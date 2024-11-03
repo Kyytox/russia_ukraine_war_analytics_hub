@@ -111,38 +111,38 @@ def format_text(text):
         "]+",
         flags=re.UNICODE,
     )
-    text = regrex_pattern.sub(r" ", text)
+    text = regrex_pattern.sub(r"", text)
 
     # remove
-    text = re.sub(r"Подписывайся на SHOT", " ", text)
-    text = re.sub(r"Прислать новость", " ", text)
-    text = re.sub(r"Предложить свою новость", " ", text)
-    text = re.sub(r"Подслушано электрички Москвы", " ", text)
-    text = re.sub(r"#Новости@transport_online", " ", text)
-    text = re.sub(r"Минтранс Подмосковья", " ", text)
-    text = re.sub(r"Прислать фото/видео/информацию: @Astra4bot", " ", text)
-    text = re.sub(r"Резервный канал ASTRA: https://t.me/astrapress2", " ", text)
+    text = re.sub(r"Подписывайся на SHOT", "", text)
+    text = re.sub(r"Прислать новость", "", text)
+    text = re.sub(r"Предложить свою новость", "", text)
+    text = re.sub(r"Подслушано электрички Москвы", "", text)
+    text = re.sub(r"#Новости@transport_online", "", text)
+    text = re.sub(r"Минтранс Подмосковья", "", text)
+    text = re.sub(r"Прислать фото/видео/информацию: @Astra4bot", "", text)
+    text = re.sub(r"Резервный канал ASTRA: https://t.me/astrapress2", "", text)
+    text = re.sub(r"astrapress@protonmail.com", "", text)
+    text = re.sub(r"SHOT", "", text)
 
     # remove after
-    text = re.sub(r"\s*Фото\s*\S*\s*от:.*?\n", " ", text)
-    text = re.sub(r"\s*Видео\s*\S*\s*от:.*?\n", " ", text)
+    text = re.sub(r"\s*Фото\s*\S*\s*от:.*?\n", "", text)
+    text = re.sub(r"\s*Видео\s*\S*\s*от:.*?\n", "", text)
 
     # remove words follow by :
-    text = re.sub(r"@\S+", " ", text)
-    text = re.sub(r"http\S+", " ", text)
+    text = re.sub(r"@\S+", "", text)
+    text = re.sub(r"http\S+", "", text)
 
     # remove all after
-    text = re.sub(r"@Astra4botРезервный.*", " ", text)
-    text = re.sub(r"Прислать фото/видео/информацию:", " ", text)
+    text = re.sub(r"@Astra4botРезервный.*", "", text)
+    text = re.sub(r"Прислать фото/видео/информацию:", "", text)
 
     #  —
     text = re.sub(r" — ", ". ", text)
-    text = re.sub(r"— ", " ", text)
+    text = re.sub(r"— ", "", text)
 
     # remove multiple spaces
     text = re.sub(r" +", " ", text).strip()
-
-    # print("text after ", text)
 
     # if last caracter is ':', remove
     if text == "":
@@ -201,4 +201,4 @@ def telegram_cleaning():
 
         # save data
         save_data(path_telegram_clean, f"{account}", df_clean, df)
-        exit()
+        # exit()
