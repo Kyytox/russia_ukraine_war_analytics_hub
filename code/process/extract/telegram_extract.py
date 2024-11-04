@@ -20,7 +20,7 @@ from utils.variables import (
 )
 
 # Functions
-from libs.connect_api import telegram_connect
+from libs.telegram_api import telegram_connect
 from libs.utils import read_data, save_data
 
 
