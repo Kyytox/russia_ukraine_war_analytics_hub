@@ -122,9 +122,6 @@ def translate_data(df_source):
         Dataframe with translated data
     """
 
-    # sort date
-    df_source = df_source.sort_values("date", ascending=False).reset_index(drop=True)
-
     # keep only x messages
     df = df_source.loc[:size_to_translate].copy()
     print(f"Size to translate: {df.shape}")
