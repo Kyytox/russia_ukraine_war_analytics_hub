@@ -15,38 +15,13 @@ import pandas as pd
 
 # Variables
 from utils.variables import (
-    list_accounts_telegram,
     path_telegram_raw,
     path_telegram_clean,
     dict_utc,
 )
 
 # Functions
-from libs.utils import read_data, save_data
-
-
-def keep_data_to_clean(df_raw, df_clean):
-    """
-    Filter data
-
-    Args:
-        df: dataframe
-        df_clean: dataframe
-
-    Returns:
-        Dataframe with filtered data
-    """
-
-    # keep data not in clean data
-    if df_clean.empty:
-        df = df_raw
-    else:
-        df = df_raw[~df_raw["id_message"].isin(df_clean["id_message"])].reset_index(
-            drop=True
-        )
-    print(f"Data to clean: {df.shape}")
-
-    return df
+from libs.utils import read_data, save_data, keep_data_to_process, get_telegram_accounts
 
 
 def format_date(df, account):
@@ -141,12 +116,17 @@ def format_text(text):
     text = re.sub(r" — ", ". ", text)
     text = re.sub(r"— ", "", text)
 
-    # remove multiple spaces
+    # remove spaces
     text = re.sub(r" +", " ", text).strip()
 
     # if last caracter is ':', remove
     if text == "":
+        print("text after cleaning is empty")
         return None
+
+    # remove first caracter if is space
+    if text[0] == " ":
+        text = text[1:]
 
     if text[-1] == ":":
         text = text[:-1]
@@ -180,6 +160,8 @@ def telegram_cleaning():
     """
 
     # get list of accounts
+    list_accounts_telegram = get_telegram_accounts(path_telegram_raw)
+
     for account in list_accounts_telegram:
         print("--------------------")
         print(account)
@@ -191,7 +173,7 @@ def telegram_cleaning():
         df_clean = read_data(path_telegram_clean, f"{account}")
 
         # keep data not in clean data
-        df = keep_data_to_clean(df_raw, df_clean)
+        df = keep_data_to_process(df_raw, df_clean)
 
         # format date
         df = format_date(df, account)
