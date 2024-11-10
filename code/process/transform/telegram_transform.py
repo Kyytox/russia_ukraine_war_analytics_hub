@@ -11,14 +11,14 @@
 
 import os
 import re
-import time
-import pandas as pd
+
+from prefect import flow, task
 
 # ia for translate
 import ollama
 
 # Variables
-from utils.variables import (
+from code.utils.variables import (
     path_telegram_clean,
     path_telegram_transform,
     path_script_service_ollama,
@@ -27,11 +27,12 @@ from utils.variables import (
 )
 
 # Functions
-from libs.utils import (
+from code.libs.utils import (
     read_data,
     save_data,
     keep_data_to_process,
     get_telegram_accounts,
+    concat_old_new_df,
 )
 
 
@@ -72,6 +73,7 @@ def clean_text(text):
     text = re.sub(r"Subscribe to SHOT.*", "", text)
 
     text = re.sub(r" +", " ", text).strip()
+    text = text.replace("\n", " ")
 
     return text
 
@@ -110,6 +112,7 @@ def translate_text(text_original):
     return ""
 
 
+@task(name="Translate data")
 def translate_data(df_source):
     """
     Translate data to English
@@ -131,41 +134,73 @@ def translate_data(df_source):
         print(f"Index: {i} - Id: {row['id_message']}")
         df.loc[i, "text_translate"] = translate_text(row["text_original"])
 
+    # remove \n in text original
+    df["text_original"] = df["text_original"].str.replace("\n", " ")
+
     return df
 
 
-def telegram_transform():
+@task(
+    name="Process Transform",
+    task_run_name="Process Transform for {account}",
+)
+def process_transform(account):
+    """
+    Process Transform
+
+    Args:
+        account: account name
+
+    Returns:
+        None
+    """
+
+    # read data clean
+    df_source = read_data(path_telegram_clean, account)
+
+    # read data transform
+    df_transform = read_data(path_telegram_transform, account)
+
+    # keep data not in transform data
+    df = keep_data_to_process(df_source, df_transform)
+
+    # reutrn if no data to process
+    if df.empty:
+        print("No data to transform")
+        return
+    print(f"Data to Transform: {df.shape[0]}")
+
+    # add col url
+    df["url"] = "https://t.me/" + account + "/" + df["id_message"].astype(str)
+
+    # translate data to english
+    df = translate_data(df)
+
+    # concat data
+    df = concat_old_new_df(df_raw=df_transform, df_new=df, cols=[])
+
+    # save data
+    save_data(path_telegram_transform, account, df)
+
+
+@flow(
+    name="Flow Telegram Transform",
+    log_prints=True,
+)
+def job_telegram_transform():
     """
     Process Telegram data
     """
 
     # start service ollama
     os.system(f"sh {path_script_service_ollama}")
-    time.sleep(5)
 
     # get list of accounts
-    list_accounts_telegram = get_telegram_accounts(path_telegram_clean)
+    list_accounts = get_telegram_accounts(path_telegram_clean)
 
     # loop over accounts
-    for account in list_accounts_telegram:
-        print("--------------------")
-        print(f"Account: {account}")
+    for account in list_accounts:
+        print("########################################")
+        print(f"Transform Account: {account}")
 
-        # read data clean
-        df_source = read_data(path_telegram_clean, account)
-
-        # read data transform
-        df_transform = read_data(path_telegram_transform, account)
-
-        # keep data not in transform data
-        df = keep_data_to_process(df_source, df_transform)
-
-        # add col url
-        df["url"] = "https://t.me/" + account + "/" + df["id_message"].astype(str)
-
-        # translate data to english
-        df = translate_data(df)
-
-        # save data
-        save_data(path_telegram_transform, account, df_transform, df)
-        print("\n")
+        process_transform(account)
