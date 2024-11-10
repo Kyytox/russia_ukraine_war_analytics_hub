@@ -1,7 +1,15 @@
 import os
 import pandas as pd
+from prefect import flow, task
+from prefect.runtime import task_run
+
+# Variables
+from code.utils.variables import (
+    list_accounts_telegram,
+)
 
 
+@task(name="Get telegram accounts", task_run_name="Get telegram accounts")
 def get_telegram_accounts(path):
     """
     Get telegram accounts
@@ -12,18 +20,44 @@ def get_telegram_accounts(path):
     Returns:
         List of accounts
     """
-
     # get accounts
     list_accounts = [
         file_name.split(".")[0]
         for file_name in os.listdir(path)
         if file_name.endswith(".parquet")
     ]
+
+    if not list_accounts:
+        list_accounts = list_accounts_telegram
+
     print(f"Accounts: {list_accounts}")
 
     return list_accounts
 
 
+def generate_task_name():
+    """
+    Generate task name
+
+    Returns:
+        Task name
+    """
+    # get task name
+    task_name = task_run.get_name().split(" ")[0]
+
+    # get parameters
+    params = task_run.get_parameters()
+
+    # get file name
+    file = f"{params['base_path'].split('/')[-1]}/{params['file_name']}"
+    return f"{task_name} {file}"
+
+
+@task(
+    name="Read data",
+    task_run_name=generate_task_name,
+    tags=["read"],
+)
 def read_data(base_path, file_name):
     """
     Read data from parquet
@@ -35,7 +69,6 @@ def read_data(base_path, file_name):
     Returns:
         Dataframe with parquet data
     """
-
     # get data
     try:
         df = pd.read_parquet(f"{base_path}/{file_name}.parquet")
@@ -47,7 +80,8 @@ def read_data(base_path, file_name):
     return df
 
 
-def save_data(base_path, file_name, df_old=None, df=None):
+@task(name="Save data", task_run_name=generate_task_name, tags=["save"])
+def save_data(base_path, file_name, df=None):
     """
     Save data to parquet
 
@@ -65,23 +99,14 @@ def save_data(base_path, file_name, df_old=None, df=None):
         print(f"No data to save")
         return
 
-    print(f"Saving {df.shape} data to {base_path}/{file_name}.parquet")
-
-    # concat data
-    if df_old is not None:
-        df = (
-            pd.concat([df_old, df])
-            .drop_duplicates()
-            .reset_index(drop=True)
-            .sort_values("date")
-        )
-
     # save data to parquet
+    print(f"Saving {df.shape} data to {base_path}/{file_name}.parquet")
     df.to_parquet(os.path.join(base_path, f"{file_name}.parquet"))
 
     return
 
 
+@task(name="Filter data to process", task_run_name="Filter data to process")
 def keep_data_to_process(df_source, df_to_filter):
     """
     Filter data
@@ -101,6 +126,30 @@ def keep_data_to_process(df_source, df_to_filter):
         df = df_source[
             ~df_source["id_message"].isin(df_to_filter["id_message"])
         ].reset_index(drop=True)
-    print(f"Data to process: {df.shape}")
 
+    return df
+
+
+@task
+def concat_old_new_df(df_raw, df_new, cols):
+    """
+    Concatenate old and new dataframes
+    Drop duplicates by cols or not
+    Sort by date
+
+    Args:
+        df_raw: old dataframe
+        df_new: new dataframe
+        cols: columns to drop duplicates
+
+    Returns:
+        df: dataframe
+    """
+
+    df = (
+        pd.concat([df_raw, df_new])
+        .drop_duplicates(subset=cols if len(cols) > 0 else None)
+        .reset_index(drop=True)
+        .sort_values("date")
+    )
     return df
