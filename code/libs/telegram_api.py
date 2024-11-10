@@ -1,11 +1,13 @@
 import yaml
 
 from telethon import TelegramClient
+from prefect import flow, task
 
 # Variables
-from utils.variables import path_creds_telegram
+from code.utils.variables import path_creds_telegram
 
 
+@task(name="Telegram connect")
 def telegram_connect():
     """
     Connect to Telegram

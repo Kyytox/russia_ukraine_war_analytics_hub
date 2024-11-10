@@ -1,6 +1,8 @@
 import os.path
 import pandas as pd
 
+from prefect import flow, task
+
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -8,12 +10,13 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # Variables
-from utils.variables import (
+from code.utils.variables import (
     path_creds_google_sheet,
     path_token_google_sheet,
 )
 
 
+@task(name="Connect Google Sheet API")
 def connect_google_sheet_api():
     """
     Connect to Google Sheet API
@@ -51,6 +54,7 @@ def connect_google_sheet_api():
     return service
 
 
+@task(name="Get sheet data")
 def get_sheet_data(service, spreadsheet_id, range_name):
     """
     Get data from Google Sheet
@@ -82,6 +86,7 @@ def get_sheet_data(service, spreadsheet_id, range_name):
     return df
 
 
+@task(name="Update sheet data")
 def update_sheet_data(service, spreadsheet_id, range_name, df):
     """
     Update data to Google Sheet
@@ -95,6 +100,9 @@ def update_sheet_data(service, spreadsheet_id, range_name, df):
     Returns:
         None
     """
+
+    if "date" in df.columns:
+        df["date"] = df["date"].astype(str)
 
     # get cols and values
     cols = df.columns.tolist()
