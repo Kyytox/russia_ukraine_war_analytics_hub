@@ -12,38 +12,45 @@
 
 import datetime
 import pandas as pd
+from prefect import flow, task
+from prefect.cache_policies import NONE
 
 # Variables
-from utils.variables import (
-    list_accounts_telegram,
+from code.utils.variables import (
     path_telegram_raw,
 )
 
 # Functions
-from libs.telegram_api import telegram_connect
-from libs.utils import read_data, save_data
+from code.libs.telegram_api import telegram_connect
+from code.libs.utils import (
+    read_data,
+    save_data,
+    get_telegram_accounts,
+    concat_old_new_df,
+)
 
 
-async def get_messages(client, account, last_id_message):
+@task(task_run_name="get-messages-{account}", cache_policy=NONE)
+async def get_messages(client, account, df_raw):
     """
     Get messages from Telegram
 
     Args:
         client: TelegramClient
-        chat: chat name
-        last_id_message: last id message
+        account: account name
+        df_raw: raw dataframe
 
     Returns:
         df: dataframe with messages
     """
-
     # init variables
     data = []
-    last_date_message = None
 
-    if last_id_message == 0:
-        # to get message after 2021 (-1h for UTC)
-        last_date_message = datetime.datetime(2021, 12, 31, 22, 59, 59)
+    # get last date or id
+    last_date_message = (
+        datetime.datetime(2021, 12, 31, 22, 59, 59) if df_raw.empty else None
+    )
+    last_id_message = 0 if df_raw.empty else df_raw["id_message"].max()
 
     print("Start extracting messages from")
     print("last_id_message:", last_id_message)
@@ -68,48 +75,48 @@ async def get_messages(client, account, last_id_message):
 
     # create df
     df = pd.DataFrame(data)
+    print(f"Extracted {df.shape[0]} messages")
 
     return df
 
 
-def telegram_extract():
+@flow(name="Process extract", flow_run_name="extract-{account}", log_prints=True)
+def process_extract(client, account):
+    """
+    Process extract
+    """
+
+    # get raw data
+    df_raw = read_data(path_telegram_raw, account)
+
+    # get messages
+    with client:
+        df = client.loop.run_until_complete(get_messages(client, account, df_raw))
+
+    # concat data
+    df = concat_old_new_df(df_raw, df, cols=["id_message"])
+
+    # save data
+    save_data(path_telegram_raw, account, df=df)
+
+
+@flow(
+    name="Flow Telegram Extract",
+    log_prints=True,
+)
+def job_telegram_extract():
     """
     Extract messages from Telegram
     """
-    print("--------------------------------")
-    print("Extracting messages from Telegram")
-    print("--------------------------------")
-
-    # init variables
-    last_id_message = 0
-
     # Connect to Telegram
     client = telegram_connect()
 
+    # get list of accounts
+    list_accounts = get_telegram_accounts(path_telegram_raw)
+
     # extract messages for each account
-    for account in list_accounts_telegram:
-        print("------------------")
-        print(account)
+    for account in list_accounts:
+        print("########################################")
+        print(f"Extracting {account}")
 
-        # get raw data
-        df_raw = read_data(path_telegram_raw, account)
-
-        # get last id
-        if not df_raw.empty:
-            last_id_message = df_raw["id_message"].max()
-
-        with client:
-            df = client.loop.run_until_complete(
-                get_messages(client, account, last_id_message)
-            )
-
-        # concat data
-        print("Number of messages extracted:", len(df))
-        df = pd.concat([df_raw, df])
-        print("Number of messages after concat:", len(df))
-
-        # drop duplicates
-        df = df.drop_duplicates(subset=["id_message"]).reset_index(drop=True)
-
-        # save data
-        save_data(path_telegram_raw, account, df_raw, df)
+        process_extract(client, account)
