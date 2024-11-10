@@ -1,11 +1,6 @@
-# Process
-# - get list of accounts
-# - collect all transform data
-# - filter incidents railway
-# - save data
-
 import re
 import pandas as pd
+from prefect import flow, task
 
 from code.libs.utils import get_telegram_accounts, read_data, save_data
 
@@ -48,7 +43,8 @@ def find_terms_in_text(list_terms, text, id_filter):
     return False
 
 
-def apply_filter_railway(df):
+@task(name="Filter incidents railway")
+def filter_incidents_railway(df):
     """
     Apply filter to df_filter
 
@@ -90,25 +86,40 @@ def apply_filter_railway(df):
     return df
 
 
-def filter_incidents_railway():
+def regroup_data(list_accounts):
     """
-    Filter incidents railway
+    Regroup data
+
+    Args:
+        list_accounts: list of accounts
+
+    Returns:
+        Dataframe with regrouped data
     """
 
-    # get list of accounts
-    list_accounts_telegram = get_telegram_accounts(path_telegram_transform)
-
-    # collect all transform data
-    df_list = [
-        read_data(path_telegram_transform, account)
-        for account in list_accounts_telegram
-    ]
+    # group data
+    df_list = [read_data(path_telegram_transform, account) for account in list_accounts]
 
     # concat data
     df_to_filter = pd.concat(df_list).sort_values("date").reset_index(drop=True)
 
+    return df_to_filter
+
+
+@flow(name="Process filter", log_prints=True)
+def job_telegram_filter():
+    """
+    Process filter
+    """
+
+    # get list accounts
+    list_accounts = get_telegram_accounts(path_telegram_transform)
+
+    # regroup data
+    df_to_filter = regroup_data(list_accounts)
+
     # apply filter
-    df = apply_filter_railway(df_to_filter)
+    df = filter_incidents_railway(df_to_filter)
 
     # save data
     save_data(path_telegram_filter, "incidents_railway", df=df)
