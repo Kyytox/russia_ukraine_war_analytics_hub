@@ -12,18 +12,26 @@
 import re
 import datetime
 import pandas as pd
+from prefect import flow, task
 
 # Variables
-from utils.variables import (
+from code.utils.variables import (
     path_telegram_raw,
     path_telegram_clean,
     dict_utc,
 )
 
 # Functions
-from libs.utils import read_data, save_data, keep_data_to_process, get_telegram_accounts
+from code.libs.utils import (
+    read_data,
+    save_data,
+    keep_data_to_process,
+    get_telegram_accounts,
+    concat_old_new_df,
+)
 
 
+@task(name="Format date")
 def format_date(df, account):
     """
     Format date according to utc
@@ -134,7 +142,8 @@ def format_text(text):
     return text
 
 
-def clean_data(df):
+@task(name="Clean text")
+def clean_text(df):
     """
     Clean data
 
@@ -154,33 +163,53 @@ def clean_data(df):
     return df
 
 
-def telegram_cleaning():
+@task(
+    name="Process cleaning",
+    task_run_name="Process cleaning for {account}",
+)
+def process_clean(account):
+    """
+    Process cleaning
+
+    Args:
+        account: account name
+
+    Returns:
+        None
+    """
+    # read raw data
+    df_raw = read_data(path_telegram_raw, account)
+
+    # read clean data
+    df_clean = read_data(path_telegram_clean, account)
+
+    # keep data not in clean data
+    df = keep_data_to_process(df_raw, df_clean)
+    print(f"Data to Clean: {df.shape[0]}")
+
+    # format date
+    df = format_date(df, account)
+
+    # clean data
+    df = clean_text(df)
+
+    # concat data
+    df = concat_old_new_df(df_raw=df_clean, df_new=df, cols=["id_message"])
+
+    # save data
+    save_data(path_telegram_clean, account, df)
+
+
+@flow(name="Flow Telegram Cleaning", log_prints=True)
+def job_telegram_cleaning():
     """
     Clean data from telegram
     """
 
     # get list of accounts
-    list_accounts_telegram = get_telegram_accounts(path_telegram_raw)
+    list_accounts = get_telegram_accounts(path_telegram_raw)
 
-    for account in list_accounts_telegram:
-        print("--------------------")
-        print(account)
-
-        # read raw data
-        df_raw = read_data(path_telegram_raw, f"{account}")
-
-        # read clean data
-        df_clean = read_data(path_telegram_clean, f"{account}")
-
-        # keep data not in clean data
-        df = keep_data_to_process(df_raw, df_clean)
-
-        # format date
-        df = format_date(df, account)
-
-        # clean data
-        df = clean_data(df)
-
-        # save data
-        save_data(path_telegram_clean, f"{account}", df_clean, df)
-        # exit()
+    for account in list_accounts:
+        print("########################################")
+        print(f"Cleaning {account}")
+        process_clean(account)
