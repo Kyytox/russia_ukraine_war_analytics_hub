@@ -1,0 +1,51 @@
+datamarts_path = "data/datamarts/incidents_railway"
+
+colors = {
+    2022: "rgb(65, 65, 105)",
+    "2022": "rgb(65, 65, 105)",
+    2023: "rgb(85, 24, 85)",
+    "2023": "rgb(85, 24, 85)",
+    2024: "rgb(148, 10, 148)",
+    "2024": "rgb(148, 10, 148)",
+    "Total": "rgb(48, 48, 48)",
+    "Sabotage": "rgba(103,0,13, 0.9)",
+    "Fire": "rgb(200, 40, 40)",
+    "Derailment": "rgb(236,112,20)",
+    "Collision": "rgb(220, 174, 25)",
+    "Technical Problem": "rgb(239, 248, 90)",
+    "Attack": "rgb(279, 255, 0)",
+    #
+    "Freight Train": "rgb(58, 60, 125)",
+    "Passengers Train": "rgb(8,48,107)",
+    "Locomotive": "rgb(8,81,156)",
+    "Relay Cabin": "rgb(66,146,198)",
+    "Infrastructure": "rgb(138,202,225)",
+    "Railroad Tracks": "rgb(222,235,247)",
+    "Electric Box": "rgb(247,251,255)",
+    #
+    "Freedom of Russia Legion": "rgb(36, 86, 104)",
+    "No affiliation": "rgb(15, 114, 121)",
+    "Rospartizan Group": "rgb(13, 143, 129)",
+    "Russian Volunteer Corps (RDK)": "rgb(57, 171, 126)",
+    "The Revolutionary Movement": "rgb(110, 197, 116)",
+    "Wanted": "rgb(169, 220, 103)",
+    "Ukrainian Army": "rgb(237, 239, 93)",
+    "ATESH": "rgb(255, 201, 0)",
+    "": "rgb(255, 255, 255)",
+    #
+    "Arrested": "rgb(13, 141, 9)",
+    "No Arrested": "rgb(39, 77, 39)",
+    "Reward": "rgb(22, 173, 184)",
+    "No Reward": "rgb(46, 113, 117)",
+    #
+    "Law not indicated": "#D3D3D3",
+    "167 - Intentional Destruction or Damage of Property": "#a32929",
+    "281 - Sabotage": "#FFA500",
+    "267 - Tracks Damage": "#4682B4",
+    "205-205.5 - Terrorism": "#8B0000",
+    #
+    "<18": "#1c7897",
+    "18-30": "#63a063",
+    "31-50": "#FFFF00",
+    ">50": "#FFA500",
+}
