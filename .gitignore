@@ -171,3 +171,11 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+core/utils/credentials.json
+core/utils/credentials.yaml
+core/utils/script_service.sh
+core/utils/token.json
+cop_news_railway_to_classified_2.csv
+cop_news_railway_to_classified.csv
+Incidents_Russian_Railway_dataset.csv
+test_ia_translate.ipynb
