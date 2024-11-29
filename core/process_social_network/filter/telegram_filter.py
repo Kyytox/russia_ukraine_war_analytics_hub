@@ -114,6 +114,9 @@ def job_telegram_filter():
     # get list accounts
     list_accounts = get_telegram_accounts(path_telegram_transform)
 
+    # remove belzhd_live
+    list_accounts.remove("belzhd_live")
+
     # regroup data
     df_to_filter = regroup_data(list_accounts)
 
