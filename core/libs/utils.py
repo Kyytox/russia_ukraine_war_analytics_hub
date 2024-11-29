@@ -99,6 +99,10 @@ def save_data(base_path: str, file_name: str, df: pd.DataFrame):
         print(f"No data to save")
         return
 
+    # create folder if not exist
+    if not os.path.exists(base_path):
+        os.makedirs(base_path)
+
     # save data to parquet
     print(f"Saving {df.shape} data to {base_path}/{file_name}.parquet")
     df.to_parquet(os.path.join(base_path, f"{file_name}.parquet"))
