@@ -74,7 +74,6 @@ def clean_text(text):
     text = re.sub(r"Subscribe to SHOT.*", "", text)
 
     text = re.sub(r" +", " ", text).strip()
-    # text = text.replace("\n", " ")
 
     return text
 
@@ -101,6 +100,20 @@ def translate_text(text_original):
                 {"role": "user", "content": text},
             ],
         )
+
+        cpt_words_orginal = len(text.split())
+        cpt_words_translate = len(response["message"]["content"].split())
+
+        # check if translation is > 60% of original
+        if cpt_words_translate < cpt_words_orginal * 0.6:
+
+            # retry
+            response = ollama.chat(
+                model=ia_name,
+                messages=[
+                    {"role": "user", "content": text},
+                ],
+            )
 
         # clean text
         return clean_text(response["message"]["content"])
@@ -139,6 +152,39 @@ def translate_data(df_source):
 
 
 @task(
+    name="Remove data not translated correctly",
+    task_run_name="Remove data not translated correctly",
+)
+def remove_poorly_translated_data(df):
+    """
+    Remove data not translated correctly
+    Remove data where text_translate is 60% less than text_original
+
+    Args:
+        df: dataframe with translated data
+
+    Returns:
+        Dataframe with removed data
+    """
+
+    # remove data where text_translate is 60% less than text_original
+    df1 = df[
+        (
+            (
+                df["text_translate"].str.split().str.len()
+                / df["text_original"].str.split().str.len()
+            )
+            * 100
+        ).round(2)
+        < 60
+    ]
+
+    print(f"Size after remove poorly translated data: {df1.shape}")
+
+    return df
+
+
+@task(
     name="Process Transform",
     task_run_name="Process Transform for {account}",
 )
@@ -158,6 +204,9 @@ def process_transform(account):
 
     # read data transform
     df_transform = read_data(path_telegram_transform, account)
+
+    # remove poorly translated data
+    # df_transform = remove_poorly_translated_data(df_transform)
 
     # keep data not in transform data
     df = keep_data_to_process(df_source, df_transform)
