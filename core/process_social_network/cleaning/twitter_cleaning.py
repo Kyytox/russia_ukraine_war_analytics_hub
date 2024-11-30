@@ -22,6 +22,7 @@ from core.libs.utils import (
     save_data,
     keep_data_to_process,
     concat_old_new_df,
+    format_clean_text,
 )
 
 
@@ -49,55 +50,6 @@ def format_date(df):
     return df
 
 
-def format_text(text):
-    """
-    Format text
-
-    Args:
-        text: text
-
-    Returns:
-        Formatted text
-    """
-    # remove special characters
-    regrex_pattern = re.compile(
-        pattern="["
-        "\U0001F600-\U0001F64F"  # emoticons
-        "\U0001F300-\U0001F5FF"  # symbols & pictographs
-        "\U0001F680-\U0001F6FF"  # transport & map symbols
-        "\U0001F1E0-\U0001F1FF"  # flags (iOS)
-        "\U00002500-\U00002BEF"  # chinese char
-        "\U00002702-\U000027B0"
-        "\U00002702-\U000027B0"
-        "\U000024C2-\U0001F251"
-        "\U0001f926-\U0001f937"
-        "\U00010000-\U0010ffff"
-        "\u2640-\u2642"
-        "\u2600-\u2B55"
-        "\u200d"
-        "\u23cf"
-        "\u23e9"
-        "\u231a"
-        "\ufe0f"  # dingbats
-        "\u3030"
-        "]+",
-        flags=re.UNICODE,
-    )
-    text = regrex_pattern.sub(r"", text)
-
-    # remove words follow by :
-    text = re.sub(r"@\S+", "", text)
-    text = re.sub(r"http\S+", "", text)
-
-    # remove
-    text = re.sub(r"&amp;", "", text)
-
-    # remove spaces
-    text = re.sub(r" +", " ", text).strip()
-
-    return text
-
-
 @flow(name="Flow Twitter Cleaning", log_prints=True)
 def job_twitter_cleaning():
     """
@@ -117,7 +69,7 @@ def job_twitter_cleaning():
     df = format_date(df)
 
     # format text
-    df["text_original"] = df["text_original"].apply(format_text)
+    df["text_original"] = df["text_original"].apply(format_clean_text)
 
     # concat data
     df = concat_old_new_df(df_raw, df, cols=["id_message"])
