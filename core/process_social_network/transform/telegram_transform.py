@@ -23,8 +23,6 @@ from core.utils.variables import (
     path_telegram_transform,
     path_script_service_ollama,
     size_to_translate,
-    prefix_message_ia,
-    ia_name,
 )
 
 # Functions
@@ -34,96 +32,11 @@ from core.libs.utils import (
     keep_data_to_process,
     get_telegram_accounts,
     concat_old_new_df,
+    format_clean_text,
 )
 
-
-def clean_text(text):
-    """
-    Clean text
-
-    Args:
-        text: text
-
-    Returns:
-        Cleaned text
-    """
-
-    list_replace = [
-        "Here is the translation:",
-        "Here is the English translation: ",
-        "Here is the translation to English:",
-        "Here's the translation:",
-        "Translation in English:",
-        "I'm ready to translate.",
-        "The translation is:",
-        "Translation:",
-        "I'll translate the text for you:",
-        "I'll translate the text accurately,",
-        "Translation in English as listed:",
-        "I can translate this text for you.",
-        "I'll translate the text accurately from Russian to English while maintaining the context and tone of the original.",
-        "I'll translate the text accurately and grammatically correct.",
-        "Here is the translation of your text from Russian to English:",
-    ]
-
-    # remove list_replace
-    for replace in list_replace:
-        text = text.replace(replace, "")
-
-    # remove all after Subscribe to SHOT
-    text = re.sub(r"Subscribe to SHOT.*", "", text)
-
-    text = re.sub(r" +", " ", text).strip()
-
-    return text
-
-
-def translate_text(text_original):
-    """
-    Translate text
-
-    Args:
-        row: row of dataframe
-
-    Returns:
-        Translated text
-    """
-
-    # add prefix
-    text = prefix_message_ia + text_original
-
-    try:
-        # translate text
-        response = ollama.chat(
-            model=ia_name,
-            messages=[
-                {"role": "user", "content": text},
-            ],
-        )
-
-        cpt_words_orginal = len(text.split())
-        cpt_words_translate = len(response["message"]["content"].split())
-
-        # check if translation is > 60% of original
-        if cpt_words_translate < cpt_words_orginal * 0.6:
-
-            # retry
-            response = ollama.chat(
-                model=ia_name,
-                messages=[
-                    {"role": "user", "content": text},
-                ],
-            )
-
-        # clean text
-        return clean_text(response["message"]["content"])
-    except Exception as e:
-        print(f"Error: {e}")
-        if "111" in str(e):
-            print("Ollama Not Active")
-            exit()
-
-    return ""
+# IA
+from core.libs.ollama_ia import ia_treat_message
 
 
 @task(name="Translate data")
@@ -146,7 +59,9 @@ def translate_data(df_source):
     # translate text
     for i, row in df.iterrows():
         print(f"Index: {i} - Id: {row['id_message']}")
-        df.loc[i, "text_translate"] = translate_text(row["text_original"])
+        df.loc[i, "text_translate"] = ia_treat_message(
+            row["text_original"], "translate"
+        )
 
     return df
 

@@ -12,7 +12,11 @@ import pandas as pd
 
 from prefect import flow, task
 
+# ia for classify
+import ollama
+
 # Functions
+from core.libs.ollama_ia import ia_treat_message
 from core.libs.utils import read_data
 from core.libs.google_api import (
     connect_google_sheet_api,
@@ -105,8 +109,9 @@ def clean_columns(df):
             "date",
             "text_original",
             "text_translate",
-            "is_add_to_final_dataset",
             "is_incident_railway",
+            "response_ia",
+            "is_add_to_final_dataset",
             "url",
         ]
     ].sort_values("date")
@@ -133,6 +138,9 @@ def convert_cols(df):
     # convert date
     df["date"] = pd.to_datetime(df["date"])
 
+    # count number of None in id_message
+    print(f"Number of None in id_message: {df['id_message'].isnull().sum()}")
+
     # convert id_message to int
     df["id_message"] = df["id_message"].astype(int)
 
@@ -155,6 +163,48 @@ def concat_data_sources(df_telegram_filter, df_twitter_filter):
     df_filter["text_translate"] = df_filter["text_translate"].fillna("")
 
     return df_filter
+
+
+@task(name="Classify with IA")
+def classify_with_ia(df):
+    """
+    Classify with IA
+    """
+    print(f"Data to classify: {df.shape}")
+
+    # get data to classify with ia
+    df_to_classify = df[
+        (df["is_add_to_final_dataset"] == False)
+        & (df["is_incident_railway"])
+        & (df["text_translate"] != "")
+        & (df["response_ia"].isnull() | (df["response_ia"] == ""))
+    ].reset_index(drop=True)
+
+    print(f"Data to classify with IA: {df_to_classify.shape}")
+
+    for i, row in df_to_classify.iterrows():
+        # ask IA
+        print(f"Index: {i}")
+        df_to_classify.loc[i, "response_ia"] = ia_treat_message(
+            row["text_translate"], "classify"
+        )
+
+    print(df_to_classify)
+
+    # concat data
+    df_concat = (
+        (pd.concat([df, df_to_classify], ignore_index=True))
+        .drop_duplicates(subset=["account", "id_message"], keep="last")
+        .sort_values("date")
+        .reset_index(drop=True)
+    )
+
+    # replace Nan
+    df_concat["response_ia"] = df_concat["response_ia"].fillna("")
+
+    print(f"Data classified: {df_concat.shape}")
+
+    return df_concat
 
 
 @flow(name="Filter to classify", log_prints=True)
@@ -181,9 +231,6 @@ def job_filter_to_classify():
     # get data from Google Sheet
     df_to_classify = get_sheet_data(service, spreadsheet_id, range_name)
 
-    # drop duplicates
-    df_to_classify = df_to_classify.drop_duplicates(subset=["url"], keep="first")
-
     # convert columns
     df_to_classify = convert_cols(df_to_classify)
 
@@ -193,5 +240,9 @@ def job_filter_to_classify():
     # clean columns
     df = clean_columns(df)
 
+    # classify with IA
+    df = classify_with_ia(df)
+
     # save data
+    df.to_csv("test_classify.csv", index=False)
     update_sheet_data(service, spreadsheet_id, range_name, df)
