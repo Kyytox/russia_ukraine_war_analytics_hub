@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import pandas as pd
 from prefect import flow, task
@@ -188,3 +189,107 @@ def get_regions_geojson():
     }
 
     return dict_region
+
+
+def format_clean_text(text):
+    """
+    Formate and clean text
+
+    Args:
+        text: text
+
+    Returns:
+        Text cleaned
+    """
+    # Remove special characters
+    regex_pattern = re.compile(
+        pattern="["
+        "\U0001F600-\U0001F64F"  # emoticons
+        "\U0001F300-\U0001F5FF"  # symbols & pictographs
+        "\U0001F680-\U0001F6FF"  # transport & map symbols
+        "\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        "\U00002500-\U00002BEF"  # chinese char
+        "\U00002702-\U000027B0"
+        "\U00002702-\U000027B0"
+        "\U000024C2-\U0001F251"
+        "\U0001f926-\U0001f937"
+        "\U00010000-\U0010ffff"
+        "\u2640-\u2642"
+        "\u2600-\u2B55"
+        "\u200d"
+        "\u23cf"
+        "\u23e9"
+        "\u231a"
+        "\ufe0f"  # dingbats
+        "\u3030"
+        "]+",
+        flags=re.UNICODE,
+    )
+    text = regex_pattern.sub("", text)
+
+    # Remove unwanted text
+    motifs = [
+        r"Подписывайся на SHOT",
+        r"Прислать новость (https://t.me/shot_go)",
+        r"Прислать новость",
+        r"Предложить свою новость",
+        r"Подслушано электрички Москвы",
+        r"#Новости@transport_online",
+        r"Минтранс Подмосковья",
+        r"Прислать фото/видео/информацию: @Astra4bot",
+        r"Резервный канал ASTRA: https://t.me/astrapress2",
+        r"astrapress@protonmail.com",
+        r"Предложить свою новость (https://t.me/electrichkibot)",
+        r"Предложить свою новость",
+        r"Подслушано электрички Москвы (https://t.me/electrichki)",
+        r"Подслушано электрички Москвы",
+        r"SHOT",
+    ]
+    for motif in motifs:
+        text = re.sub(motif, "", text)
+
+    # remove after
+    text = re.sub(r"\s*(Фото|Видео)\s*\S*\s*от:.*?\n", "", text)
+
+    # remove http and @
+    text = re.sub(r"@\S+|http\S+", "", text)
+    text = re.sub(r"Subscribe to SHOT.*", "", text)
+    text = re.sub(r"@Astra4botРезервный.*|Прислать фото/видео/информацию:", "", text)
+    text = re.sub(r"\s*—\s*", ". ", text)
+    text = re.sub(r"—\s*", "", text)
+    text = re.sub(r"&amp;", "", text)
+
+    # Remove first and last character if
+    if text.startswith(" "):
+        text = text[1:]
+    if text.endswith(":"):
+        text = text[:-1]
+
+    # Remove unwanted text translations
+    translations = [
+        "Here is the translation:",
+        "Here is the English translation:",
+        "Here is the translation to English:",
+        "Here's the translation:",
+        "Translation in English:",
+        "I'm ready to translate.",
+        "The translation is:",
+        "Translation:",
+        "I'll translate the text for you:",
+        "I'll translate the text accurately,",
+        "Translation in English as listed:",
+        "I can translate this text for you.",
+        "I'll translate the text accurately from Russian to English while maintaining the context and tone of the original.",
+        "I'll translate the text accurately and grammatically correct.",
+        "Here is the translation of your text from Russian to English:",
+    ]
+    for trad in translations:
+        text = text.replace(trad, "")
+
+    if not text:
+        print("text after cleaning is empty")
+        return None
+
+    text = re.sub(r" +", " ", text).strip()
+
+    return text
