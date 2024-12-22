@@ -72,7 +72,7 @@ def job_twitter_cleaning():
     df["text_original"] = df["text_original"].apply(format_clean_text)
 
     # concat data
-    df = concat_old_new_df(df_raw, df, cols=["id_message"])
+    df = concat_old_new_df(df_clean, df, cols=["id_message"])
 
     # save data
     save_data(path_twitter_clean, "twitter", df)

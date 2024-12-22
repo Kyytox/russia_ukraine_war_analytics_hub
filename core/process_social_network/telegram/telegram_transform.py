@@ -52,6 +52,13 @@ def translate_data(df_source):
         Dataframe with translated data
     """
 
+    # sort dataframe by the number of words in text_original
+    df_source["word_count"] = df_source["text_original"].str.split().str.len()
+    df_source = df_source.sort_values(by="word_count", ascending=True).reset_index(
+        drop=True
+    )
+    print(f"Size sorted: {df_source}")
+
     # keep only x messages
     df = df_source.loc[:size_to_translate].copy()
     print(f"Size to translate: {df.shape}")
@@ -62,6 +69,9 @@ def translate_data(df_source):
         df.loc[i, "text_translate"] = ia_treat_message(
             row["text_original"], "translate"
         )
+
+    # remove col word_count
+    df = df.drop(columns=["word_count"])
 
     return df
 
@@ -83,7 +93,10 @@ def remove_poorly_translated_data(df):
     """
 
     # remove data where text_translate is 60% less than text_original
-    df1 = df[
+    if df.empty:
+        return df
+
+    df_poor_trans = df[
         (
             (
                 df["text_translate"].str.split().str.len()
@@ -91,10 +104,17 @@ def remove_poorly_translated_data(df):
             )
             * 100
         ).round(2)
-        < 60
+        < 65
     ]
+    print(f"Size poorly translated data: {df_poor_trans.shape}")
 
-    print(f"Size after remove poorly translated data: {df1.shape}")
+    # keep 30 messages
+    if df_poor_trans.shape[0] > 10:
+        df_poor_trans = df_poor_trans.head(50)
+
+        # remove data according to id_message
+        df = df[~df["id_message"].isin(df_poor_trans["id_message"])]
+        print(f"Size after remove poorly translated data: {df.shape}")
 
     return df
 
@@ -121,7 +141,7 @@ def process_transform(account):
     df_transform = read_data(path_telegram_transform, account)
 
     # remove poorly translated data
-    # df_transform = remove_poorly_translated_data(df_transform)
+    df_transform = remove_poorly_translated_data(df_transform)
 
     # keep data not in transform data
     df = keep_data_to_process(df_source, df_transform)
