@@ -24,6 +24,24 @@ from create_charts import (
 )
 
 
+# add Google Analytics
+components.html(
+    """
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKBT8QLJ3W"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-GKBT8QLJ3W');
+    </script>
+    """,
+    height=0,
+    width=0,
+)
+
+
 st.set_page_config(page_title="Partisans Data Analysis", page_icon="📊", layout="wide")
 st.title("🚂 Incidents Russian Railways Analytics 🇷🇺")
 
@@ -1357,10 +1375,12 @@ components.html(
             alt="Kytox"
             style="border-radius: 50%; margin-right: 10px; width: 30px;"
         />
-        <p>Developed by: Kyytox</p>
+        <p>Developed by: Kytox</p>
         </a>
         
     </footer>
     """,
     height=100,
 )
+
+# return 301 http://incidentsrussianrailways.com$request_uri;
