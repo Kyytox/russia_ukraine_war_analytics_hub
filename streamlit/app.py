@@ -26,23 +26,10 @@ from create_charts import (
 
 st.set_page_config(page_title="Partisans Data Analysis", page_icon="📊", layout="wide")
 
-# add Google Analytics
-components.html(
-    """
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKBT8QLJ3W"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-GKBT8QLJ3W');
-    </script>
-    """,
-    height=0,
-    width=0,
-)
-
+# Include Google Analytics tracking code
+with open("streamlit/utils/google_analytics.html", "r") as f:
+    html_code = f.read()
+    components.html(html_code, height=0)
 
 st.title("🚂 Incidents Russian Railways Analytics 🇷🇺")
 
