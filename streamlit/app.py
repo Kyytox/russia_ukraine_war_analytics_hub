@@ -22,14 +22,52 @@ from create_charts import (
     create_waffle,
     create_waterfall,
 )
+from bs4 import BeautifulSoup
+import shutil
+import pathlib
+import logging
+
+# st.set_page_config(page_title="Partisans Data Analysis", page_icon="🚂", layout="wide")
 
 
-st.set_page_config(page_title="Partisans Data Analysis", page_icon="📊", layout="wide")
+def add_analytics_tag():
+    # replace G-XXXXXXXXXX to your web app's ID
 
-# Include Google Analytics tracking code
-with open("streamlit/utils/google_analytics.html", "r") as f:
-    html_code = f.read()
-    components.html(html_code, height=0)
+    analytics_js = """
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKBT8QLJ3W"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GKBT8QLJ3W');
+    </script>
+    <div id="G-GKBT8QLJ3W"></div>
+    """
+    analytics_id = "G-GKBT8QLJ3W"
+
+    # Identify html path of streamlit
+    index_path = pathlib.Path(st.__file__).parent / "static" / "index.html"
+    st.write(index_path)
+    logging.info(f"editing {index_path}")
+    soup = BeautifulSoup(index_path.read_text(), features="html.parser")
+    if not soup.find(id=analytics_id):  # if id not found within html file
+        bck_index = index_path.with_suffix(".bck")
+        if bck_index.exists():
+            shutil.copy(bck_index, index_path)  # backup recovery
+        else:
+            shutil.copy(index_path, bck_index)  # save backup
+        html = str(soup)
+        new_html = html.replace("<head>", "<head>\n" + analytics_js)
+        index_path.write_text(new_html)
+
+
+add_analytics_tag()
+
+# # Include Google Analytics tracking code
+# with open("streamlit/utils/google_analytics.html", "r") as f:
+#     html_code = f.read()
+#     components.html(html_code, height=0)
 
 st.title("🚂 Incidents Russian Railways Analytics 🇷🇺")
 
