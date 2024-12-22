@@ -18,6 +18,7 @@ from create_charts import (
     create_heatmap,
     create_map,
     create_wordcloud,
+    create_funnel,
     create_waffle,
     create_waterfall,
 )
@@ -25,26 +26,6 @@ from create_charts import (
 
 st.set_page_config(page_title="Partisans Data Analysis", page_icon="📊", layout="wide")
 st.title("🚂 Incidents Russian Railways Analytics 🇷🇺")
-
-
-with st.sidebar:
-    st.title("Menu")
-
-    with st.container():
-        components.html(
-            """
-            <div style="display: flex; align-items: center; justify-content: center;">
-                <a href="https://twitter.com/kyytox" target="_blank">
-                    <img src="https://pbs.twimg.com/profile_images/1471129038022455299/Zn05GePO_400x400.jpg" style="width: 30px; border-radius: 50%;">
-                </a>
-                <a href="https://twitter.com/kyytox" target="_blank" style="margin-left: 10px; font-size: 0.9rem; color: #ffffff; text-decoration: none; width: 100%;">
-                    Developed by: Kyytox
-                </a>
-            </div>
-            """,
-            height=50,
-            width=200,
-        )
 
 # update CSS
 st.markdown(
@@ -69,7 +50,7 @@ st.markdown(
         color: #000000;
     }
     
-	.stTabs [data-baseweb="tab"]:nth-child(6) {
+	.stTabs [data-baseweb="tab"]:nth-child(8) {
 		background-color: #919191;
     }
 
@@ -136,22 +117,22 @@ dmt_app_laws_prtsn_age = pd.read_parquet(f"{datamarts_path}/app_laws_prtsn_age.p
 dmt_wordcloud = pd.read_parquet(f"{datamarts_path}/wordcloud.parquet")
 dmt_sab_prtsn_grp = pd.read_parquet(f"{datamarts_path}/sabotage_by_prtsn_grp.parquet")
 
-# st.write("total")
-# st.dataframe(dmt_inc_total)
-# st.write("year")
-# st.dataframe(dmt_inc_year)
-# st.write("month")
-# st.dataframe(dmt_inc_month)
-# st.write("cumul_month")
-# st.dataframe(dmt_inc_cumul_month)
-# st.write("day_week")
-# st.dataframe(dmt_inc_day_week)
-# st.write("region")
-# st.dataframe(dmt_inc_region)
-# st.write("incident_dmg_eqp")
-# st.dataframe(dmt_inc_dmg_eqp)
-# st.write("sun_tree")
-# st.dataframe(dmt_sun_tree)
+st.write("total")
+st.dataframe(dmt_inc_total)
+st.write("year")
+st.dataframe(dmt_inc_year)
+st.write("month")
+st.dataframe(dmt_inc_month)
+st.write("cumul_month")
+st.dataframe(dmt_inc_cumul_month)
+st.write("day_week")
+st.dataframe(dmt_inc_day_week)
+st.write("region")
+st.dataframe(dmt_inc_region)
+st.write("incident_dmg_eqp")
+st.dataframe(dmt_inc_dmg_eqp)
+st.write("sun_tree")
+st.dataframe(dmt_sun_tree)
 
 # -----------DATAMARTS-----------
 
@@ -162,6 +143,8 @@ lst_dmg_eqp = dmt_inc_total[dmt_inc_total["type"] == "dmg_eqp"]["label"].unique(
 lst_sabotage_dmg_eqp = dmt_inc_total[dmt_inc_total["type"] == "sabotage"][
     "label"
 ].unique()
+st.write("lst_sabotage_dmg_eqp")
+st.write(lst_sabotage_dmg_eqp)
 list_partisans_group = dmt_inc_total[dmt_inc_total["type"] == "prtsn_grp"][
     "label"
 ].unique()
@@ -180,8 +163,10 @@ list_partisans_group = dmt_inc_total[dmt_inc_total["type"] == "prtsn_grp"][
 df_incd_typ_total = dmt_inc_total[dmt_inc_total["type"] == "inc_type"]
 df_dmg_eqp_total = dmt_inc_total[dmt_inc_total["type"] == "dmg_eqp"]
 df_incd_reg_total = dmt_inc_total[dmt_inc_total["type"] == "region"]
+df_sab_reg_total = dmt_inc_total[dmt_inc_total["type"] == "sab_region"]
 df_inc_type_cumul_month = dmt_inc_cumul_month[dmt_inc_cumul_month["inc_type"].notnull()]
 df_dmg_eqp_cumul_month = dmt_inc_cumul_month[dmt_inc_cumul_month["dmg_eqp"].notnull()]
+
 
 # -----------DF CHARTS-----------
 
@@ -193,12 +178,43 @@ sufix_subtitle = "on the Russian Railways Network in 2023 and 2024"
 # -----------VARIABLES-----------
 
 
+# ------------SIDEBAR------------
+with st.sidebar:
+    st.title("Menu")
+
+    with st.container():
+        components.html(
+            """
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <a href="https://twitter.com/kyytox" target="_blank">
+                    <img src="https://pbs.twimg.com/profile_images/1471129038022455299/Zn05GePO_400x400.jpg" style="width: 30px; border-radius: 50%;">
+                </a>
+                <a href="https://twitter.com/Kytox_" target="_blank" style="margin-left: 10px; font-size: 0.9rem; color: #ffffff; text-decoration: none; width: 100%;">
+                    Developed by: Kyytox
+                </a>
+            </div>
+            """,
+            height=50,
+            width=200,
+        )
+
+    st.title("Filters")
+    remove_moscow = st.toggle("Remove Moscow Region", False)
+
+
+# bouton to add, remove region Moscow
+if remove_moscow:
+    df_incd_reg_total = df_incd_reg_total[df_incd_reg_total["label"] != "Moscow"]
+    df_sab_reg_total = df_sab_reg_total[df_sab_reg_total["label"] != "Moscow"]
+
+
 # Tabs
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
     [
         "Overview",
         "Incidents Types",
         "Damaged Equipments",
+        "Collisions",
         "Sabotage",
         "Partisans Arrest",
         "Informations",
@@ -219,10 +235,17 @@ with tab1:
         int(dmt_inc_year["2024"][dmt_inc_year["label"] == "Total"].values[0]),
         f"{int(dmt_inc_year['2024'][dmt_inc_year['label'] == 'Total'].values[0] - dmt_inc_year['2023'][dmt_inc_year['label'] == 'Total'].values[0])} from 2023",
     )
-    col3.metric("Region Most Impacted", "Moscow")
+    col3.metric(
+        "Total Number of sabotage",
+        int(dmt_inc_total[dmt_inc_total["label"] == "Sabotage"]["total_inc"].values[0]),
+    )
     col4.metric(
         "Arrested Partisans",
-        int(dmt_inc_total[dmt_inc_total["label"] == "Arrested"]["total_inc"].values[0]),
+        int(
+            dmt_inc_total[dmt_inc_total["label"] == "Total Arrested"][
+                "total_inc"
+            ].values[0]
+        ),
     )
 
     st.divider()
@@ -265,17 +288,24 @@ with tab1:
     with col1:
         df = (
             dmt_inc_month[
-                (dmt_inc_month["inc_type"].isnull() & dmt_inc_month["dmg_eqp"].isnull())
+                (
+                    dmt_inc_month["inc_type"].isnull()
+                    & dmt_inc_month["dmg_eqp"].isnull()
+                    & dmt_inc_month["coll_with"].isnull()
+                )
             ]
+            .sort_values("year")
             .pivot(index="month", columns="year", values="total_inc")
             .reset_index()
         )
+        df = df[["month", 2024, 2023, 2022]]
 
         fig = create_line(
             df,
             col_x="month",
             title="Monthly Incident Trends on Russian Railways",
             subtitle=f"Number of Incidents by Month {sufix_subtitle}",
+            fill=None,
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -284,7 +314,11 @@ with tab1:
     # Bar Chart
     with col2:
         df = dmt_inc_month[
-            (dmt_inc_month["inc_type"].isnull() & dmt_inc_month["dmg_eqp"].isnull())
+            (
+                dmt_inc_month["inc_type"].isnull()
+                & dmt_inc_month["dmg_eqp"].isnull()
+                & dmt_inc_month["coll_with"].isnull()
+            )
         ]
         fig = create_bar(
             multi=False,
@@ -309,7 +343,7 @@ with tab1:
             col_x="label",
             col_y="total_inc",
             title="Distribution of Railway Incidents by Type in Russia",
-            subtitle=f"Total number of reported incidents categorized by type {sufix_subtitle}",
+            subtitle=f"Number of reported incidents categorized by type {sufix_subtitle}",
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -323,7 +357,7 @@ with tab1:
             col_x="label",
             col_y="total_inc",
             title="Distribution of Railway Damaged Equipments in Russia",
-            subtitle=f"Total number of reported Damaged Equipments {sufix_subtitle}",
+            subtitle=f"Number of reported Damaged Equipments {sufix_subtitle} (without Collisions with Humans)",
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -332,6 +366,7 @@ with tab1:
     st.warning(
         "Warning: Crimea is represented on this map, it is good to remember that Crimea is Ukrainian, but being occupied the rail network is under the responsibility of the Orcs."
     )
+
     # -------------------------------
     # Number of Incidents by Region
     # Treemap
@@ -347,7 +382,6 @@ with tab1:
     # -------------------------------
     # Number of Incidents by Region
     # Map
-
     fig = create_map(
         df_incd_reg_total,
     )
@@ -366,7 +400,7 @@ with tab1:
 with tab2:
     st.title("Incidents Types")
 
-    col1, col2 = st.columns([0.8, 1.2])
+    col1, col2 = st.columns([0.75, 1.25])
 
     # -------------------------------
     # Number of Incidents by Incident Type
@@ -394,7 +428,7 @@ with tab2:
             title="Trends in Cumulative Incidents by Type Over Time",
             subtitle=f"Cumulative number of incidents by type {sufix_subtitle}",
             mode="lines",
-            fill="none",
+            fill=None,
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -411,7 +445,7 @@ with tab2:
             df=df,
             col_x="label",
             col_y=None,
-            title="Incidents by Type: Yearly Comparison for 2023 and 2024",
+            title="Incidents by Type: Yearly Comparison",
             subtitle=f"Insight into the distribution of incident types {sufix_subtitle}",
             start_col=2,
             bar_mode="group",
@@ -427,6 +461,7 @@ with tab2:
                 (
                     dmt_inc_month["inc_type"].notnull()
                     & dmt_inc_month["dmg_eqp"].isnull()
+                    & dmt_inc_month["coll_with"].isnull()
                 )
             ]
             .pivot(index="month_year", columns="inc_type", values="total_inc")
@@ -437,7 +472,7 @@ with tab2:
             df=df,
             col_x="month_year",
             col_y=None,
-            title="Monthly Incidents by Type for 2023 and 2024",
+            title="Monthly Incidents by Type",
             subtitle=f"A detailed view of incidents categorized by type on a monthly {sufix_subtitle}",
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -502,8 +537,12 @@ with tab2:
 
 with tab3:
     st.title("Damaged Equipments")
+    st.info(
+        "In this section, Collisions with Humans are not included, beacause equipment is not damaged in these cases, or the damage is not significant.\n"
+    )
+    st.write("")
 
-    col1, col2 = st.columns([0.8, 1.2])
+    col1, col2 = st.columns([0.75, 1.25])
 
     # -------------------------------
     # Number of Incidents by Damaged Equipment
@@ -548,7 +587,7 @@ with tab3:
             df=df,
             col_x="label",
             col_y=None,
-            title="Damaged Equipment: Yearly Comparison for 2023 and 2024",
+            title="Damaged Equipment: Yearly Comparison",
             subtitle=f"Insight into the distribution of damaged equipment {sufix_subtitle}",
             start_col=2,
             bar_mode="group",
@@ -578,7 +617,7 @@ with tab3:
             df=df,
             col_x="month_year",
             col_y=None,
-            title="Monthly Damaged Equipments for 2023 and 2024",
+            title="Monthly Damaged Equipments",
             subtitle=f"A detailed view of Damaged Equipments on a monthly {sufix_subtitle}",
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -642,7 +681,91 @@ with tab3:
 
 
 with tab4:
+    st.title("Collisions")
+
+    col1, col2 = st.columns([0.75, 1.25])
+
+    # -------------------------------
+    # Number of Incidents by Collision With
+    # Pie Chart
+    with col1:
+        df = dmt_inc_total[dmt_inc_total["type"] == "coll_with"]
+        fig = create_pie(
+            df["label"],
+            df["total_inc"],
+            title="Distribution of Collisions",
+            subtitle=f"Distribution of collisions {sufix_subtitle}",
+            center_txt="Collisions With",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    # -------------------------------
+    # Number of Incidents by Collision With by Month
+    # Bar Chart
+    with col2:
+        df = (
+            dmt_inc_month[
+                (dmt_inc_month["inc_type"].isnull())
+                & (dmt_inc_month["dmg_eqp"].isnull())
+                & (dmt_inc_month["coll_with"].notnull())
+            ]
+            .pivot(index="month_year", columns="coll_with", values="total_inc")
+            .reset_index()
+        )
+        fig = create_bar(
+            multi=True,
+            df=df,
+            col_x="month_year",
+            col_y=None,
+            title="Monthly Collisions",
+            subtitle=f"A detailed view of collisions on a monthly {sufix_subtitle}",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+    col1, col2 = st.columns([0.8, 1.2])
+
+    # -------------------------------
+    # Number of Incidents by Collision With by Damaged Equipment
+    # Pie Chart
+    with col1:
+        df = dmt_inc_total[dmt_inc_total["type"] == "coll_eqp"]
+        fig = create_pie(
+            df["label"],
+            df["total_inc"],
+            title="Distribution of Collisions by Implicated Equipment",
+            subtitle=f"Distribution of collisions by implicated equipment {sufix_subtitle}",
+            center_txt="Implicated Equipments",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    # -------------------------------
+    # Number of Damaged Equipment by Collision With by Month
+    # Bar Chart
+    with col2:
+        df = (
+            dmt_inc_month[
+                (dmt_inc_month["inc_type"] == "Collision")
+                & (dmt_inc_month["dmg_eqp"].notnull())
+                & (dmt_inc_month["coll_with"].isnull())
+            ]
+            .pivot(index="month_year", columns="dmg_eqp", values="total_inc")
+            .reset_index()
+        )
+        fig = create_bar(
+            multi=True,
+            df=df,
+            col_x="month_year",
+            col_y=None,
+            title="Monthly Implicated Equipments in Collisions",
+            subtitle=f"A detailed view of implicated equipments in collisions on a monthly {sufix_subtitle}",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+
+with tab5:
     st.title("Sabotage")
+    st.divider()
 
     col1, col2 = st.columns([0.7, 1.3])
 
@@ -672,7 +795,10 @@ with tab4:
         df = (
             dmt_inc_month[
                 (dmt_inc_month["inc_type"] == "Sabotage")
-                & (dmt_inc_month["dmg_eqp"].isnull())
+                & (
+                    dmt_inc_month["dmg_eqp"].isnull()
+                    & dmt_inc_month["coll_with"].isnull()
+                )
             ]
             .pivot(index="month", columns="year", values="total_inc")
             .reset_index()
@@ -682,6 +808,7 @@ with tab4:
             col_x="month",
             title="Monthly Number of Sabotage",
             subtitle=f"Number of Sabotage {sufix_subtitle}",
+            fill=None,
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -694,10 +821,12 @@ with tab4:
             (
                 (dmt_inc_month["inc_type"] == "Sabotage")
                 & (dmt_inc_month["dmg_eqp"].isnull())
+                & (dmt_inc_month["coll_with"].isnull())
             )
             | (
                 (dmt_inc_month["inc_type"].isnull())
                 & (dmt_inc_month["dmg_eqp"].isnull())
+                & (dmt_inc_month["coll_with"].isnull())
             )
         ]
         .fillna("Total")
@@ -714,18 +843,20 @@ with tab4:
     st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
-    col1, col2 = st.columns([0.9, 1.1])
+    col1, col2 = st.columns([0.75, 1.25])
     # -------------------------------
     # Distribution of Sabotage by Partisans Group
     # Pie Chart
     with col1:
+        # randomize
         df = dmt_inc_total[dmt_inc_total["type"] == "prtsn_grp"]
         fig = create_pie(
             df["label"],
             df["total_inc"],
             title="Distribution of Sabotage by Partisans Group",
             subtitle=f"Distribution of sabotage incidents by partisan groups {sufix_subtitle}",
-            center_txt="Partisans Group",
+            center_txt="Sabotage",
+            rotate=105,
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -866,6 +997,7 @@ with tab4:
             dmt_inc_month[
                 (dmt_inc_month["inc_type"] == "Sabotage")
                 & (dmt_inc_month["dmg_eqp"].notnull())
+                & (dmt_inc_month["coll_with"].isnull())
             ]
             .pivot(
                 index="month_year",
@@ -879,33 +1011,87 @@ with tab4:
             df=df,
             col_x="month_year",
             col_y=None,
-            title="Monthly Number of Damaged Equipment",
+            title="Monthly Number of Damaged Equipments",
             subtitle=f"A detailed view of damaged equipment for sabotage incidents on a monthly {sufix_subtitle}",
         )
         st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
+
     # -------------------------------
     # Number of Sabotage by Damaged Equipment by Region
     # Bar Chart
-    df = dmt_inc_region[["region"] + list(lst_sabotage_dmg_eqp)]
+    df = dmt_inc_region[
+        ["region"] + [col for col in dmt_inc_region.columns if col.startswith("sab_")]
+    ]
+    # remove sab_
+    df.columns = df.columns.str.replace("sab_", "")
     df["region"] = pd.Categorical(
         df["region"], categories=df_incd_reg_total["label"], ordered=True
     )
+
+    # remove rows where all 0 except region
+    df = df[(df.drop(columns="region") != 0).any(axis=1)]
+
     df = df.sort_values("region", ascending=False)
+
     fig = create_bar(
         multi=True,
         df=df,
         col_x="region",
         col_y=None,
-        title="Number of Damaged Equipment by Region",
+        title="Number of Damaged Equipments by Region",
         orient="h",
     )
     st.plotly_chart(fig, use_container_width=True)
 
+    st.divider()
+    # -------------------------------
+    # Number of Sabotage by Region
+    # Map
+    st.warning(
+        "Warning: Crimea is represented on this map, it is good to remember that Crimea is Ukrainian, but being occupied the rail network is under the responsibility of the Orcs."
+    )
 
-with tab5:
+    fig = create_map(
+        df_sab_reg_total,
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+
+with tab6:
     st.title("Partisans Arrest")
+
+    import plotly.graph_objects as go
+    import plotly.express as px
+
+    # get data
+    df = pd.DataFrame(
+        {
+            "niv": ["Sabotage", "Sabotage with Arrest", "Total Arrested"],
+            "count": [
+                dmt_inc_total[dmt_inc_total["label"] == "Sabotage"]["total_inc"].values[
+                    0
+                ],
+                dmt_inc_total[dmt_inc_total["label"] == "Sabotage with Arrest"][
+                    "total_inc"
+                ].values[0],
+                dmt_inc_total[dmt_inc_total["label"] == "Total Arrested"][
+                    "total_inc"
+                ].values[0],
+            ],
+        }
+    )
+
+    # create figure
+    fig = create_funnel(
+        df,
+        title="Funnel of Partisans Arrested",
+        subtitle=f"Visual representation of the funnel of partisans arrested for sabotage incidents {sufix_subtitle}",
+    )
+
+    # display figure
+    st.plotly_chart(fig, use_container_width=True)
 
     col1, col2 = st.columns([1, 1])
 
@@ -917,33 +1103,17 @@ with tab5:
         fig = create_pie(
             df["label"],
             df["total_inc"],
-            title="Partisans Arrested by Sabotage Incidents",
-            subtitle=f"Distribution of partisans arrested for sabotage incidents {sufix_subtitle}",
+            title="Number of Sabotage where partisans was arrested",
+            subtitle=f"Distribution of sabotage incidents where one or more partisans was arrested {sufix_subtitle}",
             center_txt="Act of Sabotage",
+            rotate=65,
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    # -------------------------------
-    # Number of Partisans Reward
-    # Pie Chart
-    with col2:
-        df = dmt_inc_total[dmt_inc_total["type"] == "prtsn_rwd"]
-        fig = create_pie(
-            df["label"],
-            df["total_inc"],
-            title="Partisans Reward by Partisans Arrested",
-            subtitle=f"Distribution of partisans rewarded in partisans arrested for sabotage incidents {sufix_subtitle}",
-            center_txt="Partisans Arrested",
-        )
-        st.plotly_chart(fig, use_container_width=True)
-
-    col1, col2 = st.columns([0.8, 1.2])
-
-    st.divider()
     # -------------------------------
     # Number of Applicable Laws
     # Treemap
-    with col1:
+    with col2:
         df = dmt_inc_total[dmt_inc_total["type"] == "app_laws"]
         fig = create_treemap(
             ids=df["label"],
@@ -957,19 +1127,52 @@ with tab5:
         st.plotly_chart(fig, use_container_width=True)
 
     # -------------------------------
+    # Number of Partisans Reward
+    # Pie Chart
+    # with col2:
+    #     df = dmt_inc_total[dmt_inc_total["type"] == "prtsn_rwd"]
+    #     fig = create_pie(
+    #         df["label"],
+    #         df["total_inc"],
+    #         title="Partisans Reward by Partisans Arrested",
+    #         subtitle=f"Distribution of partisans rewarded in partisans arrested for sabotage incidents {sufix_subtitle}",
+    #         center_txt="Partisans Arrested",
+    #     )
+    #     st.plotly_chart(fig, use_container_width=True)
+
+    # col1, col2 = st.columns([0.8, 1.2])
+
+    st.divider()
+    # # -------------------------------
+    # # Number of Applicable Laws
+    # # Treemap
+    # with col1:
+    #     df = dmt_inc_total[dmt_inc_total["type"] == "app_laws"]
+    #     fig = create_treemap(
+    #         ids=df["label"],
+    #         labels=df["label"],
+    #         parents=[""] * len(df),
+    #         values=df["total_inc"],
+    #         title="Distribution of Applicable Laws",
+    #         subtitle=f"Laws of the Criminal Code of the Russian Federation applied to the partisans arrested <br>for sabotage incidents {sufix_subtitle}",
+    #         map_colors=[colors[label] for label in df["label"]],
+    #     )
+    #     st.plotly_chart(fig, use_container_width=True)
+
+    # -------------------------------
     # Number of Applicable Laws by Partisans Reward by Partisans Arrested
     # Sankey
-    with col2:
-        df = dmt_sun_tree[dmt_sun_tree["tab"] == "prtsn_rwd"].reset_index(drop=True)
-        fig = create_sankey(
-            df=df,
-            title="Applicable Laws by Partisans Reward Flow",
-            subtitle=f"Visual representation of how applicable laws are related to the reward of partisans arrested for sabotage incidents {sufix_subtitle}",
-            colx="label",
-            coly="label",
-            df_total=dmt_inc_total,
-        )
-        st.plotly_chart(fig, use_container_width=True)
+    # with col2:
+    #     df = dmt_sun_tree[dmt_sun_tree["tab"] == "prtsn_rwd"].reset_index(drop=True)
+    #     fig = create_sankey(
+    #         df=df,
+    #         title="Applicable Laws by Partisans Reward Flow",
+    #         subtitle=f"Visual representation of how applicable laws are related to the reward of partisans arrested for sabotage incidents {sufix_subtitle}",
+    #         colx="label",
+    #         coly="label",
+    #         df_total=dmt_inc_total,
+    #     )
+    #     st.plotly_chart(fig, use_container_width=True)
 
     # -------------------------------
     # Number of Partisans Age
@@ -1049,49 +1252,99 @@ with tab5:
         st.plotly_chart(fig, use_container_width=True)
 
 
-with tab6:
+with tab7:
     st.title("Informations")
+    st.subheader("Description")
 
     st.markdown(
         """
-        # Methodology
-
-        ## Data Source
-
-        Search of messages, tweets, and news evoking incidents on Russian Railways Network.
-
-        ### Twitter X
-
-        1. Search Tweets (with keywords)
-        2. Filter Tweets (Does it evoke an incident on Russian Railways)
-        3. Extract Data
-        4. Classify Data
-
-        Search on the following accounts:
-
-        - [Igor Sushko](https://x.com/igorsushko)
-        - [Prune60](https://x.com/Prune602)
-        - [Intelschizo](https://x.com/Schizointel)
-        - [LX](https://x.com/LXSummer1)
-        - [NOELreports](https://x.com/NOELreports)
-
-        &nbsp;
-        ### Telegram
-
-        1. Extract history of messages
-        2. Translate messages (Russian to English)
-        3. Filter messages (Does it evoke an incident on Russian Railways)
-        4. Extract Data
-        5. Classify Data
-
-        Search on the following Channels:
-
-        - [Astra News](https://t.me/astrapress)
-        - [SHOT](https://t.me/shot_shot/)
-        
+        This project is a data analysis and visualization tool for incidents that I was able to find on the **Russian Railways Network between 2022 and 2024**, thanks to the information provided by various open sources.
+        It leverages various data sources to provide insights into different types of incidents, including sabotage, collisions, and equipment damage. 
+        \n
+        The application uses [Streamlit](https://streamlit.io/) for the interactive web interface and [Plotly](https://plotly.com/) for creating dynamic charts and visualizations. 
+        Users can explore the data through various tabs, each focusing on a specific aspect of the incidents, such as incident types, damaged equipment, regional distribution and partisans involved.
         """
     )
 
+    st.write("")
+    st.subheader("Classification")
+    st.write(
+        """
+        The incidents are classified into different categories based on the type of incident, the equipment damaged, and the partisans involved. 
+        The classification is done using a combination of text analysis and manual labeling. 
+        
+        A **Sabotage** is classified when sources mention one thing evoking sabotage, some incidents are classified, for example as **derailment** or **fire** beacause source doesn't clearly mention or show sabotage. 
+        """
+    )
+
+    st.divider()
+    st.header("Data Source")
+    st.warning(
+        """Data sources are open and free to use.
+        \nJust, if you use it, please credits. 🫡"""
+    )
+    st.link_button(
+        "Source: Incidents on Russian Railways Network",
+        "https://docs.google.com/spreadsheets/d/1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk/edit?usp=sharing",
+        type="primary",
+        icon="📜",
+    )
+
+    st.divider()
+    st.header("Methodology")
+    st.write(
+        "Search of messages, tweets, and news evoking incidents on Russian Railways Network."
+    )
+
+    st.image("streamlit/utils/images/architecture_project.png")
+    st.divider()
+
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col1:
+
+        st.markdown(
+            """
+            ### Twitter X Accounts
+
+            - [LX](https://x.com/LXSummer1)
+            - [Intelschizo](https://x.com/Schizointel)
+            - [Prune60](https://x.com/Prune602)
+            - [NOELreports](https://x.com/NOELreports)      
+            - [War Translated](https://x.com/wartranslated)      
+            - [Igor Sushko](https://x.com/igorsushko)
+            """
+        )
+
+    with col2:
+        st.markdown(
+            """
+            
+            ### Telegram Channels
+
+            - [Electrichki](https://t.me/electrichki)
+            - [Astra News](https://t.me/astrapress)
+            - [SHOT](https://t.me/shot_shot/)
+            - [Atesh](https://t.me/atesh_ua)
+            - [Legion of Freedom](https://t.me/legionoffreedom)
+            - [VD Legion of Freedom](https://t.me/VDlegionoffreedom)
+            - [Enews112](https://t.me/ENews112)
+            - [TeleRZD](https://t.me/telerzd)
+            - [Mzd Rzd](https://t.me/mzd_rzd)
+            - [Magistral Kuvalda](https://t.me/magistral_kuvalda)
+            - [NSKZD](https://t.me/nskzd)
+            - [News ZSZD](https://t.me/news_zszd)
+            - [D4msk](https://t.me/D4msk)
+            - [Rospartizan](https://t.me/rospartizan)
+            - [Boakom](https://t.me/boakom)
+            - [RDPSRU](https://t.me/rdpsru)
+            - [Ostanovi Vagony 2023](https://t.me/ostanovi_vagony_2023)
+            - [Activatica](https://t.me/activatica)
+            - [Russvolcorps](https://t.me/russvolcorps)
+            """
+        )
+
+    with col3:
+        st.write("")
 
 # HTML footer
 components.html(

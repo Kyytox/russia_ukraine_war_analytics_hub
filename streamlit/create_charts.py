@@ -33,7 +33,7 @@ MONTHS = [
 ]
 
 
-def create_pie(labels, values, title, subtitle="", center_txt=""):
+def create_pie(labels, values, title, subtitle="", center_txt="", rotate=320):
     """
     Create a pie chart
     """
@@ -51,7 +51,8 @@ def create_pie(labels, values, title, subtitle="", center_txt=""):
                 font_size=18,
             ),
             textinfo="label+percent+value",
-            rotation=44,
+            textfont=dict(size=12),
+            rotation=rotate,
             textposition="auto",
         ),
         layout=dict(
@@ -63,8 +64,8 @@ def create_pie(labels, values, title, subtitle="", center_txt=""):
                     text=subtitle,
                 ),
             ),
-            height=HEIGHT - 50,
-            margin=dict(l=90, r=0) if "Group" in center_txt else None,
+            height=HEIGHT - 66,
+            margin=dict(l=0, r=0),
         ),
     )
 
@@ -101,6 +102,8 @@ def create_bar(
         fig: plotly.graph_objects.Figure
 
     """
+    # remove NaN values
+    df = df.dropna(subset=[col_x])
 
     if multi:
         fig = go.Figure(
@@ -241,11 +244,12 @@ def create_line(
         fig.update_xaxes(range=[df[col_x].min() - 0.12, df[col_x].max() + 0.12])
     elif df[col_x].dtype == "datetime64[ns]":
         fig.update_xaxes(
-            tickangle=20,
+            tickangle=25,
             tickformat="%b %Y",
             tickvals=df[col_x],
+            tickfont=dict(size=10),
         )
-    fig.update_yaxes(ticklabelposition="inside")
+    # fig.update_yaxes(ticklabelposition="inside")
 
     return fig
 
@@ -501,6 +505,50 @@ def create_wordcloud(df):
     return fig
 
 
+def create_funnel(df, title, subtitle=""):
+    """
+    Create a funnel chart
+    """
+    fig = go.Figure(
+        go.Funnel(
+            y=df["niv"],
+            x=df["count"],
+            textinfo="label+value",
+            marker=dict(
+                color=[colors[label] for label in df["niv"]],
+                line=dict(width=4, color="rgb(38, 45, 58)"),
+            ),
+            connector=dict(
+                line=dict(color="rgb(38, 45, 58)", width=1),
+                fillcolor="rgb(29, 34, 44)",
+            ),
+            textposition="inside",
+            textfont=dict(color="white", size=16),
+            insidetextanchor="middle",
+            opacity=0.90,
+        )
+    )
+
+    # Update the layout to modify the color between blocks
+    fig.update_traces(connector=dict(line=dict(color="rgba(153, 131, 131, 0.5)")))
+
+    fig.update_layout(
+        title=dict(
+            text=title,
+            pad=dict(l=20),
+            y=0.99,
+            subtitle=dict(
+                text=subtitle,
+            ),
+        ),
+        height=HEIGHT,
+    )
+
+    fig.update_yaxes(visible=False)
+
+    return fig
+
+
 def create_waffle(df):
     """
     Create a waffle chart
@@ -510,12 +558,12 @@ def create_waffle(df):
         title={
             "label": "Number of Partisans Arrested by Age Group",
             "loc": "left",
-            "fontdict": {"fontsize": 12},
+            "fontdict": {"fontsize": 10},
             "color": "white",
             "backgroundcolor": "#0e1117",
             "pad": 5,
         },
-        rows=4,
+        rows=5,
         values=df["total_inc"],
         labels=[
             f"{label} ans: {value:.0f} ({value / df['total_inc'].sum() * 100:.1f}%)"
@@ -523,12 +571,12 @@ def create_waffle(df):
         ],
         icons=["child", "person", "user-tie", "person-cane"],
         colors=[colors[label] for label in df["label"]],
-        font_size=11,
+        font_size=9,
         legend={
             "loc": "lower left",
             "bbox_to_anchor": (0, -0.3),
             "ncol": len(df),
-            "fontsize": 5,
+            "fontsize": 4,
         },
     )
     fig.set_facecolor("#0e1117")
