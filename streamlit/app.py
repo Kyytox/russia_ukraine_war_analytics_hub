@@ -1,6 +1,9 @@
+from bs4 import BeautifulSoup
 import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
+import shutil
+import pathlib
 
 import streamlit_shadcn_ui as ui
 import plotly.graph_objects as go
@@ -22,12 +25,8 @@ from create_charts import (
     create_waffle,
     create_waterfall,
 )
-from bs4 import BeautifulSoup
-import shutil
-import pathlib
-import logging
 
-# st.set_page_config(page_title="Partisans Data Analysis", page_icon="🚂", layout="wide")
+st.set_page_config(page_title="Partisans Data Analysis", page_icon="🚂", layout="wide")
 
 
 def add_analytics_tag():
@@ -48,8 +47,6 @@ def add_analytics_tag():
 
     # Identify html path of streamlit
     index_path = pathlib.Path(st.__file__).parent / "static" / "index.html"
-    st.write(index_path)
-    logging.info(f"editing {index_path}")
     soup = BeautifulSoup(index_path.read_text(), features="html.parser")
     if not soup.find(id=analytics_id):  # if id not found within html file
         bck_index = index_path.with_suffix(".bck")
@@ -64,10 +61,6 @@ def add_analytics_tag():
 
 add_analytics_tag()
 
-# # Include Google Analytics tracking code
-# with open("streamlit/utils/google_analytics.html", "r") as f:
-#     html_code = f.read()
-#     components.html(html_code, height=0)
 
 st.title("🚂 Incidents Russian Railways Analytics 🇷🇺")
 
@@ -149,34 +142,43 @@ st.markdown(
 
 
 # -----------DATAMARTS-----------
-dmt_inc_total = pd.read_parquet(f"{datamarts_path}/inc_total.parquet")
-dmt_inc_year = pd.read_parquet(f"{datamarts_path}/inc_by_year.parquet")
-dmt_inc_month = pd.read_parquet(f"{datamarts_path}/inc_by_month.parquet")
-dmt_inc_cumul_month = pd.read_parquet(f"{datamarts_path}/inc_cumul_by_month.parquet")
-dmt_inc_region = pd.read_parquet(f"{datamarts_path}/inc_by_region.parquet")
-dmt_inc_day_week = pd.read_parquet(f"{datamarts_path}/inc_by_day_week.parquet")
-dmt_inc_dmg_eqp = pd.read_parquet(f"{datamarts_path}/inc_type_dmg_eqp.parquet")
-dmt_sun_tree = pd.read_parquet(f"{datamarts_path}/inc_type_dmg_eqp_sun_tree.parquet")
-dmt_app_laws_prtsn_age = pd.read_parquet(f"{datamarts_path}/app_laws_prtsn_age.parquet")
-dmt_wordcloud = pd.read_parquet(f"{datamarts_path}/wordcloud.parquet")
-dmt_sab_prtsn_grp = pd.read_parquet(f"{datamarts_path}/sabotage_by_prtsn_grp.parquet")
+with st.spinner("Loading Data..."):
+    dmt_inc_total = pd.read_parquet(f"{datamarts_path}/inc_total.parquet")
+    dmt_inc_year = pd.read_parquet(f"{datamarts_path}/inc_by_year.parquet")
+    dmt_inc_month = pd.read_parquet(f"{datamarts_path}/inc_by_month.parquet")
+    dmt_inc_cumul_month = pd.read_parquet(
+        f"{datamarts_path}/inc_cumul_by_month.parquet"
+    )
+    dmt_inc_region = pd.read_parquet(f"{datamarts_path}/inc_by_region.parquet")
+    dmt_inc_day_week = pd.read_parquet(f"{datamarts_path}/inc_by_day_week.parquet")
+    dmt_inc_dmg_eqp = pd.read_parquet(f"{datamarts_path}/inc_type_dmg_eqp.parquet")
+    dmt_sun_tree = pd.read_parquet(
+        f"{datamarts_path}/inc_type_dmg_eqp_sun_tree.parquet"
+    )
+    dmt_app_laws_prtsn_age = pd.read_parquet(
+        f"{datamarts_path}/app_laws_prtsn_age.parquet"
+    )
+    dmt_wordcloud = pd.read_parquet(f"{datamarts_path}/wordcloud.parquet")
+    dmt_sab_prtsn_grp = pd.read_parquet(
+        f"{datamarts_path}/sabotage_by_prtsn_grp.parquet"
+    )
 
-st.write("total")
-st.dataframe(dmt_inc_total)
-st.write("year")
-st.dataframe(dmt_inc_year)
-st.write("month")
-st.dataframe(dmt_inc_month)
-st.write("cumul_month")
-st.dataframe(dmt_inc_cumul_month)
-st.write("day_week")
-st.dataframe(dmt_inc_day_week)
-st.write("region")
-st.dataframe(dmt_inc_region)
-st.write("incident_dmg_eqp")
-st.dataframe(dmt_inc_dmg_eqp)
-st.write("sun_tree")
-st.dataframe(dmt_sun_tree)
+# st.write("total")
+# st.dataframe(dmt_inc_total)
+# st.write("year")
+# st.dataframe(dmt_inc_year)
+# st.write("month")
+# st.dataframe(dmt_inc_month)
+# st.write("cumul_month")
+# st.dataframe(dmt_inc_cumul_month)
+# st.write("day_week")
+# st.dataframe(dmt_inc_day_week)
+# st.write("region")
+# st.dataframe(dmt_inc_region)
+# st.write("incident_dmg_eqp")
+# st.dataframe(dmt_inc_dmg_eqp)
+# st.write("sun_tree")
+# st.dataframe(dmt_sun_tree)
 
 # -----------DATAMARTS-----------
 
@@ -187,8 +189,6 @@ lst_dmg_eqp = dmt_inc_total[dmt_inc_total["type"] == "dmg_eqp"]["label"].unique(
 lst_sabotage_dmg_eqp = dmt_inc_total[dmt_inc_total["type"] == "sabotage"][
     "label"
 ].unique()
-st.write("lst_sabotage_dmg_eqp")
-st.write(lst_sabotage_dmg_eqp)
 list_partisans_group = dmt_inc_total[dmt_inc_total["type"] == "prtsn_grp"][
     "label"
 ].unique()
