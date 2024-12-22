@@ -24,6 +24,8 @@ from create_charts import (
 )
 
 
+st.set_page_config(page_title="Partisans Data Analysis", page_icon="📊", layout="wide")
+
 # add Google Analytics
 components.html(
     """
@@ -42,7 +44,6 @@ components.html(
 )
 
 
-st.set_page_config(page_title="Partisans Data Analysis", page_icon="📊", layout="wide")
 st.title("🚂 Incidents Russian Railways Analytics 🇷🇺")
 
 # update CSS
