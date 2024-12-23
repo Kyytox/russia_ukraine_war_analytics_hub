@@ -118,7 +118,7 @@ def create_bar(
                     ),
                     text=df[incident],
                     showlegend=legend,
-                    hovertemplate="Incidents: %{y}<br>Year: %{x}",
+                    # hovertemplate="%{x} : %{text}",
                     orientation=orient,
                     textposition="auto",
                 )
@@ -134,7 +134,7 @@ def create_bar(
                 marker=dict(
                     color=(
                         [
-                            colors[elem] if elem in colors else "grey"
+                            colors[elem] if elem in colors else "#df9d7a"
                             for elem in df[col_x]
                         ]
                     ),

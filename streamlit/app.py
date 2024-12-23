@@ -69,8 +69,7 @@ st.markdown(
     """<style>
     
     .st-emotion-cache-1jicfl2 {
-        padding-left: 3rem;
-        padding-right: 3rem;
+
         padding-bottom: 3rem;
         padding-top: 3rem;
     }     
@@ -217,7 +216,7 @@ df_dmg_eqp_cumul_month = dmt_inc_cumul_month[dmt_inc_cumul_month["dmg_eqp"].notn
 
 # -----------VARIABLES-----------
 
-sufix_subtitle = "on the Russian Railways Network in 2023 and 2024"
+sufix_subtitle = "on the Russian Railways Network from 2022 to 2024"
 
 # -----------VARIABLES-----------
 
@@ -225,6 +224,13 @@ sufix_subtitle = "on the Russian Railways Network in 2023 and 2024"
 # ------------SIDEBAR------------
 with st.sidebar:
     st.title("Menu")
+
+    st.warning(
+        """
+        App in test and not finalised.\n
+        Best experience on a **desktop** or **laptop**.\n
+        """
+    )
 
     with st.container():
         components.html(
@@ -296,9 +302,19 @@ with tab1:
     col1, col2 = st.columns([0.9, 1.1])
 
     # -------------------------------
+    # Wordcloud
+    with col1:
+        st.write("")
+        st.write("")
+        for i in range(5):
+            st.write("")
+        fig = create_wordcloud(dmt_wordcloud)
+        st.pyplot(fig)
+
+    # -------------------------------
     # Number of Incidents by Year
     # Bar Chart
-    with col1:
+    with col2:
         df = (
             dmt_inc_year[dmt_inc_year["label"] == "Total"]
             .drop(columns="type")
@@ -314,14 +330,6 @@ with tab1:
         )
 
         st.plotly_chart(fig, use_container_width=True)
-
-    # -------------------------------
-    # Wordcloud
-    with col2:
-        for i in range(5):
-            st.write("")
-        fig = create_wordcloud(dmt_wordcloud)
-        st.pyplot(fig)
 
     st.divider()
     col1, col2 = st.columns([1, 1])
@@ -712,7 +720,9 @@ with tab3:
     df["region"] = pd.Categorical(
         df["region"], categories=df_incd_reg_total["label"], ordered=True
     )
-    df = df.sort_values("region", ascending=False)
+
+    df["total"] = df.drop(columns="region").sum(axis=1)
+    df = df.sort_values("total", ascending=True).drop(columns="total")
     fig = create_bar(
         multi=True,
         df=df,
@@ -850,7 +860,7 @@ with tab5:
         fig = create_line(
             df,
             col_x="month",
-            title="Monthly Number of Sabotage",
+            title="Monthly Number of Sabotage by Year",
             subtitle=f"Number of Sabotage {sufix_subtitle}",
             fill=None,
         )
@@ -1137,6 +1147,7 @@ with tab6:
     # display figure
     st.plotly_chart(fig, use_container_width=True)
 
+    st.divider()
     col1, col2 = st.columns([1, 1])
 
     # -------------------------------
@@ -1265,6 +1276,7 @@ with tab6:
         )
         st.plotly_chart(fig, use_container_width=True)
 
+    col1, col2 = st.columns([1, 1])
     # -------------------------------
     # Number of Applicable Laws by Partisans Age
     # Heatmap
@@ -1391,22 +1403,22 @@ with tab7:
         st.write("")
 
 # HTML footer
-components.html(
-    """
-    <footer style="color: #ffffff; align-items: center; display: flex; justify-content: flex-end; padding-right: 10px; padding-top: 50px;
-    ">
-        <a href="https://x.com/Kytox_" target="_blank" style="display: flex; align-items: center; color: #ffffff; text-decoration: none; font-size: 14px;">
-        
-        <img src="https://pbs.twimg.com/profile_images/1471129038022455299/Zn05GePO_400x400.jpg"
-            alt="Kytox"
-            style="border-radius: 50%; margin-right: 10px; width: 30px;"
-        />
-        <p>Developed by: Kytox</p>
-        </a>
-        
-    </footer>
-    """,
-    height=100,
-)
+# components.html(
+#     """
+#     <footer style="color: #ffffff; align-items: center; display: flex; justify-content: flex-end; padding-right: 10px; padding-top: 50px;
+#     ">
+#         <a href="https://x.com/Kytox_" target="_blank" style="display: flex; align-items: center; color: #ffffff; text-decoration: none; font-size: 14px;">
+
+#         <img src="https://pbs.twimg.com/profile_images/1471129038022455299/Zn05GePO_400x400.jpg"
+#             alt="Kytox"
+#             style="border-radius: 50%; margin-right: 10px; width: 30px;"
+#         />
+#         <p>Developed by: Kytox</p>
+#         </a>
+
+#     </footer>
+#     """,
+#     height=100,
+# )
 
 # return 301 http://incidentsrussianrailways.com$request_uri;
