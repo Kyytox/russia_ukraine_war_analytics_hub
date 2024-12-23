@@ -312,6 +312,7 @@ def create_sunburst(ids, labels, parents, values, title, subtitle="", map_colors
                 colors=map_colors,
             ),
             hovertemplate="Incident: %{label}<br>Number Incidents: %{value}",
+            textinfo="label+percent parent+value",
         ),
         layout=dict(
             title=dict(
