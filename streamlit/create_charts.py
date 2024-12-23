@@ -181,7 +181,7 @@ def create_bar(
 
     if df[col_x].dtype == "datetime64[ns]":
         fig.update_xaxes(
-            tickangle=25,
+            tickangle=35,
             tickformat="%b %Y",
             tickvals=df[col_x],
             ticktext=[elem.strftime("%b %Y") for elem in df[col_x]],
