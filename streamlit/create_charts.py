@@ -461,7 +461,7 @@ def create_map(df_region):
             locationmode="geojson-id",
             hoverinfo="z+text",
             colorscale="thermal",
-            colorbar_title="Number Incidents",
+            colorbar_title="Incidents",
             marker_line_color="darkgray",
             marker_line_width=0.5,
         ),
