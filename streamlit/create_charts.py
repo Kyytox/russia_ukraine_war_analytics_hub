@@ -134,7 +134,7 @@ def create_bar(
                 marker=dict(
                     color=(
                         [
-                            colors[elem] if elem in colors else "#df9d7a"
+                            colors[elem] if elem in colors else "#774428"
                             for elem in df[col_x]
                         ]
                     ),
