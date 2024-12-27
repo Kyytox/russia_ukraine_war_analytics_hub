@@ -126,6 +126,18 @@ def create_bar(
             ],
         )
     else:
+
+        def gest_colors(elem):
+            if elem in colors:
+                return colors[elem]
+            else:
+                if "2022" in str(elem):
+                    return colors["2022"]
+                elif "2023" in str(elem):
+                    return colors["2023"]
+                elif "2024" in str(elem):
+                    return colors["2024"]
+
         fig = go.Figure(
             go.Bar(
                 x=df[col_x],
@@ -134,7 +146,8 @@ def create_bar(
                 marker=dict(
                     color=(
                         [
-                            colors[elem] if elem in colors else "#774428"
+                            # colors[elem] if elem in colors else "#774428"
+                            gest_colors(elem)
                             for elem in df[col_x]
                         ]
                     ),
