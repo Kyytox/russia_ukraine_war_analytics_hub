@@ -4,7 +4,7 @@ from telethon import TelegramClient
 from prefect import flow, task
 
 # Variables
-from core.utils.variables import path_creds_api
+from core.config.paths import PATH_CREDS_API
 
 
 @task(name="Telegram connect")
@@ -16,7 +16,7 @@ def telegram_connect():
         - client: TelegramClient
     """
     # get credentials
-    with open(path_creds_api) as file:
+    with open(PATH_CREDS_API) as file:
         credentials = yaml.safe_load(file)
 
     # Connect to Telegram

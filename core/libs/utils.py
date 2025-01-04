@@ -2,11 +2,12 @@ import os
 import re
 import json
 import pandas as pd
-from prefect import flow, task
+from prefect import task
 from prefect.runtime import task_run
 
 # Variables
-from core.utils.variables import list_accounts_telegram, path_json_ru_region
+from core.config.paths import PATH_JSON_RU_REGION
+from core.config.variables import LIST_ACCOUNTS_TELEGRAM
 
 
 @task(name="Get telegram accounts", task_run_name="Get telegram accounts")
@@ -28,7 +29,7 @@ def get_telegram_accounts(path: str) -> list:
     ]
 
     if not list_accounts:
-        list_accounts = list_accounts_telegram
+        list_accounts = LIST_ACCOUNTS_TELEGRAM
 
     print(f"Accounts: {list_accounts}")
 
@@ -130,9 +131,7 @@ def keep_data_to_process(
     if df_to_filter.empty:
         df = df_source
     else:
-        df = df_source[
-            ~df_source["id_message"].isin(df_to_filter["id_message"])
-        ].reset_index(drop=True)
+        df = df_source[~df_source["ID"].isin(df_to_filter["ID"])].reset_index(drop=True)
 
     return df
 
@@ -160,7 +159,7 @@ def concat_old_new_df(
         pd.concat([df_raw, df_new])
         .drop_duplicates(subset=cols if len(cols) > 0 else None)
         .reset_index(drop=True)
-        .sort_values("date")
+        .sort_values("date" if "date" in df_new.columns else [])
     )
     return df
 
@@ -172,7 +171,7 @@ def get_regions_geojson():
     """
 
     # read file json
-    with open(path_json_ru_region) as file:
+    with open(PATH_JSON_RU_REGION) as file:
         data = json.load(file)
 
     # get id and name

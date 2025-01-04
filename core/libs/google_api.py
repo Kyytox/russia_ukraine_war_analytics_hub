@@ -10,9 +10,9 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # Variables
-from core.utils.variables import (
-    path_creds_google_sheet,
-    path_token_google_sheet,
+from core.config.paths import (
+    PATH_CREDS_GOOGLE_SHEET,
+    PATH_TOKEN_GOOGLE_SHEET,
 )
 
 
@@ -31,8 +31,8 @@ def connect_google_sheet_api():
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists(path_token_google_sheet):
-        creds = Credentials.from_authorized_user_file(path_token_google_sheet, SCOPES)
+    if os.path.exists(PATH_TOKEN_GOOGLE_SHEET):
+        creds = Credentials.from_authorized_user_file(PATH_TOKEN_GOOGLE_SHEET, SCOPES)
 
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -41,12 +41,12 @@ def connect_google_sheet_api():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                path_creds_google_sheet, SCOPES
+                PATH_CREDS_GOOGLE_SHEET, SCOPES
             )
             creds = flow.run_local_server(port=0)
 
         # Save the credentials for the next run
-        with open(path_token_google_sheet, "w") as token:
+        with open(PATH_TOKEN_GOOGLE_SHEET, "w") as token:
             token.write(creds.to_json())
 
     # connect to google sheet
