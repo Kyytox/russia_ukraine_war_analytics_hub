@@ -1,0 +1,150 @@
+# list with combinations of complete words to search in the text
+list_words_set_arrest = [
+    {"anti", "war"},
+    #
+    {"arrest", "vkontakte"},
+    {"arrest", "vk"},
+    {"arrest", "telegram"},
+    {"arrest", "facebook"},
+    {"arrest", "twitter"},
+    {"arrest", "instagram"},
+    {"arrest", "youTube"},
+    {"arrest", "tikTok"},
+    {"arrest", "whatsApp"},
+    {"arrest", "linkedIn"},
+    {"arrest", "odnoklassniki"},
+    {"arrest", "ok.ru"},
+    {"arrest", "mail.ru"},
+    {"arrest", "network"},
+]
+
+# list with combinations of substrings to search in the text
+list_substr_set_arrest = [
+    {"activist", "terrorist"},
+    {"activist", "criminal"},
+    {"activist", "accuse"},
+    {"court", "sentence"},
+    #
+    {"criminal", "case"},
+    {"criminal", "open"},
+    {"criminal", "code"},
+    {"criminal", "year"},
+    #
+    {"against", "case"},
+    {"against", "open"},
+    #
+    {"detain", "man"},
+    {"detain", "woman"},
+    {"detain", "activist"},
+    {"detain", "unknown"},
+    {"detain", "philosopher"},
+    {"detain", "poet"},
+    {"detain", "year"},
+    #
+    {"arrest", "man"},
+    {"arrest", "woman"},
+    {"arrest", "unknown"},
+    {"arrest", "philosopher"},
+    {"arrest", "poet"},
+    {"arrest", "year"},
+    #
+    {"article", "167"},
+    {"article", "under"},
+    {"article", "205"},
+    {"article", "207"},
+    {"article", "208"},
+    {"article", "275"},
+    {"article", "281"},
+    #
+    {"support", "feminism"},
+    {"support", "anti-war"},
+    {"rally", "anti-war"},
+    #
+]
+
+
+# list with expressions to search in the text
+list_expression_arrest = [
+    "incitement to terrorism",
+    "article 167",
+    "article 205",
+    "article 205.1",
+    "article 205.2",
+    "article 205.3",
+    "article 205.5",
+    "article 205-205.5",
+    "article 207",
+    "article 207.3",
+    "article 208",
+    "article 267",
+    "article 275",
+    "article 275.1",
+    "article 281",
+    #
+    "criminal code",
+    "criminal code of the russian federation",
+    #
+    "social network",
+    "vkontakte",
+    "vk",
+    "telegram",
+    "facebook",
+    "twitter",
+    "instagram",
+    "youTube",
+    "tikTok",
+    "whatsApp",
+    "linkedIn",
+    "odnoklassniki",
+    "ok.ru",
+    "mail.ru",
+    #
+    "anti-war",
+    "anti-Putin",
+]
+
+# List with individual words to search in the text
+list_word_arrest = [
+    "167",
+    "205",
+    "205.1",
+    "205.2",
+    "205.3",
+    "205.5",
+    "205-205.5",
+    "207",
+    "207.3",
+    "208",
+    "267",
+    "275",
+    "275.1",
+    "281",
+    #
+]
+
+
+DICT_LAWS_arrest = {
+    "167 - Intentional Destruction or Damage of Property": [
+        "article 167",
+        "167.",
+        "167 of the Criminal",
+    ],
+    "281 - Sabotage": ["article 281", "281.", "281 of the Criminal"],
+    "205 - Terrorism": ["article 205", "205.1", "205.", "205 of the Criminal"],
+    "275 - Treason": ["article 275", "275.", "275 of the Criminal"],
+    "205.2 - Public Promotion or Justification of Terrorism": [
+        "article 205.2",
+        "205.2",
+        "205.2 of the Criminal",
+    ],
+    "207 - Knowingly Making a False Threat of Terrorism": [
+        "article 207",
+        "207.",
+        "207 of the Criminal",
+    ],
+    "208 - Organisation or Participation of an Illegal Armed Formation": [
+        "article 208",
+        "208.",
+        "208 of the Criminal",
+    ],
+}
