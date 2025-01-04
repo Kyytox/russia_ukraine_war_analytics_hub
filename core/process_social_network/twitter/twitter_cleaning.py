@@ -11,9 +11,9 @@ import pandas as pd
 from prefect import flow, task
 
 # Variables
-from core.utils.variables import (
-    path_twitter_raw,
-    path_twitter_clean,
+from core.config.paths import (
+    PATH_TWITTER_RAW,
+    PATH_TWITTER_CLEAN,
 )
 
 # Functions
@@ -57,10 +57,10 @@ def job_twitter_cleaning():
     """
 
     # get raw data
-    df_raw = read_data(path_twitter_raw, "twitter")
+    df_raw = read_data(PATH_TWITTER_RAW, "twitter")
 
     # get clean data
-    df_clean = read_data(path_twitter_clean, "twitter")
+    df_clean = read_data(PATH_TWITTER_CLEAN, "twitter")
 
     # keep data to process
     df = keep_data_to_process(df_raw, df_clean)
@@ -72,7 +72,7 @@ def job_twitter_cleaning():
     df["text_original"] = df["text_original"].apply(format_clean_text)
 
     # concat data
-    df = concat_old_new_df(df_clean, df, cols=["id_message"])
+    df = concat_old_new_df(df_clean, df, cols=["ID"])
 
     # save data
-    save_data(path_twitter_clean, "twitter", df)
+    save_data(PATH_TWITTER_CLEAN, "twitter", df)

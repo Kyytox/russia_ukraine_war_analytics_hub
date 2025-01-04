@@ -9,9 +9,9 @@ from prefect import flow, task
 from core.libs.utils import read_data, save_data
 
 # Variables
-from core.utils.variables import (
-    path_twitter_clean,
-    path_twitter_filter,
+from core.config.paths import (
+    PATH_TWITTER_CLEAN,
+    PATH_TWITTER_FILTER,
 )
 
 
@@ -46,10 +46,10 @@ def job_twitter_filter():
     """
 
     # read data from clean
-    df_to_filter = read_data(path_twitter_clean, "twitter")
+    df_to_filter = read_data(PATH_TWITTER_CLEAN, "twitter")
 
     # apply filter
     df = filter_incidents_railway(df_to_filter)
 
     # save data
-    save_data(path_twitter_filter, "incidents_railway", df=df)
+    save_data(PATH_TWITTER_FILTER, "incidents_railway", df=df)

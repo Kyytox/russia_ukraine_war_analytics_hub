@@ -5,13 +5,16 @@ from prefect import flow, task
 from core.libs.utils import get_telegram_accounts, read_data, save_data
 
 # Variables
-from core.utils.variables import (
-    path_telegram_transform,
-    path_telegram_filter,
+from core.config.paths import (
+    PATH_TELEGRAM_TRANSFORM,
+    PATH_TELEGRAM_FILTER,
+)
+
+from core.utils.terms_filter.terms_incidents_railway import (
     list_words_set_railway,
     list_substr_set_railway,
-    list_en_expression_railways,
-    list_en_words_railways,
+    list_expression_railways,
+    list_word_railways,
 )
 
 
@@ -59,8 +62,8 @@ def filter_incidents_railway(df):
     dict_filters = [
         {"list_terms": list_words_set_railway, "id_filter": 1},
         {"list_terms": list_substr_set_railway, "id_filter": 2},
-        {"list_terms": list_en_expression_railways, "id_filter": 3},
-        {"list_terms": list_en_words_railways, "id_filter": 3},
+        {"list_terms": list_expression_railways, "id_filter": 3},
+        {"list_terms": list_word_railways, "id_filter": 3},
     ]
 
     # add filter_railway column
@@ -97,7 +100,7 @@ def regroup_data(list_accounts):
     """
 
     # group data
-    df_list = [read_data(path_telegram_transform, account) for account in list_accounts]
+    df_list = [read_data(PATH_TELEGRAM_TRANSFORM, account) for account in list_accounts]
 
     # concat data
     df_to_filter = pd.concat(df_list).sort_values("date").reset_index(drop=True)
@@ -112,7 +115,7 @@ def job_telegram_filter():
     """
 
     # get list accounts
-    list_accounts = get_telegram_accounts(path_telegram_transform)
+    list_accounts = get_telegram_accounts(PATH_TELEGRAM_TRANSFORM)
 
     # remove belzhd_live
     list_accounts.remove("belzhd_live")
@@ -124,4 +127,4 @@ def job_telegram_filter():
     df = filter_incidents_railway(df_to_filter)
 
     # save data
-    save_data(path_telegram_filter, "incidents_railway", df=df)
+    save_data(PATH_TELEGRAM_FILTER, "incidents_railway", df=df)

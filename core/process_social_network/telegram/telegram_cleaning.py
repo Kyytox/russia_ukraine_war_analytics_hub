@@ -13,10 +13,12 @@ import pandas as pd
 from prefect import flow, task
 
 # Variables
-from core.utils.variables import (
-    path_telegram_raw,
-    path_telegram_clean,
-    dict_utc,
+from core.config.paths import (
+    PATH_TELEGRAM_RAW,
+    PATH_TELEGRAM_CLEAN,
+)
+from core.config.variables import (
+    DICT_UTC,
 )
 
 # Functions
@@ -44,7 +46,7 @@ def format_date(df, account):
     """
 
     # get utc for account
-    utc = dict_utc[account]
+    utc = DICT_UTC[account]
 
     # add utc to date
     df["date"] = df["date"] + datetime.timedelta(hours=utc)
@@ -96,10 +98,10 @@ def process_clean(account):
         None
     """
     # read raw data
-    df_raw = read_data(path_telegram_raw, account)
+    df_raw = read_data(PATH_TELEGRAM_RAW, account)
 
     # read clean data
-    df_clean = read_data(path_telegram_clean, account)
+    df_clean = read_data(PATH_TELEGRAM_CLEAN, account)
 
     # keep data not in clean data
     df = keep_data_to_process(df_raw, df_clean)
@@ -112,10 +114,10 @@ def process_clean(account):
     df = clean_text_original(df)
 
     # concat data
-    df = concat_old_new_df(df_raw=df_clean, df_new=df, cols=["id_message"])
+    df = concat_old_new_df(df_raw=df_clean, df_new=df, cols=["ID"])
 
     # save data
-    save_data(path_telegram_clean, account, df)
+    save_data(PATH_TELEGRAM_CLEAN, account, df)
 
 
 @flow(name="Flow Telegram Cleaning", log_prints=True)
@@ -125,7 +127,7 @@ def job_telegram_cleaning():
     """
 
     # get list of accounts
-    list_accounts = get_telegram_accounts(path_telegram_raw)
+    list_accounts = get_telegram_accounts(PATH_TELEGRAM_RAW)
 
     for account in list_accounts:
         print("########################################")

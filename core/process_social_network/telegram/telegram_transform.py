@@ -18,11 +18,13 @@ from prefect import flow, task
 import ollama
 
 # Variables
-from core.utils.variables import (
-    path_telegram_clean,
-    path_telegram_transform,
-    path_script_service_ollama,
-    size_to_translate,
+from core.config.paths import (
+    PATH_TELEGRAM_CLEAN,
+    PATH_TELEGRAM_TRANSFORM,
+    PATH_SCRIPT_SERVICE_OLLAMA,
+)
+from core.config.variables import (
+    SIZE_TO_TRANSLATE,
 )
 
 # Functions
@@ -60,7 +62,7 @@ def translate_data(df_source):
     print(f"Size sorted: {df_source}")
 
     # keep only x messages
-    df = df_source.loc[:size_to_translate].copy()
+    df = df_source.loc[:SIZE_TO_TRANSLATE].copy()
     print(f"Size to translate: {df.shape}")
 
     # translate text
@@ -112,8 +114,8 @@ def remove_poorly_translated_data(df):
     if df_poor_trans.shape[0] > 10:
         df_poor_trans = df_poor_trans.head(50)
 
-        # remove data according to id_message
-        df = df[~df["id_message"].isin(df_poor_trans["id_message"])]
+        # remove data according to ID
+        df = df[~df["ID"].isin(df_poor_trans["ID"])]
         print(f"Size after remove poorly translated data: {df.shape}")
 
     return df
@@ -135,10 +137,10 @@ def process_transform(account):
     """
 
     # read data clean
-    df_source = read_data(path_telegram_clean, account)
+    df_source = read_data(PATH_TELEGRAM_CLEAN, account)
 
     # read data transform
-    df_transform = read_data(path_telegram_transform, account)
+    df_transform = read_data(PATH_TELEGRAM_TRANSFORM, account)
 
     # remove poorly translated data
     df_transform = remove_poorly_translated_data(df_transform)
@@ -162,7 +164,7 @@ def process_transform(account):
     df = concat_old_new_df(df_raw=df_transform, df_new=df, cols=[])
 
     # save data
-    save_data(path_telegram_transform, account, df)
+    save_data(PATH_TELEGRAM_TRANSFORM, account, df)
 
 
 @flow(
@@ -175,10 +177,10 @@ def job_telegram_transform():
     """
 
     # start service ollama
-    os.system(f"sh {path_script_service_ollama}")
+    os.system(f"sh {PATH_SCRIPT_SERVICE_OLLAMA}")
 
     # get list of accounts
-    list_accounts = get_telegram_accounts(path_telegram_clean)
+    list_accounts = get_telegram_accounts(PATH_TELEGRAM_CLEAN)
 
     # loop over accounts
     for account in list_accounts:

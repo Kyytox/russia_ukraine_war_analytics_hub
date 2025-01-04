@@ -10,7 +10,7 @@ from prefect import flow, task
 
 
 # Variables
-from core.utils.variables import path_twitter_raw, path_creds_api
+from core.config.paths import PATH_TWITTER_RAW, PATH_CREDS_API
 
 # Functions
 # from core.libs.twitter_api import twitter_connect
@@ -27,7 +27,7 @@ def get_credentials():
     """
     # get credentials
     print(os.getcwd())
-    with open(path_creds_api) as file:
+    with open(PATH_CREDS_API) as file:
         credentials = yaml.safe_load(file)
 
     # get all 'name'
@@ -185,6 +185,7 @@ async def search_messages(df_raw):
                     print(f"user: {tweet.user.screen_name} id: {tweet.id}")
                     data.append(
                         {
+                            "ID": f"{tweet.user.screen_name}_{tweet.id}",
                             "date": tweet.created_at,
                             "account": tweet.user.screen_name,
                             "id_message": tweet.id,
@@ -257,13 +258,13 @@ async def search_messages(df_raw):
 #     """
 
 #     # get messages already extracted
-#     df_raw = read_data(path_twitter_raw, "twitter")
+#     df_raw = read_data(PATH_TWITTER_RAW, "twitter")
 
 #     # get messages
 #     df = asyncio.run(search_messages())
 
 #     # save data
-#     # save_data(path_twitter_raw, "twitter", df)
+#     # save_data(PATH_TWITTER_RAW, "twitter", df)
 
 
 @flow(name="Job Twitter extract", log_prints=True)
@@ -272,13 +273,13 @@ def job_twitter_extract():
     Job Twitter extract
     """
     # get messages already extracted
-    df_raw = read_data(path_twitter_raw, "twitter")
+    df_raw = read_data(PATH_TWITTER_RAW, "twitter")
 
     # get messages
     df = asyncio.run(search_messages(df_raw))
 
     # concat data
-    df = concat_old_new_df(df_raw, df, cols=["id_message"])
+    df = concat_old_new_df(df_raw, df, cols=["ID"])
 
     # save data
-    save_data(path_twitter_raw, "twitter", df)
+    save_data(PATH_TWITTER_RAW, "twitter", df)

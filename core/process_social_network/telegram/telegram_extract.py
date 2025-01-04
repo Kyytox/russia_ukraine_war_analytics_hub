@@ -16,7 +16,8 @@ from prefect import flow, task
 from prefect.cache_policies import NONE
 
 # Variables
-from core.utils.variables import path_telegram_raw, list_accounts_telegram
+from core.config.paths import PATH_TELEGRAM_RAW
+from core.config.variables import LIST_ACCOUNTS_TELEGRAM
 
 # Functions
 from core.libs.telegram_api import telegram_connect
@@ -64,6 +65,7 @@ async def get_messages(client, account, df_raw):
         if message.text != "":
             data.append(
                 {
+                    "ID": f"{account}_{message.id}",
                     "account": account,
                     "id_message": message.id,
                     "date": message.date,
@@ -85,17 +87,17 @@ def process_extract(client, account):
     """
 
     # get raw data
-    df_raw = read_data(path_telegram_raw, account)
+    df_raw = read_data(PATH_TELEGRAM_RAW, account)
 
     # get messages
     with client:
         df = client.loop.run_until_complete(get_messages(client, account, df_raw))
 
     # concat data
-    df = concat_old_new_df(df_raw, df, cols=["id_message"])
+    df = concat_old_new_df(df_raw, df, cols=["ID"])
 
     # save data
-    save_data(path_telegram_raw, account, df=df)
+    save_data(PATH_TELEGRAM_RAW, account, df=df)
 
 
 @flow(
@@ -110,8 +112,8 @@ def job_telegram_extract():
     client = telegram_connect()
 
     # get list of accounts
-    # list_accounts = get_telegram_accounts(path_telegram_raw)
-    list_accounts = list_accounts_telegram
+    # list_accounts = get_telegram_accounts(PATH_TELEGRAM_RAW)
+    list_accounts = LIST_ACCOUNTS_TELEGRAM
 
     # extract messages for each account
     for account in list_accounts:
