@@ -6,11 +6,7 @@
 
 from prefect import flow
 
-# Variables
-from core.utils.variables import path_dw_sources
-
 # Functions
-from core.libs.utils import save_data
 from core.libs.google_api import (
     connect_google_sheet_api,
 )

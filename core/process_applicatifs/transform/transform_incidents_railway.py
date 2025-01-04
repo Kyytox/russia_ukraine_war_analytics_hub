@@ -16,7 +16,7 @@ from prefect.states import Failed
 
 
 # Variables
-from core.utils.variables import path_dw_sources, path_dw_transform
+from core.config.paths import PATH_DW_SOURCES, PATH_DW_TRANSFORM
 
 # Functions
 from core.libs.utils import read_data, save_data, get_regions_geojson
@@ -31,10 +31,9 @@ dict_cols = {
     "Incident Type": "inc_type",
     "Collision With": "coll_with",
     "Partisans Group": "prtsn_grp",
-    "Partisans Reward": "prtsn_rwd",
-    "Partisans Age": "prtsn_age",
     "Partisans Arrest": "prtsn_arr",
     "Partisans Names": "prtsn_names",
+    "Partisans Age": "prtsn_age",
     "Applicable Laws": "app_laws",
     "Source Links": "source_links",
 }
@@ -49,6 +48,7 @@ def rename_cols(df):
     # remove cols
     df = df.drop(columns=["Comment"])
     df = df.drop(columns=["Exact Date"])
+    df = df.drop(columns=["Sabotage Success"])
 
     # remove spaces
     df.columns = df.columns.str.strip()
@@ -67,10 +67,7 @@ def update_type(df):
 
     df["date"] = pd.to_datetime(df["date"])
 
-    print(df.dtypes)
-
     # str to boolean
-    df["prtsn_rwd"] = df["prtsn_rwd"].replace("0", "").astype("bool")
     df["prtsn_arr"] = df["prtsn_arr"].replace("0", "").astype("bool")
 
     return df
@@ -90,6 +87,9 @@ def format_values(df):
         df[col] = df[col].str.strip()
         df[col] = df[col].str.rstrip(".")
 
+    # Fill NaN values
+    df = df.fillna(np.nan)
+
     return df
 
 
@@ -100,8 +100,8 @@ def add_cols(df):
     """
 
     # add Month and Year
-    df["month"] = df["date"].dt.month
-    df["year"] = df["date"].dt.year
+    df["month"] = df["date"].dt.month.astype(int)
+    df["year"] = df["date"].dt.year.astype(int)
 
     # get region from json file
     dict_region = get_regions_geojson()
@@ -119,7 +119,7 @@ def job_transform_incident_railway():
     """
 
     # get data from source
-    df = read_data(path_dw_sources, "incidents_railway")
+    df = read_data(PATH_DW_SOURCES, "incidents_railway")
     if df.empty:
         return Failed(message="Data is empty")
 
@@ -136,4 +136,4 @@ def job_transform_incident_railway():
     df = add_cols(df)
 
     # save data
-    save_data(path_dw_transform, "incidents_railway", df=df)
+    save_data(PATH_DW_TRANSFORM, "incidents_railway", df=df)
