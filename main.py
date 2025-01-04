@@ -5,21 +5,32 @@ import time
 from prefect import flow
 
 # Process Telegram
-from core.process_social_network.extract.telegram_extract import job_telegram_extract
-from core.process_social_network.cleaning.telegram_cleaning import job_telegram_cleaning
-from core.process_social_network.transform.telegram_transform import (
+from core.process_social_network.telegram.telegram_extract import job_telegram_extract
+from core.process_social_network.telegram.telegram_cleaning import job_telegram_cleaning
+from core.process_social_network.telegram.telegram_transform import (
     job_telegram_transform,
 )
-from core.process_social_network.filter.telegram_filter import job_telegram_filter
+from core.process_social_network.telegram.telegram_filter import job_telegram_filter
 
 # Process Twitter
-from core.process_social_network.extract.twitter_extract import job_twitter_extract
-from core.process_social_network.cleaning.twitter_cleaning import job_twitter_cleaning
-from core.process_social_network.filter.twitter_filter import job_twitter_filter
+from core.process_social_network.twitter.twitter_extract import job_twitter_extract
+from core.process_social_network.twitter.twitter_cleaning import job_twitter_cleaning
+from core.process_social_network.twitter.twitter_filter import job_twitter_filter
 
 # Filter to classify
+from core.process_social_network.filter.social_media_filter import (
+    job_social_media_filter,
+)
+from core.process_social_network.pre_classify.social_media_pre_classify import (
+    job_social_media_pre_classify,
+)
 from core.process_social_network.classify.filter_to_classify import (
     job_filter_to_classify,
+)
+
+# Classify to Excel Final
+from core.process_social_network.excel_final.classify_to_excel_final import (
+    job_classify_to_excel_final,
 )
 
 # Process Applicatifs
@@ -38,13 +49,13 @@ def process_telegram():
     """
     Process Telegram data
     """
-    # job_telegram_extract()
+    job_telegram_extract()
 
-    # job_telegram_cleaning()
+    job_telegram_cleaning()
 
     job_telegram_transform()
 
-    # job_telegram_filter()
+    job_telegram_filter()
 
 
 @flow(name="PROCESS TWITTER")
@@ -52,11 +63,19 @@ def process_twitter():
     """
     Process Twitter data
     """
-    # job_twitter_extract()
+    job_twitter_extract()
 
-    # job_twitter_cleaning()
+    job_twitter_cleaning()
 
     job_twitter_filter()
+
+
+def process_filter_classify():
+    """
+    Process Filter to Classify
+    """
+
+    job_social_media_filter()
 
 
 def process_applicatifs():
@@ -64,9 +83,9 @@ def process_applicatifs():
     Process Applicatifs data
     """
 
-    # job_extract_incident_railway()
+    job_extract_incident_railway()
 
-    # job_transform_incident_railway()
+    job_transform_incident_railway()
 
     job_datamarts_incidents_railway()
 
@@ -78,24 +97,35 @@ def main():
         print("List of parameters:")
         print("tg")
         print("tw")
+        print("filt")
+        print("pre")
+        print("class")
+        print("app")
 
     if len(sys.argv) > 1:
         # get parameters stdout
-        param = sys.argv[1]
+        params = sys.argv[1:]
 
-        if param == "tg":
-            process_telegram()
-        elif param == "tw":
-            process_twitter()
-        elif param == "app":
-            process_applicatifs()
-        else:
-            print("Invalid parameter")
-            print("List of parameters:")
-            print("tg")
-            print("tw")
-
-    # job_filter_to_classify()
+        for param in params:
+            if param == "tg":
+                process_telegram()
+            elif param == "tw":
+                process_twitter()
+            elif param == "filt":
+                process_filter_classify()
+            elif param == "pre":
+                job_social_media_pre_classify()
+            elif param == "class":
+                job_filter_to_classify()
+            elif param == "excel":
+                job_classify_to_excel_final()
+            elif param == "app":
+                process_applicatifs()
+            else:
+                print("Invalid parameter")
+                print("List of parameters:")
+                print("tg")
+                print("tw")
 
 
 if __name__ == "__main__":
