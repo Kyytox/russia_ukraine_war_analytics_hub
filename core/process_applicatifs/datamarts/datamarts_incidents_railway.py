@@ -7,9 +7,9 @@ from prefect.states import Failed
 
 
 # Variables
-from core.utils.variables import (
-    path_dw_transform,
-    path_dm_incidents_railway,
+from core.config.paths import (
+    PATH_DW_TRANSFORM,
+    PATH_DM_INCIDENTS_RAILWAY,
 )
 
 # Utils
@@ -17,23 +17,30 @@ from core.libs.utils import read_data, save_data
 
 
 @task(name="Count incidents by column")
-def count_incidents_by_column(df, column, incident_type_filter=None):
+def count_incidents_by_column(df, column, type_values):
     """
     Count incidents by a specific column.
 
     Parameters:
     df (pd.DataFrame): The input DataFrame.
     column (str): The column to count incidents by.
-    incident_type_filter (str, optional): Filter the DataFrame by this incident type before counting.
+    type_values: type of values count
 
     Returns:
     pd.DataFrame: A DataFrame with the counts.
     """
     df_tmp = df[column].value_counts().reset_index()
     df_tmp.columns = ["label", "total_inc"]
-    df_tmp["type"] = column
+    df_tmp["type"] = type_values
     df_tmp["label"] = df_tmp["label"].astype(str)
     return df_tmp
+
+
+@task(name="Count age group")
+def count_age_group(df_age, label, condition):
+    total_inc = df_age[condition]["count"].sum()
+    data = {"label": label, "total_inc": total_inc, "type": "prtsn_age"}
+    return pd.DataFrame(data, index=[0])
 
 
 @task(name="Total incidents")
@@ -41,115 +48,135 @@ def incidents_total(df):
     """
     Total incidents
     """
+
+    df_total = pd.DataFrame()
+
     columns_to_count = [
         "inc_type",
         "dmg_eqp",
         "region",
+        "coll_with",
     ]
 
-    # Count incidents for each column
-    df_list = [count_incidents_by_column(df, col) for col in columns_to_count]
-    df_total = pd.concat(df_list, ignore_index=True)
-
-    # add total incidents
+    # Total Incidents
     data = {"label": "Total", "total_inc": df.shape[0], "type": "total"}
     df_total = pd.concat([df_total, pd.DataFrame(data, index=[0])], ignore_index=True)
+
+    # Incidents Type
+    for col in columns_to_count:
+        if col == "dmg_eqp":
+            df_count = count_incidents_by_column(
+                df[df["coll_with"] != "Human"], col, col
+            )
+        else:
+            df_count = count_incidents_by_column(df, col, col)
+
+        # concat
+        df_total = pd.concat([df_total, df_count], ignore_index=True)
+
+    # Damage equipment by Collision
+    df_tmp = count_incidents_by_column(
+        df[df["inc_type"] == "Collision"], "dmg_eqp", "coll_eqp"
+    )
+    df_total = pd.concat([df_total, df_tmp], ignore_index=True)
+
+    """
+    Incidents Sabotage
+    """
 
     df = df.query("inc_type == 'Sabotage'")
 
     columns_to_count = [
-        "app_laws",
+        # "app_laws",
         "prtsn_grp",
         "prtsn_arr",
     ]
 
-    # Count incidents for each column
-    df_list = [count_incidents_by_column(df, col) for col in columns_to_count]
+    # incidents for each column
+    df_list = [count_incidents_by_column(df, col, col) for col in columns_to_count]
 
     # Combine all results into a single DataFrame
-    # df_total = pd.concat(df_list, ignore_index=True)
     df_total = pd.concat([df_total] + df_list, ignore_index=True)
     df_total["label"] = df_total["label"].replace(
-        {"False": "No Arrested", "True": "Arrested"}
+        {"False": "Sabotage without Arrest", "True": "Sabotage with Arrest"}
     )
 
-    df_tmp = df[df["prtsn_arr"] == True].value_counts("prtsn_rwd").reset_index()
-    df_tmp.columns = ["label", "total_inc"]
-    df_tmp["type"] = "prtsn_rwd"
-    df_tmp["label"] = df_tmp["label"].astype(str)
-    df_total = pd.concat([df_total, df_tmp], ignore_index=True)
-    df_total["label"] = df_total["label"].replace(
-        {"False": "No Reward", "True": "Reward"}
-    )
-
-    # count Sabotage by damaged equipment
-    df_tmp = df["dmg_eqp"].value_counts().reset_index()
-    df_tmp.columns = ["label", "total_inc"]
-    df_tmp["type"] = "sabotage"
+    # Sabotage by Region
+    df_tmp = count_incidents_by_column(df, "region", "sab_region")
     df_total = pd.concat([df_total, df_tmp], ignore_index=True)
 
-    # count damaged equipment by partisans group
+    # # Partisans Reward
+    # df_tmp = count_incidents_by_column(df, "prtsn_rwd", "prtsn_rwd")
+    # df_total = pd.concat([df_total, df_tmp], ignore_index=True)
+    # df_total["label"] = df_total["label"].replace(
+    #     {"False": "No Reward", "True": "Reward"}
+    # )
+
+    # Sabotage by damaged equipment
+    df_tmp = count_incidents_by_column(df, "dmg_eqp", "sabotage")
+    df_total = pd.concat([df_total, df_tmp], ignore_index=True)
+
+    # Damaged equipment by partisans group
     df_tmp = df.groupby(["prtsn_grp", "dmg_eqp"]).size().reset_index()
     df_tmp.columns = ["type", "label", "total_inc"]
     df_total = pd.concat([df_total, df_tmp], ignore_index=True)
 
-    # collect all age (values is string with ,)
-    # age = df["prtsn_age"].str.split(",").explode().astype(float).dropna()
-    age = (
-        df["prtsn_age"]
-        .str.split(",")
-        .explode()
-        .str.strip()
-        .replace("", np.nan)
-        .dropna()
-        .astype(float)
+    # get age and name
+    df_age_name_laws = df[["prtsn_age", "prtsn_names", "app_laws"]].dropna()
+    df_age_name_laws = df_age_name_laws.query(
+        "prtsn_age != '' and prtsn_names != '' and app_laws != ''"
     )
+    df_age_name_laws = df_age_name_laws.drop_duplicates()
+
+    # collect all age (values is string with ,)
+    df_age_name_laws = (
+        df_age_name_laws.assign(
+            prtsn_age=df_age_name_laws["prtsn_age"].str.split(","),
+            prtsn_names=df_age_name_laws["prtsn_names"].str.split(","),
+            app_laws=df_age_name_laws["app_laws"],
+        )
+        .explode(["prtsn_age", "prtsn_names"])
+        .reset_index(drop=True)
+    )
+    print("df_age_name_laws\n", df_age_name_laws)
+
+    # Count number total of partisans arrested
+    data = {
+        "label": "Total Arrested",
+        "total_inc": df_age_name_laws["prtsn_names"].count(),
+        "type": "partisans_arrested",
+    }
+    df_total = pd.concat([df_total, pd.DataFrame(data, index=[0])], ignore_index=True)
+
+    # Count Partisans Laws
+    df_laws = df_age_name_laws["app_laws"].value_counts().reset_index()
+    df_laws.columns = ["label", "total_inc"]
+    df_laws["type"] = "app_laws"
+    df_total = pd.concat([df_total, df_laws], ignore_index=True)
 
     # Moy of Partisans Age
-    moy = age.mean()
+    moy = df_age_name_laws["prtsn_age"].astype(int).mean()
     data = {"label": "Mean", "total_inc": moy, "type": "prtsn_age"}
     df_total = pd.concat([df_total, pd.DataFrame(data, index=[0])], ignore_index=True)
 
     # Count partisans age
-    df_age = pd.DataFrame(age.value_counts()).reset_index()
+    df_age = df_age_name_laws["prtsn_age"].value_counts().reset_index()
+    df_age.columns = ["prtsn_age", "count"]
     df_age["prtsn_age"] = df_age["prtsn_age"].astype(int)
 
-    # Count partisans age <18 (use df_age)
-    data = {
-        "label": "<18",
-        "total_inc": df_age[df_age["prtsn_age"] < 18]["count"].sum(),
-        "type": "prtsn_age",
-    }
-    df_total = pd.concat([df_total, pd.DataFrame(data, index=[0])], ignore_index=True)
+    # Define age groups and their conditions
+    age_groups = [
+        ("<18", df_age["prtsn_age"] < 18),
+        ("18-30", (df_age["prtsn_age"] >= 18) & (df_age["prtsn_age"] <= 30)),
+        ("31-50", (df_age["prtsn_age"] > 30) & (df_age["prtsn_age"] <= 50)),
+        (">50", df_age["prtsn_age"] > 50),
+    ]
 
-    # dot the same for the other age groups
-    # Count partisans age >18<30
-    data = {
-        "label": "18-30",
-        "total_inc": df_age[(df_age["prtsn_age"] >= 18) & (df_age["prtsn_age"] <= 30)][
-            "count"
-        ].sum(),
-        "type": "prtsn_age",
-    }
-    df_total = pd.concat([df_total, pd.DataFrame(data, index=[0])], ignore_index=True)
-
-    # Count partisans age >30<50
-    data = {
-        "label": "31-50",
-        "total_inc": df_age[(df_age["prtsn_age"] > 30) & (df_age["prtsn_age"] <= 50)][
-            "count"
-        ].sum(),
-        "type": "prtsn_age",
-    }
-    df_total = pd.concat([df_total, pd.DataFrame(data, index=[0])], ignore_index=True)
-
-    # Count partisans age >50
-    data = {
-        "label": ">50",
-        "total_inc": df_age[df_age["prtsn_age"] > 50]["count"].sum(),
-        "type": "prtsn_age",
-    }
-    df_total = pd.concat([df_total, pd.DataFrame(data, index=[0])], ignore_index=True)
+    # Count partisans age for each group
+    for label, condition in age_groups:
+        df_total = pd.concat(
+            [df_total, count_age_group(df_age, label, condition)], ignore_index=True
+        )
 
     # Count partisans age
     df_age.columns = ["label", "total_inc"]
@@ -160,6 +187,9 @@ def incidents_total(df):
     # reorder columns
     df_total = df_total[["type", "label", "total_inc"]]
 
+    # remove rows with empty label
+    df_total = df_total.query("label != ''")
+
     return df_total
 
 
@@ -169,7 +199,7 @@ def incidents_by_year(df):
     Incidents by year
     """
 
-    cols_to_count = ["inc_type", "dmg_eqp"]
+    cols_to_count = ["inc_type", "dmg_eqp", "coll_with"]
 
     df_tmp = pd.DataFrame()
 
@@ -177,7 +207,13 @@ def incidents_by_year(df):
         df_year = df[df["year"] == year]
 
         for col in cols_to_count:
-            df_count = count_incidents_by_column(df_year, col)
+            if col == "dmg_eqp":
+                df_count = count_incidents_by_column(
+                    df_year[df_year["coll_with"] != "Human"], col, col
+                )
+            else:
+                df_count = count_incidents_by_column(df_year, col, col)
+
             df_count["year"] = year
             df_tmp = pd.concat([df_tmp, df_count])
 
@@ -192,6 +228,9 @@ def incidents_by_year(df):
 
     df_tmp["label"] = df_tmp["label"].astype(str)
     df_tmp = df_tmp[["year", "type", "label", "total_inc"]]
+
+    # remove rows with empty label
+    df_tmp = df_tmp.query("label != ''")
 
     # pivot
     df_tmp = df_tmp.pivot_table(
@@ -210,28 +249,59 @@ def incidents_by_month(df):
     incidents by month, year
     """
 
-    df_tmp_1 = (
+    df_tmp_1 = df.groupby(["year", "month"]).size().reset_index(name="total_inc")
+
+    # count incidents by month, year
+    df_tmp_2 = (
+        df.groupby(["year", "month", "inc_type"]).size().reset_index(name="total_inc")
+    )
+
+    # count damaged equipment by month, year
+    df_tmp_3 = (
+        df[df["coll_with"] != "Human"]
+        .groupby(["year", "month", "dmg_eqp"])
+        .size()
+        .reset_index(name="total_inc")
+    )
+
+    # count collision with by month, year
+    df_tmp_4 = (
+        df[df["coll_with"] != ""]
+        .groupby(["year", "month", "coll_with"])
+        .size()
+        .reset_index(name="total_inc")
+    )
+
+    # count incidents, damaged equipment by month, year
+    df_tmp_5 = (
         df.groupby(["year", "month", "inc_type", "dmg_eqp"])
         .size()
         .reset_index(name="total_inc")
     )
 
-    df_tmp_2 = df.groupby(["year", "month"]).size().reset_index(name="total_inc")
-
-    df_tmp_3 = (
-        df.groupby(["year", "month", "inc_type"]).size().reset_index(name="total_inc")
+    # count incidents, damaged equipment, collision with by month, year
+    df_tmp_6 = (
+        df[df["coll_with"] != ""]
+        .groupby(["year", "month", "inc_type", "dmg_eqp", "coll_with"])
+        .size()
+        .reset_index(name="total_inc")
     )
 
-    df_tmp_4 = (
-        df.groupby(["year", "month", "dmg_eqp"]).size().reset_index(name="total_inc")
-    )
-
-    df_tmp = pd.concat([df_tmp_1, df_tmp_2, df_tmp_3, df_tmp_4], ignore_index=True)
+    # concat all dataframes
+    df_tmp = pd.concat(
+        [df_tmp_1, df_tmp_2, df_tmp_3, df_tmp_4, df_tmp_5, df_tmp_6],
+        ignore_index=True,
+    ).reset_index(drop=True)
 
     # add col month_year
     df_tmp["month_year"] = pd.to_datetime(
         df_tmp["year"].astype(str) + "-" + df_tmp["month"].astype(str)
     )
+
+    # reorder columns
+    df_tmp = df_tmp[
+        ["month_year", "year", "month", "inc_type", "dmg_eqp", "coll_with", "total_inc"]
+    ]
 
     # sort by month_year
     df_tmp = df_tmp.sort_values("month_year")
@@ -269,11 +339,13 @@ def incidents_cumul_by_month(df):
     df["month_year"] = pd.to_datetime(
         df["year"].astype(str) + "-" + df["month"].astype(str)
     )
-    print(df)
 
     df_fin = pd.DataFrame()
 
     for col in list_cols:
+        if col == "dmg_eqp":
+            df = df[df["coll_with"] != "Human"]
+
         df_tmp = df.groupby(["month_year", col]).size().reset_index(name="total_inc")
 
         df_tmp["cumul_inc"] = df_tmp.groupby([col])["total_inc"].cumsum()
@@ -365,11 +437,40 @@ def incidents_by_region(df):
 
     df_final = pd.DataFrame({"region": df["region"].unique()})
     for col in lst_cols:
-        df_tmp = (
-            df.groupby(["region", col]).size().reset_index(name="total_inc")
-        ).pivot_table(index="region", columns=col, values="total_inc", fill_value=0)
+
+        if col == "dmg_eqp":
+            df_tmp = (
+                df[df["coll_with"] != "Human"]
+                .groupby(["region", col])
+                .size()
+                .reset_index(name="total_inc")
+            )
+        else:
+            df_tmp = df.groupby(["region", col]).size().reset_index(name="total_inc")
+
+        df_tmp = df_tmp.pivot_table(index="region", columns=col, values="total_inc")
 
         df_final = pd.merge(df_final, df_tmp, on="region", how="outer")
+
+    # Filter for sabotage incidents
+    df_sabotage = df[df["inc_type"] == "Sabotage"]
+
+    # Count damaged equipment by region
+    df_tmp = (
+        df_sabotage.groupby(["region", "dmg_eqp"]).size().reset_index(name="total_inc")
+    )
+
+    # pivot table
+    df_tmp = df_tmp.pivot_table(index="region", columns="dmg_eqp", values="total_inc")
+
+    # put 'sab_ in front of the column names
+    df_tmp.columns = ["sab_" + col for col in df_tmp.columns]
+
+    # merge
+    df_final = pd.merge(df_final, df_tmp, on="region", how="outer")
+
+    # Fill missing values with 0
+    df_final = df_final.fillna(0)
 
     return df_final
 
@@ -377,6 +478,9 @@ def incidents_by_region(df):
 @task(name="Incidents by incident type and damaged equipment")
 def incident_type_damaged_equipment(df):
     """ """
+
+    # remove Collisions with Human
+    df = df[df["coll_with"] != "Human"]
 
     # group by incident type and damaged equipment
     df = df.groupby(["inc_type", "dmg_eqp"]).size().reset_index(name="total_inc")
@@ -478,12 +582,14 @@ def incident_type_damaged_equipment_sunburst_treemap(df):
 
     # Damaged equipment by partisans group for Sunburst, Treemap
     df_tmp = (
-        df.query("prtsn_grp.notnull()")
+        df.query("inc_type == 'Sabotage' and prtsn_grp != ''")
         .groupby(["dmg_eqp", "prtsn_grp"])
         .size()
         .reset_index(name="total_inc")
     )
     # ----------------------------------------------
+
+    print("df_tmp before sun_tree\n", df_tmp)
 
     ids = []
     labels = []
@@ -521,6 +627,8 @@ def incident_type_damaged_equipment_sunburst_treemap(df):
             "value": values,
         }
     )
+
+    print("df_6\n", df_6)
 
     # ----------------------------------------------
 
@@ -631,90 +739,91 @@ def incident_type_damaged_equipment_sunburst_treemap(df):
         }
     )
 
-    # Sankey Number of Apliicable Laws by Partisans Reward by Partisans Arrest
-    source = []
-    target = []
-    value = []
+    # # Sankey Number of Apliicable Laws by Partisans Reward by Partisans Arrest
+    # source = []
+    # target = []
+    # value = []
 
-    # df_tmp = df.query("partisans_arrest == True")
+    # # df_tmp = df.query("partisans_arrest == True")
 
-    df_tmp = (
-        df.query("prtsn_arr == True")
-        .groupby(["app_laws", "prtsn_rwd"])
-        .size()
-        .reset_index(name="total_inc")
-    )
+    # df_tmp = (
+    #     df.query("prtsn_arr == True")
+    #     .groupby(["app_laws", "prtsn_rwd"])
+    #     .size()
+    #     .reset_index(name="total_inc")
+    # )
 
-    # rename
-    df_tmp["prtsn_rwd"] = df_tmp["prtsn_rwd"].replace(
-        {True: "Reward", False: "No Reward"}
-    )
-    df_tmp["prtsn_arr"] = "Arrested"
+    # # rename
+    # df_tmp["prtsn_rwd"] = df_tmp["prtsn_rwd"].replace(
+    #     {True: "Reward", False: "No Reward"}
+    # )
+    # df_tmp["prtsn_arr"] = "Arrested"
 
-    # Create a list of unique labels
-    labels = list(
-        set(["Arrested"] + list(df_tmp["prtsn_rwd"]) + list(df_tmp["app_laws"]))
-    )
+    # # Create a list of unique labels
+    # labels = list(
+    #     set(["Arrested"] + list(df_tmp["prtsn_rwd"]) + list(df_tmp["app_laws"]))
+    # )
 
-    # Create a mapping dictionary
-    label_to_index = {label: i for i, label in enumerate(labels)}
+    # # Create a mapping dictionary
+    # label_to_index = {label: i for i, label in enumerate(labels)}
 
-    # Create source, target, and value lists
-    source = (
-        [
-            label_to_index["Reward"]
-            for _ in range(len(df_tmp.query("prtsn_rwd == 'Reward'")))
-        ]
-        + [
-            label_to_index["No Reward"]
-            for _ in range(len(df_tmp.query("prtsn_rwd == 'No Reward'")))
-        ]
-        + [label_to_index["Arrested"] for _ in range(len(df_tmp["prtsn_rwd"].unique()))]
-    )
+    # # Create source, target, and value lists
+    # source = (
+    #     [
+    #         label_to_index["Reward"]
+    #         for _ in range(len(df_tmp.query("prtsn_rwd == 'Reward'")))
+    #     ]
+    #     + [
+    #         label_to_index["No Reward"]
+    #         for _ in range(len(df_tmp.query("prtsn_rwd == 'No Reward'")))
+    #     ]
+    #     + [label_to_index["Arrested"] for _ in range(len(df_tmp["prtsn_rwd"].unique()))]
+    # )
 
-    # get index of app_laws where prtsn_rwd == 'Reward'
-    target = (
-        [
-            label_to_index[laws]
-            for laws in df_tmp.query("prtsn_rwd == 'Reward'")["app_laws"]
-        ]
-        + [
-            label_to_index[laws]
-            for laws in df_tmp.query("prtsn_rwd == 'No Reward'")["app_laws"]
-        ]
-        + [label_to_index["Reward"], label_to_index["No Reward"]]
-    )
+    # # get index of app_laws where prtsn_rwd == 'Reward'
+    # target = (
+    #     [
+    #         label_to_index[laws]
+    #         for laws in df_tmp.query("prtsn_rwd == 'Reward'")["app_laws"]
+    #     ]
+    #     + [
+    #         label_to_index[laws]
+    #         for laws in df_tmp.query("prtsn_rwd == 'No Reward'")["app_laws"]
+    #     ]
+    #     + [label_to_index["Reward"], label_to_index["No Reward"]]
+    # )
 
-    # browse source and target
-    for i in range(len(source) - 2):
-        value.append(
-            df_tmp.query(
-                f"prtsn_rwd == '{labels[source[i]]}' and app_laws == '{labels[target[i]]}'"
-            )["total_inc"].values[0]
-        )
+    # # browse source and target
+    # for i in range(len(source) - 2):
+    #     value.append(
+    #         df_tmp.query(
+    #             f"prtsn_rwd == '{labels[source[i]]}' and app_laws == '{labels[target[i]]}'"
+    #         )["total_inc"].values[0]
+    #     )
 
-    value.append(
-        df_tmp.query(f"prtsn_rwd == '{labels[target[-2]]}'")["total_inc"].sum()
-    )
-    value.append(
-        df_tmp.query(f"prtsn_rwd == '{labels[target[-1]]}'")["total_inc"].sum()
-    )
+    # value.append(
+    #     df_tmp.query(f"prtsn_rwd == '{labels[target[-2]]}'")["total_inc"].sum()
+    # )
+    # value.append(
+    #     df_tmp.query(f"prtsn_rwd == '{labels[target[-1]]}'")["total_inc"].sum()
+    # )
 
-    # add missing values in labels
-    labels = labels + [""] * (len(source) - len(labels))
+    # # add missing values in labels
+    # labels = labels + [""] * (len(source) - len(labels))
 
-    df_5 = pd.DataFrame(
-        {
-            "tab": "prtsn_rwd",
-            "chart": "sankey",
-            "label": labels,
-            "source": source,
-            "target": target,
-            "value": value,
-        }
-    )
+    # df_5 = pd.DataFrame(
+    #     data={
+    #         "tab": "prtsn_rwd",
+    #         "chart": "sankey",
+    #         "label": labels,
+    #         "source": source,
+    #         "target": target,
+    #         "value": value,
+    #     }
+    # )
 
-    df_final = pd.concat([df_1, df_2, df_3, df_4, df_5, df_6, df_7], ignore_index=True)
+    # df_final = pd.concat([df_1, df_2, df_3, df_4, df_5, df_6, df_7], ignore_index=True)
+    df_final = pd.concat([df_1, df_2, df_3, df_4, df_6, df_7], ignore_index=True)
 
     return df_final
 
@@ -738,40 +847,33 @@ def applicable_laws_partisans_age(df):
     For each age unique, count the number of applicable laws
     """
 
-    # Get the unique ages
-    ages = (
-        df["prtsn_age"]
-        .str.split(",")
-        .explode()
-        .str.strip()
-        .replace("", np.nan)
-        .dropna()
-        .astype(int)
-        .unique()
+    # Get unique age and names (age != "")
+    df_age_name = (
+        df.query("prtsn_age != ''")
+        .assign(
+            prtsn_age=df["prtsn_age"].str.split(","),
+            prtsn_names=df["prtsn_names"].str.split(","),
+        )
+        .explode(["prtsn_age", "prtsn_names"])
+        .reset_index(drop=True)
     )
-
-    df = df.query("prtsn_age.notnull()")
 
     # Create a DataFrame to store the results
     df_final = pd.DataFrame()
 
-    for age in ages:
-        # Filter the DataFrame by the age
-        df_age = df[df["prtsn_age"].str.contains(str(age))]
-
-        # Count the number of applicable laws
-        df_tmp = df_age["app_laws"].value_counts().reset_index()
-        df_tmp.columns = ["app_laws", "total_inc"]
-        df_tmp["age"] = age
-        df_final = (
-            pd.concat([df_final, df_tmp]).reset_index(drop=True).sort_values("age")
-        )
+    # Count the number of applicable laws
+    df_tmp = (
+        df_age_name.groupby(["prtsn_age", "app_laws"])
+        .size()
+        .reset_index(name="total_inc")
+    )
 
     # remove rows "Law not indicated"
-    df_final = df_final.query("app_laws != 'Law not indicated'")
+    df_tmp = df_tmp.query("app_laws != ''")
 
-    df_final = df_final.pivot_table(
-        index="age",
+    # Pivot table
+    df_final = df_tmp.pivot_table(
+        index="prtsn_age",
         columns="app_laws",
         values="total_inc",
         fill_value=0,
@@ -798,7 +900,6 @@ def wordcloud(df):
     # join all words in specific columns
     df_final = pd.DataFrame()
     df_final["text"] = df[list_cols].apply(lambda x: ", ".join(x.dropna()), axis=1)
-    print(df_final)
 
     # decompose text (split by ,)
     df_final = (
@@ -809,12 +910,10 @@ def wordcloud(df):
         .drop(columns=["level_0", "level_1"])
     )
     df_final.columns = ["text"]
-    print(df_final)
 
     # count words
     df_final = df_final["text"].value_counts().reset_index()
     df_final.columns = ["text", "total_inc"]
-    print(df_final)
 
     return df_final
 
@@ -826,89 +925,64 @@ def job_datamarts_incidents_railway():
     """
 
     # read data from transform
-    df = read_data(path_dw_transform, "incidents_railway")
+    df = read_data(PATH_DW_TRANSFORM, "incidents_railway")
     print(df)
 
     if df.empty:
         raise Failed("No data to process")
 
-    # remove 2022
-    # df = df[df["year"] != 2022]
-
     # Incidents total
     df_tmp = incidents_total(df)
-    path = f"{path_dm_incidents_railway}/inc_total.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/inc_total.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # Incidents by year
     df_tmp = incidents_by_year(df)
-    path = f"{path_dm_incidents_railway}/inc_by_year.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/inc_by_year.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # Incidents by month
     df_tmp = incidents_by_month(df)
-    path = f"{path_dm_incidents_railway}/inc_by_month.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/inc_by_month.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # Incidents by day, week
     df_tmp = incidents_by_day_week(df)
-    path = f"{path_dm_incidents_railway}/inc_by_day_week.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/inc_by_day_week.parquet"
     df_tmp.to_parquet(path)
 
     # Incidents by region
     df_tmp = incidents_by_region(df)
-    path = f"{path_dm_incidents_railway}/inc_by_region.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/inc_by_region.parquet"
     df_tmp.to_parquet(path)
 
     # count occurrences of incident type and damaged equipment
     df_tmp = incident_type_damaged_equipment(df)
-    path = f"{path_dm_incidents_railway}/inc_type_dmg_eqp.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/inc_type_dmg_eqp.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # Incidents by incident type and damaged equipment
     # For Graphs: Sunburst, Treemap
     df_tmp = incident_type_damaged_equipment_sunburst_treemap(df)
-    path = f"{path_dm_incidents_railway}/inc_type_dmg_eqp_sun_tree.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/inc_type_dmg_eqp_sun_tree.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # Sabotage by partisans group
     df_tmp = sabotage_by_partisans_group(df)
-    path = f"{path_dm_incidents_railway}/sabotage_by_prtsn_grp.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/sabotage_by_prtsn_grp.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # Applicable laws by partisans age
     df_tmp = applicable_laws_partisans_age(df)
-    path = f"{path_dm_incidents_railway}/app_laws_prtsn_age.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/app_laws_prtsn_age.parquet"
     df_tmp.to_parquet(path)
 
     # Wordcloud
     df_tmp = wordcloud(df)
-    path = f"{path_dm_incidents_railway}/wordcloud.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/wordcloud.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # Incidents cumul by month
     df_tmp = incidents_cumul_by_month(df)
-    path = f"{path_dm_incidents_railway}/inc_cumul_by_month.parquet"
-    # print(path)
-    # print(df_tmp)
+    path = f"{PATH_DM_INCIDENTS_RAILWAY}/inc_cumul_by_month.parquet"
     df_tmp.to_parquet(path, index=False)
