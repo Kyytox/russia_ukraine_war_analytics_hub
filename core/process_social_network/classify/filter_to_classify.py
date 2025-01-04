@@ -25,10 +25,10 @@ from core.libs.google_api import (
 )
 
 # Variables
-from core.utils.variables import (
-    path_telegram_filter,
-    path_twitter_filter,
-    id_excel_to_classify,
+from core.config.paths import (
+    PATH_TELEGRAM_FILTER,
+    PATH_TWITTER_FILTER,
+    # id_excel_inc_railway,
 )
 
 
@@ -172,13 +172,17 @@ def classify_with_ia(df):
     """
     print(f"Data to classify: {df.shape}")
 
-    # get data to classify with ia
-    df_to_classify = df[
-        (df["is_add_to_final_dataset"] == False)
-        & (df["is_incident_railway"])
-        & (df["text_translate"] != "")
-        & (df["response_ia"].isnull() | (df["response_ia"] == ""))
-    ].reset_index(drop=True)
+    # get data to classify with ia, only 300 for avoid errors
+    df_to_classify = (
+        df[
+            (df["is_add_to_final_dataset"] == False)
+            & (df["is_incident_railway"])
+            & (df["text_translate"] != "")
+            & (df["response_ia"].isnull() | (df["response_ia"] == ""))
+        ]
+        .head(200)
+        .reset_index(drop=True)
+    )
 
     print(f"Data to classify with IA: {df_to_classify.shape}")
 
@@ -213,17 +217,17 @@ def job_filter_to_classify():
     Filter data to classify
     """
 
-    spreadsheet_id = id_excel_to_classify
+    spreadsheet_id = id_excel_inc_railway
     range_name = "news_railway_to_classified"
 
     # connect to google sheet
     service = connect_google_sheet_api()
 
     # get telegram filter data
-    df_telegram_filter = read_data(path_telegram_filter, "incidents_railway")
+    df_telegram_filter = read_data(PATH_TELEGRAM_FILTER, "incidents_railway")
 
     # get twitter filter data
-    df_twitter_filter = read_data(path_twitter_filter, "incidents_railway")
+    df_twitter_filter = read_data(PATH_TWITTER_FILTER, "incidents_railway")
 
     # concat data sources
     df_filter = concat_data_sources(df_telegram_filter, df_twitter_filter)
@@ -245,4 +249,10 @@ def job_filter_to_classify():
 
     # save data
     df.to_csv("test_classify.csv", index=False)
-    update_sheet_data(service, spreadsheet_id, range_name, df)
+    try:
+        update_sheet_data(service, spreadsheet_id, range_name, df)
+    except Exception as e:
+        print("Retry Update", e)
+        # connect to google sheet
+        service = connect_google_sheet_api()
+        update_sheet_data(service, spreadsheet_id, range_name, df)
