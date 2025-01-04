@@ -461,7 +461,7 @@ def create_map(df_region):
             locationmode="geojson-id",
             hoverinfo="z+text",
             colorscale="thermal",
-            colorbar_title="Incidents",
+            colorbar_title="Sabotages",
             marker_line_color="darkgray",
             marker_line_width=0.5,
         ),
@@ -470,11 +470,11 @@ def create_map(df_region):
     fig.update_layout(
         # title_text="Geographic Distribution of Incidents on Russian Railways",
         title=dict(
-            text="Geographic Distribution of Incidents on Russian Railways",
+            text="Geographic Distribution of Sabotages on Russian Railways",
             pad=dict(l=20),
             y=0.99,
             subtitle=dict(
-                text="Number of Railway Incidents by Region in Russia from 2023 to 2024",
+                text="Number of Railway Sabotages by Region in Russia from 2023 to 2024",
             ),
         ),
         geo=dict(

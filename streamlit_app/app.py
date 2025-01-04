@@ -240,7 +240,7 @@ with st.sidebar:
                     <img src="https://pbs.twimg.com/profile_images/1471129038022455299/Zn05GePO_400x400.jpg" style="width: 30px; border-radius: 50%;">
                 </a>
                 <a href="https://twitter.com/Kytox_" target="_blank" style="margin-left: 10px; font-size: 0.9rem; color: #ffffff; text-decoration: none; width: 100%;">
-                    Developed by: Kyytox
+                    Developed by: Kytox
                 </a>
             </div>
             """,
@@ -530,6 +530,9 @@ with tab2:
         st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
+    st.info(
+        "In this section, Collisions with Humans are not included, beacause equipment is not damaged in these cases, or the damage is not significant.\n"
+    )
     col1, col2 = st.columns([0.8, 1.2])
 
     # ---------------------------------
@@ -1366,7 +1369,6 @@ with tab7:
             - [Intelschizo](https://x.com/Schizointel)
             - [Prune60](https://x.com/Prune602)
             - [NOELreports](https://x.com/NOELreports)      
-            - [War Translated](https://x.com/wartranslated)      
             - [Igor Sushko](https://x.com/igorsushko)
             """
         )
@@ -1420,5 +1422,3 @@ with tab7:
 #     """,
 #     height=100,
 # )
-
-# return 301 http://incidentsrussianrailways.com$request_uri;
