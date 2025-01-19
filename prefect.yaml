@@ -1,0 +1,114 @@
+# Generic metadata about this project
+name: russia_ukraine_war_analytics_hub
+prefect-version: 3.1.0
+
+# build section allows you to manage and build docker images
+build: null
+
+# push section allows you to manage if and how this project is uploaded to remote locations
+push: null
+
+# pull section allows you to provide instructions for cloning this project in remote locations
+pull:
+  - prefect.deployments.steps.set_working_directory:
+      directory: /mnt/4046B55946B55080/russia_ukraine_war_analytics_hub
+
+# the deployments section allows you to provide configuration for deploying flows
+deployments:
+  - name: master-telegram-extract
+    version: null
+    tags: []
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_social_network/telegram/telegram_extract.py:job_telegram_extract
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      job_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: master-telegram-clean
+    version: null
+    tags: []
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_social_network/telegram/telegram_cleaning.py:job_telegram_cleaning
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      job_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: master-telegram-transform
+    version: null
+    tags: []
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_social_network/telegram/telegram_transform.py:job_telegram_transform
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      job_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: master-twitter-extract
+    version: null
+    tags: []
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_social_network/twitter/twitter_extract.py:job_twitter_extract
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      job_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: master-twitter-clean
+    version: null
+    tags: []
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_social_network/twitter/twitter_cleaning.py:job_twitter_cleaning
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      job_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: master-social-media-filter
+    version: null
+    tags: []
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_social_network/filter/social_media_filter.py:job_social_media_filter
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      job_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: master-social-media-pre-classify
+    version: null
+    tags: []
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_social_network/pre_classify/social_media_pre_classify.py:job_social_media_pre_classify
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      job_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
