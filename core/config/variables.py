@@ -17,8 +17,15 @@ IA_TRANSLATE = "ia_translate:latest"
 IA_CLASSIFY = "ia_classify:latest"
 
 CPT_LOOP_PROCESS_TRANSLATE = 10
-SIZE_TO_TRANSLATE = 89
+SIZE_TO_TRANSLATE = 160
 
+
+###############
+## PROMPT IA ##
+###############
+PROMPT_RAILWAY = "Does the message contain information about a railway incident ?"
+PROMPT_ARREST = "Does the message contain information about an arrest or sentence ?"
+PROMPT_SABOATGE = "Does the message contain information about sabotage, arson, vandalism or acts against Russian infrastructure or government ?"
 
 #
 #
@@ -44,8 +51,8 @@ LIST_ACCOUNTS_TELEGRAM = [
     "activatica",
     "russvolcorps",
     "soprotivleniye_lsr",
-    # "Sib_EXpress",
-    # t.me/algizrpd
+    "Sib_EXpress",
+    "algizrpd",  # t.me/algizrpd
 ]
 
 
@@ -71,7 +78,8 @@ DICT_UTC = {
     "activatica": 3,
     "russvolcorps": 3,
     "soprotivleniye_lsr": 3,
-    # "Sib_EXpress": 7,
+    "Sib_EXpress": 7,
+    "algizrpd": 3,
 }
 
 
@@ -198,3 +206,40 @@ DICT_LAWS = {
         "208 of the Criminal",
     ],
 }
+
+LIST_INC_TYPE_RAIL = [
+    "Derailment",
+    "Sabotage",
+    "Fire",
+    "Collision",
+    "Attack",
+    "Other",
+]
+
+LIST_DMG_EQUIP_RAIL = [
+    "Freight Train",
+    "Passengers Train",
+    "Locomotive",
+    "Relay Cabin",
+    "Infrastructure",
+    "Railroad Tracks",
+    "Electric Box",
+    "Unknown",
+]
+
+LIST_COLL_WITH_RAIL = [
+    "Human",
+    "Train",
+    "Car",
+    "Truck",
+    "Object",
+]
+
+
+LIST_ARREST_REASON = [
+    "Post on social media",
+    "Arson",
+    "Attempt Sabotage",
+    "Sabotage",
+    "Kill",
+]

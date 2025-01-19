@@ -42,6 +42,5 @@ PATH_DM_INCIDENTS_RAILWAY = "data/datamarts/incidents_railway"
 # Path Utils
 PATH_JSON_RU_REGION = "core/utils/ru_region.json"
 
-
 # scripts
 PATH_SCRIPT_SERVICE_OLLAMA = "core/utils/script_service.sh"
