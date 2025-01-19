@@ -178,4 +178,8 @@ core/utils/token.json
 cop_news_railway_to_classified_2.csv
 cop_news_railway_to_classified.csv
 Incidents_Russian_Railway_dataset.csv
-test_ia_translate.ipynb
+test_IA_TRANSLATE.ipynb
+_brouillons/*
+*.csv
+*.ipynb
+*.py
