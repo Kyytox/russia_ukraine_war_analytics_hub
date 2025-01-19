@@ -10,7 +10,7 @@ from core.config.paths import PATH_JSON_RU_REGION
 from core.config.variables import LIST_ACCOUNTS_TELEGRAM
 
 
-@task(name="Get telegram accounts", task_run_name="Get telegram accounts")
+@task(name="Get telegram accounts", task_run_name="get-telegram-accounts")
 def get_telegram_accounts(path: str) -> list:
     """
     Get telegram accounts
@@ -51,7 +51,7 @@ def generate_task_name():
 
     # get file name
     file = f"{params['base_path'].split('/')[-1]}/{params['file_name']}"
-    return f"{task_name} {file}"
+    return f"{task_name.lower()}-{file}"
 
 
 @task(
@@ -112,7 +112,7 @@ def save_data(base_path: str, file_name: str, df: pd.DataFrame):
     return
 
 
-@task(name="Filter data to process", task_run_name="Filter data to process")
+@task(name="Filter data to process", task_run_name="filter-data-to-process")
 def keep_data_to_process(
     df_source: pd.DataFrame, df_to_filter: pd.DataFrame
 ) -> pd.DataFrame:
@@ -136,8 +136,7 @@ def keep_data_to_process(
     return df
 
 
-@task
-# def concat_old_new_df(df_raw, df_new, cols):
+@task(name="Concat old and new data", task_run_name="concat-old-new-data")
 def concat_old_new_df(
     df_raw: pd.DataFrame, df_new: pd.DataFrame, cols: list
 ) -> pd.DataFrame:
@@ -164,7 +163,7 @@ def concat_old_new_df(
     return df
 
 
-@task(name="Get region Géojson")
+@task(name="Get region Géojson", task_run_name="get-region-geojson")
 def get_regions_geojson():
     """
     Get the region and id from the json file

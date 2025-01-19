@@ -7,7 +7,7 @@ from prefect import flow, task
 from core.config.paths import PATH_CREDS_API
 
 
-@task(name="Telegram connect")
+@task(name="Telegram Connect API", task_run_name="telegram-connect-api", tags=["API"])
 def telegram_connect():
     """
     Connect to Telegram
