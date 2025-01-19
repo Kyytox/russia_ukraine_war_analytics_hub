@@ -12,7 +12,7 @@ from core.libs.utils import (
 )
 
 
-def chat_ia(text, model_ia):
+def chat_ia(text, model_ia, prompt=None):
     """
     Chat with IA
 
@@ -23,6 +23,10 @@ def chat_ia(text, model_ia):
     Returns:
         Response of IA
     """
+
+    if prompt:
+        text = f"{prompt} {text}"
+
     try:
         # translate text
         response = ollama.chat(
@@ -59,7 +63,7 @@ def format_response_translate(text, response):
 
     # check if translation is > 60% of original
     if cpt_words_translate < cpt_words_orginal * 0.6:
-        response = chat_ia(text, IA_TRANSLATE)
+        response = chat_ia(text, IA_TRANSLATE, None)
 
     return response
 
@@ -82,7 +86,7 @@ def format_response_classify(response):
     return response
 
 
-def ia_treat_message(text, mode):
+def ia_treat_message(text, mode, prompt=None):
     """
     Apply IA to text
 
@@ -94,11 +98,11 @@ def ia_treat_message(text, mode):
         Response of IA
     """
     if mode == "translate":
-        response = chat_ia(text, IA_TRANSLATE)
+        response = chat_ia(text, IA_TRANSLATE, prompt)
         response = format_response_translate(text, response)
         response = format_clean_text(response)
     elif mode == "classify":
-        response = chat_ia(text, IA_CLASSIFY)
+        response = chat_ia(text, IA_CLASSIFY, prompt)
         response = format_response_classify(response)
 
     return response
