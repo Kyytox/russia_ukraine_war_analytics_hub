@@ -180,6 +180,6 @@ cop_news_railway_to_classified.csv
 Incidents_Russian_Railway_dataset.csv
 test_IA_TRANSLATE.ipynb
 _brouillons/*
-*.csv
-*.ipynb
-*.py
+/*.csv
+/*.ipynb
+/*.py
