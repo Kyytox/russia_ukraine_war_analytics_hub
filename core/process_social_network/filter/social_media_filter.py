@@ -1,6 +1,6 @@
+import hashlib
 import re
 import pandas as pd
-import numpy as np
 from prefect import flow, task
 
 # Functions
@@ -73,7 +73,7 @@ def find_terms_in_text(list_terms, text, id_filter):
     return False, None
 
 
-@task(name="Get Telegram data")
+@task(name="Get Telegram data", task_run_name="get-telegram-data")
 def get_telegram_data():
     """
     Get Telegram data
@@ -101,7 +101,7 @@ def get_telegram_data():
     return df_telegram
 
 
-@task(name="Get Twitter data")
+@task(name="Get Twitter data", task_run_name="get-twitter-data")
 def get_twitter_data():
     """
     Get Twitter data
@@ -117,7 +117,7 @@ def get_twitter_data():
     return df_twitter
 
 
-@task(name="Regroup data")
+@task(name="Regroup data", task_run_name="regroup-data")
 def regroup_data(df_telegram, df_twitter):
     """
     Regroup data
@@ -140,113 +140,101 @@ def regroup_data(df_telegram, df_twitter):
     return df
 
 
-@task(name="Apply filters {type_filter}")
-def apply_filters(df, df_filter, type_filter):
+@task(name="Remove data not pertinant", task_run_name="remove-data-not-pertinant")
+def remove_data_not_pertinant(df):
     """
-    Apply filter
+    Remove data not pertinant
 
     Args:
-        df: dataframe with filter data
+        df: dataframe with data
 
     Returns:
-        Dataframe with filter data
+        Dataframe with data not pertinant
     """
 
-    # if type_filter == "railway":
-    #     col_filter = "filter_inc_railway"
-    #     col_found_terms = "found_terms_railway"
-    #     lst_all_terms = [
-    #         list_words_set_railway,
-    #         list_substr_set_railway,
-    #         list_expression_railways,
-    #         list_word_railways,
-    #     ]
+    list_words = [
+        "COVID",
+        "covid",
+    ]
 
-    # elif type_filter == "arrest":
-    #     col_filter = "filter_inc_arrest"
-    #     col_found_terms = "found_terms_arrest"
-    #     lst_all_terms = [
-    #         list_words_set_arrest,
-    #         list_substr_set_arrest,
-    #         list_expression_arrest,
-    #         list_word_arrest,
-    #     ]
-    # elif type_filter == "sabotage":
-    #     col_filter = "filter_inc_sabotage"
-    #     col_found_terms = "found_terms_sabotage"
-    #     lst_all_terms = [
-    #         list_words_set_sabotage,
-    #         list_substr_set_sabotage,
-    #         list_expression_sabotage,
-    #         list_word_sabotage,
-    #     ]
+    # remove data containing words (except text_translate is null)
+    mask = pd.notna(df["text_translate"]) & df["text_translate"].str.contains(
+        "|".join(list_words)
+    )
 
-    # # init Filters list with list and id _filter
-    # dict_filters = [
-    #     {"list_terms": lst_all_terms[0], "id_filter": 1},
-    #     {"list_terms": lst_all_terms[1], "id_filter": 2},
-    #     {"list_terms": lst_all_terms[2], "id_filter": 3},
-    #     {"list_terms": lst_all_terms[3], "id_filter": 3},
-    # ]
+    # remove data
+    df = df[~mask].reset_index(drop=True)
 
-    filter_config = {
-        "railway": {
-            "col_filter": "filter_inc_railway",
-            "col_terms": "found_terms_railway",
-            "terms_lists": [
-                (list_words_set_railway, 1),
-                (list_substr_set_railway, 2),
-                (list_expression_railways, 3),
-                (list_word_railways, 3),
-            ],
-        },
-        "arrest": {
-            "col_filter": "filter_inc_arrest",
-            "col_terms": "found_terms_arrest",
-            "terms_lists": [
-                (list_words_set_arrest, 1),
-                (list_substr_set_arrest, 2),
-                (list_expression_arrest, 3),
-                (list_word_arrest, 3),
-            ],
-        },
-        "sabotage": {
-            "col_filter": "filter_inc_sabotage",
-            "col_terms": "found_terms_sabotage",
-            "terms_lists": [
-                (list_words_set_sabotage, 1),
-                (list_substr_set_sabotage, 2),
-                (list_expression_sabotage, 3),
-                (list_word_sabotage, 3),
-            ],
-        },
-    }
+    print(f"Data Not Pertinant: {df.shape}")
+    return df
 
-    config = filter_config[type_filter]
-    col_filter = config["col_filter"]
-    col_terms = config["col_terms"]
-    dict_filters = config["terms_lists"]
 
-    if col_filter in df_filter.columns:
-        print(f"{col_filter} has already been applied, so keep data not filtered")
-        df_tmp = df[~df["ID"].isin(df_filter["ID"])]
-    else:
-        print(f"{col_filter} has not been applied yet")
-        df_tmp = df.copy()
+@task(name="Generate Hash Filter", task_run_name="generate-hash-filter")
+def generate_hash_filter(dict_filters):
+    """
+    Generate hash filter
 
-    print(f"Data to filter: {df_tmp.shape}")
+    Args:
+        dict_filters: dictionary with filters
+
+    Returns:
+        String with hash filter
+    """
+
+    # Regroupe filters
+    long_text = ""
+
+    for key, index in dict_filters:
+        # convert to string
+        if isinstance(key[0], tuple):
+            for x in sorted(key):
+                long_text += f"{''.join(x)}"
+        else:
+            long_text += f"{''.join(key)}"
+
+    long_text = long_text.strip().lower()
+    long_text = re.sub(r"\s+", "", long_text)  # remove spaces
+
+    hashed_data = hashlib.md5(long_text.encode())
+
+    return hashed_data.hexdigest()
+
+
+@task(name="Apply filters {type_filter}", task_run_name="apply-filters-{type_filter}")
+def apply_filters(df, type_filter, config_filter, hash_filt):
+    """
+    Apply filters to a DataFrame based on specified configuration and type.
+
+    Args:
+        df: DataFrame to filter
+        type_filter: Type of filter to apply
+        config_filter: Configuration for the filter
+        hash_filt: Hash of the filter
+
+    Returns:
+        DataFrame with filter applied
+    """
+
+    # get config
+    col_filter = config_filter["col_filter"]
+    col_terms = config_filter["col_terms"]
+    col_add_final = config_filter["col_add_final"]
+    col_hash = config_filter["col_hash"]
+    dict_filters = config_filter["terms_lists"]
 
     # Init cols
-    df_tmp[col_filter] = df_tmp["filter_theme"] == f"incident_{type_filter}"
-    df_tmp[f"found_terms_{type_filter}"] = ""
-    df_tmp[f"add_final_inc_{type_filter}"] = False
+    df[col_filter] = df["filter_theme"] == f"incident_{type_filter}"
+    df[col_terms] = ""
+    df[col_add_final] = False
 
     # apply filter according to terms
     for terms, id_filter in dict_filters:
-        mask = (df_tmp[col_filter] == False) & pd.notna(df_tmp["text_translate"])
-        print(f"Data mask to filter: {df_tmp[mask].shape}")
 
-        results = df_tmp.loc[mask, "text_translate"].apply(
+        # get
+        mask = (df[col_filter] == False) & pd.notna(df["text_translate"])
+        print(f"Data mask to filter: {df[mask].shape}")
+
+        results = df.loc[mask, "text_translate"].apply(
             lambda x: find_terms_in_text(
                 terms,
                 x,
@@ -258,25 +246,79 @@ def apply_filters(df, df_filter, type_filter):
         filter_values, terms_values = zip(*results)
 
         # update values
-        df_tmp.loc[mask, col_filter] = filter_values
-        df_tmp.loc[mask, col_terms] = terms_values
+        df.loc[mask, col_filter] = filter_values
+        df.loc[mask, col_terms] = terms_values
 
-    # Concat data
-    df_final = pd.concat([df, df_tmp]).drop_duplicates(subset=["ID"], keep="last")
-    print(
-        f"Data filtered for incident {type_filter}: {df_final[df_final[col_filter] == True].shape}"
+    # add hash filter to data
+    df[col_hash] = hash_filt
+
+    print(f"Data filtered for incident {type_filter}: {df.shape}")
+    return df
+
+
+@task(name="Update final data", task_run_name="update-final-data")
+def update_final_data(df, df_old, type):
+    """
+    Update final data
+
+    Args:
+        df: dataframe with data
+        df_old: dataframe with old data
+        type: type of data
+
+    Returns:
+        Dataframe with updated data
+    """
+    if df_old.empty:
+        return df
+
+    # check if cols exist in data
+    cols_to_add = [col for col in df.columns if col not in df_old.columns]
+    print(f"Cols to add: {cols_to_add}")
+
+    if cols_to_add:
+        mask_exist = df[df["ID"].isin(df_old["ID"])]
+        mask_exist = mask_exist[["ID"] + cols_to_add]
+
+        df_old = pd.merge(
+            df_old,
+            mask_exist,
+            on="ID",
+            how="outer",
+        )
+
+    if type == "hash":
+        mask = df
+    else:
+        # get data not in old
+        mask = df[~df["ID"].isin(df_old["ID"])]
+
+    df_old = (
+        pd.concat([df_old, mask])
+        .drop_duplicates(subset=["ID"], keep="last")
+        .sort_values("date")
+        .reset_index(drop=True)
+        .ffill()
     )
 
-    return df_final
+    return df_old
 
 
-@flow(name="Process Social Media Filter", log_prints=True)
+@flow(
+    name="Flow Master Social Media Filter",
+    flow_run_name="Flow-master-social-media-filter",
+    log_prints=True,
+)
 def job_social_media_filter():
     """
     Process filter
     """
+
     # get Filter data
-    df_filter = read_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media")
+    df_filter_old = read_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media")
+
+    # get Hash Filter
+    df_hash_filte_old = read_data(PATH_FILTER_SOCIAL_MEDIA, "hash_filter_social_media")
 
     # get Telegram data
     df_telegram = get_telegram_data()
@@ -287,58 +329,133 @@ def job_social_media_filter():
     # group data
     df = regroup_data(df_telegram, df_twitter)
 
+    # remove Data not pertinant
+    df = remove_data_not_pertinant(df)
+
     # for test keep 5000
-    # if df_filter.empty:
+    # if df_filter_old.empty:
     #     df = df[0:1000]
     # else:
     #     df = df[0:2000]
 
-    # Apply filters
-    df = apply_filters(df, df_filter, "railway")
-    df = apply_filters(df, df_filter, "arrest")
-    df = apply_filters(df, df_filter, "sabotage")
+    df_filtered = pd.DataFrame()
 
-    # get data Filtered, according to filter_inc
-    df = df[
-        df[[col for col in df.columns if "filter_inc" in col]].any(axis=1)
-    ].reset_index(drop=True)
+    theme_list = ["railway", "arrest", "sabotage"]
 
-    # remove filter_theme
-    df = df.drop(columns=["filter_theme"])
+    for theme in theme_list:
 
-    # update filter data
-    if not df_filter.empty:
+        dict_filter_config = {
+            "railway": {
+                "col_filter": "filter_inc_railway",
+                "col_terms": "found_terms_railway",
+                "col_add_final": "add_final_inc_railway",
+                "col_hash": "hash_filter_railway",
+                "terms_lists": [
+                    (list_words_set_railway, 1),
+                    (list_substr_set_railway, 2),
+                    (list_expression_railways, 3),
+                    (list_word_railways, 3),
+                ],
+            },
+            "arrest": {
+                "col_filter": "filter_inc_arrest",
+                "col_terms": "found_terms_arrest",
+                "col_add_final": "add_final_inc_arrest",
+                "col_hash": "hash_filter_arrest",
+                "terms_lists": [
+                    (list_words_set_arrest, 1),
+                    (list_substr_set_arrest, 2),
+                    (list_expression_arrest, 3),
+                    (list_word_arrest, 3),
+                ],
+            },
+            "sabotage": {
+                "col_filter": "filter_inc_sabotage",
+                "col_terms": "found_terms_sabotage",
+                "col_add_final": "add_final_inc_sabotage",
+                "col_hash": "hash_filter_sabotage",
+                "terms_lists": [
+                    (list_words_set_sabotage, 1),
+                    (list_substr_set_sabotage, 2),
+                    (list_expression_sabotage, 3),
+                    (list_word_sabotage, 3),
+                ],
+            },
+        }
 
-        # get cols of filter
-        cols_filter = df_filter.columns
-        cols_filter = cols_filter[1:]  # remove ID
+        config_filt = dict_filter_config[theme]
 
-        df_tmp = df[df["ID"].isin(df_filter["ID"])].reset_index(drop=True)
-        df_tmp.drop(columns=cols_filter, inplace=True)
-        print(f"Data Filtered: {df_tmp.shape}")
+        # generate hash of filter
+        hash_filt = generate_hash_filter(config_filt["terms_lists"])
 
-        if len(df_tmp.columns) > 1:
-            # merge data
-            df_filter = pd.merge(
-                df_filter,
-                df_tmp,
-                on="ID",
-                how="left",
+        # keep data to filter
+        if config_filt["col_hash"] not in df_hash_filte_old.columns:
+            df_to_filter = df.copy()
+        else:
+            # get data with hash different
+            mask = df_hash_filte_old[config_filt["col_hash"]] != hash_filt
+            df_to_filter = df[
+                df["ID"].isin(df_hash_filte_old[mask]["ID"])
+                | ~df["ID"].isin(df_hash_filte_old["ID"])
+            ]
+            print(f"Data to filter: {df_to_filter.shape}")
+
+            # remove from to_filter, data already filtered
+            df_to_filter = df_to_filter[~df_to_filter["ID"].isin(df_filter_old["ID"])]
+            print(f"Data to filter: {df_to_filter.shape}")
+
+        print(f"Data to filter: {df_to_filter.shape}")
+
+        if df_to_filter.empty:
+            print("No data to filter")
+            continue
+
+        # Apply filters
+        if df_filtered.empty:
+            df_filtered = apply_filters(df_to_filter, theme, config_filt, hash_filt)
+        else:
+            df_filtered = pd.merge(
+                df_filtered,
+                apply_filters(df_to_filter, theme, config_filt, hash_filt),
+                on=[
+                    "ID",
+                    "date",
+                    "text_original",
+                    "text_translate",
+                    "url",
+                    "filter_theme",
+                ],
+                how="outer",
             )
 
-        # concat data
-        df_tmp = df[~df["ID"].isin(df_filter["ID"])].reset_index(drop=True)
-        print(f"Data Not Filtered: {df_tmp.shape}")
-        df_filter = pd.concat([df_filter, df_tmp]).reset_index(drop=True)
+    if df_filtered.empty:
+        print("No data to filter")
+        return
 
-        # fillana bool cols
-        for col in df_filter.columns:
-            if col.startswith("filter_inc") or col.startswith("add_final"):
-                df_filter[col] = df_filter[col].fillna(False)
+    # get hash data
+    cols_hashs = ["ID"] + [col for col in df_filtered.columns if "hash_filter" in col]
+    df_hashed = df_filtered[df_filtered[cols_hashs].notna().any(axis=1)][cols_hashs]
+    print(f"Data df_hashed: {df_hashed}")
 
-    else:
-        df_filter = df
+    # remove hash cols
+    df_filtered = df_filtered.drop(columns=cols_hashs[1:])
+    df_filtered = df_filtered.drop(columns=["filter_theme"])
+
+    # get data Filtered, according to filter_inc
+    df_filtered = df_filtered[
+        df_filtered[[col for col in df_filtered.columns if "filter_inc" in col]].any(
+            axis=1
+        )
+    ].reset_index(drop=True)
+
+    # update hash filter
+    df_hash_final = update_final_data(df_hashed, df_hash_filte_old, "hash")
+    df_filter_final = update_final_data(df_filtered, df_filter_old, "filter")
 
     # save data
-    print(f"Data Final: {df_filter}")
-    save_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media", df=df_filter)
+    print(f"Data Hash: {df_hash_final}")
+    save_data(PATH_FILTER_SOCIAL_MEDIA, "hash_filter_social_media", df=df_hash_final)
+
+    # save data
+    print(f"Data Final: {df_filter_final}")
+    save_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media", df=df_filter_final)

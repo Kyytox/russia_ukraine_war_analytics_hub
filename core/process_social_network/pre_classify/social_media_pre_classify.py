@@ -21,6 +21,9 @@ from core.config.paths import (
 )
 from core.config.variables import (
     DICT_LAWS,
+    PROMPT_RAILWAY,
+    PROMPT_ARREST,
+    PROMPT_SABOATGE,
 )
 from core.config.schemas import (
     SCHEMA_PRE_CLASS_RAILWAY,
@@ -29,15 +32,14 @@ from core.config.schemas import (
 )
 
 
-@task(name="Classify with IA")
-def pre_classify_with_ia(df, col_filter, col_add_final):
+@task(name="Classify with IA", task_run_name="classify-with-ia")
+def pre_classify_with_ia(df, prompt):
     """
     Classify with IA
 
     Args:
         df: dataframe
-        col_filter: column to filter
-        col_add_final: column to add final
+        prompt: prompt for IA
 
     Returns:
         Dataframe with pre classified data
@@ -49,12 +51,7 @@ def pre_classify_with_ia(df, col_filter, col_add_final):
 
     # get data to classify with ia, only 300 for avoid errors
     df_pre_class_ia = (
-        df[
-            # (df[col_add_final] == False)
-            # & (df[col_filter])
-            # &
-            (df["pre_class_ia"].isnull() | (df["pre_class_ia"] == ""))
-        ]
+        df[(df["pre_class_ia"].isnull() | (df["pre_class_ia"] == ""))]
         .head(3)
         .reset_index(drop=True)
     )
@@ -71,12 +68,14 @@ def pre_classify_with_ia(df, col_filter, col_add_final):
             text = row["text_translate"]
 
         # ask IA
-        df_pre_class_ia.loc[i, "pre_class_ia"] = ia_treat_message(text, "classify")
+        df_pre_class_ia.loc[i, "pre_class_ia"] = ia_treat_message(
+            text, "classify", prompt
+        )
 
     # concat data
     df_concat = (
         (pd.concat([df, df_pre_class_ia], ignore_index=True))
-        .drop_duplicates(subset=["ID"], keep="last")
+        .drop_duplicates(subset=["ID", "IDX"], keep="last")
         .sort_values("date")
         .reset_index(drop=True)
     )
@@ -114,7 +113,7 @@ def find_region(text, LIST_REGIONS):
         return ""
 
 
-@task(name="Pre classify Region")
+@task(name="Pre classify Region", task_run_name="pre-classify-region")
 def pre_classify_region(df):
     """
     Pre classify Region
@@ -146,7 +145,6 @@ def pre_classify_region(df):
     return df
 
 
-# find law
 def find_law(text, DICT_LAWS):
     """
     Find law in text
@@ -166,7 +164,7 @@ def find_law(text, DICT_LAWS):
     return ", ".join(found_laws) if found_laws else ""
 
 
-@task(name="Pre classify Applied Laws")
+@task(name="Pre classify Applied Laws", task_run_name="pre-classify-applied-laws")
 def pre_classify_app_laws(df):
     """
     Pre classify Applied Laws
@@ -190,7 +188,7 @@ def pre_classify_app_laws(df):
     return df
 
 
-@task(name="Remove cols filter")
+@task(name="Remove cols filter", task_run_name="remove-cols-filter")
 def remove_cols_filter(df):
     """
     Remove cols filter
@@ -216,7 +214,7 @@ def remove_cols_filter(df):
     return df
 
 
-@task(name="Add cols with {schema}")
+@task(name="Add cols with {schema}", task_run_name="add-cols-with-schema-{schema}")
 def add_cols_with_schema(df, schema):
     """
     Add columns to DataFrame based on schema
@@ -247,6 +245,7 @@ def add_cols_with_schema(df, schema):
     return df
 
 
+@task(name="Keep data to pre classify", task_run_name="keep-data-to-pre-classify")
 def keep_data_to_pre_class(df, col_add_final, col_filter):
     """
     Keep data to pre classify
@@ -262,100 +261,50 @@ def keep_data_to_pre_class(df, col_add_final, col_filter):
     return df[(df[col_add_final] == False) & (df[col_filter])].reset_index(drop=True)
 
 
-@task(name="Process Incidents Railway")
-def process_incidents_railway(df_filter):
+@flow(
+    name="Flow Single Pre Classification {theme}",
+    flow_run_name="Flow-single-pre-classification-{theme}",
+    log_prints=True,
+)
+def process_pre_classification(theme, df_filter):
     """
-    Process Incidents Railway
+    Apply Pre Classifications
     """
 
-    # get Pre classify data
-    df_pre_classify = read_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, "pre_classify_railway")
+    # init vars
+    if theme == "railway":
+        file_name = "pre_classify_railway"
+        prompt_ia = PROMPT_RAILWAY
+        schema = SCHEMA_PRE_CLASS_RAILWAY
+        col_add_final = "add_final_inc_railway"
+        col_filter = "filter_inc_railway"
+    elif theme == "arrest":
+        file_name = "pre_classify_arrest"
+        prompt_ia = PROMPT_ARREST
+        schema = SCHEMA_PRE_CLASS_ARREST
+        col_add_final = "add_final_inc_arrest"
+        col_filter = "filter_inc_arrest"
+    elif theme == "sabotage":
+        file_name = "pre_classify_sabotage"
+        prompt_ia = PROMPT_SABOATGE
+        schema = SCHEMA_PRE_CLASS_SABOTAGE
+        col_add_final = "add_final_inc_sabotage"
+        col_filter = "filter_inc_sabotage"
+    else:
+        return
 
     # keep data who not add final and filter
-    df_filter = keep_data_to_pre_class(
-        df_filter, "add_final_inc_railway", "filter_inc_railway"
-    )
-
-    # pre_cassify with IA
-    df_to_class = pre_classify_with_ia(
-        df_filter, "filter_inc_railway", "add_final_inc_railway"
-    )
-
-    # pre classify Region
-    df_to_class = pre_classify_region(df_to_class)
-
-    # pre classify Applied Laws
-    df_to_class = pre_classify_app_laws(df_to_class)
-
-    # remove cols filter
-    df_to_class = remove_cols_filter(df_to_class)
-
-    # add spe cols railways
-    df_to_class = add_cols_with_schema(df_to_class, SCHEMA_PRE_CLASS_RAILWAY)
-
-    # concat data
-    df = concat_old_new_df(df_raw=df_pre_classify, df_new=df_to_class, cols=["ID"])
-
-    # save data
-    save_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, "pre_classify_railway", df)
-
-
-@task(name="Process Incidents Arrest")
-def process_incidents_arrest(df_filter):
-    """
-    Process Incidents Arrest
-    """
+    df_filter = keep_data_to_pre_class(df_filter, col_add_final, col_filter)
 
     # get Pre classify data
-    df_pre_classify = read_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, "pre_classify_arrest")
+    df_pre_classify = read_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, file_name)
 
-    # keep data who not add final and filter
-    df_filter = keep_data_to_pre_class(
-        df_filter, "add_final_inc_arrest", "filter_inc_arrest"
-    )
-
-    # pre_cassify with IA
-    df_to_class = pre_classify_with_ia(
-        df_filter, "filter_inc_arrest", "add_final_inc_arrest"
-    )
-
-    # pre classify Region
-    df_to_class = pre_classify_region(df_to_class)
-
-    # pre classify Applied Laws
-    df_to_class = pre_classify_app_laws(df_to_class)
-
-    # remove cols filter
-    df_to_class = remove_cols_filter(df_to_class)
-
-    # add spe cols arrest
-    df_to_class = add_cols_with_schema(df_to_class, SCHEMA_PRE_CLASS_ARREST)
-
-    # concat data
-    df = concat_old_new_df(df_raw=df_pre_classify, df_new=df_to_class, cols=["ID"])
-
-    # save data
-    save_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, "pre_classify_arrest", df)
-
-
-@task(name="Process Incidents Sabotage")
-def process_incidents_sabotage(df_filter):
-    """
-    Process Incidents Sabotage
-    """
-
-    # get Pre classify data
-    df_pre_classify = read_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, "pre_classify_sabotage")
-
-    # keep data who not add final and filter
-    df_filter = keep_data_to_pre_class(
-        df_filter, "add_final_inc_sabotage", "filter_inc_sabotage"
-    )
+    # add IDX
+    if "IDX" not in df_pre_classify.columns:
+        df_filter["IDX"] = np.nan  # for drop duplicates in ia function
 
     # pre_cassify with IA
-    df_to_class = pre_classify_with_ia(
-        df_filter, "filter_inc_sabotage", "add_final_inc_sabotage"
-    )
+    df_to_class = pre_classify_with_ia(df_filter, prompt_ia)
 
     # pre classify Region
     df_to_class = pre_classify_region(df_to_class)
@@ -367,28 +316,35 @@ def process_incidents_sabotage(df_filter):
     df_to_class = remove_cols_filter(df_to_class)
 
     # add spe cols sabotage
-    df_to_class = add_cols_with_schema(df_to_class, SCHEMA_PRE_CLASS_SABOTAGE)
+    df_to_class = add_cols_with_schema(df_to_class, schema)
 
     # concat data
-    df = concat_old_new_df(df_raw=df_pre_classify, df_new=df_to_class, cols=["ID"])
+    df = concat_old_new_df(
+        df_raw=df_pre_classify, df_new=df_to_class, cols=["ID", "IDX"]
+    )
 
     # save data
-    save_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, "pre_classify_sabotage", df)
+    save_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, file_name, df)
 
 
-@flow(name="Process Social Media Pre Classify", log_prints=True)
+@flow(
+    name="Flow Master Social Media Pre Classify",
+    flow_run_name="Flow-master-social-media-pre-classify",
+    log_prints=True,
+)
 def job_social_media_pre_classify():
     """
-    Process filter
+    Process Pre Classify Social Media
     """
+
     # get Filter data
     df_filter = read_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media")
 
     # Incidents Railway
-    process_incidents_railway(df_filter)
+    process_pre_classification("railway", df_filter)
 
     # Incidents Arrest
-    process_incidents_arrest(df_filter)
+    process_pre_classification("arrest", df_filter)
 
     # Incidents Sabotage
-    process_incidents_sabotage(df_filter)
+    process_pre_classification("sabotage", df_filter)
