@@ -10,12 +10,8 @@
 # - save data
 
 import os
-import re
 
 from prefect import flow, task
-
-# ia for translate
-import ollama
 
 # Variables
 from core.config.paths import (
@@ -34,14 +30,13 @@ from core.libs.utils import (
     keep_data_to_process,
     get_telegram_accounts,
     concat_old_new_df,
-    format_clean_text,
 )
 
 # IA
 from core.libs.ollama_ia import ia_treat_message
 
 
-@task(name="Translate data")
+@task(name="Translate data", task_run_name="translate-data-{account}")
 def translate_data(df_source):
     """
     Translate data to English
@@ -79,8 +74,8 @@ def translate_data(df_source):
 
 
 @task(
-    name="Remove data not translated correctly",
-    task_run_name="Remove data not translated correctly",
+    name="Remove poorly translated data",
+    task_run_name="remove-poorly-translated-data",
 )
 def remove_poorly_translated_data(df):
     """
@@ -121,9 +116,10 @@ def remove_poorly_translated_data(df):
     return df
 
 
-@task(
-    name="Process Transform",
-    task_run_name="Process Transform for {account}",
+@flow(
+    name="Flow Single Telegram Transform",
+    flow_run_name="Flow-telegram-transform-{account}",
+    log_prints=True,
 )
 def process_transform(account):
     """
@@ -168,13 +164,17 @@ def process_transform(account):
 
 
 @flow(
-    name="Flow Telegram Transform",
+    name="Flow Master Telegram Transform",
+    flow_run_name="Flow-master-telegram-transform",
     log_prints=True,
 )
 def job_telegram_transform():
     """
     Process Telegram data
     """
+    print("********************************")
+    print("Start transforming Telegram")
+    print("********************************")
 
     # start service ollama
     os.system(f"sh {PATH_SCRIPT_SERVICE_OLLAMA}")
@@ -184,7 +184,5 @@ def job_telegram_transform():
 
     # loop over accounts
     for account in list_accounts:
-        print("########################################")
         print(f"Transform Account: {account}")
-
         process_transform(account)

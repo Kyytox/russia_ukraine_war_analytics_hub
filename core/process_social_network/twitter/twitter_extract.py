@@ -1,7 +1,6 @@
 import asyncio
 import yaml
 import pandas as pd
-import random
 import os
 import datetime
 from twikit import Client
@@ -17,7 +16,7 @@ from core.config.paths import PATH_TWITTER_RAW, PATH_CREDS_API
 from core.libs.utils import read_data, save_data, concat_old_new_df
 
 
-@task(task_run_name="get-credentials")
+@task(name="Get credentials", task_run_name="get-credentials")
 def get_credentials():
     """
     Get credentials
@@ -38,6 +37,7 @@ def get_credentials():
     return list_creds
 
 
+@task(name="Create search query", task_run_name="create-search-query")
 def create_search_query(
     list_words_filter, list_accounts_filter, date_since, date_until
 ):
@@ -63,6 +63,7 @@ def create_search_query(
     return query
 
 
+@task(name="Get date since and until", task_run_name="get-date-since-until")
 def get_date_since_until(df):
     """
     Get date since and until
@@ -105,7 +106,7 @@ def get_date_since_until(df):
     return date_since, date_until
 
 
-@task(task_run_name="search-messages")
+@task(name="Search messages", task_run_name="search-messages")
 async def search_messages(df_raw):
     """
     Search messages in Twitter
@@ -147,7 +148,6 @@ async def search_messages(df_raw):
     list_credentials = get_credentials()
 
     for account in list_credentials:
-        print("######## Acount ########")
         data = []
         cpt_try = 0
 
@@ -251,27 +251,19 @@ async def search_messages(df_raw):
     return df
 
 
-# @flow(name="Process extract", flow_run_name="extract-twitter")
-# def process_extract():
-#     """
-#     Process extract
-#     """
-
-#     # get messages already extracted
-#     df_raw = read_data(PATH_TWITTER_RAW, "twitter")
-
-#     # get messages
-#     df = asyncio.run(search_messages())
-
-#     # save data
-#     # save_data(PATH_TWITTER_RAW, "twitter", df)
-
-
-@flow(name="Job Twitter extract", log_prints=True)
+@flow(
+    name="Flow Master Twitter Extract",
+    flow_run_name="Flow-master-twitter-extract",
+    log_prints=True,
+)
 def job_twitter_extract():
     """
     Job Twitter extract
     """
+    print("********************************")
+    print("Start extracting Twitter")
+    print("********************************")
+
     # get messages already extracted
     df_raw = read_data(PATH_TWITTER_RAW, "twitter")
 

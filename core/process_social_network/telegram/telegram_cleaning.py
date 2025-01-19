@@ -32,8 +32,8 @@ from core.libs.utils import (
 )
 
 
-@task(name="Format date")
-def format_date(df, account):
+@task(name="Update UTC Date", task_run_name="update-utc-date-{account}")
+def update_utc_date(df, account):
     """
     Format date according to utc
 
@@ -59,7 +59,7 @@ def format_date(df, account):
     return df
 
 
-@task(name="Clean text original")
+@task(name="Clean text original", task_run_name="clean-text-original")
 def clean_text_original(df):
     """
     Clean data
@@ -83,9 +83,10 @@ def clean_text_original(df):
     return df
 
 
-@task(
-    name="Process cleaning",
-    task_run_name="Process cleaning for {account}",
+@flow(
+    name="Flow Single Telegram Cleaning",
+    flow_run_name="Flow-telegram-cleaning-{account}",
+    log_prints=True,
 )
 def process_clean(account):
     """
@@ -97,6 +98,7 @@ def process_clean(account):
     Returns:
         None
     """
+
     # read raw data
     df_raw = read_data(PATH_TELEGRAM_RAW, account)
 
@@ -108,7 +110,7 @@ def process_clean(account):
     print(f"Data to Clean: {df.shape[0]}")
 
     # format date
-    df = format_date(df, account)
+    df = update_utc_date(df, account)
 
     # clean data
     df = clean_text_original(df)
@@ -120,16 +122,23 @@ def process_clean(account):
     save_data(PATH_TELEGRAM_CLEAN, account, df)
 
 
-@flow(name="Flow Telegram Cleaning", log_prints=True)
+@flow(
+    name="Flow Master Telegram Cleaning",
+    flow_run_name="Flow-master-telegram-cleaning",
+    log_prints=True,
+)
 def job_telegram_cleaning():
     """
     Clean data from telegram
     """
 
+    print("********************************")
+    print("Start cleaning Telegram")
+    print("********************************")
+
     # get list of accounts
     list_accounts = get_telegram_accounts(PATH_TELEGRAM_RAW)
 
     for account in list_accounts:
-        print("########################################")
         print(f"Cleaning {account}")
         process_clean(account)

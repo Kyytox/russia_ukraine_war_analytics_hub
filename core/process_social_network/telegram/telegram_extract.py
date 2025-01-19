@@ -24,12 +24,15 @@ from core.libs.telegram_api import telegram_connect
 from core.libs.utils import (
     read_data,
     save_data,
-    get_telegram_accounts,
     concat_old_new_df,
 )
 
 
-@task(task_run_name="get-messages-{account}", cache_policy=NONE)
+@task(
+    name="Get Telegram Messages",
+    task_run_name="get-messages-{account}",
+    cache_policy=NONE,
+)
 async def get_messages(client, account, df_raw):
     """
     Get messages from Telegram
@@ -80,7 +83,11 @@ async def get_messages(client, account, df_raw):
     return df
 
 
-@flow(name="Process extract", flow_run_name="extract-{account}", log_prints=True)
+@flow(
+    name="Flow Single Telegram Extract",
+    flow_run_name="Flow-telegram-extract-{account}",
+    log_prints=True,
+)
 def process_extract(client, account):
     """
     Process extract
@@ -101,13 +108,19 @@ def process_extract(client, account):
 
 
 @flow(
-    name="Flow Telegram Extract",
+    name="Flow Master Telegram Extract",
+    flow_run_name="Flow-master-telegram-extract",
+    description="Extract Telegram messages from accounts",
     log_prints=True,
 )
 def job_telegram_extract():
     """
     Extract messages from Telegram
     """
+    print("********************************")
+    print("Start extracting Telegram")
+    print("********************************")
+
     # Connect to Telegram
     client = telegram_connect()
 
@@ -117,7 +130,5 @@ def job_telegram_extract():
 
     # extract messages for each account
     for account in list_accounts:
-        print("########################################")
         print(f"Extracting {account}")
-
         process_extract(client, account)

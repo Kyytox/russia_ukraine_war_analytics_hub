@@ -6,7 +6,6 @@
 # - Format text
 # - Save data
 
-import re
 import pandas as pd
 from prefect import flow, task
 
@@ -26,7 +25,7 @@ from core.libs.utils import (
 )
 
 
-@task(name="Format date")
+@task(name="Format date", task_run_name="format-date")
 def format_date(df):
     """
     Format date %a %b %d %H:%M:%S %z %Y to %Y-%m-%d %H:%M:%S
@@ -50,7 +49,11 @@ def format_date(df):
     return df
 
 
-@flow(name="Flow Twitter Cleaning", log_prints=True)
+@flow(
+    name="Flow Master Twitter Cleaning",
+    flow_run_name="Flow-master-twitter-cleaning",
+    log_prints=True,
+)
 def job_twitter_cleaning():
     """
     Clean data from Twitter
