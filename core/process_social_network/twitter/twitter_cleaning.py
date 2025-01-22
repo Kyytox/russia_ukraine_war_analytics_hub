@@ -22,6 +22,8 @@ from core.libs.utils import (
     keep_data_to_process,
     concat_old_new_df,
     format_clean_text,
+    upd_data_artifact,
+    create_artifact,
 )
 
 
@@ -43,8 +45,6 @@ def format_date(df):
 
     # convert to datetime
     df["date"] = pd.to_datetime(df["date"])
-
-    print(df.dtypes)
 
     return df
 
@@ -74,8 +74,14 @@ def job_twitter_cleaning():
     # format text
     df["text_original"] = df["text_original"].apply(format_clean_text)
 
+    # update artifact
+    upd_data_artifact("twitter Clean", df.shape[0])
+
     # concat data
     df = concat_old_new_df(df_clean, df, cols=["ID"])
 
     # save data
     save_data(PATH_TWITTER_CLEAN, "twitter", df)
+
+    # create artifact
+    create_artifact("twitter-cleaning")

@@ -29,6 +29,8 @@ from core.libs.utils import (
     get_telegram_accounts,
     concat_old_new_df,
     format_clean_text,
+    upd_data_artifact,
+    create_artifact,
 )
 
 
@@ -115,6 +117,9 @@ def process_clean(account):
     # clean data
     df = clean_text_original(df)
 
+    # update artifact
+    upd_data_artifact(account, df.shape[0])
+
     # concat data
     df = concat_old_new_df(df_raw=df_clean, df_new=df, cols=["ID"])
 
@@ -142,3 +147,6 @@ def job_telegram_cleaning():
     for account in list_accounts:
         print(f"Cleaning {account}")
         process_clean(account)
+
+    # create artifact
+    create_artifact("telegram-cleaning")

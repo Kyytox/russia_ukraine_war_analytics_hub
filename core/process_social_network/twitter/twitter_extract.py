@@ -13,7 +13,13 @@ from core.config.paths import PATH_TWITTER_RAW, PATH_CREDS_API
 
 # Functions
 # from core.libs.twitter_api import twitter_connect
-from core.libs.utils import read_data, save_data, concat_old_new_df
+from core.libs.utils import (
+    read_data,
+    save_data,
+    concat_old_new_df,
+    upd_data_artifact,
+    create_artifact,
+)
 
 
 @task(name="Get credentials", task_run_name="get-credentials")
@@ -270,8 +276,14 @@ def job_twitter_extract():
     # get messages
     df = asyncio.run(search_messages(df_raw))
 
+    # update data artifact
+    upd_data_artifact("twitter-extract", df.shape[0])
+
     # concat data
     df = concat_old_new_df(df_raw, df, cols=["ID"])
 
     # save data
     save_data(PATH_TWITTER_RAW, "twitter", df)
+
+    # create artifacts
+    create_artifact("twitter-extract")

@@ -8,6 +8,8 @@ from core.libs.utils import (
     get_telegram_accounts,
     read_data,
     save_data,
+    upd_data_artifact,
+    create_artifact,
 )
 
 # Variables
@@ -410,6 +412,9 @@ def job_social_media_filter():
             print("No data to filter")
             continue
 
+        # update artifact
+        upd_data_artifact(f"Data to filter for {theme}", df_to_filter.shape[0])
+
         # Apply filters
         if df_filtered.empty:
             df_filtered = apply_filters(df_to_filter, theme, config_filt, hash_filt)
@@ -427,6 +432,9 @@ def job_social_media_filter():
                 ],
                 how="outer",
             )
+
+        # update artifact
+        upd_data_artifact(f"Data filtered for {theme}", df_filtered.shape[0])
 
     if df_filtered.empty:
         print("No data to filter")
@@ -459,3 +467,6 @@ def job_social_media_filter():
     # save data
     print(f"Data Final: {df_filter_final}")
     save_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media", df=df_filter_final)
+
+    # create artifact
+    create_artifact("filter-social-media")

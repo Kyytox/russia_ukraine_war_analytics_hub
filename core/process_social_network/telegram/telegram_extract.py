@@ -25,6 +25,8 @@ from core.libs.utils import (
     read_data,
     save_data,
     concat_old_new_df,
+    upd_data_artifact,
+    create_artifact,
 )
 
 
@@ -100,6 +102,9 @@ def process_extract(client, account):
     with client:
         df = client.loop.run_until_complete(get_messages(client, account, df_raw))
 
+    # update data artifact
+    upd_data_artifact(account, df.shape[0])
+
     # concat data
     df = concat_old_new_df(df_raw, df, cols=["ID"])
 
@@ -132,3 +137,6 @@ def job_telegram_extract():
     for account in list_accounts:
         print(f"Extracting {account}")
         process_extract(client, account)
+
+    # create artifact
+    create_artifact("telegram-extract")

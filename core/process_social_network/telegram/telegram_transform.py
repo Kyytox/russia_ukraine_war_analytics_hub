@@ -30,13 +30,15 @@ from core.libs.utils import (
     keep_data_to_process,
     get_telegram_accounts,
     concat_old_new_df,
+    upd_data_artifact,
+    create_artifact,
 )
 
 # IA
 from core.libs.ollama_ia import ia_treat_message
 
 
-@task(name="Translate data", task_run_name="translate-data-{account}")
+@task(name="Translate data", task_run_name="translate-data")
 def translate_data(df_source):
     """
     Translate data to English
@@ -150,6 +152,9 @@ def process_transform(account):
         return
     print(f"Data to Transform: {df.shape[0]}")
 
+    # update artifact
+    upd_data_artifact(f"{account} - Messages to Transform", df.shape[0])
+
     # add col url
     df["url"] = "https://t.me/" + account + "/" + df["id_message"].astype(str)
 
@@ -186,3 +191,6 @@ def job_telegram_transform():
     for account in list_accounts:
         print(f"Transform Account: {account}")
         process_transform(account)
+
+    # create artifact
+    create_artifact("telegram-transform")

@@ -4,10 +4,57 @@ import json
 import pandas as pd
 from prefect import task
 from prefect.runtime import task_run
+from prefect.variables import Variable
+from prefect.artifacts import create_table_artifact
+
 
 # Variables
 from core.config.paths import PATH_JSON_RU_REGION
 from core.config.variables import LIST_ACCOUNTS_TELEGRAM
+
+
+def upd_data_artifact(info, data):
+    """
+    Update data artifact
+
+    Args:
+        info: information
+        data: data to add
+    """
+
+    # get varoaible
+    data_artifact = Variable.get("data_artifact", default=[])
+
+    # add data
+    new_data = {
+        "info": info,
+        "data": data,
+    }
+    data_artifact.append(new_data)
+
+    # save variable
+    Variable.set("data_artifact", data_artifact, overwrite=True)
+
+
+def create_artifact(key_name):
+    """
+    Create artifact
+
+    Args:
+        key: key of artifact
+    """
+
+    # get data
+    data_artifact = Variable.get("data_artifact", default=[])
+
+    # create data
+    create_table_artifact(
+        key=key_name,
+        table=data_artifact,
+    )
+
+    # reset variable
+    Variable.set("data_artifact", [], overwrite=True)
 
 
 @task(name="Get telegram accounts", task_run_name="get-telegram-accounts")
@@ -82,7 +129,6 @@ def read_data(base_path: str, file_name: str) -> pd.DataFrame:
 
 
 @task(name="Save data", task_run_name=generate_task_name, tags=["save"])
-# def save_data(base_path, file_name, df):
 def save_data(base_path: str, file_name: str, df: pd.DataFrame):
     """
     Save data to parquet

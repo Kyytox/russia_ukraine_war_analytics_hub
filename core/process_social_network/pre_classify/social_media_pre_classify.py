@@ -10,6 +10,8 @@ from core.libs.utils import (
     concat_old_new_df,
     read_data,
     save_data,
+    upd_data_artifact,
+    create_artifact,
 )
 
 from core.libs.ollama_ia import ia_treat_message
@@ -318,6 +320,9 @@ def process_pre_classification(theme, df_filter):
     # add spe cols sabotage
     df_to_class = add_cols_with_schema(df_to_class, schema)
 
+    # update artifact
+    upd_data_artifact(f"Pre Classify {theme}", df_to_class.shape[0])
+
     # concat data
     df = concat_old_new_df(
         df_raw=df_pre_classify, df_new=df_to_class, cols=["ID", "IDX"]
@@ -348,3 +353,6 @@ def job_social_media_pre_classify():
 
     # Incidents Sabotage
     process_pre_classification("sabotage", df_filter)
+
+    # create artifact
+    create_artifact("sociall-media-pre-classify")
