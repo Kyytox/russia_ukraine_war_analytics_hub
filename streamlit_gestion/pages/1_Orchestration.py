@@ -206,7 +206,7 @@ with col1:
     for flow in st.session_state.list_telegram_flows:
         key_name = f'key_{flow.name.replace(" ", "_").lower()}'
         st.toggle(
-            flow.name,
+            flow.name.replace("master", "").replace("-", " ").title(),
             key=key_name,
             on_change=prepare_flows_to_run,
             args=(flow, key_name),
@@ -217,7 +217,7 @@ with col2:
     for flow in st.session_state.list_twitter_flows:
         key_name = f'key_{flow.name.replace(" ", "_").lower()}'
         st.toggle(
-            flow.name,
+            flow.name.replace("master", "").replace("-", " ").title(),
             key=key_name,
             on_change=prepare_flows_to_run,
             args=(flow, key_name),
@@ -229,7 +229,7 @@ with col3:
     for flow in st.session_state.list_filter_flows:
         key_name = f'key_{flow.name.replace(" ", "_").lower()}'
         st.toggle(
-            flow.name,
+            flow.name.replace("master", "").replace("-", " ").title(),
             key=key_name,
             on_change=prepare_flows_to_run,
             args=(flow, key_name),
