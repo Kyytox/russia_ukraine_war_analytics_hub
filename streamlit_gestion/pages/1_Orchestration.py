@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import asyncio
 import streamlit as st
 import pandas as pd
@@ -11,6 +12,7 @@ from prefect.server.schemas.actions import WorkPoolCreate
 from prefect.deployments import run_deployment
 from prefect.deployments.runner import RunnerDeployment
 from prefect.runner.runner import Runner
+from prefect.artifacts import Artifact
 
 st.set_page_config(page_title="Orchestration", page_icon=":gear:", layout="wide")
 
@@ -51,6 +53,9 @@ def ini_session_state():
 
     if "list_flows_to_run" not in st.session_state:
         st.session_state.list_flows_to_run = []
+
+    if "list_artifacts" not in st.session_state:
+        st.session_state.list_artifacts = []
 
 
 def init_list_flows(section, list_all_flows):
@@ -166,6 +171,11 @@ async def call(list_flows):
 
             if res.state_type == "COMPLETED":
                 st.write(f"Flow {flow.name} completed ✅")
+
+                # Get artifacts
+                flow_artifact = await Artifact.get(f"flow-{flow.name}-artifact")
+                st.session_state.list_artifacts.append(flow_artifact)
+
             else:
                 status.update(label="Pipeline failed!", state="error", expanded=True)
                 st.write(res)
@@ -239,3 +249,15 @@ with col3:
 #     st.subheader("Applicatifs Flows")
 #     # for flow in list_flows:
 #     #     st.write(flow.name)
+
+
+# st.write(st.session_state.list_flows_to_run)
+
+st.divider()
+
+# st.write(st.session_state.list_artifacts)
+if st.session_state.list_artifacts:
+    st.subheader("Artifacts")
+    for artifact in st.session_state.list_artifacts:
+        st.write(artifact.key)
+        st.write(pd.DataFrame(json.loads(artifact.data)))
