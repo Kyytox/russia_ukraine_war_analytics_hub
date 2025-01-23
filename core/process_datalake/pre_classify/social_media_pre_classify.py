@@ -265,7 +265,7 @@ def keep_data_to_pre_class(df, col_add_final, col_filter):
 
 @flow(
     name="Flow Single Pre Classification {theme}",
-    flow_run_name="Flow-single-pre-classification-{theme}",
+    flow_run_name="flow-single-pre-classification-{theme}",
     log_prints=True,
 )
 def process_pre_classification(theme, df_filter):
@@ -334,7 +334,7 @@ def process_pre_classification(theme, df_filter):
 
 @flow(
     name="Flow Master Social Media Pre Classify",
-    flow_run_name="Flow-master-social-media-pre-classify",
+    flow_run_name="flow-master-social-media-pre-classify",
     log_prints=True,
 )
 def job_social_media_pre_classify():
@@ -355,4 +355,4 @@ def job_social_media_pre_classify():
     process_pre_classification("sabotage", df_filter)
 
     # create artifact
-    create_artifact("sociall-media-pre-classify")
+    create_artifact("flow-master-social-media-pre-classify-artifact")

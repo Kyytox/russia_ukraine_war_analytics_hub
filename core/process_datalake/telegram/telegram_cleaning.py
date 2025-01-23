@@ -87,7 +87,7 @@ def clean_text_original(df):
 
 @flow(
     name="Flow Single Telegram Cleaning",
-    flow_run_name="Flow-telegram-cleaning-{account}",
+    flow_run_name="flow-telegram-cleaning-{account}",
     log_prints=True,
 )
 def process_clean(account):
@@ -129,7 +129,7 @@ def process_clean(account):
 
 @flow(
     name="Flow Master Telegram Cleaning",
-    flow_run_name="Flow-master-telegram-cleaning",
+    flow_run_name="flow-master-telegram-cleaning",
     log_prints=True,
 )
 def job_telegram_cleaning():
@@ -149,4 +149,4 @@ def job_telegram_cleaning():
         process_clean(account)
 
     # create artifact
-    create_artifact("telegram-cleaning")
+    create_artifact("flow-master-telegram-cleaning-artifact")

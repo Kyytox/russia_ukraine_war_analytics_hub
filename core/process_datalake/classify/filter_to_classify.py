@@ -32,7 +32,7 @@ from core.config.paths import (
 )
 
 
-@task(name="Merge filter to news")
+@task(name="Merge filter to news", task_run_name="merge-filter-to-news")
 def merge_filter_to_news(df_filter, df_to_classify):
     """
     Merge data
@@ -68,7 +68,7 @@ def merge_filter_to_news(df_filter, df_to_classify):
     return df
 
 
-@task(name="Clean columns")
+@task(name="Clean columns", task_run_name="clean-columns")
 def clean_columns(df):
     """
     Clean columns
@@ -126,7 +126,7 @@ def clean_columns(df):
     return df
 
 
-@task(name="Convert columns")
+@task(name="Convert columns", task_run_name="convert-columns")
 def convert_cols(df):
     """
     Convert columns
@@ -147,7 +147,7 @@ def convert_cols(df):
     return df
 
 
-@task(name="Concat data Sources")
+@task(name="Concat data Sources", task_run_name="concat-data-sources")
 def concat_data_sources(df_telegram_filter, df_twitter_filter):
     """
     Concat data sources
@@ -165,7 +165,7 @@ def concat_data_sources(df_telegram_filter, df_twitter_filter):
     return df_filter
 
 
-@task(name="Classify with IA")
+@task(name="Classify with IA", task_run_name="classify-with-ia")
 def classify_with_ia(df):
     """
     Classify with IA

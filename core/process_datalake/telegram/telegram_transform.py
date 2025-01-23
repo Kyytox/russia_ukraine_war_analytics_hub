@@ -120,7 +120,7 @@ def remove_poorly_translated_data(df):
 
 @flow(
     name="Flow Single Telegram Transform",
-    flow_run_name="Flow-telegram-transform-{account}",
+    flow_run_name="flow-telegram-transform-{account}",
     log_prints=True,
 )
 def process_transform(account):
@@ -170,7 +170,7 @@ def process_transform(account):
 
 @flow(
     name="Flow Master Telegram Transform",
-    flow_run_name="Flow-master-telegram-transform",
+    flow_run_name="flow-master-telegram-transform",
     log_prints=True,
 )
 def job_telegram_transform():
@@ -193,4 +193,4 @@ def job_telegram_transform():
         process_transform(account)
 
     # create artifact
-    create_artifact("telegram-transform")
+    create_artifact("flow-master-telegram-transform-artifact")

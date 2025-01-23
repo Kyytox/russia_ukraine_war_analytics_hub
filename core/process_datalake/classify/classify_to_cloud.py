@@ -88,7 +88,7 @@ def format_columns(df):
 
 @flow(
     name="Flow Master Classify to Cloud",
-    flow_run_name="Flow-master-classify-to-cloud",
+    flow_run_name="flow-master-classify-to-cloud",
     log_prints=True,
 )
 def job_classify_to_cloud():

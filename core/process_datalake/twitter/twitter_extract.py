@@ -259,7 +259,7 @@ async def search_messages(df_raw):
 
 @flow(
     name="Flow Master Twitter Extract",
-    flow_run_name="Flow-master-twitter-extract",
+    flow_run_name="flow-master-twitter-extract",
     log_prints=True,
 )
 def job_twitter_extract():
@@ -286,4 +286,4 @@ def job_twitter_extract():
     save_data(PATH_TWITTER_RAW, "twitter", df)
 
     # create artifacts
-    create_artifact("twitter-extract")
+    create_artifact("flow-master-twitter-extract-artifact")

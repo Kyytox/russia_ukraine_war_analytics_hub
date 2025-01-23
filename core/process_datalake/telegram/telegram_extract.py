@@ -87,7 +87,7 @@ async def get_messages(client, account, df_raw):
 
 @flow(
     name="Flow Single Telegram Extract",
-    flow_run_name="Flow-telegram-extract-{account}",
+    flow_run_name="flow-telegram-extract-{account}",
     log_prints=True,
 )
 def process_extract(client, account):
@@ -114,7 +114,7 @@ def process_extract(client, account):
 
 @flow(
     name="Flow Master Telegram Extract",
-    flow_run_name="Flow-master-telegram-extract",
+    flow_run_name="flow-master-telegram-extract",
     description="Extract Telegram messages from accounts",
     log_prints=True,
 )
@@ -139,4 +139,4 @@ def job_telegram_extract():
         process_extract(client, account)
 
     # create artifact
-    create_artifact("telegram-extract")
+    create_artifact("flow-master-telegram-extract-artifact")

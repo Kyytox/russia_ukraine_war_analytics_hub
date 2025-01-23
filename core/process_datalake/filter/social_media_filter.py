@@ -308,7 +308,7 @@ def update_final_data(df, df_old, type):
 
 @flow(
     name="Flow Master Social Media Filter",
-    flow_run_name="Flow-master-social-media-filter",
+    flow_run_name="flow-master-social-media-filter",
     log_prints=True,
 )
 def job_social_media_filter():
@@ -469,4 +469,4 @@ def job_social_media_filter():
     save_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media", df=df_filter_final)
 
     # create artifact
-    create_artifact("filter-social-media")
+    create_artifact("flow-master-social-media-filter-artifact")

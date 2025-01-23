@@ -17,7 +17,7 @@ IA_TRANSLATE = "ia_translate:latest"
 IA_CLASSIFY = "ia_classify:latest"
 
 CPT_LOOP_PROCESS_TRANSLATE = 10
-SIZE_TO_TRANSLATE = 160
+SIZE_TO_TRANSLATE = 99
 
 
 ###############

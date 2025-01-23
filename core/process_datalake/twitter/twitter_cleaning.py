@@ -51,7 +51,7 @@ def format_date(df):
 
 @flow(
     name="Flow Master Twitter Cleaning",
-    flow_run_name="Flow-master-twitter-cleaning",
+    flow_run_name="flow-master-twitter-cleaning",
     log_prints=True,
 )
 def job_twitter_cleaning():
@@ -84,4 +84,4 @@ def job_twitter_cleaning():
     save_data(PATH_TWITTER_CLEAN, "twitter", df)
 
     # create artifact
-    create_artifact("twitter-cleaning")
+    create_artifact("flow-master-twitter-cleaning-artifact")

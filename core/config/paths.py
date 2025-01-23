@@ -12,29 +12,29 @@ PATH_CREDS_GOOGLE_SHEET = "core/utils/credentials.json"
 PATH_TOKEN_GOOGLE_SHEET = "core/utils/token.json"
 
 # data Telegram
-PATH_TELEGRAM_RAW = "data/social_media/telegram/raw"
-PATH_TELEGRAM_CLEAN = "data/social_media/telegram/clean"
-PATH_TELEGRAM_TRANSFORM = "data/social_media/telegram/transform"
-PATH_TELEGRAM_FILTER = "data/social_media/telegram/filtered"
+PATH_TELEGRAM_RAW = "data/datalake/telegram/raw"
+PATH_TELEGRAM_CLEAN = "data/datalake/telegram/clean"
+PATH_TELEGRAM_TRANSFORM = "data/datalake/telegram/transform"
+PATH_TELEGRAM_FILTER = "data/datalake/telegram/filtered"
 
 # data Twitter
-PATH_TWITTER_RAW = "data/social_media/twitter/raw"
-PATH_TWITTER_CLEAN = "data/social_media/twitter/clean"
-PATH_TWITTER_FILTER = "data/social_media/twitter/filtered"
+PATH_TWITTER_RAW = "data/datalake/twitter/raw"
+PATH_TWITTER_CLEAN = "data/datalake/twitter/clean"
+PATH_TWITTER_FILTER = "data/datalake/twitter/filtered"
 
 # Data Filter
-PATH_FILTER_SOCIAL_MEDIA = "data/social_media/filter"
+PATH_FILTER_SOCIAL_MEDIA = "data/datalake/filter"
 
 # Data Pre Classify
-PATH_PRE_CLASSIFY_SOCIAL_MEDIA = "data/social_media/pre_classify"
+PATH_PRE_CLASSIFY_SOCIAL_MEDIA = "data/datalake/pre_classify"
 
 # Data Classify
-PATH_CLASSIFY_SOCIAL_MEDIA = "data/social_media/classify"
+PATH_CLASSIFY_SOCIAL_MEDIA = "data/datalake/classify"
 
 
 # Data Wharehouse
-PATH_DW_SOURCES = "data/warehouse/sources"
-PATH_DW_TRANSFORM = "data/warehouse/transform"
+PATH_DW_SOURCES = "data/data_warehouse/sources"
+PATH_DW_TRANSFORM = "data/data_warehouse/transform"
 
 # Data Marts
 PATH_DM_INCIDENTS_RAILWAY = "data/datamarts/incidents_railway"
