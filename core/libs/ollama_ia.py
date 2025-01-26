@@ -78,10 +78,22 @@ def format_response_classify(response):
     Returns:
         Formatted response
     """
-    if "yes" in response.lower():
+    if "name" in response.lower():
+        return None
+    elif "age" in response.lower():
+        return None
+    elif "yes" in response.lower():
         return "yes"
     elif "no" in response.lower():
         return "no"
+
+    #  jump line replace
+    response = (
+        response.replace(", ", ",")
+        .replace("\n", " ")
+        .replace("\r", " ")
+        .replace(".", "")
+    )
 
     return response
 
