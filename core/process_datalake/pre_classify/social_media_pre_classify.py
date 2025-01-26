@@ -1,6 +1,7 @@
+import os
 import re
 import pandas as pd
-import numpy as np
+from tqdm import tqdm
 from prefect import flow, task
 
 
@@ -20,12 +21,11 @@ from core.libs.ollama_ia import ia_treat_message
 from core.config.paths import (
     PATH_FILTER_SOCIAL_MEDIA,
     PATH_PRE_CLASSIFY_SOCIAL_MEDIA,
+    PATH_SCRIPT_SERVICE_OLLAMA,
 )
 from core.config.variables import (
+    SIZE_TO_PRE_CLASSIFY,
     DICT_LAWS,
-    PROMPT_RAILWAY,
-    PROMPT_ARREST,
-    PROMPT_SABOATGE,
 )
 from core.config.schemas import (
     SCHEMA_PRE_CLASS_RAILWAY,
@@ -34,61 +34,162 @@ from core.config.schemas import (
 )
 
 
-@task(name="Classify with IA", task_run_name="classify-with-ia")
-def pre_classify_with_ia(df, prompt):
+@task(name="Pre classify with IA", task_run_name="pre-classify-with-ia")
+def pre_classify_with_ia(df, col, prompt):
     """
-    Classify with IA
+    Pre classify specific column with IA
 
     Args:
         df: dataframe
+        col: column to pre classify
         prompt: prompt for IA
 
     Returns:
         Dataframe with pre classified data
     """
-    print(f"Data to classify: {df.shape}")
 
-    if "pre_class_ia" not in df.columns:
-        df["pre_class_ia"] = ""
+    group_size = 10
+    df_result = pd.DataFrame()
 
-    # get data to classify with ia, only 300 for avoid errors
-    df_pre_class_ia = (
-        df[(df["pre_class_ia"].isnull() | (df["pre_class_ia"] == ""))]
-        .head(3)
-        .reset_index(drop=True)
-    )
+    # Calcul number of batches
+    total_batches = (len(df) + group_size - 1) // group_size
 
-    print(f"Data to classify with IA: {df_pre_class_ia.shape}")
+    # Create progress bar
+    with tqdm(total=total_batches, desc=f"Pre classify {col} with IA") as pbar:
+        for i in range(0, len(df), group_size):
+            df_group = df[i : i + group_size]
 
-    for i, row in df_pre_class_ia.iterrows():
-        print(f"Index: {i}")
+            # ask IA
+            df_group.loc[:, col] = df_group["text_translate"].apply(
+                lambda x: ia_treat_message(x, "classify", prompt)
+            )
 
-        # get text
-        if row["text_translate"] == "":
-            text = row["text_original"]
-        else:
-            text = row["text_translate"]
+            df_result = pd.concat([df_result, df_group])
 
-        # ask IA
-        df_pre_class_ia.loc[i, "pre_class_ia"] = ia_treat_message(
-            text, "classify", prompt
-        )
+            # Update progress bar
+            pbar.update(1)
 
-    # concat data
-    df_concat = (
-        (pd.concat([df, df_pre_class_ia], ignore_index=True))
-        .drop_duplicates(subset=["ID", "IDX"], keep="last")
-        .sort_values("date")
-        .reset_index(drop=True)
-    )
-    print(df_concat.shape)
+    return df_result
 
-    # replace Nan
-    df_concat["pre_class_ia"] = df_concat["pre_class_ia"].fillna("")
 
-    print(f"Data classified: {df_concat.shape}")
+@task(name="Pre classify theme", task_run_name="pre-classify-theme")
+def pre_classify_theme(df, theme):
+    """
+    Pre classify theme with IA, find if message concern a theme
 
-    return df_concat
+    Args:
+        df: dataframe
+        theme: theme to classify
+
+    Returns:
+        Dataframe with pre classified data
+    """
+
+    if theme == "railway":
+        prompt = """
+        You are an expert in text analysis and classification.
+
+        You do respond by YES or NO 
+        does the message concern a railway incident ?
+
+        A message who concern a railway incident is a message that contains information about accidents, incidents, derailments, sabotage, arson, vandalism, fire, arrests, sentences, or any other event that occurs on a railway.
+
+        Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with YES or NO.
+        """
+    elif theme == "arrest":
+        prompt = """
+        You are an expert in text analysis and classification.
+        
+        You do respond by YES or NO
+        does the message concern an arrest or sentence ?
+        
+        A message who concern an arrest or sentence is a message that contains information about arrests, sentences, trials, court decisions, or any other event that involves the arrest or sentencing of an individual.
+        
+        Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with YES or NO.
+        """
+    elif theme == "sabotage":
+        prompt = """
+        You are an expert in text analysis and classification.
+        
+        You do respond by YES or NO
+        does the message concern sabotage, arson, vandalism, or acts against Russian infrastructure or government ?
+        
+        A message who concern sabotage, arson, vandalism, or acts against Russian infrastructure or government is a message that contains information about sabotage, arson, vandalism, acts against Russian infrastructure or government, or any other event that involves sabotage, arson, vandalism, or acts against Russian infrastructure or government.
+        
+        Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with YES or NO.
+        """
+
+    # pre classify with IA
+    df = pre_classify_with_ia(df, "pre_class_ia", prompt)
+
+    return df
+
+
+@task(name="Pre classify Partisans Names", task_run_name="pre-classify-partisans-names")
+def pre_classify_partisans_names(df, theme):
+    """
+    Find partisans names in text with IA
+
+    Args:
+        df: dataframe
+        theme: theme to classify
+
+    Returns:
+        Dataframe with pre classified partisans names
+    """
+
+    # add col
+    if theme == "railway":
+        col_name = "pre_class_prtsn_names"
+    elif theme == "arrest":
+        col_name = "pre_class_person_name"
+    elif theme == "sabotage":
+        col_name = "pre_class_prtsn_names"
+
+    prompt = """
+    If available, please provide the name(s) of the individual(s) who have been arrested or sentenced. Kindly respond with only the names, as you are not required to discuss the content of the message.
+    If the message contains multiple names, please provide all of them.
+    If the message does not contain any names, please respond with "No names".
+    
+    Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with names or "No names".
+    """
+
+    # Find partisans names
+    return pre_classify_with_ia(df, col_name, prompt)
+
+
+@task(name="Pre classify Partisans Ages", task_run_name="pre-classify-partisans-ages")
+def pre_classify_partisans_ages(df, theme):
+    """
+    Find partisans ages in text with IA
+
+    Args:
+        df: dataframe
+        theme: theme to classify
+
+    Returns:
+        Dataframe with pre classified partisans ages
+    """
+
+    # add col
+    if theme == "railway":
+        col_age = "pre_class_prtsn_age"
+    elif theme == "arrest":
+        col_age = "pre_class_person_age"
+    elif theme == "sabotage":
+        col_age = "pre_class_prtsn_age"
+
+    # prompt
+    prompt = """
+    If available, please provide the age(s) of the individual(s) who have been arrested or sentenced. Kindly respond with only the ages, as you are not required to discuss the content of the message.
+    If the message contains multiple ages, please provide all of them.
+    If the message does not contain any ages, please respond with "No ages".
+
+    Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with ages or "No ages".
+    """
+
+    # Find partisans ages
+    return pre_classify_with_ia(df, col_age, prompt)
 
 
 def find_region(text, LIST_REGIONS):
@@ -133,14 +234,7 @@ def pre_classify_region(df):
     # put keys in list
     LIST_REGIONS = list(dict_regions.keys())
 
-    # add col region
-    df["pre_class_region"] = ""
-
-    # for text_translate not null and not empty
-    mask = df["text_translate"].notna() & (df["text_translate"] != "")
-
-    # find region
-    df.loc[mask, "pre_class_region"] = df.loc[mask, "text_translate"].apply(
+    df.loc[:, "pre_class_region"] = df["text_translate"].apply(
         lambda x: find_region(x, LIST_REGIONS)
     )
 
@@ -177,13 +271,8 @@ def pre_classify_app_laws(df):
     Returns:
         Dataframe with pre classified applied laws
     """
-    # add col pre_class_app_laws
-    df["pre_class_app_laws"] = ""
 
-    # for text_translate not null and not empty
-    mask = df["text_translate"].notna() & (df["text_translate"] != "")
-
-    df.loc[mask, "pre_class_app_laws"] = df.loc[mask, "text_translate"].apply(
+    df.loc[:, "pre_class_app_laws"] = df["text_translate"].apply(
         lambda x: find_law(x, DICT_LAWS)
     )
 
@@ -216,7 +305,7 @@ def remove_cols_filter(df):
     return df
 
 
-@task(name="Add cols with {schema}", task_run_name="add-cols-with-schema-{schema}")
+@task(name="Add cols with Schema", task_run_name="add-cols-with-schema")
 def add_cols_with_schema(df, schema):
     """
     Add columns to DataFrame based on schema
@@ -231,7 +320,7 @@ def add_cols_with_schema(df, schema):
 
     for col, type in schema.items():
         if col not in df.columns:
-            df[col] = np.nan
+            df[col] = None
 
         if type == "datetime64[ns]":
             df[col] = pd.to_datetime(df[col], errors="coerce")
@@ -248,19 +337,23 @@ def add_cols_with_schema(df, schema):
 
 
 @task(name="Keep data to pre classify", task_run_name="keep-data-to-pre-classify")
-def keep_data_to_pre_class(df, col_add_final, col_filter):
+def keep_data_to_pre_class(df_filt, col_add_final, col_filter):
     """
-    Keep data to pre classify
+    Keep data who "add_final" is False and "filter" is True
 
     Args:
-        df: dataframe
+        df_filt: dataframe with filter data
         col_add_final: column add final
         col_filter: column filter
 
     Returns:
         Dataframe with data to pre classify
     """
-    return df[(df[col_add_final] == False) & (df[col_filter])].reset_index(drop=True)
+
+    # keep data according to cols
+    return df_filt[
+        (df_filt[col_add_final] == False) & (df_filt[col_filter])
+    ].reset_index(drop=True)
 
 
 @flow(
@@ -268,7 +361,7 @@ def keep_data_to_pre_class(df, col_add_final, col_filter):
     flow_run_name="flow-single-pre-classification-{theme}",
     log_prints=True,
 )
-def process_pre_classification(theme, df_filter):
+def process_pre_classification(theme, df_filt):
     """
     Apply Pre Classifications
     """
@@ -276,60 +369,132 @@ def process_pre_classification(theme, df_filter):
     # init vars
     if theme == "railway":
         file_name = "pre_classify_railway"
-        prompt_ia = PROMPT_RAILWAY
         schema = SCHEMA_PRE_CLASS_RAILWAY
         col_add_final = "add_final_inc_railway"
         col_filter = "filter_inc_railway"
     elif theme == "arrest":
         file_name = "pre_classify_arrest"
-        prompt_ia = PROMPT_ARREST
         schema = SCHEMA_PRE_CLASS_ARREST
         col_add_final = "add_final_inc_arrest"
         col_filter = "filter_inc_arrest"
     elif theme == "sabotage":
         file_name = "pre_classify_sabotage"
-        prompt_ia = PROMPT_SABOATGE
         schema = SCHEMA_PRE_CLASS_SABOTAGE
         col_add_final = "add_final_inc_sabotage"
         col_filter = "filter_inc_sabotage"
-    else:
-        return
+
+    # get data already Pre classify
+    df_pre_class = read_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, file_name)
+    print("\n", df_pre_class.head(30))
 
     # keep data who not add final and filter
-    df_filter = keep_data_to_pre_class(df_filter, col_add_final, col_filter)
+    df_to_class = keep_data_to_pre_class(df_filt, col_add_final, col_filter)
+    print("\n", df_to_class.head(30))
 
-    # get Pre classify data
-    df_pre_classify = read_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, file_name)
+    df_ids_no_pre_class_ia = pd.DataFrame()
 
-    # add IDX
-    if "IDX" not in df_pre_classify.columns:
-        df_filter["IDX"] = np.nan  # for drop duplicates in ia function
+    if not df_pre_class.empty:
+        # some data already pre classified
+        # get list ID not processed with IA
+        df_ids_no_pre_class_ia = df_to_class[
+            ~df_to_class["ID"].isin(df_pre_class["ID"])  # new data
+            | (
+                df_to_class["ID"].isin(df_pre_class["ID"])  # no pre_class ia
+                & df_pre_class["pre_class_ia"].isnull()
+            )
+            & (df_to_class[col_add_final] == False)
+            & (df_to_class[col_filter])
+        ]["ID"]
 
-    # pre_cassify with IA
-    df_to_class = pre_classify_with_ia(df_filter, prompt_ia)
+        if df_ids_no_pre_class_ia.empty:
+            print("End of process, because no new data and all data already processed")
+            return
 
-    # pre classify Region
-    df_to_class = pre_classify_region(df_to_class)
+        # keep data not in pre classify
+        df_to_class = df_to_class[
+            ~df_to_class["ID"].isin(df_pre_class["ID"])
+        ].reset_index(drop=True)
 
-    # pre classify Applied Laws
-    df_to_class = pre_classify_app_laws(df_to_class)
+    """
+    Pre Classify without IA
+    """
+    if not df_to_class.empty:
 
-    # remove cols filter
-    df_to_class = remove_cols_filter(df_to_class)
+        # pre classify Region
+        df_to_class = pre_classify_region(df_to_class)
 
-    # add spe cols sabotage
-    df_to_class = add_cols_with_schema(df_to_class, schema)
+        # pre classify Applied Laws
+        df_to_class = pre_classify_app_laws(df_to_class)
 
-    # update artifact
-    upd_data_artifact(f"Pre Classify {theme}", df_to_class.shape[0])
+        # remove cols filter
+        df_to_class = remove_cols_filter(df_to_class)
 
-    # concat data
-    df = concat_old_new_df(
-        df_raw=df_pre_classify, df_new=df_to_class, cols=["ID", "IDX"]
+        # add cols with schema
+        df_to_class = add_cols_with_schema(df_to_class, schema)
+
+        # concat old data
+        df_to_class = concat_old_new_df(
+            df_raw=df_pre_class, df_new=df_to_class, cols=["ID", "IDX"]
+        )
+
+    print("LIST ID")
+    print("\n", df_ids_no_pre_class_ia.head(30))
+
+    print("TO CLASSIFY")
+    print("\n", df_to_class.head(30))
+    """
+    Pre Classify with IA
+    """
+
+    if df_to_class.empty:
+        df_to_class = df_pre_class.copy()
+
+    # merge filter and pre classify
+    df_to_class = pd.merge(
+        df_to_class,
+        df_filt[["ID", "text_original", "text_translate"]],
+        on=["ID"],
+        how="left",
+        suffixes=("", "_y"),
     )
 
+    if not df_ids_no_pre_class_ia.empty:
+        # keep data not pre_call with IA and not classifed
+        df_to_class_wh_ia = df_to_class[
+            (df_to_class["ID"].isin(df_ids_no_pre_class_ia))
+        ].reset_index(drop=True)
+    else:
+        df_to_class_wh_ia = df_to_class
+
+    # keep data according to SIZE_TO_PRE_CLASSIFY
+    # We define a threshold of x to avoid excessive processing time due to the IA
+    if SIZE_TO_PRE_CLASSIFY:
+        df_to_class_wh_ia = df_to_class_wh_ia.head(SIZE_TO_PRE_CLASSIFY)
+
+    print("WITH IA")
+    print("\n", df_to_class_wh_ia.head(30))
+
+    # process IA
+    df_to_class_wh_ia = pre_classify_theme(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = pre_classify_partisans_names(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = pre_classify_partisans_ages(df_to_class_wh_ia, theme)
+    print("\n", df_to_class_wh_ia.head(30))
+
+    # concat data
+    df_to_class = (
+        pd.concat([df_to_class, df_to_class_wh_ia])
+        .drop_duplicates(subset=["ID", "IDX"], keep="last")
+        .sort_values("date")
+        .reset_index(drop=True)
+    )
+
+    # remove text_translate
+    df_to_class = df_to_class.drop(columns=["text_original", "text_translate"])
+    print("\n", df_to_class)
+    print("\n", df_to_class.dtypes)
+
     # save data
-    save_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, file_name, df)
+    save_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, file_name, df_to_class)
 
 
 @flow(
@@ -342,6 +507,13 @@ def job_social_media_pre_classify():
     Process Pre Classify Social Media
     """
 
+    print("********************************")
+    print("Start Pre Classifications")
+    print("********************************")
+
+    # start service ollama
+    os.system(f"sh {PATH_SCRIPT_SERVICE_OLLAMA}")
+
     # get Filter data
     df_filter = read_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media")
 
@@ -349,10 +521,10 @@ def job_social_media_pre_classify():
     process_pre_classification("railway", df_filter)
 
     # Incidents Arrest
-    process_pre_classification("arrest", df_filter)
+    # process_pre_classification("arrest", df_filter)
 
     # Incidents Sabotage
-    process_pre_classification("sabotage", df_filter)
+    # process_pre_classification("sabotage", df_filter)
 
     # create artifact
-    create_artifact("flow-master-social-media-pre-classify-artifact")
+    # create_artifact("flow-master-social-media-pre-classify-artifact")
