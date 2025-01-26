@@ -202,9 +202,9 @@ def concat_old_new_df(
 
     df = (
         pd.concat([df_raw, df_new])
-        .drop_duplicates(subset=cols if len(cols) > 0 else None)
-        .reset_index(drop=True)
+        .drop_duplicates(subset=cols if len(cols) > 0 else None, keep="last")
         .sort_values("date" if "date" in df_new.columns else [])
+        .reset_index(drop=True)
     )
     return df
 
