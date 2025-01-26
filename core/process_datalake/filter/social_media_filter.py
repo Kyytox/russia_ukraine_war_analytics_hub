@@ -450,11 +450,20 @@ def job_social_media_filter():
     df_filtered = df_filtered.drop(columns=["filter_theme"])
 
     # get data Filtered, according to filter_inc
-    df_filtered = df_filtered[
-        df_filtered[[col for col in df_filtered.columns if "filter_inc" in col]].any(
-            axis=1
-        )
-    ].reset_index(drop=True)
+    df_filtered = (
+        df_filtered[
+            df_filtered[
+                [col for col in df_filtered.columns if "filter_inc" in col]
+            ].any(axis=1)
+        ]
+        .sort_values("date")
+        .reset_index(drop=True)
+    )
+
+    # if text_translate is empty, replace by text_original
+    df_filtered["text_translate"] = df_filtered["text_translate"].fillna(
+        df_filtered["text_original"]
+    )
 
     # update hash filter
     df_hash_final = update_final_data(df_hashed, df_hash_filte_old, "hash")
