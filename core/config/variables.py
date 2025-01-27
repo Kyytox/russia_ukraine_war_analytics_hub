@@ -18,8 +18,8 @@ IA_TRANSLATE = "ia_translate:latest"
 IA_CLASSIFY = "mistral-nemo:latest"
 
 CPT_LOOP_PROCESS_TRANSLATE = 10
-SIZE_TO_TRANSLATE = 29
-SIZE_TO_PRE_CLASSIFY = 19
+SIZE_TO_TRANSLATE = 9
+SIZE_TO_PRE_CLASSIFY = 9
 
 
 ###############

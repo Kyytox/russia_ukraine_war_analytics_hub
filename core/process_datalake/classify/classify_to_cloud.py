@@ -19,7 +19,7 @@ from core.libs.google_api import (
 )
 
 # Variables
-from core.config.paths import PATH_CLASSIFY_SOCIAL_MEDIA
+from core.config.paths import PATH_CLASSIFY_DATALAKE
 
 from core.config.variables import (
     ID_EXCEL_INCIDENT_RAILWAY,
@@ -108,7 +108,7 @@ def job_classify_to_cloud():
     print(df_excel_final)
 
     # get classify data
-    df_classify = read_data(PATH_CLASSIFY_SOCIAL_MEDIA, "classify_inc_railway")
+    df_classify = read_data(PATH_CLASSIFY_DATALAKE, "classify_inc_railway")
 
     # Compare data
     if df_excel_final.shape[0] > df_classify.shape[0]:
@@ -116,7 +116,7 @@ def job_classify_to_cloud():
         return
 
     # save Ecel Final
-    df_excel_final.to_csv(f"{PATH_CLASSIFY_SOCIAL_MEDIA}/old_excel_{today}.csv")
+    df_excel_final.to_csv(f"{PATH_CLASSIFY_DATALAKE}/old_excel_{today}.csv")
 
     # format data
     df_classify = format_columns(df_classify)

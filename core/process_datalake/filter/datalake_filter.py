@@ -16,7 +16,7 @@ from core.libs.utils import (
 from core.config.paths import (
     PATH_TELEGRAM_TRANSFORM,
     PATH_TWITTER_CLEAN,
-    PATH_FILTER_SOCIAL_MEDIA,
+    PATH_FILTER_DATALAKE,
 )
 
 from core.utils.terms_filter.terms_incidents_railway import (
@@ -298,7 +298,7 @@ def update_final_data(df, df_old, type):
     df_old = (
         pd.concat([df_old, mask])
         .drop_duplicates(subset=["ID"], keep="last")
-        .sort_values("date")
+        .sort_values("date" if "date" in df_old.columns else [])
         .reset_index(drop=True)
         .ffill()
     )
@@ -307,20 +307,20 @@ def update_final_data(df, df_old, type):
 
 
 @flow(
-    name="Flow Master Social Media Filter",
-    flow_run_name="flow-master-social-media-filter",
+    name="Flow Master Datalake Filter",
+    flow_run_name="flow-master-datalake-filter",
     log_prints=True,
 )
-def job_social_media_filter():
+def job_datalake_filter():
     """
     Process filter
     """
 
     # get Filter data
-    df_filter_old = read_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media")
+    df_filter_old = read_data(PATH_FILTER_DATALAKE, "filter_datalake")
 
     # get Hash Filter
-    df_hash_filte_old = read_data(PATH_FILTER_SOCIAL_MEDIA, "hash_filter_social_media")
+    df_hash_filte_old = read_data(PATH_FILTER_DATALAKE, "hash_filter_datalake")
 
     # get Telegram data
     df_telegram = get_telegram_data()
@@ -333,12 +333,6 @@ def job_social_media_filter():
 
     # remove Data not pertinant
     df = remove_data_not_pertinant(df)
-
-    # for test keep 5000
-    # if df_filter_old.empty:
-    #     df = df[0:1000]
-    # else:
-    #     df = df[0:2000]
 
     df_filtered = pd.DataFrame()
 
@@ -471,11 +465,11 @@ def job_social_media_filter():
 
     # save data
     print(f"Data Hash: {df_hash_final}")
-    save_data(PATH_FILTER_SOCIAL_MEDIA, "hash_filter_social_media", df=df_hash_final)
+    save_data(PATH_FILTER_DATALAKE, "hash_filter_datalake", df=df_hash_final)
 
     # save data
     print(f"Data Final: {df_filter_final}")
-    save_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media", df=df_filter_final)
+    save_data(PATH_FILTER_DATALAKE, "filter_datalake", df=df_filter_final)
 
     # create artifact
-    create_artifact("flow-master-social-media-filter-artifact")
+    create_artifact("flow-master-datalake-filter-artifact")

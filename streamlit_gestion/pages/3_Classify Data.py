@@ -7,9 +7,9 @@ import numpy as np
 os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 from core.config.paths import (
-    PATH_FILTER_SOCIAL_MEDIA,
-    PATH_PRE_CLASSIFY_SOCIAL_MEDIA,
-    PATH_CLASSIFY_SOCIAL_MEDIA,
+    PATH_FILTER_DATALAKE,
+    PATH_PRE_CLASSIFY_DATALAKE,
+    PATH_CLASSIFY_DATALAKE,
 )
 from core.config.schemas import (
     SCHEMA_EXCEL_RAILWAY,
@@ -30,29 +30,29 @@ def init_state_theme_data():
     """
 
     st.session_state["path_filter_source"] = (
-        f"{PATH_FILTER_SOCIAL_MEDIA}/filter_social_media.parquet"
+        f"{PATH_FILTER_DATALAKE}/filter_DATALAKE.parquet"
     )
 
     theme_data_config = {
         "Incidents Railway": {
-            "path_pre_classify": f"{PATH_PRE_CLASSIFY_SOCIAL_MEDIA}/pre_classify_railway.parquet",
-            "path_classify": f"{PATH_CLASSIFY_SOCIAL_MEDIA}/classify_inc_railway.parquet",
+            "path_pre_classify": f"{PATH_PRE_CLASSIFY_DATALAKE}/pre_classify_railway.parquet",
+            "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_railway.parquet",
             "schema_excel": SCHEMA_EXCEL_RAILWAY,
             "name_col_add_final": "add_final_inc_railway",
             "name_col_filter": "filter_inc_railway",
             "found_terms": "found_terms_railway",
         },
         "Incidents Arrest": {
-            "path_pre_classify": f"{PATH_PRE_CLASSIFY_SOCIAL_MEDIA}/pre_classify_arrest.parquet",
-            "path_classify": f"{PATH_CLASSIFY_SOCIAL_MEDIA}/classify_inc_arrest.parquet",
+            "path_pre_classify": f"{PATH_PRE_CLASSIFY_DATALAKE}/pre_classify_arrest.parquet",
+            "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_arrest.parquet",
             "schema_excel": SCHEMA_EXCEL_ARREST,
             "name_col_add_final": "add_final_inc_arrest",
             "name_col_filter": "filter_inc_arrest",
             "found_terms": "found_terms_arrest",
         },
         "Incidents Sabotage": {
-            "path_pre_classify": f"{PATH_PRE_CLASSIFY_SOCIAL_MEDIA}/pre_classify_sabotage.parquet",
-            "path_classify": f"{PATH_CLASSIFY_SOCIAL_MEDIA}/classify_inc_sabotage.parquet",
+            "path_pre_classify": f"{PATH_PRE_CLASSIFY_DATALAKE}/pre_classify_sabotage.parquet",
+            "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_sabotage.parquet",
             "schema_excel": SCHEMA_EXCEL_SABOTAGE,
             "name_col_add_final": "add_final_inc_sabotage",
             "name_col_filter": "filter_inc_sabotage",

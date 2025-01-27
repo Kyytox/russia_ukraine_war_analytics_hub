@@ -19,8 +19,8 @@ from core.libs.ollama_ia import ia_treat_message
 
 # Variables
 from core.config.paths import (
-    PATH_FILTER_SOCIAL_MEDIA,
-    PATH_PRE_CLASSIFY_SOCIAL_MEDIA,
+    PATH_FILTER_DATALAKE,
+    PATH_PRE_CLASSIFY_DATALAKE,
     PATH_SCRIPT_SERVICE_OLLAMA,
 )
 from core.config.variables import (
@@ -384,7 +384,7 @@ def process_pre_classification(theme, df_filt):
         col_filter = "filter_inc_sabotage"
 
     # get data already Pre classify
-    df_pre_class = read_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, file_name)
+    df_pre_class = read_data(PATH_PRE_CLASSIFY_DATALAKE, file_name)
     print("\n", df_pre_class.head(30))
 
     # keep data who not add final and filter
@@ -494,17 +494,17 @@ def process_pre_classification(theme, df_filt):
     print("\n", df_to_class.dtypes)
 
     # save data
-    save_data(PATH_PRE_CLASSIFY_SOCIAL_MEDIA, file_name, df_to_class)
+    save_data(PATH_PRE_CLASSIFY_DATALAKE, file_name, df_to_class)
 
 
 @flow(
-    name="Flow Master Social Media Pre Classify",
-    flow_run_name="flow-master-social-media-pre-classify",
+    name="Flow Master Datalake Pre Classify",
+    flow_run_name="flow-master-datalake-pre-classify",
     log_prints=True,
 )
-def job_social_media_pre_classify():
+def job_datalake_pre_classify():
     """
-    Process Pre Classify Social Media
+    Process Pre Classify Datalake
     """
 
     print("********************************")
@@ -515,7 +515,7 @@ def job_social_media_pre_classify():
     os.system(f"sh {PATH_SCRIPT_SERVICE_OLLAMA}")
 
     # get Filter data
-    df_filter = read_data(PATH_FILTER_SOCIAL_MEDIA, "filter_social_media")
+    df_filter = read_data(PATH_FILTER_DATALAKE, "filter_datalake")
 
     # Incidents Railway
     process_pre_classification("railway", df_filter)
@@ -527,4 +527,4 @@ def job_social_media_pre_classify():
     # process_pre_classification("sabotage", df_filter)
 
     # create artifact
-    # create_artifact("flow-master-social-media-pre-classify-artifact")
+    # create_artifact("flow-master-datalake-pre-classify-artifact")

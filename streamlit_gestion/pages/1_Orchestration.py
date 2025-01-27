@@ -183,11 +183,11 @@ async def call(list_flows):
 
         status.update(label="Pipeline completed!", state="complete", expanded=True)
 
-    st.session_state.list_flows_to_run = []
+    # st.session_state.list_flows_to_run = []
 
-    for key in st.session_state.keys():
-        if "key_" in key:
-            st.session_state[key] = False
+    # for key in st.session_state.keys():
+    #     if "key_" in key:
+    #         st.session_state[key] = False
 
     st.success("All flows completed")
     if st.button("refresh"):

@@ -19,7 +19,7 @@ from core.libs.google_api import (
 
 # Variables
 from core.config.paths import (
-    PATH_CLASSIFY_SOCIAL_MEDIA,
+    PATH_CLASSIFY_DATALAKE,
 )
 from core.config.variables import (
     ID_EXCEL_INCIDENT_RAILWAY,
@@ -57,7 +57,7 @@ def process_incidents_arrest(service):
     df_excel = get_sheet_data(service, spreadsheet_id, range_name)
 
     # get data classified
-    df = read_data(PATH_CLASSIFY_SOCIAL_MEDIA, "classify_inc_arrest")
+    df = read_data(PATH_CLASSIFY_DATALAKE, "classify_inc_arrest")
 
     # rename columns
     df.rename(columns=dict_cols, inplace=True)

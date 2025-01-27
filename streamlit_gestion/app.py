@@ -11,5 +11,5 @@ if mod not in sys.path:
 from core.config.paths import (
     PATH_TELEGRAM_TRANSFORM,
     PATH_TWITTER_CLEAN,
-    PATH_FILTER_SOCIAL_MEDIA,
+    PATH_FILTER_DATALAKE,
 )

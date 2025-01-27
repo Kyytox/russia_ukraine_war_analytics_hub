@@ -20,7 +20,7 @@ deployments:
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_social_network/telegram/telegram_extract.py:job_telegram_extract
+    entrypoint: ./core/process_datalake/telegram/telegram_extract.py:job_telegram_extract
     parameters: {}
     work_pool:
       name: main-pool
@@ -34,7 +34,7 @@ deployments:
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_social_network/telegram/telegram_cleaning.py:job_telegram_cleaning
+    entrypoint: ./core/process_datalake/telegram/telegram_cleaning.py:job_telegram_cleaning
     parameters: {}
     work_pool:
       name: main-pool
@@ -48,7 +48,7 @@ deployments:
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_social_network/telegram/telegram_transform.py:job_telegram_transform
+    entrypoint: ./core/process_datalake/telegram/telegram_transform.py:job_telegram_transform
     parameters: {}
     work_pool:
       name: main-pool
@@ -62,7 +62,7 @@ deployments:
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_social_network/twitter/twitter_extract.py:job_twitter_extract
+    entrypoint: ./core/process_datalake/twitter/twitter_extract.py:job_twitter_extract
     parameters: {}
     work_pool:
       name: main-pool
@@ -76,7 +76,7 @@ deployments:
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_social_network/twitter/twitter_cleaning.py:job_twitter_cleaning
+    entrypoint: ./core/process_datalake/twitter/twitter_cleaning.py:job_twitter_cleaning
     parameters: {}
     work_pool:
       name: main-pool
@@ -85,12 +85,12 @@ deployments:
     enforce_parameter_schema: true
     schedules: []
 
-  - name: master-social-media-filter
+  - name: master-datalake-filter
     version: null
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_social_network/filter/social_media_filter.py:job_social_media_filter
+    entrypoint: ./core/process_datalake/filter/datalake_filter.py:job_datalake_filter
     parameters: {}
     work_pool:
       name: main-pool
@@ -99,12 +99,12 @@ deployments:
     enforce_parameter_schema: true
     schedules: []
 
-  - name: master-social-media-pre-classify
+  - name: master-datalake-pre-classify
     version: null
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_social_network/pre_classify/social_media_pre_classify.py:job_social_media_pre_classify
+    entrypoint: ./core/process_datalake/pre_classify/datalake_pre_classify.py:job_datalake_pre_classify
     parameters: {}
     work_pool:
       name: main-pool

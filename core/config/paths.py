@@ -23,13 +23,13 @@ PATH_TWITTER_CLEAN = "data/datalake/twitter/clean"
 PATH_TWITTER_FILTER = "data/datalake/twitter/filtered"
 
 # Data Filter
-PATH_FILTER_SOCIAL_MEDIA = "data/datalake/filter"
+PATH_FILTER_DATALAKE = "data/datalake/filter"
 
 # Data Pre Classify
-PATH_PRE_CLASSIFY_SOCIAL_MEDIA = "data/datalake/pre_classify"
+PATH_PRE_CLASSIFY_DATALAKE = "data/datalake/pre_classify"
 
 # Data Classify
-PATH_CLASSIFY_SOCIAL_MEDIA = "data/datalake/classify"
+PATH_CLASSIFY_DATALAKE = "data/datalake/classify"
 
 
 # Data Wharehouse
