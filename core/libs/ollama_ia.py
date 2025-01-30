@@ -78,9 +78,14 @@ def format_response_classify(response):
     Returns:
         Formatted response
     """
-    if "name" in response.lower():
+
+    if "other" in response.lower():
+        return None
+    elif "name" in response.lower():
         return None
     elif "age" in response.lower():
+        return None
+    elif "unknown" in response.lower():
         return None
     elif "yes" in response.lower():
         return "yes"

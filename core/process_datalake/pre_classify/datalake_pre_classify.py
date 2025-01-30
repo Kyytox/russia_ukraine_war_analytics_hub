@@ -192,6 +192,83 @@ def pre_classify_partisans_ages(df, theme):
     return pre_classify_with_ia(df, col_age, prompt)
 
 
+@task(name="Pre classify Incident Type", task_run_name="pre-classify-incident-type")
+def pre_classify_incident_type(df, theme):
+    """
+    Find incident type in text with IA
+
+    Args:
+        df: dataframe
+        theme: theme to classify
+
+    Returns:
+        Dataframe with pre classified incident type
+    """
+
+    # add col
+    if theme == "railway":
+        col_age = "pre_class_inc_type"
+    elif theme == "arrest":
+        return df
+    elif theme == "sabotage":
+        return df
+
+    # prompt
+    prompt = """
+    If available, please provide the type of incident that occurred. Kindly respond with only the type of incident, as you are not required to discuss the content of the message.
+    
+    You can choose from the following options: Derailment, Sabotage, Fire, Collision, Attack, Other.
+    
+    If the message contains multiple types of incidents, please provide only one, the most relevant if possible.
+    If the message does not contain any information about the type of incident, please respond with "Other".
+    
+    Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with the type of incident or "Other".
+    """
+
+    # Find Incident Type
+    return pre_classify_with_ia(df, col_age, prompt)
+
+
+@task(
+    name="Pre classify Damaged Equipment",
+    task_run_name="pre-classify-damaged-equipment",
+)
+def pre_classify_damaged_equipment(df, theme):
+    """
+    Find damaged equipment in text with IA
+
+    Args:
+        df: dataframe
+        theme: theme to classify
+
+    Returns:
+        Dataframe with pre classified damaged equipment
+    """
+
+    # add col
+    if theme == "railway":
+        col_age = "pre_class_dmg_eqp"
+    elif theme == "arrest":
+        return df
+    elif theme == "sabotage":
+        return df
+
+    # prompt
+    prompt = """
+    If available, please provide the type of equipment that was damaged. Kindly respond with only the type of equipment, as you are not required to discuss the content of the message.
+    
+    You can choose from the following options: Freight Train, Passengers Train, Locomotive, Relay Cabin, Infrastructure, Railroad Tracks, Electric Box, Unknown.
+    
+    If the message contains multiple types of equipment, please provide only one, the most relevant if possible.
+    If the message does not contain any information about the type of equipment, please respond with "Unknown".
+    
+    Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with the type of equipment or "Unknown".
+    """
+
+    # Find Damaged Equipment
+    return pre_classify_with_ia(df, col_age, prompt)
+
+
 def find_region(text, LIST_REGIONS):
     """
     Find region in text
@@ -393,17 +470,33 @@ def process_pre_classification(theme, df_filt):
 
     df_ids_no_pre_class_ia = pd.DataFrame()
 
+    # if not df_pre_class.empty:
+    #     # some data already pre classified
+    #     # get list ID not processed with IA
+    #     df_ids_no_pre_class_ia = df_to_class[
+    #         ~df_to_class["ID"].isin(df_pre_class["ID"])  # new data
+    #         | (
+    #             df_to_class["ID"].isin(df_pre_class["ID"])  # no pre_class ia
+    #             # & df_pre_class["pre_class_ia"].isnull()
+    #             & pd.isnull(df_pre_class["pre_class_ia"])
+    #         )
+    #         & (df_to_class[col_add_final] == False)
+    #         & (df_to_class[col_filter])
+    #     ]["ID"]
+
     if not df_pre_class.empty:
-        # some data already pre classified
+        # merge filter and pre classify
+        df_merged = pd.merge(
+            df_to_class, df_pre_class[["ID", "pre_class_ia"]], on="ID", how="left"
+        )
+        print("DFDFVDFVDVDVDFVDFVDFV\n", df_merged.head(50))
+
         # get list ID not processed with IA
-        df_ids_no_pre_class_ia = df_to_class[
-            ~df_to_class["ID"].isin(df_pre_class["ID"])  # new data
-            | (
-                df_to_class["ID"].isin(df_pre_class["ID"])  # no pre_class ia
-                & df_pre_class["pre_class_ia"].isnull()
-            )
-            & (df_to_class[col_add_final] == False)
-            & (df_to_class[col_filter])
+        df_ids_no_pre_class_ia = df_merged[
+            (~df_merged["ID"].isin(df_pre_class["ID"]))  # New IDs
+            | (pd.isnull(df_merged["pre_class_ia"]))  # IDs without pre_class_ia
+            & (df_merged[col_add_final] == False)
+            & (df_merged[col_filter])
         ]["ID"]
 
         if df_ids_no_pre_class_ia.empty:
@@ -478,6 +571,8 @@ def process_pre_classification(theme, df_filt):
     df_to_class_wh_ia = pre_classify_theme(df_to_class_wh_ia, theme)
     df_to_class_wh_ia = pre_classify_partisans_names(df_to_class_wh_ia, theme)
     df_to_class_wh_ia = pre_classify_partisans_ages(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = pre_classify_incident_type(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = pre_classify_damaged_equipment(df_to_class_wh_ia, theme)
     print("\n", df_to_class_wh_ia.head(30))
 
     # concat data
