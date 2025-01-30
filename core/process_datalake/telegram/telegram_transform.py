@@ -10,7 +10,9 @@
 # - save data
 
 import os
+from tqdm import tqdm
 
+import pandas as pd
 from prefect import flow, task
 
 # Variables
@@ -56,23 +58,47 @@ def translate_data(df_source):
     df_source = df_source.sort_values(by="word_count", ascending=True).reset_index(
         drop=True
     )
-    print(f"Size sorted: {df_source}")
+    # print(f"Size sorted: {df_source}")
+    print(
+        f"Min: {df_source['word_count'].min()} - Max: {df_source['word_count'].max()}"
+    )
 
     # keep only x messages
     df = df_source.loc[:SIZE_TO_TRANSLATE].copy()
     print(f"Size to translate: {df.shape}")
 
-    # translate text
-    for i, row in df.iterrows():
-        print(f"Index: {i} - Id: {row['id_message']}")
-        df.loc[i, "text_translate"] = ia_treat_message(
-            row["text_original"], "translate"
-        )
+    # # translate text
+    # for i, row in df.iterrows():
+    #     print(f"Index: {i} - Id: {row['id_message']}")
+    #     df.loc[i, "text_translate"] = ia_treat_message(
+    #         row["text_original"], "translate"
+    #     )
+
+    group_size = 10
+    df_result = pd.DataFrame()
+
+    # Calcul number of batches
+    total_batches = (len(df) + group_size - 1) // group_size
+
+    # Create progress bar
+    with tqdm(total=total_batches, desc=f"Translate data") as pbar:
+        for i in range(0, len(df), group_size):
+            df_group = df.loc[i : i + group_size].copy()
+
+            # ask IA
+            df_group.loc[:, "text_translate"] = df_group["text_original"].apply(
+                lambda x: ia_treat_message(x, "translate")
+            )
+
+            df_result = pd.concat([df_result, df_group])
+
+            # Update progress bar
+            pbar.update(1)
 
     # remove col word_count
-    df = df.drop(columns=["word_count"])
+    df_result = df_result.drop(columns=["word_count"])
 
-    return df
+    return df_result
 
 
 @task(
