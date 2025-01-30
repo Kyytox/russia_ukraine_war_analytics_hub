@@ -183,3 +183,4 @@ _brouillons/*
 /*.csv
 /*.ipynb
 /*.py
+streamlit_gestion/3_Classify Data copy.py
