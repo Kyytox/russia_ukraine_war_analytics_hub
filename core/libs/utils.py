@@ -147,6 +147,7 @@ def save_data(base_path: str, file_name: str, df: pd.DataFrame):
         print(f"No data to save")
         return
 
+    print(base_path)
     # create folder if not exist
     if not os.path.exists(base_path):
         os.makedirs(base_path)
@@ -228,7 +229,10 @@ def get_regions_geojson():
 
     # update dict
     dict_region = {
-        k.replace("Moskva", "Moscow").replace("'", ""): v
+        k.replace("Moskva", "Moscow")
+        .replace("'", "")
+        .replace("Moscow Oblast", "Moscow")
+        .replace("Moscow City", "Moscow"): v
         for k, v in dict_region.items()
     }
 

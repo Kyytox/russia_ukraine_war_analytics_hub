@@ -1,0 +1,22 @@
+DWH_SCHEMA_EXCEL_RAILWAY = {
+    "IDX": "object",
+    "date": "datetime64[ns]",
+    "region": "object",
+    "location": "object",
+    "gps": "object",
+    "dmg_eqp": "object",
+    "inc_type": "object",
+    "coll_with": "object",
+    "nb_loco_dmg": "int64",
+    "nb_relay_dmg": "int64",
+    "prtsn_grp": "object",
+    "prtsn_arr": "bool",
+    "prtsn_names": "object",
+    "prtsn_age": "object",
+    "app_laws": "object",
+    "source_links": "object",
+    #
+    "sabotage_success": "object",
+    "comments": "object",
+    "exact_date": "object",
+}
