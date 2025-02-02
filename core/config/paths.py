@@ -25,21 +25,23 @@ PATH_TWITTER_FILTER = "data/datalake/twitter/filtered"
 # Data Filter
 PATH_FILTER_DATALAKE = "data/datalake/filter"
 
-# Data Pre Classify
-PATH_PRE_CLASSIFY_DATALAKE = "data/datalake/pre_classify"
+# Data Qualif
+PATH_QUALIF_DATALAKE = "data/datalake/qualification"
 
 # Data Classify
 PATH_CLASSIFY_DATALAKE = "data/datalake/classify"
 
 
 # Data Wharehouse
-PATH_DW_SOURCES = "data/data_warehouse/sources"
-PATH_DW_TRANSFORM = "data/data_warehouse/transform"
+PATH_DWH_SOURCES = "data/data_warehouse/sources"
+# PATH_DWH_TRANSFORM = "data/data_warehouse/transform"
 
 # Data Marts
-PATH_DM_INCIDENTS_RAILWAY = "data/datamarts/incidents_railway"
+# PATH_DMT_INC_RAILWAY = "data/datamarts/incidents_railway"
+PATH_DMT_INC_RAILWAY = "data/data_warehouse/datamarts/incidents_railway"
 
 # Path Utils
+# PATH_JSON_RU_REGION = "core/utils/russia_region.json"
 PATH_JSON_RU_REGION = "core/utils/ru_region.json"
 
 # scripts

@@ -47,9 +47,9 @@ def ini_session_state():
         tmp_ = init_list_flows("filter", st.session_state.list_all_flows)
         st.session_state.list_filter_flows = sort_flows(tmp_)
 
-    if "list_applicatifs_flows" not in st.session_state:
-        tmp_ = init_list_flows("applicatifs", st.session_state.list_all_flows)
-        st.session_state.list_applicatifs_flows = sort_flows(tmp_)
+    # if "list_applicatifs_flows" not in st.session_state:
+    #     tmp_ = init_list_flows("applicatifs", st.session_state.list_all_flows)
+    #     st.session_state.list_applicatifs_flows = sort_flows(tmp_)
 
     if "list_flows_to_run" not in st.session_state:
         st.session_state.list_flows_to_run = []
@@ -70,27 +70,27 @@ def init_list_flows(section, list_all_flows):
         list_flows = [
             flow
             for flow in list_all_flows
-            if "telegram" in flow.name.lower() and "master" in flow.name.lower()
+            if "telegram" in flow.name.lower() and "dlk" in flow.name.lower()
         ]
     elif section == "twitter":
         list_flows = [
             flow
             for flow in list_all_flows
-            if "twitter" in flow.name.lower() and "master" in flow.name.lower()
+            if "twitter" in flow.name.lower() and "dlk" in flow.name.lower()
         ]
     elif section == "filter":
         list_flows = [
             flow
             for flow in list_all_flows
-            if ("filter" in flow.name.lower() or "pre" in flow.name.lower())
-            and "master" in flow.name.lower()
+            if ("filter" in flow.name.lower() or "qualif" in flow.name.lower())
+            and "dlk" in flow.name.lower()
         ]
-    elif section == "applicatifs":
-        list_flows = [
-            flow
-            for flow in list_all_flows
-            if "applicatifs" in flow.name.lower() and "master" in flow.name.lower()
-        ]
+    # elif section == "applicatifs":
+    #     list_flows = [
+    #         flow
+    #         for flow in list_all_flows
+    #         if "applicatifs" in flow.name.lower() and "flow" in flow.name.lower()
+    #     ]
 
     # sort list
     list_flows = sort_flows(list_flows)
@@ -114,7 +114,7 @@ def sort_flows(list_flows):
         "twitter-extract": 4,
         "twitter-clean": 5,
         "filter": 6,
-        "pre-classify": 7,
+        "qualif": 7,
     }
 
     # sort according to the presence of substrings in dic_order_flows

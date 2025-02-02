@@ -20,32 +20,32 @@ from core.libs.ollama_ia import ia_treat_message
 # Variables
 from core.config.paths import (
     PATH_FILTER_DATALAKE,
-    PATH_PRE_CLASSIFY_DATALAKE,
+    PATH_QUALIF_DATALAKE,
     PATH_SCRIPT_SERVICE_OLLAMA,
 )
 from core.config.variables import (
-    SIZE_TO_PRE_CLASSIFY,
+    SIZE_TO_QUALIF,
     DICT_LAWS,
 )
 from core.config.schemas import (
-    SCHEMA_PRE_CLASS_RAILWAY,
-    SCHEMA_PRE_CLASS_ARREST,
-    SCHEMA_PRE_CLASS_SABOTAGE,
+    SCHEMA_QUALIF_RAILWAY,
+    SCHEMA_QUALIF_ARREST,
+    SCHEMA_QUALIF_SABOTAGE,
 )
 
 
-@task(name="Pre classify with IA", task_run_name="pre-classify-with-ia")
-def pre_classify_with_ia(df, col, prompt):
+@task(name="Qualif with IA", task_run_name="pre-classify-with-ia")
+def qualif_with_ia(df, col, prompt):
     """
-    Pre classify specific column with IA
+    Qualif specific column with IA
 
     Args:
         df: dataframe
-        col: column to pre classify
+        col: column to qualif
         prompt: prompt for IA
 
     Returns:
-        Dataframe with pre classified data
+        Dataframe with Qualif data
     """
 
     group_size = 10
@@ -55,7 +55,7 @@ def pre_classify_with_ia(df, col, prompt):
     total_batches = (len(df) + group_size - 1) // group_size
 
     # Create progress bar
-    with tqdm(total=total_batches, desc=f"Pre classify {col} with IA") as pbar:
+    with tqdm(total=total_batches, desc=f"Qualif {col} with IA") as pbar:
         for i in range(0, len(df), group_size):
             df_group = df[i : i + group_size]
 
@@ -72,17 +72,17 @@ def pre_classify_with_ia(df, col, prompt):
     return df_result
 
 
-@task(name="Pre classify theme", task_run_name="pre-classify-theme")
-def pre_classify_theme(df, theme):
+@task(name="Qualif theme", task_run_name="pre-classify-theme")
+def qualif_theme(df, theme):
     """
-    Pre classify theme with IA, find if message concern a theme
+    Qualif theme with IA, find if message concern a theme
 
     Args:
         df: dataframe
         theme: theme to classify
 
     Returns:
-        Dataframe with pre classified data
+        Dataframe with Qualif data
     """
 
     if theme == "railway":
@@ -119,14 +119,14 @@ def pre_classify_theme(df, theme):
         Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with YES or NO.
         """
 
-    # pre classify with IA
-    df = pre_classify_with_ia(df, "pre_class_ia", prompt)
+    # qualif with IA
+    df = qualif_with_ia(df, "qualif_ia", prompt)
 
     return df
 
 
-@task(name="Pre classify Partisans Names", task_run_name="pre-classify-partisans-names")
-def pre_classify_partisans_names(df, theme):
+@task(name="Qualif Partisans Names", task_run_name="pre-classify-partisans-names")
+def qualif_partisans_names(df, theme):
     """
     Find partisans names in text with IA
 
@@ -135,16 +135,16 @@ def pre_classify_partisans_names(df, theme):
         theme: theme to classify
 
     Returns:
-        Dataframe with pre classified partisans names
+        Dataframe with Qualif partisans names
     """
 
     # add col
     if theme == "railway":
-        col_name = "pre_class_prtsn_names"
+        col_name = "qualif_prtsn_names"
     elif theme == "arrest":
-        col_name = "pre_class_person_name"
+        col_name = "qualif_person_name"
     elif theme == "sabotage":
-        col_name = "pre_class_prtsn_names"
+        col_name = "qualif_prtsn_names"
 
     prompt = """
     If available, please provide the name(s) of the individual(s) who have been arrested or sentenced. Kindly respond with only the names, as you are not required to discuss the content of the message.
@@ -155,11 +155,11 @@ def pre_classify_partisans_names(df, theme):
     """
 
     # Find partisans names
-    return pre_classify_with_ia(df, col_name, prompt)
+    return qualif_with_ia(df, col_name, prompt)
 
 
-@task(name="Pre classify Partisans Ages", task_run_name="pre-classify-partisans-ages")
-def pre_classify_partisans_ages(df, theme):
+@task(name="Qualif Partisans Ages", task_run_name="pre-classify-partisans-ages")
+def qualif_partisans_ages(df, theme):
     """
     Find partisans ages in text with IA
 
@@ -168,16 +168,16 @@ def pre_classify_partisans_ages(df, theme):
         theme: theme to classify
 
     Returns:
-        Dataframe with pre classified partisans ages
+        Dataframe with Qualif partisans ages
     """
 
     # add col
     if theme == "railway":
-        col_age = "pre_class_prtsn_age"
+        col_age = "qualif_prtsn_age"
     elif theme == "arrest":
-        col_age = "pre_class_person_age"
+        col_age = "qualif_person_age"
     elif theme == "sabotage":
-        col_age = "pre_class_prtsn_age"
+        col_age = "qualif_prtsn_age"
 
     # prompt
     prompt = """
@@ -189,11 +189,11 @@ def pre_classify_partisans_ages(df, theme):
     """
 
     # Find partisans ages
-    return pre_classify_with_ia(df, col_age, prompt)
+    return qualif_with_ia(df, col_age, prompt)
 
 
-@task(name="Pre classify Incident Type", task_run_name="pre-classify-incident-type")
-def pre_classify_incident_type(df, theme):
+@task(name="Qualif Incident Type", task_run_name="pre-classify-incident-type")
+def qualif_incident_type(df, theme):
     """
     Find incident type in text with IA
 
@@ -202,12 +202,12 @@ def pre_classify_incident_type(df, theme):
         theme: theme to classify
 
     Returns:
-        Dataframe with pre classified incident type
+        Dataframe with Qualif incident type
     """
 
     # add col
     if theme == "railway":
-        col_age = "pre_class_inc_type"
+        col_age = "qualif_inc_type"
     elif theme == "arrest":
         return df
     elif theme == "sabotage":
@@ -226,14 +226,14 @@ def pre_classify_incident_type(df, theme):
     """
 
     # Find Incident Type
-    return pre_classify_with_ia(df, col_age, prompt)
+    return qualif_with_ia(df, col_age, prompt)
 
 
 @task(
-    name="Pre classify Damaged Equipment",
+    name="Qualif Damaged Equipment",
     task_run_name="pre-classify-damaged-equipment",
 )
-def pre_classify_damaged_equipment(df, theme):
+def qualif_damaged_equipment(df, theme):
     """
     Find damaged equipment in text with IA
 
@@ -242,12 +242,12 @@ def pre_classify_damaged_equipment(df, theme):
         theme: theme to classify
 
     Returns:
-        Dataframe with pre classified damaged equipment
+        Dataframe with Qualif damaged equipment
     """
 
     # add col
     if theme == "railway":
-        col_age = "pre_class_dmg_eqp"
+        col_age = "qualif_dmg_eqp"
     elif theme == "arrest":
         return df
     elif theme == "sabotage":
@@ -266,7 +266,7 @@ def pre_classify_damaged_equipment(df, theme):
     """
 
     # Find Damaged Equipment
-    return pre_classify_with_ia(df, col_age, prompt)
+    return qualif_with_ia(df, col_age, prompt)
 
 
 def find_region(text, LIST_REGIONS):
@@ -293,16 +293,16 @@ def find_region(text, LIST_REGIONS):
         return ""
 
 
-@task(name="Pre classify Region", task_run_name="pre-classify-region")
-def pre_classify_region(df):
+@task(name="Qualif Region", task_run_name="pre-classify-region")
+def qualif_region(df):
     """
-    Pre classify Region
+    Qualif Region
 
     Args:
         df: dataframe
 
     Returns:
-        Dataframe with pre classified region
+        Dataframe with Qualif region
     """
 
     # get regions
@@ -311,7 +311,7 @@ def pre_classify_region(df):
     # put keys in list
     LIST_REGIONS = list(dict_regions.keys())
 
-    df.loc[:, "pre_class_region"] = df["text_translate"].apply(
+    df.loc[:, "qualif_region"] = df["text_translate"].apply(
         lambda x: find_region(x, LIST_REGIONS)
     )
 
@@ -337,19 +337,19 @@ def find_law(text, DICT_LAWS):
     return ", ".join(found_laws) if found_laws else ""
 
 
-@task(name="Pre classify Applied Laws", task_run_name="pre-classify-applied-laws")
-def pre_classify_app_laws(df):
+@task(name="Qualif Applied Laws", task_run_name="pre-classify-applied-laws")
+def qualif_app_laws(df):
     """
-    Pre classify Applied Laws
+    Qualif Applied Laws
 
     Args:
         df: dataframe
 
     Returns:
-        Dataframe with pre classified applied laws
+        Dataframe with Qualif applied laws
     """
 
-    df.loc[:, "pre_class_app_laws"] = df["text_translate"].apply(
+    df.loc[:, "qualif_app_laws"] = df["text_translate"].apply(
         lambda x: find_law(x, DICT_LAWS)
     )
 
@@ -413,8 +413,8 @@ def add_cols_with_schema(df, schema):
     return df
 
 
-@task(name="Keep data to pre classify", task_run_name="keep-data-to-pre-classify")
-def keep_data_to_pre_class(df_filt, col_add_final, col_filter):
+@task(name="Keep data to qualif", task_run_name="keep-data-to-pre-classify")
+def keep_data_to_qualif(df_filt, col_add_final, col_filter):
     """
     Keep data who "add_final" is False and "filter" is True
 
@@ -424,7 +424,7 @@ def keep_data_to_pre_class(df_filt, col_add_final, col_filter):
         col_filter: column filter
 
     Returns:
-        Dataframe with data to pre classify
+        Dataframe with data to qualif
     """
 
     # keep data according to cols
@@ -434,90 +434,90 @@ def keep_data_to_pre_class(df_filt, col_add_final, col_filter):
 
 
 @flow(
-    name="Flow Single Pre Classification {theme}",
+    name="Flow Single qualification {theme}",
     flow_run_name="flow-single-pre-classification-{theme}",
     log_prints=True,
 )
-def process_pre_classification(theme, df_filt):
+def process_qualification(theme, df_filt):
     """
-    Apply Pre Classifications
+    Apply qualifications
     """
 
     # init vars
     if theme == "railway":
-        file_name = "pre_classify_railway"
-        schema = SCHEMA_PRE_CLASS_RAILWAY
+        file_name = "qualification_railway"
+        schema = SCHEMA_QUALIF_RAILWAY
         col_add_final = "add_final_inc_railway"
         col_filter = "filter_inc_railway"
     elif theme == "arrest":
-        file_name = "pre_classify_arrest"
-        schema = SCHEMA_PRE_CLASS_ARREST
+        file_name = "qualification_arrest"
+        schema = SCHEMA_QUALIF_ARREST
         col_add_final = "add_final_inc_arrest"
         col_filter = "filter_inc_arrest"
     elif theme == "sabotage":
-        file_name = "pre_classify_sabotage"
-        schema = SCHEMA_PRE_CLASS_SABOTAGE
+        file_name = "qualification_sabotage"
+        schema = SCHEMA_QUALIF_SABOTAGE
         col_add_final = "add_final_inc_sabotage"
         col_filter = "filter_inc_sabotage"
 
-    # get data already Pre classify
-    df_pre_class = read_data(PATH_PRE_CLASSIFY_DATALAKE, file_name)
-    print("\n", df_pre_class.head(30))
+    # get data already Qualif
+    df_qualif = read_data(PATH_QUALIF_DATALAKE, file_name)
+    print("\n", df_qualif.head(30))
 
     # keep data who not add final and filter
-    df_to_class = keep_data_to_pre_class(df_filt, col_add_final, col_filter)
+    df_to_class = keep_data_to_qualif(df_filt, col_add_final, col_filter)
     print("\n", df_to_class.head(30))
 
-    df_ids_no_pre_class_ia = pd.DataFrame()
+    df_ids_no_qualif_ia = pd.DataFrame()
 
-    # if not df_pre_class.empty:
-    #     # some data already pre classified
+    # if not df_qualif.empty:
+    #     # some data already Qualif
     #     # get list ID not processed with IA
-    #     df_ids_no_pre_class_ia = df_to_class[
-    #         ~df_to_class["ID"].isin(df_pre_class["ID"])  # new data
+    #     df_ids_no_qualif_ia = df_to_class[
+    #         ~df_to_class["ID"].isin(df_qualif["ID"])  # new data
     #         | (
-    #             df_to_class["ID"].isin(df_pre_class["ID"])  # no pre_class ia
-    #             # & df_pre_class["pre_class_ia"].isnull()
-    #             & pd.isnull(df_pre_class["pre_class_ia"])
+    #             df_to_class["ID"].isin(df_qualif["ID"])  # no qualif ia
+    #             # & df_qualif["qualif_ia"].isnull()
+    #             & pd.isnull(df_qualif["qualif_ia"])
     #         )
     #         & (df_to_class[col_add_final] == False)
     #         & (df_to_class[col_filter])
     #     ]["ID"]
 
-    if not df_pre_class.empty:
-        # merge filter and pre classify
+    if not df_qualif.empty:
+        # merge filter and qualif
         df_merged = pd.merge(
-            df_to_class, df_pre_class[["ID", "pre_class_ia"]], on="ID", how="left"
+            df_to_class, df_qualif[["ID", "qualif_ia"]], on="ID", how="left"
         )
         print("DFDFVDFVDVDVDFVDFVDFV\n", df_merged.head(50))
 
         # get list ID not processed with IA
-        df_ids_no_pre_class_ia = df_merged[
-            (~df_merged["ID"].isin(df_pre_class["ID"]))  # New IDs
-            | (pd.isnull(df_merged["pre_class_ia"]))  # IDs without pre_class_ia
+        df_ids_no_qualif_ia = df_merged[
+            (~df_merged["ID"].isin(df_qualif["ID"]))  # New IDs
+            | (pd.isnull(df_merged["qualif_ia"]))  # IDs without qualif_ia
             & (df_merged[col_add_final] == False)
             & (df_merged[col_filter])
         ]["ID"]
 
-        if df_ids_no_pre_class_ia.empty:
+        if df_ids_no_qualif_ia.empty:
             print("End of process, because no new data and all data already processed")
             return
 
-        # keep data not in pre classify
-        df_to_class = df_to_class[
-            ~df_to_class["ID"].isin(df_pre_class["ID"])
-        ].reset_index(drop=True)
+        # keep data not in qualif
+        df_to_class = df_to_class[~df_to_class["ID"].isin(df_qualif["ID"])].reset_index(
+            drop=True
+        )
 
     """
-    Pre Classify without IA
+    Qualif without IA
     """
     if not df_to_class.empty:
 
-        # pre classify Region
-        df_to_class = pre_classify_region(df_to_class)
+        # qualif Region
+        df_to_class = qualif_region(df_to_class)
 
-        # pre classify Applied Laws
-        df_to_class = pre_classify_app_laws(df_to_class)
+        # qualif Applied Laws
+        df_to_class = qualif_app_laws(df_to_class)
 
         # remove cols filter
         df_to_class = remove_cols_filter(df_to_class)
@@ -527,22 +527,22 @@ def process_pre_classification(theme, df_filt):
 
         # concat old data
         df_to_class = concat_old_new_df(
-            df_raw=df_pre_class, df_new=df_to_class, cols=["ID", "IDX"]
+            df_raw=df_qualif, df_new=df_to_class, cols=["ID", "IDX"]
         )
 
     print("LIST ID")
-    print("\n", df_ids_no_pre_class_ia.head(30))
+    print("\n", df_ids_no_qualif_ia.head(30))
 
     print("TO CLASSIFY")
     print("\n", df_to_class.head(30))
     """
-    Pre Classify with IA
+    Qualif with IA
     """
 
     if df_to_class.empty:
-        df_to_class = df_pre_class.copy()
+        df_to_class = df_qualif.copy()
 
-    # merge filter and pre classify
+    # merge filter and qualif
     df_to_class = pd.merge(
         df_to_class,
         df_filt[["ID", "text_original", "text_translate"]],
@@ -551,28 +551,28 @@ def process_pre_classification(theme, df_filt):
         suffixes=("", "_y"),
     )
 
-    if not df_ids_no_pre_class_ia.empty:
-        # keep data not pre_call with IA and not classifed
+    if not df_ids_no_qualif_ia.empty:
+        # keep data not qualify with IA and not classifed
         df_to_class_wh_ia = df_to_class[
-            (df_to_class["ID"].isin(df_ids_no_pre_class_ia))
+            (df_to_class["ID"].isin(df_ids_no_qualif_ia))
         ].reset_index(drop=True)
     else:
         df_to_class_wh_ia = df_to_class
 
-    # keep data according to SIZE_TO_PRE_CLASSIFY
+    # keep data according to SIZE_TO_QUALIF
     # We define a threshold of x to avoid excessive processing time due to the IA
-    if SIZE_TO_PRE_CLASSIFY:
-        df_to_class_wh_ia = df_to_class_wh_ia.head(SIZE_TO_PRE_CLASSIFY)
+    if SIZE_TO_QUALIF:
+        df_to_class_wh_ia = df_to_class_wh_ia.head(SIZE_TO_QUALIF)
 
     print("WITH IA")
     print("\n", df_to_class_wh_ia.head(30))
 
     # process IA
-    df_to_class_wh_ia = pre_classify_theme(df_to_class_wh_ia, theme)
-    df_to_class_wh_ia = pre_classify_partisans_names(df_to_class_wh_ia, theme)
-    df_to_class_wh_ia = pre_classify_partisans_ages(df_to_class_wh_ia, theme)
-    df_to_class_wh_ia = pre_classify_incident_type(df_to_class_wh_ia, theme)
-    df_to_class_wh_ia = pre_classify_damaged_equipment(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = qualif_theme(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = qualif_partisans_names(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = qualif_partisans_ages(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = qualif_incident_type(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = qualif_damaged_equipment(df_to_class_wh_ia, theme)
     print("\n", df_to_class_wh_ia.head(30))
 
     # concat data
@@ -589,21 +589,21 @@ def process_pre_classification(theme, df_filt):
     print("\n", df_to_class.dtypes)
 
     # save data
-    save_data(PATH_PRE_CLASSIFY_DATALAKE, file_name, df_to_class)
+    save_data(PATH_QUALIF_DATALAKE, file_name, df_to_class)
 
 
 @flow(
-    name="Flow Master Datalake Pre Classify",
+    name="Flow Master Datalake Qualif",
     flow_run_name="flow-master-datalake-pre-classify",
     log_prints=True,
 )
-def job_datalake_pre_classify():
+def flow_datalake_qualif():
     """
-    Process Pre Classify Datalake
+    Process Qualif Datalake
     """
 
     print("********************************")
-    print("Start Pre Classifications")
+    print("Start qualifications")
     print("********************************")
 
     # start service ollama
@@ -613,13 +613,13 @@ def job_datalake_pre_classify():
     df_filter = read_data(PATH_FILTER_DATALAKE, "filter_datalake")
 
     # Incidents Railway
-    process_pre_classification("railway", df_filter)
+    process_qualification("railway", df_filter)
 
     # Incidents Arrest
-    # process_pre_classification("arrest", df_filter)
+    # process_qualification("arrest", df_filter)
 
     # Incidents Sabotage
-    # process_pre_classification("sabotage", df_filter)
+    # process_qualification("sabotage", df_filter)
 
     # create artifact
     # create_artifact("flow-master-datalake-pre-classify-artifact")
