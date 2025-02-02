@@ -132,7 +132,7 @@ def process_clean(account):
     flow_run_name="flow-master-telegram-cleaning",
     log_prints=True,
 )
-def job_telegram_cleaning():
+def flow_telegram_cleaning():
     """
     Clean data from telegram
     """

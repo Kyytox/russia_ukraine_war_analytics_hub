@@ -262,7 +262,7 @@ async def search_messages(df_raw):
     flow_run_name="flow-master-twitter-extract",
     log_prints=True,
 )
-def job_twitter_extract():
+def flow_twitter_extract():
     """
     Job Twitter extract
     """

@@ -54,7 +54,7 @@ def format_date(df):
     flow_run_name="flow-master-twitter-cleaning",
     log_prints=True,
 )
-def job_twitter_cleaning():
+def flow_twitter_cleaning():
     """
     Clean data from Twitter
     """

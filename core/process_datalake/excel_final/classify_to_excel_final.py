@@ -100,7 +100,7 @@ def process_incidents_arrest(service):
 
 
 @flow(name="Classify to Excel Final", log_prints=True)
-def job_classify_to_excel_final():
+def flow_classify_to_excel_final():
     """
     Update data in Google Drive with data Classified
     """

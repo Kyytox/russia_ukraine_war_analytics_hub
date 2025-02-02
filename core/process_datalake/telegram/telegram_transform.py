@@ -58,7 +58,6 @@ def translate_data(df_source):
     df_source = df_source.sort_values(by="word_count", ascending=True).reset_index(
         drop=True
     )
-    # print(f"Size sorted: {df_source}")
     print(
         f"Min: {df_source['word_count'].min()} - Max: {df_source['word_count'].max()}"
     )
@@ -199,7 +198,7 @@ def process_transform(account):
     flow_run_name="flow-master-telegram-transform",
     log_prints=True,
 )
-def job_telegram_transform():
+def flow_telegram_transform():
     """
     Process Telegram data
     """

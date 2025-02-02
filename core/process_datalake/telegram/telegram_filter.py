@@ -109,7 +109,7 @@ def regroup_data(list_accounts):
 
 
 @flow(name="Process filter", log_prints=True)
-def job_telegram_filter():
+def flow_telegram_filter():
     """
     Process filter
     """

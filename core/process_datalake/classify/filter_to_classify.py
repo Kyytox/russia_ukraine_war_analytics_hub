@@ -212,7 +212,7 @@ def classify_with_ia(df):
 
 
 @flow(name="Filter to classify", log_prints=True)
-def job_filter_to_classify():
+def flow_filter_to_classify():
     """
     Filter data to classify
     """

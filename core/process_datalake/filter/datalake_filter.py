@@ -311,7 +311,7 @@ def update_final_data(df, df_old, type):
     flow_run_name="flow-master-datalake-filter",
     log_prints=True,
 )
-def job_datalake_filter():
+def flow_datalake_filter():
     """
     Process filter
     """

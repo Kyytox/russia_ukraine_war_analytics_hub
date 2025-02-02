@@ -118,7 +118,7 @@ def process_extract(client, account):
     description="Extract Telegram messages from accounts",
     log_prints=True,
 )
-def job_telegram_extract():
+def flow_telegram_extract():
     """
     Extract messages from Telegram
     """
@@ -140,3 +140,8 @@ def job_telegram_extract():
 
     # create artifact
     create_artifact("flow-master-telegram-extract-artifact")
+
+
+#  TODO
+# connect to client telegram
+# get list accounts

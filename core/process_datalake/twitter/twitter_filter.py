@@ -40,7 +40,7 @@ def filter_incidents_railway(df):
 
 
 @flow(name="Process filter", log_prints=True)
-def job_twitter_filter():
+def flow_twitter_filter():
     """
     Process filter
     """

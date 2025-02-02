@@ -91,7 +91,7 @@ def format_columns(df):
     flow_run_name="flow-master-classify-to-cloud",
     log_prints=True,
 )
-def job_classify_to_cloud():
+def flow_classify_to_cloud():
     """
     Classify to Cloud
     """

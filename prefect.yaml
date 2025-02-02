@@ -15,100 +15,114 @@ pull:
 
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
-  - name: master-telegram-extract
+  - name: dlk-telegram-extract
     version: null
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_datalake/telegram/telegram_extract.py:job_telegram_extract
+    entrypoint: ./core/process_datalake/telegram/telegram_extract.py:flow_telegram_extract
     parameters: {}
     work_pool:
       name: main-pool
       work_queue_name: null
-      job_variables: {}
+      flow_variables: {}
     enforce_parameter_schema: true
     schedules: []
 
-  - name: master-telegram-clean
+  - name: dlk-telegram-clean
     version: null
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_datalake/telegram/telegram_cleaning.py:job_telegram_cleaning
+    entrypoint: ./core/process_datalake/telegram/telegram_cleaning.py:flow_telegram_cleaning
     parameters: {}
     work_pool:
       name: main-pool
       work_queue_name: null
-      job_variables: {}
+      flow_variables: {}
     enforce_parameter_schema: true
     schedules: []
 
-  - name: master-telegram-transform
+  - name: dlk-telegram-transform
     version: null
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_datalake/telegram/telegram_transform.py:job_telegram_transform
+    entrypoint: ./core/process_datalake/telegram/telegram_transform.py:flow_telegram_transform
     parameters: {}
     work_pool:
       name: main-pool
       work_queue_name: null
-      job_variables: {}
+      flow_variables: {}
     enforce_parameter_schema: true
     schedules: []
 
-  - name: master-twitter-extract
+  - name: dlk-twitter-extract
     version: null
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_datalake/twitter/twitter_extract.py:job_twitter_extract
+    entrypoint: ./core/process_datalake/twitter/twitter_extract.py:flow_twitter_extract
     parameters: {}
     work_pool:
       name: main-pool
       work_queue_name: null
-      job_variables: {}
+      flow_variables: {}
     enforce_parameter_schema: true
     schedules: []
 
-  - name: master-twitter-clean
+  - name: dlk-twitter-clean
     version: null
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_datalake/twitter/twitter_cleaning.py:job_twitter_cleaning
+    entrypoint: ./core/process_datalake/twitter/twitter_cleaning.py:flow_twitter_cleaning
     parameters: {}
     work_pool:
       name: main-pool
       work_queue_name: null
-      job_variables: {}
+      flow_variables: {}
     enforce_parameter_schema: true
     schedules: []
 
-  - name: master-datalake-filter
+  - name: dlk-filter
     version: null
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_datalake/filter/datalake_filter.py:job_datalake_filter
+    entrypoint: ./core/process_datalake/filter/datalake_filter.py:flow_datalake_filter
     parameters: {}
     work_pool:
       name: main-pool
       work_queue_name: null
-      job_variables: {}
+      flow_variables: {}
     enforce_parameter_schema: true
     schedules: []
 
-  - name: master-datalake-pre-classify
+  - name: dlk-qualification
     version: null
     tags: []
     concurrency_limit: null
     description: null
-    entrypoint: ./core/process_datalake/pre_classify/datalake_pre_classify.py:job_datalake_pre_classify
+    entrypoint: ./core/process_datalake/qualification/datalake_qualif.py:flow_datalake_qualif
     parameters: {}
     work_pool:
       name: main-pool
       work_queue_name: null
-      job_variables: {}
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: dwh-incidents-railway
+    version: null
+    tags: []
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_data_warehouse/flow_dwh_inc_railway.py:flow_dwh_inc_railway
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
     enforce_parameter_schema: true
     schedules: []
