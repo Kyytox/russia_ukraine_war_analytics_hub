@@ -119,7 +119,7 @@ def read_data(base_path: str, file_name: str) -> pd.DataFrame:
     """
     # get data
     try:
-        df = pd.read_parquet(f"{base_path}/{file_name}.parquet")
+        df = pd.read_parquet(f"{base_path}/{file_name}.parquet", engine="fastparquet")
     except Exception as e:
         print(e)
         df = pd.DataFrame()

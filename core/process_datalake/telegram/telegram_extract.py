@@ -1,15 +1,3 @@
-# Process
-# - get credentials
-# - Connect to Telegram
-# - get list of account to extract
-# - loop over accounts
-# - get raw data
-# - check if account is already in data
-# - if YES -> get last id
-# - if NO -> retrive from date = 2021-12-31 22:59:59
-# - extract messages
-# - save messages
-
 import datetime
 import pandas as pd
 from prefect import flow, task
@@ -35,35 +23,28 @@ from core.libs.utils import (
     task_run_name="get-messages-{account}",
     cache_policy=NONE,
 )
-async def get_messages(client, account, df_raw):
+async def collect_messages(
+    client: object, account: str, last_date: datetime, last_id: int
+) -> pd.DataFrame:
     """
-    Get messages from Telegram
+    Collect messages from account
 
     Args:
         client: TelegramClient
         account: account name
-        df_raw: raw dataframe
+        last_date: last date of message
+        last_id: last id of message
 
     Returns:
-        df: dataframe with messages
+        df: dataframe with new messages
     """
     # init variables
     data = []
 
-    # get last date or id
-    last_date_message = (
-        datetime.datetime(2021, 12, 31, 22, 59, 59) if df_raw.empty else None
-    )
-    last_id_message = 0 if df_raw.empty else df_raw["id_message"].max()
-
-    print("Start extracting messages from")
-    print("last_id_message:", last_id_message)
-    print("last_date_message:", last_date_message)
-
     async for message in client.iter_messages(
         account,
-        offset_date=last_date_message,
-        offset_id=last_id_message,
+        offset_date=last_date,
+        offset_id=last_id,
         reverse=True,
     ):
         # add to data
@@ -78,43 +59,78 @@ async def get_messages(client, account, df_raw):
                 }
             )
 
-    # create df
-    df = pd.DataFrame(data)
-    print(f"Extracted {df.shape[0]} messages")
+    return pd.DataFrame(data)
+
+
+@task(
+    name="Get last date or id",
+    task_run_name="get-last-date-or-id",
+)
+def get_last_date_or_id(df_raw_acc: pd.DataFrame) -> tuple:
+    """
+    Get last date or id
+
+    Args:
+        df_raw_acc: dataframe with data already extracted from account
+
+    Returns:
+        last_date: last date
+        last_id: last id
+    """
+
+    if df_raw_acc.empty:
+        last_date = datetime.datetime(2021, 12, 31, 22, 59, 59)
+        last_id = 0
+    else:
+        last_date = None
+        last_id = df_raw_acc["id_message"].max()
+
+    print("last_id:", last_id)
+    print("last_date:", last_date)
+
+    return last_date, last_id
+
+
+@flow(
+    name="DLK Subflow Telegram Extract",
+    flow_run_name="dlk-subflow-telegram-extract-{account}",
+    log_prints=True,
+)
+def process_extract(
+    client: object, account: str, df_raw_acc: pd.DataFrame
+) -> pd.DataFrame:
+    """
+    Process extract
+
+    Args:
+        client: TelegramClient
+        account: account name
+        df_raw_acc: data already extracted from account
+
+    Returns:
+        df: dataframe with old and new messages
+    """
+    print("Account old data shape:", df_raw_acc.shape)
+
+    # get last date or id
+    last_date, last_id = get_last_date_or_id(df_raw_acc)
+
+    # get messages
+    with client:
+        df = client.loop.run_until_complete(
+            collect_messages(client, account, last_date, last_id)
+        )
+
+    # update data artifact
+    print(f"Messages extracted from {account}: {df.shape[0]}")
+    upd_data_artifact(f"Messages extracted from {account}", df.shape[0])
 
     return df
 
 
 @flow(
-    name="Flow Single Telegram Extract",
-    flow_run_name="flow-telegram-extract-{account}",
-    log_prints=True,
-)
-def process_extract(client, account):
-    """
-    Process extract
-    """
-
-    # get raw data
-    df_raw = read_data(PATH_TELEGRAM_RAW, account)
-
-    # get messages
-    with client:
-        df = client.loop.run_until_complete(get_messages(client, account, df_raw))
-
-    # update data artifact
-    upd_data_artifact(account, df.shape[0])
-
-    # concat data
-    df = concat_old_new_df(df_raw, df, cols=["ID"])
-
-    # save data
-    save_data(PATH_TELEGRAM_RAW, account, df=df)
-
-
-@flow(
-    name="Flow Master Telegram Extract",
-    flow_run_name="flow-master-telegram-extract",
+    name="DLK Flow Telegram Extract",
+    flow_run_name="dlk-flow-telegram-extract",
     description="Extract Telegram messages from accounts",
     log_prints=True,
 )
@@ -122,26 +138,42 @@ def flow_telegram_extract():
     """
     Extract messages from Telegram
     """
-    print("********************************")
-    print("Start extracting Telegram")
-    print("********************************")
-
     # Connect to Telegram
     client = telegram_connect()
 
     # get list of accounts
-    # list_accounts = get_telegram_accounts(PATH_TELEGRAM_RAW)
     list_accounts = LIST_ACCOUNTS_TELEGRAM
 
-    # extract messages for each account
+    # get raw Data already extracted
+    df_raw = read_data(PATH_TELEGRAM_RAW, "raw_telegram")
+
+    # Init dfs
+    df_new_data = pd.DataFrame()  # new data to extract
+    df_raw_acc = pd.DataFrame()  # data already extracted for account
+
+    # Collect message from all accounts
     for account in list_accounts:
         print(f"Extracting {account}")
-        process_extract(client, account)
+
+        if df_raw.shape[0] > 0 and account in df_raw["account"].unique():
+            df_raw_acc = df_raw[df_raw["account"] == account]
+
+        # extract messages
+        df_new_data = pd.concat(
+            [df_new_data, process_extract(client, account, df_raw_acc)]
+        )
+
+    # concat data
+    df_final = concat_old_new_df(df_raw, df_new_data, cols=["ID"])
+    print("Final shape:", df_final.shape)
 
     # create artifact
-    create_artifact("flow-master-telegram-extract-artifact")
+    create_artifact("dlk-flow-telegram-extract-artifact")
 
-
-#  TODO
-# connect to client telegram
-# get list accounts
+    # save data
+    df_final.to_parquet(
+        PATH_TELEGRAM_RAW + "/raw_telegram.parquet",
+        engine="fastparquet",
+        partition_cols=["account"],
+        compression="snappy",
+    )
