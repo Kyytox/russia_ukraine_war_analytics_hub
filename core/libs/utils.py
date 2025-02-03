@@ -335,7 +335,6 @@ def format_clean_text(text):
         text = text.replace(trad, "")
 
     if not text:
-        print("text after cleaning is empty")
         return None
 
     text = re.sub(r" +", " ", text).strip()

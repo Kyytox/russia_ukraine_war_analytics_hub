@@ -1,13 +1,3 @@
-# Process Cleaning
-# - get list of accounts
-# - loop over accounts
-# - read raw data
-# - read data clean
-# - keep data not in clean data
-# - format date according to utc
-# - clean data
-# - save data
-
 import datetime
 import pandas as pd
 from prefect import flow, task
@@ -34,29 +24,34 @@ from core.libs.utils import (
 )
 
 
-@task(name="Update UTC Date", task_run_name="update-utc-date-{account}")
-def update_utc_date(df, account):
+@task(name="Update UTC date", task_run_name="update-utc-date")
+def update_utc_date(df):
     """
     Format date according to utc
 
     Args:
         df: dataframe
-        account: account name
 
     Returns:
         Dataframe with formatted date
     """
 
-    # get utc for account
-    utc = DICT_UTC[account]
+    # create col UTC
+    df["utc_offset"] = df["account"].map(DICT_UTC)
+
+    # convert to timedelta
+    df["utc_offset"] = pd.to_timedelta(df["utc_offset"], unit="h")
 
     # add utc to date
-    df["date"] = df["date"] + datetime.timedelta(hours=utc)
+    df["date"] = df["date"] + df["utc_offset"]
 
     # format date
     df["date"] = pd.to_datetime(df["date"], format="%Y-%m-%d %H:%M:%S").dt.tz_localize(
         None
     )
+
+    # drop col utc
+    df = df.drop(columns=["utc_offset"])
 
     return df
 
@@ -86,50 +81,8 @@ def clean_text_original(df):
 
 
 @flow(
-    name="Flow Single Telegram Cleaning",
-    flow_run_name="flow-telegram-cleaning-{account}",
-    log_prints=True,
-)
-def process_clean(account):
-    """
-    Process cleaning
-
-    Args:
-        account: account name
-
-    Returns:
-        None
-    """
-
-    # read raw data
-    df_raw = read_data(PATH_TELEGRAM_RAW, account)
-
-    # read clean data
-    df_clean = read_data(PATH_TELEGRAM_CLEAN, account)
-
-    # keep data not in clean data
-    df = keep_data_to_process(df_raw, df_clean)
-    print(f"Data to Clean: {df.shape[0]}")
-
-    # format date
-    df = update_utc_date(df, account)
-
-    # clean data
-    df = clean_text_original(df)
-
-    # update artifact
-    upd_data_artifact(account, df.shape[0])
-
-    # concat data
-    df = concat_old_new_df(df_raw=df_clean, df_new=df, cols=["ID"])
-
-    # save data
-    save_data(PATH_TELEGRAM_CLEAN, account, df)
-
-
-@flow(
-    name="Flow Master Telegram Cleaning",
-    flow_run_name="flow-master-telegram-cleaning",
+    name="DLK Flow Telegram Cleaning",
+    flow_run_name="dlk-flow-telegram-cleaning",
     log_prints=True,
 )
 def flow_telegram_cleaning():
@@ -137,16 +90,37 @@ def flow_telegram_cleaning():
     Clean data from telegram
     """
 
-    print("********************************")
-    print("Start cleaning Telegram")
-    print("********************************")
+    # data extracted
+    df_raw = read_data(PATH_TELEGRAM_RAW, "raw_telegram")
 
-    # get list of accounts
-    list_accounts = get_telegram_accounts(PATH_TELEGRAM_RAW)
+    # data already cleaned
+    df_clean = read_data(PATH_TELEGRAM_CLEAN, "clean_telegram")
 
-    for account in list_accounts:
-        print(f"Cleaning {account}")
-        process_clean(account)
+    # keep data not in clean data
+    df = keep_data_to_process(df_raw, df_clean)
+
+    # format date
+    df = update_utc_date(df)
+
+    # clean data
+    df = clean_text_original(df)
+
+    # update artifact
+    for account in df["account"].unique():
+        upd_data_artifact(
+            f"Messages cleaned from {account}", df[df["account"] == account].shape[0]
+        )
+
+    # concat data
+    df = concat_old_new_df(df_raw=df_clean, df_new=df, cols=["ID"])
+
+    # save data
+    df.to_parquet(
+        f"{PATH_TELEGRAM_CLEAN}/clean_telegram.parquet",
+        engine="fastparquet",
+        partition_cols=["account"],
+        compression="snappy",
+    )
 
     # create artifact
-    create_artifact("flow-master-telegram-cleaning-artifact")
+    create_artifact("dlk-flow-telegram-cleaning-artifact")
