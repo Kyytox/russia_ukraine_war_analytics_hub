@@ -16,7 +16,6 @@ from core.libs.utils import (
     read_data,
     save_data,
     keep_data_to_process,
-    get_telegram_accounts,
     concat_old_new_df,
     format_clean_text,
     upd_data_artifact,
