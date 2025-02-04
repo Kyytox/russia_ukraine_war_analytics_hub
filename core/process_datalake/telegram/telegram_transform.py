@@ -1,14 +1,3 @@
-# Process Cleaning
-# - Start service ollama
-# - get list of accounts
-# - loop over accounts
-# - read data clean
-# - read data transform
-# - keep data not in transform data
-# - add col url
-# - translate data to english
-# - save data
-
 import os
 from tqdm import tqdm
 
@@ -30,7 +19,6 @@ from core.libs.utils import (
     read_data,
     save_data,
     keep_data_to_process,
-    get_telegram_accounts,
     concat_old_new_df,
     upd_data_artifact,
     create_artifact,
@@ -41,37 +29,21 @@ from core.libs.ollama_ia import ia_treat_message
 
 
 @task(name="Translate data", task_run_name="translate-data")
-def translate_data(df_source):
+def translate_data(df_to_trt):
     """
     Translate data to English
     Translate only x messages because depending on your pc, it can take a long time
 
     Args:
-        df_source: dataframe
+        df_to_trt: dataframe to translate
 
     Returns:
         Dataframe with translated data
     """
 
-    # sort dataframe by the number of words in text_original
-    df_source["word_count"] = df_source["text_original"].str.split().str.len()
-    df_source = df_source.sort_values(by="word_count", ascending=True).reset_index(
-        drop=True
-    )
-    print(
-        f"Min: {df_source['word_count'].min()} - Max: {df_source['word_count'].max()}"
-    )
-
     # keep only x messages
-    df = df_source.loc[:SIZE_TO_TRANSLATE].copy()
+    df = df_to_trt.loc[:SIZE_TO_TRANSLATE].copy()
     print(f"Size to translate: {df.shape}")
-
-    # # translate text
-    # for i, row in df.iterrows():
-    #     print(f"Index: {i} - Id: {row['id_message']}")
-    #     df.loc[i, "text_translate"] = ia_treat_message(
-    #         row["text_original"], "translate"
-    #     )
 
     group_size = 10
     df_result = pd.DataFrame()
@@ -94,10 +66,29 @@ def translate_data(df_source):
             # Update progress bar
             pbar.update(1)
 
-    # remove col word_count
-    df_result = df_result.drop(columns=["word_count"])
-
     return df_result
+
+
+@task(name="Sort by number of words", task_run_name="sort-by-number-of-words")
+def sort_by_nb_words(df):
+    """
+    Sort dataframe by the number of words in text_original
+    For translate text not too long
+
+    Args:
+        df: dataframe
+
+    Returns:
+        Dataframe sorted
+    """
+    # add, sort and remove column
+    df.loc[:, "word_nb"] = df["text_original"].str.split().str.len()
+    df = df.sort_values(by="word_nb", ascending=True).reset_index(drop=True)
+
+    print(f"Min: {df['word_nb'].min()} - Max: {df['word_nb'].max()} - Size: {df.shape}")
+    df = df.drop(columns=["word_nb"])
+
+    return df
 
 
 @task(
@@ -108,6 +99,8 @@ def remove_poorly_translated_data(df):
     """
     Remove data not translated correctly
     Remove data where text_translate is 60% less than text_original
+    We do this to retranslate the data again
+    So we remove the data from data already translated
 
     Args:
         df: dataframe with translated data
@@ -132,7 +125,7 @@ def remove_poorly_translated_data(df):
     ]
     print(f"Size poorly translated data: {df_poor_trans.shape}")
 
-    # keep 30 messages
+    # keep 30 messages beaaause it's too long to retranslate if we have a lot of data
     if df_poor_trans.shape[0] > 10:
         df_poor_trans = df_poor_trans.head(50)
 
@@ -144,78 +137,105 @@ def remove_poorly_translated_data(df):
 
 
 @flow(
-    name="Flow Single Telegram Transform",
-    flow_run_name="flow-telegram-transform-{account}",
+    name="DLK Subflow Telegram Transform",
+    flow_run_name="dlk-subflow-telegram-transform-{account}",
     log_prints=True,
 )
-def process_transform(account):
+def process_transform(df: pd.DataFrame, account: str) -> pd.DataFrame:
     """
     Process Transform
 
     Args:
+        df: dataframe to transform
         account: account name
 
     Returns:
-        None
+        Dataframe with transformed data
     """
 
-    # read data clean
-    df_source = read_data(PATH_TELEGRAM_CLEAN, account)
-
-    # read data transform
-    df_transform = read_data(PATH_TELEGRAM_TRANSFORM, account)
-
-    # remove poorly translated data
-    df_transform = remove_poorly_translated_data(df_transform)
-
-    # keep data not in transform data
-    df = keep_data_to_process(df_source, df_transform)
-
-    # reutrn if no data to process
-    if df.empty:
-        print("No data to transform")
-        return
     print(f"Data to Transform: {df.shape[0]}")
 
     # update artifact
-    upd_data_artifact(f"{account} - Messages to Transform", df.shape[0])
+    upd_data_artifact(f"Messages to Transform - {account}", df.shape[0])
 
     # add col url
-    df["url"] = "https://t.me/" + account + "/" + df["id_message"].astype(str)
+    df.loc[:, "url"] = "https://t.me/" + account + "/" + df["id_message"].astype(str)
+    # df["url"] = "https://t.me/" + account + "/" + df["id_message"].astype(str)
+
+    # sort by nb words
+    df = sort_by_nb_words(df)
 
     # translate data to english
     df = translate_data(df)
 
-    # concat data
-    df = concat_old_new_df(df_raw=df_transform, df_new=df, cols=[])
-
-    # save data
-    save_data(PATH_TELEGRAM_TRANSFORM, account, df)
+    return df
 
 
 @flow(
-    name="Flow Master Telegram Transform",
-    flow_run_name="flow-master-telegram-transform",
+    name="DLK Flow Telegram Transform",
+    flow_run_name="dlk-flow-telegram-transform",
     log_prints=True,
 )
 def flow_telegram_transform():
     """
     Process Telegram data
     """
-    print("********************************")
-    print("Start transforming Telegram")
-    print("********************************")
 
     # start service ollama
     os.system(f"sh {PATH_SCRIPT_SERVICE_OLLAMA}")
 
-    # get list of accounts
-    list_accounts = get_telegram_accounts(PATH_TELEGRAM_CLEAN)
+    """
+    Init data
+    """
+    # read data clean
+    df_clean = read_data(PATH_TELEGRAM_CLEAN, "clean_telegram")
+
+    # read data transform
+    df_old_transf = read_data(PATH_TELEGRAM_TRANSFORM, "transform_telegram")
+
+    # remove poorly translated data for translate again
+    df_transform = remove_poorly_translated_data(df_old_transf)
+
+    # keep data not transformed
+    df = keep_data_to_process(df_clean, df_old_transf)
+
+    if df.empty:
+        print("No data to transform")
+        return
+
+    """
+    Process Transform
+    """
+    # init df
+    df_final = pd.DataFrame()
 
     # loop over accounts
-    for account in list_accounts:
-        print(f"Transform Account: {account}")
-        process_transform(account)
+    for account in df["account"].unique():
+        print(f"Transforming {account}")
+
+        # get data for account
+        df_acc = df[df["account"] == account]
+
+        # process transform
+        df_acc = process_transform(df_acc, account)
+
+        # concat
+        df_final = pd.concat([df_final, df_acc])
+
+    """
+    Save data
+    """
+    # concat final
+    df_final = concat_old_new_df(df_raw=df_transform, df_new=df_final, cols=["ID"])
+    print(f"Final data shape: {df_final.shape}")
+
+    # save data
+    df_final.to_parquet(
+        f"{PATH_TELEGRAM_TRANSFORM}/transform_telegram.parquet",
+        engine="fastparquet",
+        partition_cols=["account"],
+        compression="snappy",
+    )
 
     # create artifact
-    create_artifact("flow-master-telegram-transform-artifact")
+    create_artifact("dlk-flow-telegram-transform-artifact")
