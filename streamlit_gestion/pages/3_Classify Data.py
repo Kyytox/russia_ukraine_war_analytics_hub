@@ -428,9 +428,15 @@ def validation_checkbox(df_filt, df_qualif, df_class, list_id):
             [st.session_state["df_qualif"], df_qualif]
         ).drop_duplicates(["ID", "IDX"], keep="last")
 
-        st.session_state["df_class_excel"] = pd.concat(
-            [st.session_state["df_class_excel"], df_class]
-        ).drop_duplicates(["IDX"], keep="last")
+        # find exact name of col date
+        col_date = [
+            col for col in st.session_state["df_class_excel"].columns if "date" in col
+        ][0]
+        st.session_state["df_class_excel"] = (
+            pd.concat([st.session_state["df_class_excel"], df_class])
+            .drop_duplicates(["IDX"], keep="last")
+            .sort_values(by=[col_date])
+        )
 
         # Save data
         save_data()
@@ -475,7 +481,6 @@ def prepare_for_save(dict_save):
     df_new_qualif = df_new_qualif.loc[~df_new_qualif["ID"].isin(list_id)]
 
     #
-    #
     # transform cols of tmp Excel to qualif
     df_excel_to_qualif = st.session_state["df_tmp_class_excel"].rename(
         columns=lambda x: x.replace("class_sources", "url").replace("class_", "qualif_")
@@ -495,7 +500,6 @@ def prepare_for_save(dict_save):
     )
 
     #
-    #
     # get data, IDX in tmp Excel, for update qualif if IDX already exists in Excel
     df_upd_qualif = st.session_state["df_qualif"].loc[
         st.session_state["df_qualif"]["IDX"].isin(
@@ -510,13 +514,13 @@ def prepare_for_save(dict_save):
         """
 
         # remove all cols qualif_
-        df_upd_qualif = df_upd_qualif.drop(
+        df_tmp_new_qualif = df_upd_qualif.drop(
             columns=[col for col in df_upd_qualif.columns if col.startswith("qualif_")]
         )
 
         # update all cols qualif (merge)
-        df_upd_qualif = pd.merge(
-            df_upd_qualif,
+        df_tmp_new_qualif = pd.merge(
+            df_tmp_new_qualif,
             df_new_qualif,
             on=["IDX"],
             how="left",
@@ -524,13 +528,13 @@ def prepare_for_save(dict_save):
         ).drop_duplicates(["ID", "IDX"], keep="last")
 
         # drop cols _y
-        df_upd_qualif = df_upd_qualif.drop(
-            columns=[col for col in df_upd_qualif.columns if col.endswith("_y")]
+        df_tmp_new_qualif = df_tmp_new_qualif.drop(
+            columns=[col for col in df_tmp_new_qualif.columns if col.endswith("_y")]
         )
 
         # merge with new data
-        df_new_qualif = pd.concat([df_new_qualif, df_upd_qualif]).drop_duplicates(
-            ["ID", "IDX"], keep="last"
+        df_new_qualif = pd.concat([df_new_qualif, df_tmp_new_qualif]).drop_duplicates(
+            subset=["ID", "IDX"], keep="last"
         )
 
     """
@@ -540,6 +544,17 @@ def prepare_for_save(dict_save):
     df_new_classify = st.session_state["df_tmp_class_excel"][
         st.session_state["schema_excel"].keys()
     ]
+
+    # replace qualif_ to class_
+    if not df_upd_qualif.empty:
+        df_upd_qualif = df_upd_qualif.rename(
+            columns=lambda x: x.replace("qualif_", "class_").replace(
+                "url", "class_sources"
+            )
+        ).drop(["date", "class_ia"], axis=1)
+
+    # add data already in Excel to new classify
+    df_new_classify = pd.concat([df_new_classify, df_upd_qualif])
 
     # add cols mul_ID, mul_url, regoup all if IDX is muultiple
     df_new_classify["mul_ID"] = df_new_classify.groupby("IDX")["ID"].transform(
@@ -558,7 +573,7 @@ def prepare_for_save(dict_save):
                 "mul_url": "class_sources",
             }
         )
-        .drop_duplicates(["IDX"], keep="last")
+        .drop_duplicates(["IDX"], keep="first")
     )
 
     # Validation
@@ -570,36 +585,41 @@ def apply_basic_filters(df, dict_filter):
     Apply basic filters
 
     Args:
-        df: DataFrame à filtrer
-        dict_filter: Dictionnaire contenant les filtres
+        df: DataFrame to filter
+        dict_filter: Dictionary with filters
 
     Returns:
-        DataFrame filtré
+        DataFrame filter
     """
-    # Filtre sur les colonnes de base
+    # filter col
     df = df[
         (df[st.session_state.name_col_filter] == dict_filter["filt_col_filter"])
         & (df[st.session_state.name_col_add_final] == dict_filter["filt_col_add_final"])
     ]
 
-    # Filtre sur qualif_ia
+    # qualif_ia
     if dict_filter["filt_ia"]:
-        # Si filt_ia est True, on ne garde que les 'yes'
+        # filter only data with qualif_ia = yes
         df = df[df["qualif_ia"] == "yes"]
     else:
-        # Sinon on garde les 'no' et les valeurs nulles
+        # filter data with qualif_ia = no or null
         df = df[(df["qualif_ia"] == "no") | (df["qualif_ia"].isnull())]
 
-    # Filtre sur la région
+    # Region
     if dict_filter["filt_reg"]:
         df = df[(df["qualif_region"] != "") & (df["qualif_region"].notnull())]
 
-    # Filtre sur le texte
+    # Test
     if dict_filter["filt_text"]:
         mask = df["text_translate"].str.contains(
             dict_filter["filt_text"], na=False
         ) | df["text_original"].str.contains(dict_filter["filt_text"], na=False)
         df = df[mask]
+
+    # Date
+    if dict_filter["filt_date"]:
+        filter_date = pd.to_datetime(dict_filter["filt_date"])
+        df = df[df["date"].dt.date >= filter_date.date()]
 
     return df
 
@@ -709,6 +729,13 @@ with st.expander("Filters", expanded=True):
                 key="slt_filt_col_add_final",
             )
 
+            # text contains
+            st.text_input(
+                "Text Contains",
+                key="slt_filt_txt",
+                value="",
+            )
+
         with scol2:
             # toggle claas ia
             st.toggle(
@@ -722,12 +749,8 @@ with st.expander("Filters", expanded=True):
                 key="slt_filt_reg",
             )
 
-        # text contains
-        st.text_input(
-            "Text Contains",
-            key="slt_filt_txt",
-            value="",
-        )
+            # date
+            st.date_input("After Date", key="slt_filt_date")
 
         with col2:
             st.subheader("Specifics")
@@ -786,6 +809,7 @@ with st.expander("Filters", expanded=True):
                 "filt_ia": st.session_state["slt_filt_ia"],
                 "filt_reg": st.session_state["slt_filt_reg"],
                 "filt_text": st.session_state["slt_filt_txt"],
+                "filt_date": st.session_state["slt_filt_date"],
             }
 
             if st.session_state["theme_data"] == "Incidents Railway":
