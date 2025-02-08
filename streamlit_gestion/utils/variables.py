@@ -5,6 +5,7 @@ from core.config.variables import (
     LIST_DMG_EQUIP_RAIL,
     LIST_ARREST_REASON,
     LIST_COLL_WITH_RAIL,
+    LIST_PARTISANS_GRP,
 )
 
 LIST_EXP_LAWS = [
@@ -210,8 +211,9 @@ DICT_REF_INPUT = [
     {
         "name": "qualif_prtsn_grp",
         "label": "Prtsn Group",
-        "type": "text_input",
+        "type": "selectbox",
         "value": "",
+        "options": LIST_PARTISANS_GRP,
         "st_col": "col4",
     },
     {
