@@ -160,7 +160,6 @@ def process_transform(df: pd.DataFrame, account: str) -> pd.DataFrame:
 
     # add col url
     df.loc[:, "url"] = "https://t.me/" + account + "/" + df["id_message"].astype(str)
-    # df["url"] = "https://t.me/" + account + "/" + df["id_message"].astype(str)
 
     # sort by nb words
     df = sort_by_nb_words(df)

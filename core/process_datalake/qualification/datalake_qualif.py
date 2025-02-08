@@ -530,11 +530,11 @@ def process_qualification(theme, df_filt):
             df_raw=df_qualif, df_new=df_to_class, cols=["ID", "IDX"]
         )
 
-    print("LIST ID")
-    print("\n", df_ids_no_qualif_ia.head(30))
+    # print("LIST ID")
+    # print("\n", df_ids_no_qualif_ia.head(30))
 
-    print("TO CLASSIFY")
-    print("\n", df_to_class.head(30))
+    # print("TO CLASSIFY")
+    # print("\n", df_to_class.head(30))
     """
     Qualif with IA
     """
@@ -585,8 +585,9 @@ def process_qualification(theme, df_filt):
 
     # remove text_translate
     df_to_class = df_to_class.drop(columns=["text_original", "text_translate"])
-    print("\n", df_to_class)
-    print("\n", df_to_class.dtypes)
+
+    # update types
+    df_to_class = df_to_class.astype(schema)
 
     # save data
     save_data(PATH_QUALIF_DATALAKE, file_name, df_to_class)
@@ -601,10 +602,6 @@ def flow_datalake_qualif():
     """
     Process Qualif Datalake
     """
-
-    print("********************************")
-    print("Start qualifications")
-    print("********************************")
 
     # start service ollama
     os.system(f"sh {PATH_SCRIPT_SERVICE_OLLAMA}")
