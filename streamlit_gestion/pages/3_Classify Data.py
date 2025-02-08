@@ -76,7 +76,6 @@ def read_data(path_name, df_name, schema_name):
     """
 
     # read
-    st.write(f"Read data: {st.session_state[path_name]}")
     st.session_state[df_name] = pd.read_parquet(f"{st.session_state[path_name]}")
 
     # schema
@@ -211,7 +210,8 @@ def reinit_row_filt_qualif(ID, IDX):
 
 def maj_row_excel_to_filt_qualif(ID, IDX, name_df_source):
     """
-    Maj row excel to filt Qualif
+    Update filt_qualif with data from Excel
+    Because data already exists in Excel
 
     Args:
         ID: ID
@@ -249,8 +249,10 @@ def upd_ref_input(ID, IDX, col_name):
     print(f"IDX: {IDX}")
     print(f"col Name: {col_name}")
     print(f"Value: {st.session_state[f'REF_{col_name}_{ID}']}")
+    print(f"Value: {type(st.session_state[f'REF_{col_name}_{ID}'])}")
 
     if col_name == "IDX":
+        #  Retrieve existing data from the Excel file or the tmp Excel file
         IDX_new = st.session_state[f"REF_{col_name}_{ID}"]
         print(f"IDX_new: {IDX_new}")
 
@@ -266,19 +268,26 @@ def upd_ref_input(ID, IDX, col_name):
             maj_row_excel_to_filt_qualif(ID, IDX_new, "df_tmp_class_excel")
 
         if IDX_new in st.session_state["df_class_excel"]["IDX"].values:
+            print("IDX_new in df_class_excel")
             # Update data qualif
             maj_row_excel_to_filt_qualif(ID, IDX_new, "df_class_excel")
 
+    if "date" in col_name:
+        st.session_state[f"REF_{col_name}_{ID}"] = pd.to_datetime(
+            st.session_state[f"REF_{col_name}_{ID}"]
+        )
+
+    #
+    # Update df_tmp_filt_qualif by ID
     if col_name in st.session_state["schema_filter"]:
-        # Update df_tmp_filt_qualif by ID
         st.session_state["df_tmp_filt_qualif"].loc[
             (st.session_state["df_tmp_filt_qualif"]["ID"] == ID),
             col_name,
         ] = st.session_state[f"REF_{col_name}_{ID}"]
 
-    elif col_name in st.session_state["schema_qualif"]:
-
-        # Update df_tmp_qualif by ID and IDX condition
+    #
+    # Update df_tmp_qualif by ID and IDX condition
+    if col_name in st.session_state["schema_qualif"]:
         if IDX == None:
             st.session_state["df_tmp_filt_qualif"].loc[
                 (st.session_state["df_tmp_filt_qualif"]["ID"] == ID)
@@ -290,6 +299,17 @@ def upd_ref_input(ID, IDX, col_name):
                 (st.session_state["df_tmp_filt_qualif"]["ID"] == ID)
                 & (st.session_state["df_tmp_filt_qualif"]["IDX"] == IDX),
                 col_name,
+            ] = st.session_state[f"REF_{col_name}_{ID}"]
+
+    #
+    # Update df_tmp_class_excel by IDX
+    if col_name != "IDX":
+        col_name_class = col_name.replace("qualif_", "class_")
+        if col_name_class in st.session_state["schema_excel"]:
+            print("------", col_name_class)
+            st.session_state["df_tmp_class_excel"].loc[
+                st.session_state["df_tmp_class_excel"]["IDX"] == IDX,
+                col_name_class,
             ] = st.session_state[f"REF_{col_name}_{ID}"]
 
 
@@ -356,32 +376,150 @@ def add_new_data_classify(ID, date, url):
     find_next_idx()
 
 
-def save_data():
+def prepare_for_save(dict_save):
     """
-    Save data
+    Save data in parquet
+
+    Args:
+        dict_save: dict with path and dataframe
     """
 
-    # save data filter
-    st.session_state["df_filt_src"].to_parquet(
-        f"{st.session_state['path_filter_source']}", index=False
+    ########################
+    ## UPDATE FILTER DATA ##
+    ########################
+    # get cols necessary, according to schema filter
+    df_new_filter = st.session_state["df_tmp_filt_qualif"][
+        st.session_state["schema_filter"].keys()
+    ]
+
+    ########################
+    ## UPDATE QUALIF DATA ##
+    ########################
+    # get cols necessary, according to schema qualif
+    df_new_qualif = st.session_state["df_tmp_filt_qualif"][
+        st.session_state["schema_qualif"].keys()
+    ]
+
+    # get list ID in tmp_filt_qualif AND in tmp Excel
+    list_id = st.session_state["df_tmp_class_excel"]["ID"].tolist()
+
+    if len(list_id) > 0:
+        ########################
+        # remove data present in df_tmp_class_excel
+        # Beacause data will be insert in Excel
+        # So qualif data need to be MAJ for insert data with qualif_cols filled
+        ########################
+
+        # Remove rows in new qualif
+        df_new_qualif = df_new_qualif.loc[~df_new_qualif["ID"].isin(list_id)]
+
+        # transform cols of tmp Excel to qualif
+        df_excel_to_qualif = st.session_state["df_tmp_class_excel"].rename(
+            columns=lambda x: x.replace("class_sources", "url").replace(
+                "class_", "qualif_"
+            )
+        )
+
+        # merge to get date
+        df_excel_to_qualif = pd.merge(
+            df_excel_to_qualif,
+            dict_save["id_date"],
+            on=["ID"],
+            how="left",
+        )
+
+        # add to tmp qualif
+        df_new_qualif = pd.concat([df_new_qualif, df_excel_to_qualif]).drop_duplicates(
+            ["ID", "IDX"], keep="last"
+        )
+
+    #
+    # get data, IDX in tmp Excel, for update qualif if IDX already exists in Excel
+    df_upd_qualif = st.session_state["df_qualif"].loc[
+        st.session_state["df_qualif"]["IDX"].isin(
+            st.session_state["df_tmp_class_excel"]["IDX"]
+        )
+    ]
+
+    if not df_upd_qualif.empty:
+        ########################
+        # data (IDX) already exists in Excel, it's a update
+        # So update all data qualif with IDX updated
+        ########################
+
+        # remove all cols qualif_
+        df_tmp_new_qualif = df_upd_qualif.drop(
+            columns=[col for col in df_upd_qualif.columns if col.startswith("qualif_")]
+        )
+
+        # update all cols qualif (merge)
+        df_tmp_new_qualif = pd.merge(
+            df_tmp_new_qualif,
+            df_new_qualif,
+            on=["IDX"],
+            how="left",
+            suffixes=("", "_y"),
+        ).drop_duplicates(["ID", "IDX"], keep="last")
+
+        # drop cols _y
+        df_tmp_new_qualif = df_tmp_new_qualif.drop(
+            columns=[col for col in df_tmp_new_qualif.columns if col.endswith("_y")]
+        )
+
+        # merge with new data
+        df_new_qualif = pd.concat([df_new_qualif, df_tmp_new_qualif]).drop_duplicates(
+            subset=["ID", "IDX"], keep="last"
+        )
+
+    ##########################
+    ## UPDATE CLASSIFY DATA ##
+    ##########################
+    # get cols necessary, according to schema Excel
+    df_new_classify = st.session_state["df_tmp_class_excel"][
+        st.session_state["schema_excel"].keys()
+    ]
+
+    # replace qualif_ to class_
+    df_upd_qualif = df_upd_qualif.rename(
+        columns=lambda x: x.replace("qualif_", "class_").replace("url", "class_sources")
+    ).drop(["date", "class_ia"], axis=1)
+
+    # add data already in Excel to new classify
+    df_new_classify = pd.concat([df_new_classify, df_upd_qualif])
+
+    # group data by IDX
+    df_new_classify = group_url_id_new_classify(df_new_classify)
+
+    # Validation
+    validation_checkbox(df_new_filter, df_new_qualif, df_new_classify, list_id)
+
+
+def group_url_id_new_classify(df):
+    """
+    Group data by IDX
+    If there are multiple same IDX, group all ID and URL
+
+    Args:
+        df: DataFrame with new classify data
+    """
+
+    # add cols mul_ID, mul_url, regoup all if IDX is muultiple
+    df["mul_ID"] = df.groupby("IDX")["ID"].transform(lambda x: ",".join(x))
+    df["mul_url"] = df.groupby("IDX")["class_sources"].transform(lambda x: ",".join(x))
+
+    # replace cols
+    df = (
+        df.drop(columns=["ID", "class_sources"])
+        .rename(
+            columns={
+                "mul_ID": "ID",
+                "mul_url": "class_sources",
+            }
+        )
+        .drop_duplicates(["IDX"], keep="first")
     )
 
-    # save data qualif
-    st.session_state["df_qualif"].to_parquet(
-        f"{st.session_state['path_qualif']}", index=False
-    )
-
-    # save data classify
-    st.session_state["df_class_excel"].to_parquet(
-        f"{st.session_state['path_classify']}", index=False
-    )
-
-    # Reset
-    init_state_theme_data()
-    init_raw_data()
-    init_tmp_data()
-    find_next_idx()
-    st.rerun()
+    return df
 
 
 @st.dialog("Validation", width="large")
@@ -420,13 +558,19 @@ def validation_checkbox(df_filt, df_qualif, df_class, list_id):
         ]
 
         # Concat data
-        st.session_state["df_filt_src"] = pd.concat(
-            [st.session_state["df_filt_src"], df_filt]
-        ).drop_duplicates(["ID"], keep="last")
+        st.session_state["df_filt_src"] = (
+            pd.concat([st.session_state["df_filt_src"], df_filt])
+            .drop_duplicates(["ID"], keep="last")
+            .sort_values(by=["date"])
+            .reset_index(drop=True)
+        )
 
-        st.session_state["df_qualif"] = pd.concat(
-            [st.session_state["df_qualif"], df_qualif]
-        ).drop_duplicates(["ID", "IDX"], keep="last")
+        st.session_state["df_qualif"] = (
+            pd.concat([st.session_state["df_qualif"], df_qualif])
+            .drop_duplicates(["ID", "IDX"], keep="last")
+            .sort_values(by=["date"])
+            .reset_index(drop=True)
+        )
 
         # find exact name of col date
         col_date = [
@@ -436,6 +580,15 @@ def validation_checkbox(df_filt, df_qualif, df_class, list_id):
             pd.concat([st.session_state["df_class_excel"], df_class])
             .drop_duplicates(["IDX"], keep="last")
             .sort_values(by=[col_date])
+            .reset_index(drop=True)
+        )
+
+        # update type with schema
+        st.session_state["df_class_excel"] = st.session_state["df_class_excel"].astype(
+            st.session_state["schema_excel"]
+        )
+        st.session_state["df_qualif"] = st.session_state["df_qualif"].astype(
+            st.session_state["schema_qualif"]
         )
 
         # Save data
@@ -447,137 +600,32 @@ def validation_checkbox(df_filt, df_qualif, df_class, list_id):
         st.rerun()
 
 
-def prepare_for_save(dict_save):
+def save_data():
     """
-    Save data in parquet
-
-    Args:
-        dict_save: dict with path and dataframe
+    Save data
     """
 
-    print("--------------------------------")
-    print(dict_save)
-
-    """
-    update Filter data 
-    """
-    # get cols necessary, according to schema filter
-    df_new_filter = st.session_state["df_tmp_filt_qualif"][
-        st.session_state["schema_filter"].keys()
-    ]
-
-    """
-    update Qualif data
-    """
-    # get cols necessary, according to schema qualif
-    df_new_qualif = st.session_state["df_tmp_filt_qualif"][
-        st.session_state["schema_qualif"].keys()
-    ]
-
-    # get list ID in tmp_filt_qualif AND in tmp Excel
-    list_id = st.session_state["df_tmp_class_excel"]["ID"].tolist()
-
-    # Remove rows in new qualif
-    df_new_qualif = df_new_qualif.loc[~df_new_qualif["ID"].isin(list_id)]
-
-    #
-    # transform cols of tmp Excel to qualif
-    df_excel_to_qualif = st.session_state["df_tmp_class_excel"].rename(
-        columns=lambda x: x.replace("class_sources", "url").replace("class_", "qualif_")
+    # save data filter
+    st.session_state["df_filt_src"].to_parquet(
+        f"{st.session_state['path_filter_source']}", index=False
     )
 
-    # merge to get date
-    df_excel_to_qualif = pd.merge(
-        df_excel_to_qualif,
-        dict_save["id_date"],
-        on=["ID"],
-        how="left",
+    # save data qualif
+    st.session_state["df_qualif"].to_parquet(
+        f"{st.session_state['path_qualif']}", index=False
     )
 
-    # add to tmp qualif
-    df_new_qualif = pd.concat([df_new_qualif, df_excel_to_qualif]).drop_duplicates(
-        ["ID", "IDX"], keep="last"
+    # save data classify
+    st.session_state["df_class_excel"].to_parquet(
+        f"{st.session_state['path_classify']}", index=False
     )
 
-    #
-    # get data, IDX in tmp Excel, for update qualif if IDX already exists in Excel
-    df_upd_qualif = st.session_state["df_qualif"].loc[
-        st.session_state["df_qualif"]["IDX"].isin(
-            st.session_state["df_tmp_class_excel"]["IDX"]
-        )
-    ]
-
-    if not df_upd_qualif.empty:
-        """
-        data (IDX) already exists in Excel, it's a update
-        So update all qualif with IDX updated
-        """
-
-        # remove all cols qualif_
-        df_tmp_new_qualif = df_upd_qualif.drop(
-            columns=[col for col in df_upd_qualif.columns if col.startswith("qualif_")]
-        )
-
-        # update all cols qualif (merge)
-        df_tmp_new_qualif = pd.merge(
-            df_tmp_new_qualif,
-            df_new_qualif,
-            on=["IDX"],
-            how="left",
-            suffixes=("", "_y"),
-        ).drop_duplicates(["ID", "IDX"], keep="last")
-
-        # drop cols _y
-        df_tmp_new_qualif = df_tmp_new_qualif.drop(
-            columns=[col for col in df_tmp_new_qualif.columns if col.endswith("_y")]
-        )
-
-        # merge with new data
-        df_new_qualif = pd.concat([df_new_qualif, df_tmp_new_qualif]).drop_duplicates(
-            subset=["ID", "IDX"], keep="last"
-        )
-
-    """
-    update Classify data
-    """
-    # get cols necessary, according to schema Excel
-    df_new_classify = st.session_state["df_tmp_class_excel"][
-        st.session_state["schema_excel"].keys()
-    ]
-
-    # replace qualif_ to class_
-    if not df_upd_qualif.empty:
-        df_upd_qualif = df_upd_qualif.rename(
-            columns=lambda x: x.replace("qualif_", "class_").replace(
-                "url", "class_sources"
-            )
-        ).drop(["date", "class_ia"], axis=1)
-
-    # add data already in Excel to new classify
-    df_new_classify = pd.concat([df_new_classify, df_upd_qualif])
-
-    # add cols mul_ID, mul_url, regoup all if IDX is muultiple
-    df_new_classify["mul_ID"] = df_new_classify.groupby("IDX")["ID"].transform(
-        lambda x: ",".join(x)
-    )
-    df_new_classify["mul_url"] = df_new_classify.groupby("IDX")[
-        "class_sources"
-    ].transform(lambda x: ",".join(x))
-
-    # replace cols
-    df_new_classify = (
-        df_new_classify.drop(columns=["ID", "class_sources"])
-        .rename(
-            columns={
-                "mul_ID": "ID",
-                "mul_url": "class_sources",
-            }
-        )
-        .drop_duplicates(["IDX"], keep="first")
-    )
-
-    # Validation
-    validation_checkbox(df_new_filter, df_new_qualif, df_new_classify, list_id)
+    # Reset
+    init_state_theme_data()
+    init_raw_data()
+    init_tmp_data()
+    find_next_idx()
+    st.rerun()
 
 
 def apply_basic_filters(df, dict_filter):
@@ -896,6 +944,8 @@ with st.sidebar:
     st.divider()
 
 
+# st.write(st.session_state["df_tmp_filt_qualif"].dtypes)
+
 for index, row in st.session_state["df_tmp_filt_qualif"].iterrows():
 
     text_message = (
@@ -1016,7 +1066,7 @@ for index, row in st.session_state["df_tmp_filt_qualif"].iterrows():
                     st.number_input(
                         dict_ref["label"],
                         value=(
-                            row[dict_ref["name"]]
+                            int(row[dict_ref["name"]])
                             if not pd.isnull(row[dict_ref["name"]])
                             else None
                         ),
