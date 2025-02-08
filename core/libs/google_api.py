@@ -109,6 +109,15 @@ def update_sheet_data(service, spreadsheet_id, range_name, df):
     cols = df.columns.tolist()
     values = df.values.tolist()
 
+    # clear sheet
+    result = (
+        service.spreadsheets()
+        .values()
+        .clear(spreadsheetId=spreadsheet_id, range=range_name)
+        .execute()
+    )
+    print(f"{result.get('clearedRanges')} ranges cleared.")
+
     # update values
     body = {"values": [cols] + values}
     result = (
