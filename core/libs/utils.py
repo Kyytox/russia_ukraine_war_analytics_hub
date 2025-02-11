@@ -340,3 +340,23 @@ def format_clean_text(text):
     text = re.sub(r" +", " ", text).strip()
 
     return text
+
+
+@task(name="Rename columns", task_run_name="rename-columns")
+def rename_cols(df, dict_cols):
+    """
+    Update the columns names
+
+    Args:
+        df (pd.DataFrame): Dataframe to control
+        dict_cols (dict): Dictionary with old and new names
+
+    Returns:
+        pd.DataFrame: Dataframe with new columns names
+    """
+
+    # format names
+    df.columns = df.columns.str.strip()
+
+    # rename columns
+    return df.rename(columns=dict_cols)

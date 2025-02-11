@@ -15,6 +15,7 @@ from prefect.states import Completed, Failed
 # Variables
 from core.config.paths import PATH_DWH_SOURCES
 from core.config.variables import ID_EXCEL_INCIDENT_RAILWAY
+from core.config.dwh_corresp_schema import CORRESP_SCHEMA_INCIDENT_RAILWAY
 
 # Functions
 from core.libs.utils import (
@@ -22,55 +23,12 @@ from core.libs.utils import (
     get_regions_geojson,
     create_artifact,
     upd_data_artifact,
+    rename_cols,
 )
 from core.libs.google_api import (
     connect_google_sheet_api,
     get_sheet_data,
 )
-
-
-dict_cols = {
-    "Date": "date",
-    "Region": "region",
-    "Location": "location",
-    "Gps": "gps",
-    "Damaged Equipment": "dmg_eqp",
-    "Incident Type": "inc_type",
-    "Collision With": "coll_with",
-    "Locomotive Damaged": "nb_loco_dmg",
-    "Relay Damaged": "nb_relay_dmg",
-    "Partisans Group": "prtsn_grp",
-    "Partisans Arrest": "prtsn_arr",
-    "Partisans Names": "prtsn_names",
-    "Partisans Age": "prtsn_age",
-    "Applicable Laws": "app_laws",
-    "Source Links": "source_links",
-    "Locomotive Damaged": "nb_loco_dmg",
-    "Relay Damaged": "nb_relay_dmg",
-    #
-    "Sabotage Success": "sabotage_success",
-    "Comments": "comments",
-    "Exact Date": "exact_date",
-}
-
-
-@task(name="Rename columns", task_run_name="rename-columns")
-def rename_cols(df):
-    """
-    Update the columns names
-
-    Args:
-        df (pd.DataFrame): Dataframe to control
-
-    Returns:
-        Completed or Failed
-    """
-
-    # format names
-    df.columns = df.columns.str.strip()
-
-    # rename columns
-    return df.rename(columns=dict_cols)
 
 
 @task(name="Remove columns", task_run_name="remove-columns")
@@ -181,7 +139,7 @@ def ctrl_cols(df):
     err = []
 
     # check if all columns are in the dataframe
-    for col in dict_cols.values():
+    for col in CORRESP_SCHEMA_INCIDENT_RAILWAY.values():
         if col not in df.columns:
             err.append(col)
 
@@ -448,7 +406,7 @@ def flow_ingest_incident_railway():
         return Failed(message="Data is empty")
 
     # rename columns
-    df = rename_cols(df)
+    df = rename_cols(df, CORRESP_SCHEMA_INCIDENT_RAILWAY)
 
     # control data
     st_data = control_data_quality(df)
