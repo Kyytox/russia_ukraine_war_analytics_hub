@@ -4,12 +4,15 @@ import pandas as pd
 from core.process_data_warehouse.ingest.ingest_inc_railway import (
     ctrl_date,
     ctrl_regions,
-    ctrl_miss_values_col,
-    ctrl_miss_values_typ_inc,
-    rename_cols,
+    ctrl_miss_val_solo_col,
+    ctrl_miss_val_set_cols,
+    ctrl_missing_values_prtsn,
+    ctrl_cols,
 )
 
-from core.libs.utils import get_regions_geojson
+from core.config.dwh_corresp_schema import CORRESP_SCHEMA_INCIDENT_RAILWAY
+
+from core.libs.utils import get_regions_geojson, rename_cols
 
 
 @pytest.fixture
@@ -74,25 +77,25 @@ class TestCtrlRegions:
 
 class TestCtrlMissValuesCol:
     def test_no_missing_values(self, valid_df):
-        result = ctrl_miss_values_col(valid_df)
+        result = ctrl_miss_val_solo_col(valid_df)
         assert result.is_completed()
 
     def test_missing_values(self, error_df):
-        result = ctrl_miss_values_col(error_df)
+        result = ctrl_miss_val_solo_col(error_df)
         assert result.is_failed()
 
 
 class TestCtrlMissValuesTypInc:
     def test_no_missing_values(self, valid_df):
-        result = ctrl_miss_values_typ_inc(valid_df)
+        result = ctrl_miss_val_set_cols(valid_df)
         assert result.is_completed()
 
     def test_missing_values_sabotage(self, error_df):
-        result = ctrl_miss_values_typ_inc(error_df)
+        result = ctrl_miss_val_set_cols(error_df)
         assert result.is_failed()
 
     def test_missing_values_collision(self, error_df):
-        result = ctrl_miss_values_typ_inc(error_df)
+        result = ctrl_miss_val_set_cols(error_df)
         assert result.is_failed()
 
 
@@ -120,9 +123,5 @@ class TestRenameColumns:
                 "Exact Date": ["1/1/2023"],
             }
         )
-        result = rename_cols(df)
+        result = rename_cols(df, CORRESP_SCHEMA_INCIDENT_RAILWAY)
         assert isinstance(result, pd.DataFrame)
-
-    def test_missing_columns(self, error_df):
-        result = rename_cols(error_df)
-        assert result.is_failed()
