@@ -920,7 +920,7 @@ def wordcloud(df):
 
 @flow(
     name="DWH Subflow Datamarts Incidents Railway",
-    flow_run_name="dwh-subflow-datamarts-inc-railway",
+    flow_run_name="dwh-subflow-dmt-inc-railway",
     log_prints=True,
 )
 def flow_dmt_incident_railway():
