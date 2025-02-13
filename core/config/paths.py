@@ -39,6 +39,7 @@ PATH_DWH_SOURCES = "data/data_warehouse/sources"
 # Data Marts
 # PATH_DMT_INC_RAILWAY = "data/datamarts/incidents_railway"
 PATH_DMT_INC_RAILWAY = "data/data_warehouse/datamarts/incidents_railway"
+PATH_DMT_RU_BLOCK_SITES = "data/data_warehouse/datamarts/russia_block_sites"
 
 # Path Utils
 # PATH_JSON_RU_REGION = "core/utils/russia_region.json"

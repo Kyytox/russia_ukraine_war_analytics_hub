@@ -4,6 +4,9 @@ from prefect import flow
 from core.process_data_warehouse.ingest.ingest_ru_block_sites import (
     flow_ingest_russia_blocked_sites,
 )
+from core.process_data_warehouse.datamarts.datamarts_ru_block_sites import (
+    flow_dmt_russia_blocked_sites,
+)
 
 
 @flow(
@@ -17,6 +20,7 @@ def flow_dwh_ru_block_sites():
     """
 
     # Ingest
-    flow_ingest_russia_blocked_sites()
+    # flow_ingest_russia_blocked_sites()
 
     # Datamarts
+    flow_dmt_russia_blocked_sites()

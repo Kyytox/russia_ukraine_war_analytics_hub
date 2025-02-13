@@ -14,6 +14,7 @@ from core.libs.utils import (
     create_artifact,
     upd_data_artifact,
     rename_cols,
+    drop_duplicates,
 )
 from core.libs.google_api import (
     connect_google_sheet_api,
@@ -67,6 +68,14 @@ def flow_ingest_russia_blocked_sites():
 
     # Format values
     df = format_values(df)
+
+    # add month, year
+    df["month"] = df["date_blocked"].dt.to_period("M").dt.to_timestamp()
+    df["year"] = df["date_blocked"].dt.year
+
+    # drop duplicates
+    df = drop_duplicates(df, ["domain"])
+    print("\n", df)
 
     upd_data_artifact(f"Ingestion Russia blocked sites", df.shape[0])
 

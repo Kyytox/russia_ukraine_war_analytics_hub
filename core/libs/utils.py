@@ -360,3 +360,24 @@ def rename_cols(df, dict_cols):
 
     # rename columns
     return df.rename(columns=dict_cols)
+
+
+@task(name="Drop Duplicates", task_run_name="drop-duplicates")
+def drop_duplicates(df, list_cols):
+    """
+    Drop duplicates by col
+
+    Args:
+        df (pd.DataFrame): Dataframe to control
+        list_cols (list): List of columns to control
+
+    Returns:
+        df (pd.DataFrame): Dataframe without duplicates
+    """
+
+    for col in list_cols:
+        df = df.drop_duplicates(subset=[col])
+
+    df = df.drop_duplicates().reset_index(drop=True)
+
+    return df
