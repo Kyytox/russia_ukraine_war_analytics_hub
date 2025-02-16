@@ -1,4 +1,4 @@
-datamarts_path = "data/datamarts/incidents_railway"
+datamarts_path = "data/data_warehouse/datamarts/incidents_railway"
 
 colors = {
     # 2022: "rgb(65, 65, 105)",
