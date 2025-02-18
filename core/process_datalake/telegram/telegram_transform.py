@@ -125,8 +125,8 @@ def remove_poorly_translated_data(df):
     ]
     print(f"Size poorly translated data: {df_poor_trans.shape}")
 
-    # keep 30 messages beaaause it's too long to retranslate if we have a lot of data
-    if df_poor_trans.shape[0] > 10:
+    # keep 50 messages beaaause it's too long to retranslate if we have a lot of data
+    if df_poor_trans.shape[0] > 50:
         df_poor_trans = df_poor_trans.head(50)
 
         # remove data according to ID
