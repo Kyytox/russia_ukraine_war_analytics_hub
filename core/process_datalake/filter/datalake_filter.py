@@ -84,17 +84,8 @@ def get_telegram_data():
         Dataframe with Telegram data
     """
 
-    # get list accounts
-    list_accounts = get_telegram_accounts(PATH_TELEGRAM_TRANSFORM)
-
-    # remove belzhd_live
-    list_accounts.remove("belzhd_live")
-
-    # group data
-    df_list = [read_data(PATH_TELEGRAM_TRANSFORM, account) for account in list_accounts]
-
-    # concat data
-    df_telegram = pd.concat(df_list).sort_values("date").reset_index(drop=True)
+    # read data transform
+    df_telegram = read_data(PATH_TELEGRAM_TRANSFORM, "transform_telegram")
 
     # convert to str
     df_telegram["id_message"] = df_telegram["id_message"].astype(str)
