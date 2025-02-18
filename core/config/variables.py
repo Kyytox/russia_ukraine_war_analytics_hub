@@ -99,6 +99,7 @@ LIST_REGIONS = [
     "Chita",
     "Chukchi Autonomous Okrug",
     "Chuvash",
+    "Crimea",
     "Dagestan",
     "Gorno-Altay",
     "Ingush",
