@@ -190,11 +190,41 @@ def dmt_by_authority_category(df: pd.DataFrame) -> pd.DataFrame:
         df (pd.DataFrame): Dataframe with datamart by authority and category
     """
 
-    df_final = pd.crosstab(df["banning_authority"], df["category"]).reset_index()
-    df_final = pd.melt(
-        df_final, id_vars=["banning_authority"], var_name="category", value_name="count"
+    # df_final = pd.crosstab(df["banning_authority"], df["category"]).reset_index()
+    # df_final = pd.melt(
+    #     df_final, id_vars=["banning_authority"], var_name="category", value_name="count"
+    # )
+
+    # create a df for use Sankey diagram
+    df_final = (
+        df.groupby(["banning_authority", "category"]).size().reset_index(name="value")
     )
-    # print(df_final)
+
+    # Get unique values for nodes
+    authorities = df_final["banning_authority"].unique()
+    categories = df_final["category"].unique()
+
+    # Create node labels list
+    labels = list(authorities) + list(categories)
+
+    # Create source, target and value lists
+    source = [list(authorities).index(x) for x in df_final["banning_authority"]]
+    target = [
+        len(authorities) + list(categories).index(x) for x in df_final["category"]
+    ]
+    value = df_final["value"].tolist()
+
+    print(source)
+    print(target)
+    print(value)
+
+    # add missing values to labels
+    labels = labels + [""] * (len(source) - len(labels))
+
+    # Create final dataframe
+    df_final = pd.DataFrame(
+        {"source": source, "target": target, "value": value, "labels": labels}
+    )
 
     return df_final
 
@@ -258,6 +288,11 @@ def flow_dmt_russia_blocked_sites():
     # Block by Category over time
     df_tmp = dmt_by_category_over_time(df)
     path = f"{PATH_DMT_RU_BLOCK_SITES}/count_by_category_over_time.parquet"
+    df_tmp.to_parquet(path, index=False)
+
+    # Blocked by Country Domain and Category
+    df_tmp = df.groupby(["country_domain", "category"]).size().reset_index(name="count")
+    path = f"{PATH_DMT_RU_BLOCK_SITES}/count_by_country_domain_category.parquet"
     df_tmp.to_parquet(path, index=False)
 
     if df.empty:
