@@ -156,6 +156,7 @@ LIST_REGIONS = [
     "Tambov",
     "Tatarstan",
     "Tomsk",
+    "Transbaikalia",
     "Tula",
     "Tuva",
     "Tver",
