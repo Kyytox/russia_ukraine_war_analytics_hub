@@ -462,11 +462,9 @@ def process_qualification(theme, df_filt):
 
     # get data already Qualif
     df_qualif = read_data(PATH_QUALIF_DATALAKE, file_name)
-    print("\n", df_qualif.head(30))
 
     # keep data who not add final and filter
     df_to_class = keep_data_to_qualif(df_filt, col_add_final, col_filter)
-    print("\n", df_to_class.head(30))
 
     df_ids_no_qualif_ia = pd.DataFrame()
 
@@ -489,7 +487,6 @@ def process_qualification(theme, df_filt):
         df_merged = pd.merge(
             df_to_class, df_qualif[["ID", "qualif_ia"]], on="ID", how="left"
         )
-        print("DFDFVDFVDVDVDFVDFVDFV\n", df_merged.head(50))
 
         # get list ID not processed with IA
         df_ids_no_qualif_ia = df_merged[
@@ -511,6 +508,8 @@ def process_qualification(theme, df_filt):
     """
     Qualif without IA
     """
+    print("WITHOUT IA")
+    print("Data to classify: ", df_to_class.shape)
     if not df_to_class.empty:
 
         # qualif Region
@@ -530,15 +529,10 @@ def process_qualification(theme, df_filt):
             df_raw=df_qualif, df_new=df_to_class, cols=["ID", "IDX"]
         )
 
-    # print("LIST ID")
-    # print("\n", df_ids_no_qualif_ia.head(30))
-
-    # print("TO CLASSIFY")
-    # print("\n", df_to_class.head(30))
     """
     Qualif with IA
     """
-
+    print("WITH IA")
     if df_to_class.empty:
         df_to_class = df_qualif.copy()
 
@@ -559,21 +553,20 @@ def process_qualification(theme, df_filt):
     else:
         df_to_class_wh_ia = df_to_class
 
+    print("Data to classify: ", df_to_class_wh_ia.shape)
+
     # keep data according to SIZE_TO_QUALIF
     # We define a threshold of x to avoid excessive processing time due to the IA
     if SIZE_TO_QUALIF:
         df_to_class_wh_ia = df_to_class_wh_ia.head(SIZE_TO_QUALIF)
 
-    print("WITH IA")
-    print("\n", df_to_class_wh_ia.head(30))
-
     # process IA
+    print("Data to classify after SIZE_TO_QUALIF: ", df_to_class_wh_ia.shape)
     df_to_class_wh_ia = qualif_theme(df_to_class_wh_ia, theme)
     df_to_class_wh_ia = qualif_partisans_names(df_to_class_wh_ia, theme)
     df_to_class_wh_ia = qualif_partisans_ages(df_to_class_wh_ia, theme)
     df_to_class_wh_ia = qualif_incident_type(df_to_class_wh_ia, theme)
     df_to_class_wh_ia = qualif_damaged_equipment(df_to_class_wh_ia, theme)
-    print("\n", df_to_class_wh_ia.head(30))
 
     # concat data
     df_to_class = (
