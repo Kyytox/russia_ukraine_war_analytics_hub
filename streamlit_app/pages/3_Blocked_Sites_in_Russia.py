@@ -35,6 +35,78 @@ dmt_by_country_category = pd.read_parquet(
 )
 
 
+def jump_lines(z=0, n=6):
+    while z < n:
+        st.write("")
+        z += 1
+
+
+###########################################################################
+###########################################################################
+###########################################################################
+###########################################################################
+###########################################################################
+###########################################################################
+
+
+# Create sidebar filters
+st.sidebar.header("Filters")
+
+# Country domain filter
+country_domains = dmt_by_country_category["country_domain"].unique()
+country_domains = country_domains.tolist()
+selected_countries = st.sidebar.multiselect(
+    "Select Countries",
+    options=country_domains,
+    placeholder="All",
+)
+
+# Category filter from dmt_global
+categories = dmt_global[dmt_global["type_metric"] == "by_category"]["metric"].unique()
+categories = categories.tolist()
+selected_categories = st.sidebar.multiselect(
+    "Select Categories",
+    options=categories,
+    placeholder="All",
+)
+
+# Subcategory filter from dmt_global
+subcategories = dmt_global[dmt_global["type_metric"] == "by_subcategory"][
+    "metric"
+].unique()
+subcategories = subcategories.tolist()
+selected_subcategories = st.sidebar.multiselect(
+    "Select Subcategories",
+    options=subcategories,
+    placeholder="All",
+)
+
+# Apply filters to relevant dataframes
+if len(selected_countries) > 0:
+    dmt_global = dmt_global[
+        (dmt_global["type_metric"] != "by_country_domain")
+        | (dmt_global["metric"].isin(selected_countries))
+    ]
+    dmt_by_country_category = dmt_by_country_category[
+        dmt_by_country_category["country_domain"].isin(selected_countries)
+    ]
+
+if len(selected_categories) > 0:
+    dmt_global = dmt_global[
+        (dmt_global["type_metric"] != "by_category")
+        | (dmt_global["metric"].isin(selected_categories))
+    ]
+    dmt_by_country_category = dmt_by_country_category[
+        dmt_by_country_category["category"].isin(selected_categories)
+    ]
+
+if len(selected_subcategories) > 0:
+    dmt_global = dmt_global[
+        (dmt_global["type_metric"] != "by_subcategory")
+        | (dmt_global["metric"].isin(selected_subcategories))
+    ]
+
+
 #
 # 1. Charts Dmt Global
 st.dataframe(dmt_global.dtypes)
@@ -53,8 +125,10 @@ LIST_TOP_30 = (
 )
 
 
+col1, col2 = st.columns([0.5, 0.5])
+curr_col = col2
 for type_metric in dmt_global["type_metric"].unique():
-    col1, col2 = st.columns([0.5, 0.5])
+
     df = (
         dmt_global[dmt_global["type_metric"] == type_metric]
         .sort_values(by="count", ascending=False)
@@ -87,23 +161,37 @@ for type_metric in dmt_global["type_metric"].unique():
         text="count", color=alt.value("white")
     )
 
-    with col1:
+    curr_col = col1 if curr_col == col2 else col2
+
+    with curr_col:
         st.altair_chart(bar + text, use_container_width=True)
 
-    with col2:
-        st.write("")
-        with st.expander("Data"):
-            st.dataframe(
-                df[["metric", "count"]].rename(
-                    columns={
-                        "metric": type_metric.title()
-                        .replace("_", " ")
-                        .replace("By", "")
-                    }
-                ),
-                hide_index=True,
-                width=300,
-            )
+        with st.expander("Explore Data - More Explanation", icon="🔍"):
+            subcol1, subcol2 = st.columns([0.4, 0.6])
+            with subcol1:
+                st.dataframe(
+                    df[["metric", "count"]].rename(
+                        columns={
+                            "metric": type_metric.title()
+                            .replace("_", " ")
+                            .replace("By", "")
+                        }
+                    ),
+                    hide_index=True,
+                    width=300,
+                )
+
+            with subcol2:
+                if type_metric == "by_subcategory":
+                    # resume what is miroor subcategory
+                    st.write(
+                        """'Mirror' subcategory refers to alternative domain names created to bypass Russian censorship.
+                        These are primarily used by news services like Radio Liberty/Radio Free Europe (RL/RFE) to maintain 
+                        access when their main domains are blocked. When Roskomnadzor blocks one mirror domain, new ones 
+                        are quickly created and shared through social media."""
+                    )
+
+        jump_lines()
 
 
 st.divider()
@@ -282,8 +370,6 @@ st.divider()
 #
 #
 
-
-st.divider()
 st.dataframe(dmt_by_date_and_metrics)
 st.dataframe(dmt_by_date_and_metrics.dtypes)
 
@@ -326,7 +412,7 @@ for type_metric in dmt_by_date_and_metrics["type_metric"].unique():
         )
         .properties(
             title=f"Blocked Sites by Month {type_metric.title().replace('_', ' ')}",
-            height=500,
+            height=700,
         )
     )
 
@@ -530,7 +616,9 @@ final_chart = (
     .properties(
         title=alt.TitleParams(
             "Blocked Sites by Country Domain and Category",
-            subtitle="Mosaic Chart",
+            subtitle="For the Top 6 Country Domain",
+            subtitleColor="grey",
+            subtitleFontSize=14,
             anchor="middle",
         ),
     )
@@ -550,13 +638,19 @@ bar = (
     alt.Chart(df)
     .mark_bar()
     .encode(
-        x=alt.X("country_domain", title="Country Domain"),
+        x=alt.X("country_domain", title="Country Domain", sort="-y"),
         y=alt.Y("count", title="Count"),
-        color=alt.Color("category", legend=None),
+        color=alt.Color("category"),
         tooltip=["country_domain", "category", "count"],
     )
     .properties(
-        title="Blocked Sites by Country Domain and Category",
+        title=alt.TitleParams(
+            "Blocked Sites by Country Domain and Category",
+            subtitle="For the Top 6 to 30 Country Domain",
+            subtitleColor="grey",
+            subtitleFontSize=14,
+            anchor="middle",
+        ),
         height=500,
     )
 )
@@ -586,4 +680,78 @@ st.altair_chart(bar, use_container_width=True)
 #
 
 
-# st.dataframe(dmt_by_category_over_time)
+st.divider()
+st.dataframe(dmt_by_category_over_time)
+st.dataframe(dmt_by_category_over_time.dtypes)
+
+# Schema
+# source	int64
+# target	int64
+# value	int64
+# labels	object
+
+dmt_by_category_over_time["month"] = (
+    dmt_by_category_over_time["month"].astype(str).str[:7]
+)
+
+# Charts bar stacked
+bar = (
+    alt.Chart(dmt_by_category_over_time)
+    .mark_bar()
+    .encode(
+        x=alt.X("month", title="Month"),
+        y=alt.Y("count", title="Count"),
+        color=alt.Color("category", legend=None),
+        tooltip=["category", "count"],
+    )
+    .properties(
+        title=alt.TitleParams(
+            "Blocked Sites by Category over Time",
+            subtitle="Stacked",
+            subtitleColor="grey",
+        ),
+        height=600,
+    )
+)
+
+st.altair_chart(bar, use_container_width=True)
+
+
+# # Sankey
+# data = dict(
+#     type="sankey",
+#     node=dict(
+#         pad=21,
+#         thickness=15,
+#         line=dict(color="black", width=0.6),
+#         label=dmt_by_category_over_time["labels"],
+#         color=dmt_by_category_over_time["labels"].apply(
+#             lambda x: "lightblue" if "by" in x else "lightgreen"
+#         ),
+#     ),
+#     link=dict(
+#         source=dmt_by_category_over_time["source"],
+#         target=dmt_by_category_over_time["target"],
+#         value=dmt_by_category_over_time["value"],
+#         color=dmt_by_category_over_time["source"].apply(
+#             lambda x: "orange" if x == 0 else "blue"
+#         ),
+#     ),
+# )
+
+# fig = go.Figure(
+#     data,
+#     layout=dict(
+#         title=dict(
+#             text="Blocked Sites by Category over Time",
+#             pad=dict(l=20),
+#             y=0.99,
+#             subtitle=dict(
+#                 text="Sankey Diagram",
+#             ),
+#         ),
+#         font_size=16,
+#         height=680,
+#     ),
+# )
+# st.plotly_chart(fig, use_container_width=True)
