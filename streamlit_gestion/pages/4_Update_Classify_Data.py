@@ -1,14 +1,12 @@
 import os
-import sys
 import streamlit as st
 import pandas as pd
-import numpy as np
 
 os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 from core.config.paths import (
     PATH_FILTER_DATALAKE,
-    PATH_PRE_CLASSIFY_DATALAKE,
+    PATH_QUALIF_DATALAKE,
     PATH_CLASSIFY_DATALAKE,
 )
 from core.config.schemas import (
@@ -30,12 +28,12 @@ def init_state_theme_data():
     """
 
     st.session_state["path_filter_source"] = (
-        f"{PATH_FILTER_DATALAKE}/filter_DATALAKE.parquet"
+        f"{PATH_FILTER_DATALAKE}/filter_datalake.parquet"
     )
 
     theme_data_config = {
         "Incidents Railway": {
-            "path_pre_classify": f"{PATH_PRE_CLASSIFY_DATALAKE}/pre_classify_railway.parquet",
+            "path_qualif": f"{PATH_QUALIF_DATALAKE}/qualification_railway.parquet",
             "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_railway.parquet",
             "schema_excel": SCHEMA_EXCEL_RAILWAY,
             "name_col_add_final": "add_final_inc_railway",
@@ -44,7 +42,7 @@ def init_state_theme_data():
             "name_col_date_class": "class_date_inc",
         },
         "Incidents Arrest": {
-            "path_pre_classify": f"{PATH_PRE_CLASSIFY_DATALAKE}/pre_classify_arrest.parquet",
+            "path_qualif": f"{PATH_QUALIF_DATALAKE}/qualification_arrest.parquet",
             "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_arrest.parquet",
             "schema_excel": SCHEMA_EXCEL_ARREST,
             "name_col_add_final": "add_final_inc_arrest",
@@ -53,7 +51,7 @@ def init_state_theme_data():
             "name_col_date_class": "class_arrest_date",
         },
         "Incidents Sabotage": {
-            "path_pre_classify": f"{PATH_PRE_CLASSIFY_DATALAKE}/pre_classify_sabotage.parquet",
+            "path_qualif": f"{PATH_QUALIF_DATALAKE}/qualification_sabotage.parquet",
             "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_sabotage.parquet",
             "schema_excel": SCHEMA_EXCEL_SABOTAGE,
             "name_col_add_final": "add_final_inc_sabotage",
@@ -76,14 +74,14 @@ def init_data():
     st.session_state["saved_select_IDX"] = ""
 
     st.session_state["df_temp_filter"] = pd.DataFrame()
-    st.session_state["df_temp_pre_classify"] = pd.DataFrame()
+    st.session_state["df_temp_qualif"] = pd.DataFrame()
     st.session_state["df_temp_classify"] = pd.DataFrame()
 
     # get data filter
     read_data("path_filter_source", "df_filter_source", "schema_filter")
 
-    # get data pre classify
-    read_data("path_pre_classify", "df_pre_classify", "schema_pre_classify")
+    # get data qualif
+    read_data("path_qualif", "df_qualif", "schema_qualif")
 
     # Get data classify (data final)
     if os.path.exists(f"{st.session_state['path_classify']}"):
@@ -134,12 +132,12 @@ def save_data(dict_save):
         .reset_index(drop=True)
     )
 
-    # concat pre classify
-    st.session_state["df_pre_classify"] = (
+    # concat qualif
+    st.session_state["df_qualif"] = (
         pd.concat(
             [
-                st.session_state["df_pre_classify"],
-                st.session_state["df_temp_pre_classify"],
+                st.session_state["df_qualif"],
+                st.session_state["df_temp_qualif"],
             ]
         )
         .drop_duplicates(["ID", "IDX"], keep="last")
@@ -161,7 +159,7 @@ def save_data(dict_save):
     )
 
     # st.dataframe(st.session_state["df_filter_source"])
-    # st.dataframe(st.session_state["df_pre_classify"])
+    # st.dataframe(st.session_state["df_qualif"])
     # st.dataframe(st.session_state["df_classify_excel"])
 
     for path, df in dict_save.items():
@@ -189,7 +187,7 @@ def convert_cols(df):
         df[col] = df[col].fillna(0).astype(int)
 
 
-def upd_pre_class_and_class(idx, col_name):
+def upd_qualif_and_class(idx, col_name):
     """
     Update data to classify
     """
@@ -199,15 +197,15 @@ def upd_pre_class_and_class(idx, col_name):
     print(f"col Name: {col_name}")
     print(f"Value: {st.session_state[f'REF_{col_name}_{idx}']}")
 
-    ###########################
-    ## UPD TEMP PRE CLASSIFY ##
-    ###########################
+    #####################
+    ## UPD TEMP QUALIF ##
+    #####################
     if col_name != "IDX":
-        pre_col_name = f"pre_{col_name}"
+        qualif_col_name = col_name.replace("class_", "qualif_")
 
     # upd col_name, according to idx
-    st.session_state["df_temp_pre_classify"].loc[
-        st.session_state["df_temp_pre_classify"]["IDX"] == idx, pre_col_name
+    st.session_state["df_temp_qualif"].loc[
+        st.session_state["df_temp_qualif"]["IDX"] == idx, qualif_col_name
     ] = st.session_state[f"REF_{col_name}_{idx}"]
 
     #######################
@@ -218,8 +216,6 @@ def upd_pre_class_and_class(idx, col_name):
     st.session_state["df_temp_classify"].loc[
         st.session_state["df_temp_classify"]["IDX"] == idx, col_name
     ] = st.session_state[f"REF_{col_name}_{idx}"]
-
-    st.rerun()
 
 
 def upd_filter(id, col_name):
@@ -318,13 +314,13 @@ with st.sidebar:
             .reset_index(drop=True)
         )
 
-        # For Pre Classify get data with ID
-        st.session_state["df_temp_pre_classify"] = (
-            st.session_state["df_pre_classify"]
+        # For Qualif get data with ID
+        st.session_state["df_temp_qualif"] = (
+            st.session_state["df_qualif"]
             .loc[
                 (
-                    st.session_state["df_pre_classify"]["ID"].isin(list_ID)
-                    & (st.session_state["df_pre_classify"]["IDX"] == select_IDX)
+                    st.session_state["df_qualif"]["ID"].isin(list_ID)
+                    & (st.session_state["df_qualif"]["IDX"] == select_IDX)
                 )
             ]
             .reset_index(drop=True)
@@ -347,7 +343,7 @@ with st.sidebar:
         args=[
             {
                 "path_filter_source": "df_filter_source",
-                "path_pre_classify": "df_pre_classify",
+                "path_qualif": "df_qualif",
                 "path_classify": "df_classify_excel",
             }
         ],
@@ -363,7 +359,7 @@ with st.sidebar:
         ]
         .shape[0],
         "Filter Source": st.session_state["path_filter_source"].split("/")[-1],
-        "Pre Classify": st.session_state["path_pre_classify"].split("/")[-1],
+        "Qualif": st.session_state["path_qualif"].split("/")[-1],
         "Classify": st.session_state["path_classify"].split("/")[-1],
         "Name Col Add Final": st.session_state["name_col_add_final"],
     }
@@ -378,8 +374,8 @@ st.title(f"Update Classify Data - {st.session_state['theme_data']}")
 # with st.expander("All Data"):
 #     names_df = [
 #         "df_filter_source",
-#         "df_pre_classify",
-#         "df_filter_pre_classify",
+#         "df_qualif",
+#         "df_filter_qualif",
 #         "df_to_classify",
 #     ]
 #     for name_df in names_df:
@@ -398,8 +394,8 @@ st.write("Classify")
 st.dataframe(st.session_state["df_temp_classify"])
 st.write("Filter")
 st.dataframe(st.session_state["df_temp_filter"])
-st.write("Pre Classify")
-st.dataframe(st.session_state["df_temp_pre_classify"])
+st.write("Qualif")
+st.dataframe(st.session_state["df_temp_qualif"])
 
 st.divider()
 
@@ -450,7 +446,7 @@ for index, row in st.session_state["df_temp_classify"].iterrows():
                         dict_ref["label"],
                         value=(row[dict_ref["name"]]),
                         key=f"REF_{dict_ref['name']}_{IDX}",
-                        on_change=upd_pre_class_and_class,
+                        on_change=upd_qualif_and_class,
                         args=(IDX, dict_ref["name"]),
                     )
 
@@ -459,7 +455,7 @@ for index, row in st.session_state["df_temp_classify"].iterrows():
                         dict_ref["label"],
                         value=row[dict_ref["name"]],
                         key=f"REF_{dict_ref['name']}_{IDX}",
-                        on_change=upd_pre_class_and_class,
+                        on_change=upd_qualif_and_class,
                         args=(IDX, dict_ref["name"]),
                     )
 
@@ -472,7 +468,7 @@ for index, row in st.session_state["df_temp_classify"].iterrows():
                             else None
                         ),
                         key=f"REF_{dict_ref['name']}_{IDX}",
-                        on_change=upd_pre_class_and_class,
+                        on_change=upd_qualif_and_class,
                         args=(IDX, dict_ref["name"]),
                         format="MM/DD/YYYY",
                     )
@@ -486,7 +482,7 @@ for index, row in st.session_state["df_temp_classify"].iterrows():
                             else ["", *dict_ref["options"]]
                         ),
                         key=f"REF_{dict_ref['name']}_{IDX}",
-                        on_change=upd_pre_class_and_class,
+                        on_change=upd_qualif_and_class,
                         args=(IDX, dict_ref["name"]),
                     )
 
@@ -495,7 +491,7 @@ for index, row in st.session_state["df_temp_classify"].iterrows():
                         dict_ref["label"],
                         value=row[dict_ref["name"]],
                         key=f"REF_{dict_ref['name']}_{IDX}",
-                        on_change=upd_pre_class_and_class,
+                        on_change=upd_qualif_and_class,
                         args=(IDX, dict_ref["name"]),
                     )
 
@@ -503,12 +499,12 @@ for index, row in st.session_state["df_temp_classify"].iterrows():
                     st.number_input(
                         dict_ref["label"],
                         value=(
-                            row[dict_ref["name"]]
+                            int(row[dict_ref["name"]])
                             if not pd.isnull(row[dict_ref["name"]])
                             else None
                         ),
                         key=f"REF_{dict_ref['name']}_{IDX}",
-                        on_change=upd_pre_class_and_class,
+                        on_change=upd_qualif_and_class,
                         args=(IDX, dict_ref["name"]),
                     )
 
@@ -520,7 +516,7 @@ for index, row in st.session_state["df_temp_classify"].iterrows():
                             [row[dict_ref["name"]]] if row[dict_ref["name"]] else []
                         ),
                         key=f"REF_{dict_ref['name']}_{IDX}",
-                        on_change=upd_pre_class_and_class,
+                        on_change=upd_qualif_and_class,
                         args=(IDX, dict_ref["name"]),
                     )
 
