@@ -327,7 +327,8 @@ def flow_datalake_filter():
 
     df_filtered = pd.DataFrame()
 
-    theme_list = ["railway", "arrest", "sabotage"]
+    # theme_list = ["railway", "arrest", "sabotage"]
+    theme_list = ["railway", "arrest"]
 
     for theme in theme_list:
 

@@ -30,7 +30,7 @@ from core.config.variables import (
 from core.config.schemas import (
     SCHEMA_QUALIF_RAILWAY,
     SCHEMA_QUALIF_ARREST,
-    SCHEMA_QUALIF_SABOTAGE,
+    # SCHEMA_QUALIF_SABOTAGE,
 )
 
 
@@ -107,17 +107,17 @@ def qualif_theme(df, theme):
         
         Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with YES or NO.
         """
-    elif theme == "sabotage":
-        prompt = """
-        You are an expert in text analysis and classification.
-        
-        You do respond by YES or NO
-        does the message concern sabotage, arson, vandalism, or acts against Russian infrastructure or government ?
-        
-        A message who concern sabotage, arson, vandalism, or acts against Russian infrastructure or government is a message that contains information about sabotage, arson, vandalism, acts against Russian infrastructure or government, or any other event that involves sabotage, arson, vandalism, or acts against Russian infrastructure or government.
-        
-        Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with YES or NO.
-        """
+    # elif theme == "sabotage":
+    #     prompt = """
+    #     You are an expert in text analysis and classification.
+
+    #     You do respond by YES or NO
+    #     does the message concern sabotage, arson, vandalism, or acts against Russian infrastructure or government ?
+
+    #     A message who concern sabotage, arson, vandalism, or acts against Russian infrastructure or government is a message that contains information about sabotage, arson, vandalism, acts against Russian infrastructure or government, or any other event that involves sabotage, arson, vandalism, or acts against Russian infrastructure or government.
+
+    #     Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with YES or NO.
+    #     """
 
     # qualif with IA
     df = qualif_with_ia(df, "qualif_ia", prompt)
@@ -143,8 +143,6 @@ def qualif_partisans_names(df, theme):
         col_name = "qualif_prtsn_names"
     elif theme == "arrest":
         col_name = "qualif_person_name"
-    elif theme == "sabotage":
-        col_name = "qualif_prtsn_names"
 
     prompt = """
     If available, please provide the name(s) of the individual(s) who have been arrested or sentenced. Kindly respond with only the names, as you are not required to discuss the content of the message.
@@ -175,9 +173,8 @@ def qualif_partisans_ages(df, theme):
     if theme == "railway":
         col_age = "qualif_prtsn_age"
     elif theme == "arrest":
-        col_age = "qualif_person_age"
-    elif theme == "sabotage":
-        col_age = "qualif_prtsn_age"
+        # col_age = "qualif_person_age"
+        return df
 
     # prompt
     prompt = """
@@ -209,8 +206,6 @@ def qualif_incident_type(df, theme):
     if theme == "railway":
         col_age = "qualif_inc_type"
     elif theme == "arrest":
-        return df
-    elif theme == "sabotage":
         return df
 
     # prompt
@@ -249,8 +244,6 @@ def qualif_damaged_equipment(df, theme):
     if theme == "railway":
         col_age = "qualif_dmg_eqp"
     elif theme == "arrest":
-        return df
-    elif theme == "sabotage":
         return df
 
     # prompt
@@ -404,7 +397,7 @@ def add_cols_with_schema(df, schema):
         elif type == "int64":
             df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0).astype(int)
         elif type == "float64":
-            df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0.0).astype(float)
+            df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0).astype(int)
         elif type == "object":
             df[col] = df[col].astype(object)
         elif type == "bool":
@@ -454,11 +447,11 @@ def process_qualification(theme, df_filt):
         schema = SCHEMA_QUALIF_ARREST
         col_add_final = "add_final_inc_arrest"
         col_filter = "filter_inc_arrest"
-    elif theme == "sabotage":
-        file_name = "qualification_sabotage"
-        schema = SCHEMA_QUALIF_SABOTAGE
-        col_add_final = "add_final_inc_sabotage"
-        col_filter = "filter_inc_sabotage"
+    # elif theme == "sabotage":
+    #     file_name = "qualification_sabotage"
+    #     schema = SCHEMA_QUALIF_SABOTAGE
+    #     col_add_final = "add_final_inc_sabotage"
+    #     col_filter = "filter_inc_sabotage"
 
     # get data already Qualif
     df_qualif = read_data(PATH_QUALIF_DATALAKE, file_name)
@@ -562,6 +555,7 @@ def process_qualification(theme, df_filt):
 
     # process IA
     print("Data to classify after SIZE_TO_QUALIF: ", df_to_class_wh_ia.shape)
+
     df_to_class_wh_ia = qualif_theme(df_to_class_wh_ia, theme)
     df_to_class_wh_ia = qualif_partisans_names(df_to_class_wh_ia, theme)
     df_to_class_wh_ia = qualif_partisans_ages(df_to_class_wh_ia, theme)
@@ -606,7 +600,7 @@ def flow_datalake_qualif():
     process_qualification("railway", df_filter)
 
     # Incidents Arrest
-    # process_qualification("arrest", df_filter)
+    process_qualification("arrest", df_filter)
 
     # Incidents Sabotage
     # process_qualification("sabotage", df_filter)

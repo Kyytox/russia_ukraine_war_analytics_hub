@@ -75,7 +75,7 @@ LIST_EXP_LAWS = [
 ]
 
 
-DICT_REF_INPUT = [
+DICT_REF_INPUT_RAILWAY = [
     {
         "name": "IDX",
         "label": "IDX",
@@ -279,6 +279,156 @@ DICT_REF_INPUT = [
         "label": "Sentence Years",
         "type": "number_input",
         "value": None,
+        "st_col": "col4",
+    },
+]
+
+DICT_REF_INPUT_ARREST = [
+    {
+        "name": "IDX",
+        "label": "IDX",
+        "type": "text_input",
+        "value": "IDX",
+        "st_col": "col1",
+    },
+    #
+    ## Filter
+    {
+        "name": "filter_inc_railway",
+        "label": "Filter Railway",
+        "type": "toggle",
+        "value": True,
+        "st_col": "col1",
+    },
+    {
+        "name": "add_final_inc_railway",
+        "label": "Add Final Data Railway",
+        "type": "toggle",
+        "value": True,
+        "st_col": "col1",
+    },
+    {
+        "name": "filter_inc_arrest",
+        "label": "Filter Arrest",
+        "type": "toggle",
+        "value": True,
+        "st_col": "col1",
+    },
+    {
+        "name": "add_final_inc_arrest",
+        "label": "Add Final Data Arrest",
+        "type": "toggle",
+        "value": True,
+        "st_col": "col1",
+    },
+    {
+        "name": "filter_inc_sabotage",
+        "label": "Filter Sabotage",
+        "type": "toggle",
+        "value": True,
+        "st_col": "col1",
+    },
+    {
+        "name": "add_final_inc_sabotage",
+        "label": "Add Final Data Sabotage",
+        "type": "toggle",
+        "value": True,
+        "st_col": "col1",
+    },
+    #
+    ## Qualif
+    {
+        "name": "qualif_arrest_date",
+        "label": "Select Arrest Date",
+        "type": "date_input",
+        "value": None,
+        "st_col": "col3",
+    },
+    {
+        "name": "qualif_region",
+        "label": "Select Region",
+        "type": "selectbox",
+        "value": "",
+        "options": LIST_REGIONS,
+        "st_col": "col3",
+    },
+    {
+        "name": "qualif_location",
+        "label": "Location",
+        "type": "text_input",
+        "value": "",
+        "st_col": "col4",
+    },
+    # {
+    #     "name": "qualif_arrest_reason",
+    #     "label": "Select Reason Arrest",
+    #     "type": "selectbox",
+    #     "value": "",
+    #     "options": [],
+    #     "st_col": "col3",
+    # },
+    {
+        "name": "qualif_arrest_reason",
+        "label": "Select Reason Arrest",
+        "type": "text_input",
+        "value": "",
+        "st_col": "col3",
+    },
+    {
+        "name": "qualif_app_laws",
+        "label": "Select Applied Laws",
+        "type": "multiselect",
+        "value": [],
+        "options": LIST_LAWS,
+        "st_col": "col3",
+    },
+    {
+        "name": "qualif_sentence_date",
+        "label": "Select Date Sentence",
+        "type": "date_input",
+        "value": None,
+        "st_col": "col4",
+    },
+    {
+        "name": "qualif_sentence_years",
+        "label": "Sentence Years",
+        "type": "number_input",
+        "value": None,
+        "st_col": "col4",
+    },
+    {
+        "name": "qualif_person_name",
+        "label": "Person Name",
+        "type": "text_input",
+        "value": "",
+        "st_col": "col3",
+    },
+    {
+        "name": "qualif_person_age",
+        "label": "Person Age",
+        "type": "number_input",
+        "value": "",
+        "st_col": "col4",
+    },
+    {
+        "name": "qualif_person_job",
+        "label": "Person Job",
+        "type": "text_input",
+        "value": "",
+        "st_col": "col4",
+    },
+    {
+        "name": "qualif_media_post",
+        "label": "Media Post",
+        "type": "text_input",
+        "value": "",
+        "st_col": "col4",
+    },
+    {
+        "name": "qualif_comments",
+        "label": "Comments",
+        "type": "text_input",
+        "value": "",
         "st_col": "col4",
     },
 ]

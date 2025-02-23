@@ -14,10 +14,14 @@ from core.config.paths import (
 from core.config.schemas import (
     SCHEMA_EXCEL_RAILWAY,
     SCHEMA_EXCEL_ARREST,
-    SCHEMA_EXCEL_SABOTAGE,
+    # SCHEMA_EXCEL_SABOTAGE,
 )
 
-from streamlit_gestion.utils.variables import LIST_EXP_LAWS, DICT_REF_INPUT
+from streamlit_gestion.utils.variables import (
+    LIST_EXP_LAWS,
+    DICT_REF_INPUT_RAILWAY,
+    DICT_REF_INPUT_ARREST,
+)
 
 st.set_page_config(page_title="Classify Data", page_icon=":bar_chart:", layout="wide")
 
@@ -41,6 +45,7 @@ def init_state_theme_data():
             "name_col_add_final": "add_final_inc_railway",
             "name_col_filter": "filter_inc_railway",
             "found_terms": "found_terms_railway",
+            "dict_input": DICT_REF_INPUT_RAILWAY,
         },
         "Incidents Arrest": {
             "path_qualif": f"{PATH_QUALIF_DATALAKE}/qualification_arrest.parquet",
@@ -49,15 +54,16 @@ def init_state_theme_data():
             "name_col_add_final": "add_final_inc_arrest",
             "name_col_filter": "filter_inc_arrest",
             "found_terms": "found_terms_arrest",
+            "dict_input": DICT_REF_INPUT_ARREST,
         },
-        "Incidents Sabotage": {
-            "path_qualif": f"{PATH_QUALIF_DATALAKE}/qualification_sabotage.parquet",
-            "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_sabotage.parquet",
-            "schema_excel": SCHEMA_EXCEL_SABOTAGE,
-            "name_col_add_final": "add_final_inc_sabotage",
-            "name_col_filter": "filter_inc_sabotage",
-            "found_terms": "found_terms_sabotage",
-        },
+        # "Incidents Sabotage": {
+        #     "path_qualif": f"{PATH_QUALIF_DATALAKE}/qualification_sabotage.parquet",
+        #     "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_sabotage.parquet",
+        #     "schema_excel": SCHEMA_EXCEL_SABOTAGE,
+        #     "name_col_add_final": "add_final_inc_sabotage",
+        #     "name_col_filter": "filter_inc_sabotage",
+        #     "found_terms": "found_terms_sabotage",
+        # },
     }
 
     config = theme_data_config.get(st.session_state["theme_data"], {})
@@ -102,8 +108,8 @@ def init_raw_data():
             st.session_state["schema_excel"] = SCHEMA_EXCEL_RAILWAY
         elif st.session_state["theme_data"] == "Incidents Arrest":
             st.session_state["schema_excel"] = SCHEMA_EXCEL_ARREST
-        elif st.session_state["theme_data"] == "Incidents Sabotage":
-            st.session_state["schema_excel"] = SCHEMA_EXCEL_SABOTAGE
+        # elif st.session_state["theme_data"] == "Incidents Sabotage":
+        #     st.session_state["schema_excel"] = SCHEMA_EXCEL_SABOTAGE
 
 
 def init_tmp_data():
@@ -145,20 +151,20 @@ def find_next_idx():
     """
     Find next IDX
     """
-
-    list_IDX = (
-        st.session_state["df_class_excel"]["IDX"].tolist()
-        + st.session_state["df_tmp_class_excel"]["IDX"].tolist()
-    )
-
-    # find max in list
-    next_idx = (
-        pd.Series(list_IDX).str.split("_").str[1].astype(int).max() if list_IDX else 0
-    )
-
-    if next_idx == 0:
+    if st.session_state["df_class_excel"].empty:
         next_idx = 1
     else:
+        list_IDX = (
+            st.session_state["df_class_excel"]["IDX"].tolist()
+            + st.session_state["df_tmp_class_excel"]["IDX"].tolist()
+        )
+
+        # find max in list
+        next_idx = (
+            pd.Series(list_IDX).str.split("_").str[1].astype(int).max()
+            if list_IDX
+            else 0
+        )
         next_idx = next_idx + 1
 
     if st.session_state["theme_data"] == "Incidents Railway":
@@ -167,9 +173,9 @@ def find_next_idx():
     elif st.session_state["theme_data"] == "Incidents Arrest":
         prefix_idx = "arr_"
         next_idx = f"arr_{next_idx:02}"
-    elif st.session_state["theme_data"] == "Incidents Sabotage":
-        prefix_idx = "sab_"
-        next_idx = f"sab_{next_idx:02}"
+    # elif st.session_state["theme_data"] == "Incidents Sabotage":
+    #     prefix_idx = "sab_"
+    #     next_idx = f"sab_{next_idx:02}"
 
     st.session_state["next_idx"] = next_idx
     st.session_state["prefix_idx"] = prefix_idx
@@ -267,10 +273,11 @@ def upd_ref_input(ID, IDX, col_name):
             # Update data qualif
             maj_row_excel_to_filt_qualif(ID, IDX_new, "df_tmp_class_excel")
 
-        if IDX_new in st.session_state["df_class_excel"]["IDX"].values:
-            print("IDX_new in df_class_excel")
-            # Update data qualif
-            maj_row_excel_to_filt_qualif(ID, IDX_new, "df_class_excel")
+        if not st.session_state["df_class_excel"].empty:
+            if IDX_new in st.session_state["df_class_excel"]["IDX"].values:
+                print("IDX_new in df_class_excel")
+                # Update data qualif
+                maj_row_excel_to_filt_qualif(ID, IDX_new, "df_class_excel")
 
     if "date" in col_name:
         st.session_state[f"REF_{col_name}_{ID}"] = pd.to_datetime(
@@ -574,8 +581,11 @@ def validation_checkbox(df_filt, df_qualif, df_class, list_id):
 
         # find exact name of col date
         col_date = [
-            col for col in st.session_state["df_class_excel"].columns if "date" in col
+            col
+            for col in st.session_state["df_tmp_class_excel"].columns
+            if "date" in col
         ][0]
+
         st.session_state["df_class_excel"] = (
             pd.concat([st.session_state["df_class_excel"], df_class])
             .drop_duplicates(["IDX"], keep="last")
@@ -696,7 +706,6 @@ def apply_incident_filters(df, dict_filter):
     Returns:
         DataFrame filter
     """
-
     # create query
     query = ""
 
@@ -730,10 +739,10 @@ with st.sidebar:
     st.session_state["theme_data"] = st.selectbox(
         "Select Type Data",
         options=[
+            "",
             "Incidents Railway",
             "Incidents Arrest",
-            "Incidents Sabotage",
-            "",
+            # "Incidents Sabotage",
         ],
     )
 
@@ -872,8 +881,8 @@ with st.expander("Filters", expanded=True):
             elif st.session_state["theme_data"] == "Incidents Arrest":
                 # add filters
                 filters = {
-                    "filt_reason": st.session_state["slt_filt_reason"],
-                    "filt_app_law": st.session_state["slt_filt_app_law_arr"],
+                    "qualif_arrest_reason": st.session_state["slt_filt_reason"],
+                    "qualif_app_laws": st.session_state["slt_filt_app_law_arr"],
                 }
 
             # merge data filter and Qualif
@@ -890,6 +899,37 @@ with st.expander("Filters", expanded=True):
 
             # upd tmp data
             st.session_state["df_tmp_filt_qualif"] = df_tmp.head(HEAD_CLASS)
+
+        # Dislay filter
+        # Convert filter values to a DataFrame with 2 columns
+        filters_df = pd.DataFrame(
+            {
+                "Filter": [
+                    "Col Incident Filter",
+                    "Col Add Final",
+                    "Class IA",
+                    "Class Region",
+                    "Text Contains",
+                    "After Date",
+                    # "Class Incident Type",
+                    # "Class Damage Equipment",
+                    # "Class Applied Laws",
+                ],
+                "Value": [
+                    st.session_state["slt_filt_col_filter"],
+                    st.session_state["slt_filt_col_add_final"],
+                    st.session_state["slt_filt_ia"],
+                    st.session_state["slt_filt_reg"],
+                    st.session_state["slt_filt_txt"],
+                    st.session_state["slt_filt_date"],
+                    # st.session_state["slt_filt_inc_type"],
+                    # st.session_state["slt_filt_dmg_eqp"],
+                    # st.session_state["slt_filt_app_law"],
+                ],
+            }
+        )
+
+        st.dataframe(filters_df)
 
 
 # with st.expander("Raw data"):
@@ -987,7 +1027,7 @@ for index, row in st.session_state["df_tmp_filt_qualif"].iterrows():
 
         st.markdown(highlighted_text, unsafe_allow_html=True)
 
-    for dict_ref in DICT_REF_INPUT:
+    for dict_ref in st.session_state["dict_input"]:
         if dict_ref["name"] in row:
             col = eval(dict_ref["st_col"])
 
