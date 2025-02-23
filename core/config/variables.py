@@ -20,7 +20,7 @@ IA_CLASSIFY = "mistral-nemo:latest"
 
 CPT_LOOP_PROCESS_TRANSLATE = 10
 SIZE_TO_TRANSLATE = 29
-SIZE_TO_QUALIF = 79
+SIZE_TO_QUALIF = 99
 
 ###############
 ## PROMPT IA ##
@@ -54,6 +54,7 @@ LIST_ACCOUNTS_TELEGRAM = [
     "soprotivleniye_lsr",
     "Sib_EXpress",
     "algizrpd",  # t.me/algizrpd
+    "idelrealii",  # t.me/idelrealii
 ]
 
 
@@ -81,6 +82,7 @@ DICT_UTC = {
     "soprotivleniye_lsr": 3,
     "Sib_EXpress": 7,
     "algizrpd": 3,
+    "idelrealii": 3,
 }
 
 

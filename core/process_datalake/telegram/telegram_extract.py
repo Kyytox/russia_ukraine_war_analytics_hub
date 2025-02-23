@@ -157,6 +157,8 @@ def flow_telegram_extract():
 
         if df_raw.shape[0] > 0 and account in df_raw["account"].unique():
             df_raw_acc = df_raw[df_raw["account"] == account]
+        else:
+            df_raw_acc = pd.DataFrame()
 
         # extract messages
         df_new_data = pd.concat(
