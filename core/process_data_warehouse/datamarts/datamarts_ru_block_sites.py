@@ -214,10 +214,6 @@ def dmt_by_authority_category(df: pd.DataFrame) -> pd.DataFrame:
     ]
     value = df_final["value"].tolist()
 
-    print(source)
-    print(target)
-    print(value)
-
     # add missing values to labels
     labels = labels + [""] * (len(source) - len(labels))
 
@@ -242,7 +238,37 @@ def dmt_by_category_over_time(df: pd.DataFrame) -> pd.DataFrame:
     """
 
     df_final = df.groupby(["month", "category"]).size().unstack(fill_value=0)
-    # print(df_final)
+    df_final = df_final.reset_index()
+    df_final = pd.melt(
+        df_final, id_vars=["month"], var_name="category", value_name="count"
+    )
+    print(df_final)
+    print(df_final.columns)
+
+    # # create a heatmap with source is month, target is category and value is count
+    # df_final = df.groupby(["month", "category"]).size().reset_index(name="count")
+
+    # # Get unique values for nodes
+    # months = df_final["month"].unique()
+    # categories = df_final["category"].unique()
+
+    # # Create node labels list
+    # labels = list(months) + list(categories)
+
+    # # Create source, target and value lists
+    # source = [list(months).index(x) for x in df_final["month"]]
+    # target = [len(months) + list(categories).index(x) for x in df_final["category"]]
+    # value = df_final["count"].tolist()
+
+    # # add missing values to labels
+    # labels = labels + [""] * (len(source) - len(labels))
+
+    # # Create final dataframe
+    # df_final = pd.DataFrame(
+    #     {"source": source, "target": target, "value": value, "labels": labels}
+    # )
+    # # convert label to string
+    # df_final["labels"] = df_final["labels"].astype(str)
 
     return df_final
 
