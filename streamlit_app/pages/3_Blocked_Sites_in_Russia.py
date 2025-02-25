@@ -13,13 +13,6 @@ import streamlit_shadcn_ui as ui
 path = "data/data_warehouse/datamarts/russia_block_sites"
 
 
-# data / data_warehouse / datamarts / russia_block_sites / count_by_authority_category.parquet
-# data / data_warehouse / datamarts / russia_block_sites / count_by_category_over_time.parquet
-# data / data_warehouse / datamarts / russia_block_sites / count_by_date_and_metrics.parquet
-# data / data_warehouse / datamarts / russia_block_sites / count_by_date.parquet
-# data / data_warehouse / datamarts / russia_block_sites / count_global.parquet
-
-
 dmt_global = pd.read_parquet(f"{path}/count_global.parquet")
 dmt_by_date = pd.read_parquet(f"{path}/count_by_date.parquet")
 dmt_by_date_and_metrics = pd.read_parquet(f"{path}/count_by_date_and_metrics.parquet")
@@ -47,6 +40,17 @@ def jump_lines(z=0, n=6):
 ###########################################################################
 ###########################################################################
 ###########################################################################
+
+
+st.title("Blocked Sites in Russia")
+st.error(
+    """
+    The data has been collected from **[Websites Blocked in Russia Since February 2022](https://www.top10vpn.com/research/websites-blocked-in-russia/countries-with-most-blocked-domains/)**
+    
+    This page is a graphical representation of the data.
+    """,
+    icon="⚠️",
+)
 
 
 # Create sidebar filters
@@ -111,12 +115,6 @@ if len(selected_subcategories) > 0:
 # 1. Charts Dmt Global
 st.dataframe(dmt_global.dtypes)
 
-# schema of dmt_global
-# metric	object
-# count	int64
-# type_metric	object
-# poucentage	float64
-
 LIST_TOP_30 = (
     dmt_global[dmt_global["type_metric"] == "by_country_domain"]
     .sort_values(by="count", ascending=False)
@@ -135,6 +133,25 @@ for type_metric in dmt_global["type_metric"].unique():
         .head(30)
     )
 
+    dict_colors = {
+        "by_country_domain": {
+            "color": "purples",
+            "subtitle": "Top 30",
+        },
+        "by_subcategory": {
+            "color": "viridis",
+            "subtitle": "Top 30",
+        },
+        "by_category": {
+            "color": "plasma",
+            "subtitle": "",
+        },
+        "by_banning_authority": {
+            "color": "magma",
+            "subtitle": "",
+        },
+    }
+
     # Charts bar
     bar = (
         alt.Chart(df)
@@ -145,14 +162,19 @@ for type_metric in dmt_global["type_metric"].unique():
         .encode(
             y=alt.Y("metric", sort="-x"),
             x="count",
-            color=alt.Color("metric", legend=None, scale=alt.Scale(scheme="inferno")),
+            color=alt.Color(
+                "metric",
+                legend=None,
+                scale=alt.Scale(scheme=dict_colors[type_metric]["color"]),
+                sort=alt.EncodingSortField("count", order="ascending"),
+            ),
             tooltip=["metric", "count"],
         )
         .properties(
             title=alt.TitleParams(
                 f"Blocked Sites {type_metric.title().replace('_', ' ')}",
                 anchor="middle",
-                subtitle="Top 30",
+                subtitle=dict_colors[type_metric]["subtitle"],
                 subtitleColor="grey",
             ),
         )
@@ -220,11 +242,6 @@ st.divider()
 st.dataframe(dmt_by_date)
 st.dataframe(dmt_by_date.dtypes)
 
-# Schema
-# date	datetime64[ns]
-# count	int64
-# type_metric	object
-
 
 col1, col2 = st.columns([0.5, 0.5])
 
@@ -239,7 +256,13 @@ year = (
     .encode(
         alt.X("date", title="Year", axis=alt.Axis(labelAngle=0)),
         alt.Y("count", title="Count"),
-        color=alt.Color("type_metric", legend=None),
+        color=alt.Color(
+            "date:N",
+            scale=alt.Scale(
+                domain=["2022", "2023", "2024"], range=["#079999", "#054985", "#8f0a10"]
+            ),
+            legend=alt.Legend(title="Year"),
+        ),
         tooltip=["date", "count"],
     )
     .properties(
@@ -253,6 +276,7 @@ col1.altair_chart(year, use_container_width=True)
 # By Month
 df = dmt_by_date[dmt_by_date["type_metric"] == "by_month"]
 df["date"] = df["date"].astype(str).str[:7]
+df["year"] = df["date"].str[:4]
 month = (
     # alt.Chart(dmt_by_date[dmt_by_date["type_metric"] == "by_month"])
     alt.Chart(df)
@@ -262,7 +286,13 @@ month = (
     .encode(
         alt.X("date", title="Month"),
         alt.Y("count", title="Count"),
-        color=alt.Color("type_metric", legend=None),
+        color=alt.Color(
+            "year:N",
+            scale=alt.Scale(
+                domain=["2022", "2023", "2024"], range=["#079999", "#054985", "#8f0a10"]
+            ),
+            legend=alt.Legend(title="Year"),
+        ),
         tooltip=["date", "count"],
     )
     .properties(
@@ -280,7 +310,7 @@ day_line = (
     .encode(
         alt.X("date", title="Day", axis=alt.Axis(labelAngle=0)),
         alt.Y("count", title="Count"),
-        color=alt.Color("type_metric", legend=None),
+        color=alt.Color("type_metric", legend=None, scale=alt.Scale(range=["#b8471a"])),
         tooltip=["date", "count"],
     )
     .properties(
@@ -300,7 +330,7 @@ day_cumul = (
     .encode(
         x="date",
         y="count",
-        color=alt.Color("type_metric", legend=None),
+        color=alt.Color("type_metric", legend=None, scale=alt.Scale(range=["#b8471a"])),
         tooltip=["date", "count"],
     )
     .properties(
@@ -373,13 +403,6 @@ st.divider()
 st.dataframe(dmt_by_date_and_metrics)
 st.dataframe(dmt_by_date_and_metrics.dtypes)
 
-# Schema
-# month	period[M]
-# metric	object
-# count	int64
-# type_metric	object
-
-
 col1, col2 = st.columns([0.5, 0.5])
 
 for type_metric in dmt_by_date_and_metrics["type_metric"].unique():
@@ -400,7 +423,7 @@ for type_metric in dmt_by_date_and_metrics["type_metric"].unique():
             y="count",
             color=alt.Color(
                 "metric",
-                scale=alt.Scale(scheme="inferno"),
+                scale=alt.Scale(scheme="magma"),
                 legend=alt.Legend(
                     orient="right",
                     title=None,
@@ -447,12 +470,6 @@ st.divider()
 st.dataframe(dmt_by_authority_category)
 st.dataframe(dmt_by_authority_category.dtypes)
 
-# Schema dmt_by_authority_category
-# source	int64
-# target	int64
-# value	int64
-# labels	object
-
 
 # Sankey
 data = dict(
@@ -462,17 +479,18 @@ data = dict(
         thickness=15,
         line=dict(color="black", width=0.6),
         label=dmt_by_authority_category["labels"],
-        color=dmt_by_authority_category["labels"].apply(
-            lambda x: "lightblue" if "by" in x else "lightgreen"
-        ),
+        # color=dmt_by_authority_category["labels"].apply(
+        #     lambda x: "indigo" if "by" in x else "indianred"
+        # ),
     ),
     link=dict(
         source=dmt_by_authority_category["source"],
         target=dmt_by_authority_category["target"],
         value=dmt_by_authority_category["value"],
-        color=dmt_by_authority_category["source"].apply(
-            lambda x: "orange" if x == 0 else "blue"
-        ),
+        # color=dmt_by_authority_category["source"].apply(
+        #     lambda x: "orange" if x == 0 else "darkblue"
+        # ),
+        # color="darkblue",
     ),
 )
 
@@ -518,11 +536,6 @@ st.plotly_chart(fig, use_container_width=True)
 st.divider()
 st.dataframe(dmt_by_country_category)
 st.dataframe(dmt_by_country_category.dtypes)
-
-# Schema dmt_by_country_category
-# country_domain	object
-# category	object
-# count	int64
 
 # in LIST_TOP_30
 # LIST_TOP_30_NO_UNKNOWN = [x for x in LIST_TOP_30 if x != "Unknown"]
@@ -640,7 +653,10 @@ bar = (
     .encode(
         x=alt.X("country_domain", title="Country Domain", sort="-y"),
         y=alt.Y("count", title="Count"),
-        color=alt.Color("category"),
+        color=alt.Color(
+            "category",
+            scale=alt.Scale(scheme="inferno"),
+        ),
         tooltip=["country_domain", "category", "count"],
     )
     .properties(
@@ -684,15 +700,29 @@ st.divider()
 st.dataframe(dmt_by_category_over_time)
 st.dataframe(dmt_by_category_over_time.dtypes)
 
-# Schema
-# source	int64
-# target	int64
-# value	int64
-# labels	object
-
 dmt_by_category_over_time["month"] = (
     dmt_by_category_over_time["month"].astype(str).str[:7]
 )
+
+
+dict_colors = {
+    "Blog": "#1f77b4",
+    "Civil Society": "#b96012",
+    "Cultural": "#2ca02c",
+    "Digital Resistance": "#802c2c",
+    "Education": "#9467bd",
+    "Financial": "#8c564b",
+    "Government": "#e377c2",
+    "Internet Radio & Podcasts": "#7f7f7f",
+    "Legal": "#bcbd22",
+    "Lifestyle": "#17becf",
+    "Messaging": "#1f77b4",
+    "News": "#ff7802",
+    "Online Marketing": "#2e6b2e",
+    "Politics": "#d62728",
+    "Social Media": "#9467bd",
+}
+
 
 # Charts bar stacked
 bar = (
@@ -701,7 +731,16 @@ bar = (
     .encode(
         x=alt.X("month", title="Month"),
         y=alt.Y("count", title="Count"),
-        color=alt.Color("category", legend=None),
+        color=alt.Color(
+            "category",
+            scale=alt.Scale(scheme="tableau20"),
+        ),
+        # color=alt.Color(
+        #     "category",
+        #     scale=alt.Scale(
+        #         domain=list(dict_colors.keys()), range=list(dict_colors.values())
+        #     ),
+        # ),
         tooltip=["category", "count"],
     )
     .properties(
