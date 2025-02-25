@@ -98,7 +98,7 @@ def sort_by_nb_words(df):
 def remove_poorly_translated_data(df):
     """
     Remove data not translated correctly
-    Remove data where text_translate is 60% less than text_original
+    Remove data where text_translate is 65% less than text_original
     We do this to retranslate the data again
     So we remove the data from data already translated
 
