@@ -141,7 +141,7 @@ def flow_classify_to_cloud():
     """
 
     # save Excel Final (archive)
-    # df_excel_final.to_csv(f"{PATH_CLASSIFY_DATALAKE}/old_excel_{today}.csv")
+    df_excel_final.to_csv(f"{PATH_CLASSIFY_DATALAKE}/old_excel_{today}.csv")
 
     try:
         update_sheet_data(service, spreadsheet_id, range_name, df_classify)
