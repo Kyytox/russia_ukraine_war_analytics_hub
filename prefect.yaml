@@ -1,3 +1,12 @@
+# Step 1 - Create a new work-pool
+# prefect work-pool create "main-pool" --type process
+
+# Step 2 - Start worker
+# prefect worker start --pool main-pool
+
+# Step 3 - Create deployment
+# prefect deploy --all
+
 # Generic metadata about this project
 name: russia_ukraine_war_analytics_hub
 prefect-version: 3.1.0
@@ -15,7 +24,7 @@ pull:
 
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
-  - name: dlk-telegram-extract
+  - name: dlk-flow-telegram-extract
     version: null
     tags: []
     concurrency_limit: null
@@ -29,7 +38,7 @@ deployments:
     enforce_parameter_schema: true
     schedules: []
 
-  - name: dlk-telegram-clean
+  - name: dlk-flow-telegram-clean
     version: null
     tags: []
     concurrency_limit: null
@@ -43,7 +52,7 @@ deployments:
     enforce_parameter_schema: true
     schedules: []
 
-  - name: dlk-telegram-transform
+  - name: dlk-flow-telegram-transform
     version: null
     tags: []
     concurrency_limit: null
@@ -85,7 +94,7 @@ deployments:
     enforce_parameter_schema: true
     schedules: []
 
-  - name: dlk-filter
+  - name: dlk-flow-filter
     version: null
     tags: []
     concurrency_limit: null
@@ -99,7 +108,7 @@ deployments:
     enforce_parameter_schema: true
     schedules: []
 
-  - name: dlk-qualification
+  - name: dlk-flow-qualification
     version: null
     tags: []
     concurrency_limit: null
