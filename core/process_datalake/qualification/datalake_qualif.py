@@ -427,8 +427,8 @@ def keep_data_to_qualif(df_filt, col_add_final, col_filter):
 
 
 @flow(
-    name="Flow Single qualification {theme}",
-    flow_run_name="flow-single-pre-classification-{theme}",
+    name="DLK SubFlow qualification {theme}",
+    flow_run_name="dlk-subflow-qualification-{theme}",
     log_prints=True,
 )
 def process_qualification(theme, df_filt):
@@ -503,6 +503,8 @@ def process_qualification(theme, df_filt):
     """
     print("WITHOUT IA")
     print("Data to classify: ", df_to_class.shape)
+    upd_data_artifact(f"Data to Qualify without IA - {theme}", df_to_class.shape[0])
+
     if not df_to_class.empty:
 
         # qualif Region
@@ -547,6 +549,7 @@ def process_qualification(theme, df_filt):
         df_to_class_wh_ia = df_to_class
 
     print("Data to classify: ", df_to_class_wh_ia.shape)
+    upd_data_artifact(f"Data to Qualify with IA - {theme}", df_to_class_wh_ia.shape[0])
 
     # keep data according to SIZE_TO_QUALIF
     # We define a threshold of x to avoid excessive processing time due to the IA
@@ -581,8 +584,8 @@ def process_qualification(theme, df_filt):
 
 
 @flow(
-    name="Flow Master Datalake Qualif",
-    flow_run_name="flow-master-datalake-pre-classify",
+    name="DLK Flow Qualification",
+    flow_run_name="dlk-flow-qualification",
     log_prints=True,
 )
 def flow_datalake_qualif():
@@ -606,4 +609,4 @@ def flow_datalake_qualif():
     # process_qualification("sabotage", df_filter)
 
     # create artifact
-    # create_artifact("flow-master-datalake-pre-classify-artifact")
+    create_artifact("dlk-flow-qualification-artifact")

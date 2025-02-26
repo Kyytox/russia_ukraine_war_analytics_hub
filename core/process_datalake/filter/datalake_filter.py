@@ -298,8 +298,8 @@ def update_final_data(df, df_old, type):
 
 
 @flow(
-    name="Flow Master Datalake Filter",
-    flow_run_name="flow-master-datalake-filter",
+    name="DLK Flow Filter",
+    flow_run_name="dlk-flow-filter",
     log_prints=True,
 )
 def flow_datalake_filter():
@@ -464,4 +464,4 @@ def flow_datalake_filter():
     save_data(PATH_FILTER_DATALAKE, "filter_datalake", df=df_filter_final)
 
     # create artifact
-    create_artifact("flow-master-datalake-filter-artifact")
+    create_artifact("dlk-flow-filter-artifact")
