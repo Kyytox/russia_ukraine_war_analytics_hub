@@ -1,17 +1,15 @@
-import os
-import sys
+import time
 import json
 import asyncio
 import streamlit as st
 import pandas as pd
-import numpy as np
 
+from prefect.runner.runner import Runner
+from prefect.deployments.runner import RunnerDeployment
+from prefect.server.schemas.actions import WorkPoolCreate
 
 from prefect.client.orchestration import get_client
-from prefect.server.schemas.actions import WorkPoolCreate
 from prefect.deployments import run_deployment
-from prefect.deployments.runner import RunnerDeployment
-from prefect.runner.runner import Runner
 from prefect.artifacts import Artifact
 
 st.set_page_config(page_title="Orchestration", page_icon=":gear:", layout="wide")
@@ -56,6 +54,9 @@ def ini_session_state():
 
     if "list_artifacts" not in st.session_state:
         st.session_state.list_artifacts = []
+
+    if "nb_loop" not in st.session_state:
+        st.session_state["nb_loop"] = 1
 
 
 def init_list_flows(section, list_all_flows):
@@ -158,8 +159,14 @@ def prepare_flows_to_run(flow, key_name):
 ini_session_state()
 
 
-async def call(list_flows):
+async def call(list_flows, step):
+    """
+    Run flows
 
+    Args:
+        list_flows (list): list of flows to run
+        step (int): step number
+    """
     if len(list_flows) == 0:
         st.error("No flows to run")
         return
@@ -173,7 +180,7 @@ async def call(list_flows):
                 st.write(f"Flow {flow.name} completed ✅")
 
                 # Get artifacts
-                flow_artifact = await Artifact.get(f"flow-{flow.name}-artifact")
+                flow_artifact = await Artifact.get(f"{flow.name}-artifact")
                 st.session_state.list_artifacts.append(flow_artifact)
 
             else:
@@ -183,22 +190,26 @@ async def call(list_flows):
 
         status.update(label="Pipeline completed!", state="complete", expanded=True)
 
-    # st.session_state.list_flows_to_run = []
-
-    # for key in st.session_state.keys():
-    #     if "key_" in key:
-    #         st.session_state[key] = False
-
-    st.success("All flows completed")
-    if st.button("refresh"):
-        st.rerun()
+    if step == 0 or step == st.session_state.nb_loop:
+        st.success("All flows completed")
+        if st.button("refresh"):
+            st.rerun()
+    else:
+        st.divider()
 
 
 with st.sidebar:
 
     if st.session_state.list_flows_to_run:
         if st.button("Run Flows", type="primary"):
-            asyncio.run(call(st.session_state.list_flows_to_run))
+
+            if st.session_state.nb_loop > 1:
+                for step in range(1, st.session_state.nb_loop + 1):
+                    st.write(f"Run n°{step} of {st.session_state.nb_loop}")
+                    asyncio.run(call(st.session_state.list_flows_to_run, step))
+                    time.sleep(15)
+            else:
+                asyncio.run(call(st.session_state.list_flows_to_run, 0))
 
         st.subheader("Flows to Run")
         for flow in st.session_state.list_flows_to_run:
@@ -208,6 +219,12 @@ with st.sidebar:
 
 
 st.divider()
+
+
+# Select loop
+st.session_state["nb_loop"] = st.number_input(
+    "Number of loops", min_value=1, max_value=10, value=1, step=1
+)
 
 col1, col2, col3, col4 = st.columns(4, border=True)
 
@@ -250,8 +267,6 @@ with col3:
 #     # for flow in list_flows:
 #     #     st.write(flow.name)
 
-
-# st.write(st.session_state.list_flows_to_run)
 
 st.divider()
 
