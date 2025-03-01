@@ -54,7 +54,7 @@ with col1:
         styles={
             "card": {
                 "width": "500px",
-                "height": "500px",
+                "height": "450px",
                 "box-shadow": "6px 6px 10px rgba(0,0,0,0.5)",
             },
         },
@@ -63,15 +63,14 @@ with col1:
 
 with col2:
     card(
-        title="Incidents Russian Railways",
-        text="Explore incidents related to Russian Railways between 2022 and 2024.",
-        # image="./utils/images/inc_rail.jpeg",
-        image="https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i3RNq1iGQFBU/v1/-1x-1.webp",
-        url="http://localhost:8501/Incidents_Russian_Railways",
+        title="Blocked Sites in Russia",
+        text="Explore the list of websites blocked in Russia.",
+        image="https://sflc.in/wp-content/uploads/2016/12/internet-censorship.png",
+        url="http://localhost:8501/Blocked_Sites_in_Russia",
         styles={
             "card": {
                 "width": "500px",
-                "height": "500px",
+                "height": "450px",
                 "box-shadow": "6px 6px 10px rgba(0,0,0,0.5)",
             },
         },
