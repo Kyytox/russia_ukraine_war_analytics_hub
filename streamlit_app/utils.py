@@ -72,6 +72,7 @@ def init_css():
         div.stMetric p{
             color: #ffffff;
             font-size: 1rem;
+            white-space: wrap;
         }
         div.stMetric [data-testid="stMetricValue"]{
             color: #ffffff;

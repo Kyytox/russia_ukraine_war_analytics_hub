@@ -140,34 +140,49 @@ st.header("Overview of Blocked Sites in Russia", divider="grey")
 jump_lines(3)
 
 
+st.write(dmt_global)
+
+
 # Cards for global metrics
 col1, col2, col3, col4 = st.columns(4)
+
+# Max number of sites blocked
 col1.metric(
     "Total Sites Blocked",
     dmt_global[dmt_global["type_metric"] == "by_country_domain"]["count"].sum(),
-    "sites",
+)
+
+# Year with the most sites blocked
+max_year = (
+    dmt_by_date[dmt_by_date["type_metric"] == "by_year"].nlargest(1, "count").iloc[0]
 )
 col2.metric(
-    "Total Categories",
-    dmt_global[dmt_global["type_metric"] == "by_category"]["count"].sum(),
-    "categories",
+    f"Year with the most sites blocked : **{max_year['date'].date().year}**",
+    f"{max_year['count']} in {max_year['date'].date().year}",
+)
+
+# Category with the most sites blocked
+max_category = (
+    dmt_global[dmt_global["type_metric"] == "by_category"].nlargest(1, "count").iloc[0]
 )
 col3.metric(
-    "Total Subcategories",
-    dmt_global[dmt_global["type_metric"] == "by_subcategory"]["count"].sum(),
-    "subcategories",
+    f"Category most blocked : **{max_category['metric']}**",
+    max_category["count"],
+)
+
+# Banning authority the most active
+max_authority = (
+    dmt_global[dmt_global["type_metric"] == "by_banning_authority"]
+    .nlargest(1, "count")
+    .iloc[0]
 )
 col4.metric(
-    "Total Authorities",
-    dmt_global[dmt_global["type_metric"] == "by_banning_authority"]["count"].sum(),
-    "authorities",
+    f"Most active \n banning authority : **{max_authority['metric']}**",
+    max_authority["count"],
 )
+
+
 jump_lines(3)
-
-
-lst_type_metric = [
-    dmt_global["type_metric"].unique().tolist()[i : i + 2] for i in range(0, 4, 2)
-]
 
 
 ########################################
@@ -177,6 +192,9 @@ lst_type_metric = [
 ## BLOCKED SITES BY BANNING AUTHORITY ##
 ##             CHARTS BAR             ##
 ########################################
+lst_type_metric = [
+    dmt_global["type_metric"].unique().tolist()[i : i + 2] for i in range(0, 4, 2)
+]
 for group_tm in lst_type_metric:
     col1, col2 = st.columns([0.5, 0.5])
     curr_col = col2
@@ -227,7 +245,6 @@ for group_tm in lst_type_metric:
             .properties(
                 title=alt.TitleParams(
                     f"Blocked Sites {type_metric.title().replace('_', ' ')}",
-                    # anchor="middle",
                     anchor=None,
                     subtitle=dict_colors[type_metric]["subtitle"],
                     subtitleColor="grey",
@@ -259,8 +276,8 @@ for group_tm in lst_type_metric:
                     )
 
                 with subcol2:
+                    # resume what is miroor subcategory
                     if type_metric == "by_subcategory":
-                        # resume what is miroor subcategory
                         st.write(
                             """'Mirror' subcategory refers to alternative domain names created to bypass Russian censorship.
                             These are primarily used by news services like Radio Liberty/Radio Free Europe (RL/RFE) to maintain 
