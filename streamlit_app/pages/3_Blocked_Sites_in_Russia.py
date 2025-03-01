@@ -1,13 +1,10 @@
-from bs4 import BeautifulSoup
-import streamlit as st
-import streamlit.components.v1 as components
+import datetime as dt
 import pandas as pd
-import shutil
-import pathlib
+
+import streamlit as st
+
 import altair as alt
 import plotly.graph_objects as go
-
-import streamlit_shadcn_ui as ui
 
 from utils import jump_lines, init_css, add_analytics_tag, developper_link
 
@@ -33,6 +30,10 @@ dmt_by_category_over_time = pd.read_parquet(
 
 dmt_by_country_category = pd.read_parquet(
     f"{path}/count_by_country_domain_category.parquet"
+)
+
+dmt_by_subcategory_over_time = pd.read_parquet(
+    f"{path}/count_by_subcategory_over_time.parquet"
 )
 
 
@@ -121,6 +122,10 @@ with st.sidebar:
             | (dmt_global["metric"].isin(selected_subcategories))
         ]
 
+        dmt_by_subcategory_over_time = dmt_by_subcategory_over_time[
+            dmt_by_subcategory_over_time["subcategory"].isin(selected_subcategories)
+        ]
+
     developper_link()
 
 
@@ -177,6 +182,14 @@ lst_type_metric = [
     dmt_global["type_metric"].unique().tolist()[i : i + 2] for i in range(0, 4, 2)
 ]
 
+
+########################################
+##      BLOCKED SITES BY COUNTRY      ##
+##    BLOCKED SITES BY SUBCATEGORY    ##
+##     BLOCKED SITES BY CATEGORY      ##
+## BLOCKED SITES BY BANNING AUTHORITY ##
+##             CHARTS BAR             ##
+########################################
 for group_tm in lst_type_metric:
     col1, col2 = st.columns([0.5, 0.5])
     curr_col = col2
@@ -271,18 +284,18 @@ for group_tm in lst_type_metric:
             jump_lines(5)
 
 
-st.divider()
-
-###############
-## OVER TIME ##
-###############
-
+#############################
+## BLOCKED SITES OVER TIME ##
+#############################
 st.header("Blocked Sites in Russia Over Time", divider="grey")
 jump_lines(3)
 
 col1, col2 = st.columns([0.5, 0.5])
 
-# By Year
+###########################
+## BLOCKED SITES BY YEAR ##
+##      CHARTS BAR       ##
+###########################
 df = dmt_by_date[dmt_by_date["type_metric"] == "by_year"]
 df["date"] = df["date"].astype(str).str[:4]
 year = (
@@ -312,7 +325,10 @@ year = (
 col1.altair_chart(year, use_container_width=True)
 
 
-# By Month
+############################
+## BLOCKED SITES BY MONTH ##
+##       CHARTS BAR       ##
+############################
 df = dmt_by_date[dmt_by_date["type_metric"] == "by_month"]
 df["date"] = df["date"].astype(str).str[:7]
 df["year"] = df["date"].str[:4]
@@ -346,10 +362,12 @@ col2.altair_chart(month, use_container_width=True)
 jump_lines(4)
 
 
-col1, col2 = st.columns([0.5, 0.5])
+########################
+## BLOXK SITES BY DAY ##
+##     CHARTS BAR     ##
+########################
 
-# Day (line)
-import datetime as dt
+col1, col2 = st.columns([0.5, 0.5])
 
 date_range = (dt.date(2022, 1, 1), dt.date(2024, 12, 31))
 brush = alt.selection_interval(encodings=["x"], value={"x": date_range})
@@ -380,7 +398,10 @@ lower = base.properties(height=110, title="").add_params(brush)
 col1.altair_chart(upper & lower, use_container_width=True)
 
 
-# Bt Day cuml
+###################################
+## BLOCKED SITES, DAY CUMULATIVE ##
+##          CHARTS LINE          ##
+###################################
 df_day_cumul = dmt_by_date[dmt_by_date["type_metric"] == "by_day_cumul"]
 day_cumul = (
     alt.Chart(df_day_cumul)
@@ -401,8 +422,11 @@ col2.altair_chart(day_cumul, use_container_width=True)
 jump_lines(4)
 
 
+########################
+## BLOCK SITES BY DAY ##
+##   CHARTS HEATMAP   ##
+########################
 col1, col2 = st.columns([0.5, 0.5], gap="medium")
-# for each year
 for year in dmt_by_date["date"].dt.year.unique():
     year = str(year)
     df = dmt_by_date[
@@ -457,16 +481,95 @@ with col2:
 
 st.divider()
 
-#########################
-## COMPARAISON METRICS ##
-#########################
 
-st.header("Blocked Sites by Different Metrics Comparison", divider="grey")
-col1, col2 = st.columns([0.5, 0.5])
+#########################################
+## BLOCKED SITES BY CATEGORY OVER TIME ##
+##         CHARTS BAR STACKED          ##
+#########################################
+col1, col2 = st.columns([0.5, 0.5], gap="medium")
+
+dmt_by_category_over_time["month"] = (
+    dmt_by_category_over_time["month"].astype(str).str[:7]
+)
+
+selection = alt.selection_point(fields=["category"], bind="legend")
+
+bar = (
+    alt.Chart(dmt_by_category_over_time)
+    .mark_bar(
+        cornerRadius=2,
+    )
+    .encode(
+        x=alt.X("month", title="Month"),
+        y=alt.Y("count", title="Count"),
+        color=alt.Color(
+            "category",
+            scale=alt.Scale(scheme="category20b"),
+        ),
+        tooltip=["category", "count"],
+        order=alt.Order("count", sort="descending"),
+        opacity=alt.when(selection).then(alt.value(1)).otherwise(alt.value(0.4)),
+    )
+    .properties(
+        title=alt.TitleParams(
+            "Blocked Sites by Category over Time",
+            subtitle="",
+            subtitleColor="grey",
+        ),
+        height=700,
+    )
+    .add_params(selection)
+)
+
+st.altair_chart(bar, use_container_width=True)
 
 
-# Block sites by month, by country domain
-# Block sites by month, by banning authority
+# #############################################
+# ## BLOCKED SITES BY SUBBCATEGORY OVER TIME ##
+# ##           CHARTS BAR STACKED            ##
+# #############################################
+
+# dmt_by_subcategory_over_time["month"] = (
+#     dmt_by_subcategory_over_time["month"].astype(str).str[:7]
+# )
+
+# selection = alt.selection_point(fields=["subcategory"], bind="legend")
+
+# # Charts bar stacked
+# bar = (
+#     alt.Chart(dmt_by_subcategory_over_time)
+#     .mark_bar(
+#         cornerRadius=2,
+#     )
+#     .encode(
+#         x=alt.X("month", title="Month"),
+#         y=alt.Y("count", title="Count"),
+#         color=alt.Color(
+#             "subcategory",
+#             scale=alt.Scale(scheme="category20c"),
+#         ),
+#         tooltip=["subcategory", "count"],
+#         order=alt.Order("count", sort="descending"),
+#         opacity=alt.when(selection).then(alt.value(1)).otherwise(alt.value(0.4)),
+#     )
+#     .properties(
+#         title=alt.TitleParams(
+#             "Blocked Sites by SubCategory over Time",
+#             subtitle="",
+#             subtitleColor="grey",
+#         ),
+#         height=700,
+#     )
+#     .add_params(selection)
+# )
+
+# st.altair_chart(bar, use_container_width=True)
+
+
+################################################
+##  BLOCK SITES BY MONTH, BY COUNTRY DOMAIN   ##
+## BLOCK SITES BY MONTH, BY BANNING AUTHORITY ##
+################################################
 for type_metric in dmt_by_date_and_metrics["type_metric"].unique():
     df = dmt_by_date_and_metrics[dmt_by_date_and_metrics["type_metric"] == type_metric]
     df["month"] = df["month"].astype(str).str[:7]
@@ -513,9 +616,18 @@ for type_metric in dmt_by_date_and_metrics["type_metric"].unique():
 
     jump_lines(2)
 
-st.divider()
 
-# Sankey
+#########################
+## COMPARAISON METRICS ##
+#########################
+
+st.header("Blocked Sites by Different Metrics Comparison", divider="grey")
+col1, col2 = st.columns([0.5, 0.5])
+
+###############################################################
+## RELATION BETWEEN AUTHORITY AND CATEGORY FOR BLOCKED SITES ##
+##                       CHARTS SANKEY                       ##
+###############################################################
 color_src = {0: "#3c116f", 1: "#7d2470", 2: "#be3954", 3: "#ff9f6f"}
 color_label = {
     "Office of the Prosecutor General": "#be3954",
@@ -740,68 +852,3 @@ bar = (
 
 st.altair_chart(bar, use_container_width=True)
 jump_lines(2)
-
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-
-
-st.divider()
-
-#########################################
-## BLOCKED SITES BY CATEGORY OVER TIME ##
-##         CHARTS BAR STACKED          ##
-#########################################
-
-dmt_by_category_over_time["month"] = (
-    dmt_by_category_over_time["month"].astype(str).str[:7]
-)
-
-selection = alt.selection_point(fields=["category"], bind="legend")
-
-# Charts bar stacked
-bar = (
-    alt.Chart(dmt_by_category_over_time)
-    .mark_bar(
-        cornerRadius=2,
-    )
-    .encode(
-        x=alt.X("month", title="Month"),
-        y=alt.Y("count", title="Count"),
-        color=alt.Color(
-            "category",
-            scale=alt.Scale(scheme="category20b"),
-        ),
-        tooltip=["category", "count"],
-        order=alt.Order("count", sort="descending"),
-        opacity=alt.when(selection).then(alt.value(1)).otherwise(alt.value(0.4)),
-    )
-    .properties(
-        title=alt.TitleParams(
-            "Blocked Sites by Category over Time",
-            subtitle="",
-            subtitleColor="grey",
-        ),
-        height=700,
-    )
-    .add_params(selection)
-)
-
-st.altair_chart(bar, use_container_width=True)
