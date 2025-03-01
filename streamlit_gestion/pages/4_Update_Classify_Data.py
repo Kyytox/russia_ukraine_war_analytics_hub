@@ -12,7 +12,7 @@ from core.config.paths import (
 from core.config.schemas import (
     SCHEMA_EXCEL_RAILWAY,
     SCHEMA_EXCEL_ARREST,
-    SCHEMA_EXCEL_SABOTAGE,
+    # SCHEMA_EXCEL_SABOTAGE,
 )
 
 from streamlit_gestion.utils.variables import LIST_EXP_LAWS, DICT_REF_INPUT_CLASS
@@ -50,15 +50,15 @@ def init_state_theme_data():
             "found_terms": "found_terms_arrest",
             "name_col_date_class": "class_arrest_date",
         },
-        "Incidents Sabotage": {
-            "path_qualif": f"{PATH_QUALIF_DATALAKE}/qualification_sabotage.parquet",
-            "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_sabotage.parquet",
-            "schema_excel": SCHEMA_EXCEL_SABOTAGE,
-            "name_col_add_final": "add_final_inc_sabotage",
-            "name_col_filter": "filter_inc_sabotage",
-            "found_terms": "found_terms_sabotage",
-            "name_col_date_class": "class_date_sab",
-        },
+        # "Incidents Sabotage": {
+        #     "path_qualif": f"{PATH_QUALIF_DATALAKE}/qualification_sabotage.parquet",
+        #     "path_classify": f"{PATH_CLASSIFY_DATALAKE}/classify_inc_sabotage.parquet",
+        #     "schema_excel": SCHEMA_EXCEL_SABOTAGE,
+        #     "name_col_add_final": "add_final_inc_sabotage",
+        #     "name_col_filter": "filter_inc_sabotage",
+        #     "found_terms": "found_terms_sabotage",
+        #     "name_col_date_class": "class_date_sab",
+        # },
     }
 
     config = theme_data_config.get(st.session_state["theme_data"], {})
@@ -92,8 +92,8 @@ def init_data():
             st.session_state["schema_excel"] = SCHEMA_EXCEL_RAILWAY
         elif st.session_state["theme_data"] == "Incidents Arrest":
             st.session_state["schema_excel"] = SCHEMA_EXCEL_ARREST
-        elif st.session_state["theme_data"] == "Incidents Sabotage":
-            st.session_state["schema_excel"] = SCHEMA_EXCEL_SABOTAGE
+        # elif st.session_state["theme_data"] == "Incidents Sabotage":
+        #     st.session_state["schema_excel"] = SCHEMA_EXCEL_SABOTAGE
 
 
 def read_data(path_name, df_name, schema_name):
@@ -256,7 +256,7 @@ with st.sidebar:
             "",
             "Incidents Railway",
             "Incidents Arrest",
-            "Incidents Sabotage",
+            # "Incidents Sabotage",
         ],
     )
 
