@@ -4,7 +4,7 @@ import streamlit as st
 
 import plotly.graph_objects as go
 
-from variables import colors, datamarts_path
+from variables import colors, path_dmt_inc_railway
 from utils import jump_lines, init_css, add_analytics_tag, developper_link
 
 # Charts
@@ -35,24 +35,28 @@ st.title("🚂 Incidents Russian Railways Analytics 🇷🇺")
 
 # -----------DATAMARTS-----------
 with st.spinner("Loading Data..."):
-    dmt_inc_total = pd.read_parquet(f"{datamarts_path}/inc_total.parquet")
-    dmt_inc_year = pd.read_parquet(f"{datamarts_path}/inc_by_year.parquet")
-    dmt_inc_month = pd.read_parquet(f"{datamarts_path}/inc_by_month.parquet")
+    dmt_inc_total = pd.read_parquet(f"{path_dmt_inc_railway}/inc_total.parquet")
+    dmt_inc_year = pd.read_parquet(f"{path_dmt_inc_railway}/inc_by_year.parquet")
+    dmt_inc_month = pd.read_parquet(f"{path_dmt_inc_railway}/inc_by_month.parquet")
     dmt_inc_cumul_month = pd.read_parquet(
-        f"{datamarts_path}/inc_cumul_by_month.parquet"
+        f"{path_dmt_inc_railway}/inc_cumul_by_month.parquet"
     )
-    dmt_inc_region = pd.read_parquet(f"{datamarts_path}/inc_by_region.parquet")
-    dmt_inc_day_week = pd.read_parquet(f"{datamarts_path}/inc_by_day_week.parquet")
-    dmt_inc_dmg_eqp = pd.read_parquet(f"{datamarts_path}/inc_type_dmg_eqp.parquet")
+    dmt_inc_region = pd.read_parquet(f"{path_dmt_inc_railway}/inc_by_region.parquet")
+    dmt_inc_day_week = pd.read_parquet(
+        f"{path_dmt_inc_railway}/inc_by_day_week.parquet"
+    )
+    dmt_inc_dmg_eqp = pd.read_parquet(
+        f"{path_dmt_inc_railway}/inc_type_dmg_eqp.parquet"
+    )
     dmt_sun_tree = pd.read_parquet(
-        f"{datamarts_path}/inc_type_dmg_eqp_sun_tree.parquet"
+        f"{path_dmt_inc_railway}/inc_type_dmg_eqp_sun_tree.parquet"
     )
     dmt_app_laws_prtsn_age = pd.read_parquet(
-        f"{datamarts_path}/app_laws_prtsn_age.parquet"
+        f"{path_dmt_inc_railway}/app_laws_prtsn_age.parquet"
     )
-    dmt_wordcloud = pd.read_parquet(f"{datamarts_path}/wordcloud.parquet")
+    dmt_wordcloud = pd.read_parquet(f"{path_dmt_inc_railway}/wordcloud.parquet")
     dmt_sab_prtsn_grp = pd.read_parquet(
-        f"{datamarts_path}/sabotage_by_prtsn_grp.parquet"
+        f"{path_dmt_inc_railway}/sabotage_by_prtsn_grp.parquet"
     )
 
 

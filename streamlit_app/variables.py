@@ -1,12 +1,7 @@
-datamarts_path = "data/data_warehouse/datamarts/incidents_railway"
+path_dmt_inc_railway = "data/data_warehouse/datamarts/incidents_railway"
+path_dmt_block_site = "data/data_warehouse/datamarts/russia_block_sites"
 
 colors = {
-    # 2022: "rgb(65, 65, 105)",
-    # "2022": "rgb(65, 65, 105)",
-    # 2023: "rgb(85, 24, 85)",
-    # "2023": "rgb(85, 24, 85)",
-    # 2024: "rgb(148, 10, 148)",
-    # "2024": "rgb(148, 10, 148)",
     #
     2022: "#355070",
     "2022": "#355070",
@@ -23,21 +18,6 @@ colors = {
     "Other": "#f79618",
     "Attack": "#ffba08",
     #
-    # "Total": "rgb(121, 99, 99)",
-    # "Sabotage": "rgba(103,0,13, 0.9)",
-    # "Fire": "rgb(200, 40, 40)",
-    # "Derailment": "rgb(236,112,20)",
-    # "Collision": "rgb(220, 174, 25)",
-    # "Other": "rgb(115, 121, 17)",
-    # "Attack": "rgb(279, 255, 0)",
-    #
-    #     Violet foncé : #5A189A
-    # Violet moyen : #7B2CBF
-    # Violet bleuté : #9D4EDD
-    # Bleu violacé : #3C096C
-    # Bleu foncé : #4A4E69
-    # Bleu classique : #1D3557
-    # Bleu clair : #A8DADC
     "Freight Train": "#001A6E",
     "Passengers Train": "#074799",
     "Locomotive": "#608BC1",
@@ -45,38 +25,12 @@ colors = {
     "Infrastructure": "#F0FFFF",
     "Railroad Tracks": "#5439c0",
     "Electric Box": "#846abb",
-    # "Freight Train": "rgb(58, 60, 125)",
-    # "Passengers Train": "rgb(8,48,107)",
-    # "Locomotive": "rgb(8,81,156)",
-    # "Relay Cabin": "rgb(66,146,198)",
-    # "Infrastructure": "rgb(138,202,225)",
-    # "Railroad Tracks": "rgb(222,235,247)",
-    # "Electric Box": "rgb(247,251,255)",
     #
     "Human": "#ffc8dd",
     "Car": "#eb99b7",
     "Truck": "#c77dff",
     "Train": "#7b2cbf",
     "Object": "#3c096c",
-    # "Human": "rgb(255, 182, 193)",
-    # "Car": "rgb(0, 128, 128)",
-    # "Truck": "rgb(128, 0, 0)",
-    # "Train": "rgb(0, 0, 128)",
-    # "Object": "rgb(128, 128, 0)",
-    # "Bus": "rgb(255, 165, 0)",
-    # "Tractor": "rgb(34, 139, 34)",
-    #
-    # "Freedom Russia Legion": "rgb(36, 86, 104)",
-    # "No affiliation": "rgb(15, 114, 121)",
-    # "Rospartizan Group": "rgb(13, 143, 129)",
-    # "Russian Volunteer Corps": "rgb(57, 171, 126)",
-    # "Right of Power": "rgb(110, 197, 116)",
-    # "Wanted": "rgb(169, 220, 103)",
-    # "GUR": "rgb(237, 239, 93)",
-    # "ATESH": "rgb(255, 201, 0)",
-    # "BOAK": "rgb(116, 194, 13)",
-    # "Green Gendarmerie": "rgb(0, 128, 0)",
-    # "Stop the Wagons": "rgb(0, 255, 0)",
     #
     "Rospartizan Group": "#2B9348",
     "Freedom Russia Legion": "#035e47",
