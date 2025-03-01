@@ -128,16 +128,12 @@ def dmt_by_date(df: pd.DataFrame) -> pd.DataFrame:
     return df_concat
 
 
-@task(name="dmt-by-date-by-metrics", task_run_name="dmt-by-date_by-metrics")
-def dmt_by_date_by_metrics(df: pd.DataFrame) -> pd.DataFrame:
+@task(name="dmt-by-metrics-over-time", task_run_name="dmt-by-metrics-over-time")
+def dmt_by_metrics_over_time(df: pd.DataFrame) -> pd.DataFrame:
     """
     Create datamart for number of blocked sites by date and metrics
-    - Day
     - Month
-    - Year
     - Metrics
-
-    ** month and year are already in the dataframe
 
     Args:
         df (pd.DataFrame): Dataframe to control
@@ -147,7 +143,8 @@ def dmt_by_date_by_metrics(df: pd.DataFrame) -> pd.DataFrame:
     """
 
     df_final = pd.DataFrame()
-    list_metrics = ["banning_authority", "country_domain"]
+    # list_metrics = ["banning_authority", "country_domain", "category", "subcategory"]
+    list_metrics = ["banning_authority", "country_domain", "category"]
 
     # range date
     df_date = pd.DataFrame(
@@ -169,7 +166,7 @@ def dmt_by_date_by_metrics(df: pd.DataFrame) -> pd.DataFrame:
         # replcae metric None by "Not specified"
         if metric == "country_domain":
             df_tmp["metric"] = df_tmp["metric"].replace({None: "Unknown"})
-        else:
+        elif metric == "banning_authority":
             df_tmp["metric"] = df_tmp["metric"].replace({np.nan: "Not specified"})
 
         # concat
@@ -182,6 +179,7 @@ def dmt_by_date_by_metrics(df: pd.DataFrame) -> pd.DataFrame:
 def dmt_by_authority_category(df: pd.DataFrame) -> pd.DataFrame:
     """
     Create datamart for number of blocked sites by authority and category
+    For use in Sankey diagram
 
     Args:
         df (pd.DataFrame): Dataframe to control
@@ -189,11 +187,6 @@ def dmt_by_authority_category(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         df (pd.DataFrame): Dataframe with datamart by authority and category
     """
-
-    # df_final = pd.crosstab(df["banning_authority"], df["category"]).reset_index()
-    # df_final = pd.melt(
-    #     df_final, id_vars=["banning_authority"], var_name="category", value_name="count"
-    # )
 
     # create a df for use Sankey diagram
     df_final = (
@@ -225,54 +218,6 @@ def dmt_by_authority_category(df: pd.DataFrame) -> pd.DataFrame:
     return df_final
 
 
-@task(name="dmt-by-category-over-time", task_run_name="dmt-by-category-over-time")
-def dmt_by_category_over_time(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Create datamart for number of blocked sites by category over time
-
-    Args:
-        df (pd.DataFrame): Dataframe to control
-
-    Returns:
-        df (pd.DataFrame): Dataframe with datamart by category over time
-    """
-
-    df_final = df.groupby(["month", "category"]).size().unstack(fill_value=0)
-    df_final = df_final.reset_index()
-    df_final = pd.melt(
-        df_final, id_vars=["month"], var_name="category", value_name="count"
-    )
-    print(df_final)
-    print(df_final.columns)
-
-    # # create a heatmap with source is month, target is category and value is count
-    # df_final = df.groupby(["month", "category"]).size().reset_index(name="count")
-
-    # # Get unique values for nodes
-    # months = df_final["month"].unique()
-    # categories = df_final["category"].unique()
-
-    # # Create node labels list
-    # labels = list(months) + list(categories)
-
-    # # Create source, target and value lists
-    # source = [list(months).index(x) for x in df_final["month"]]
-    # target = [len(months) + list(categories).index(x) for x in df_final["category"]]
-    # value = df_final["count"].tolist()
-
-    # # add missing values to labels
-    # labels = labels + [""] * (len(source) - len(labels))
-
-    # # Create final dataframe
-    # df_final = pd.DataFrame(
-    #     {"source": source, "target": target, "value": value, "labels": labels}
-    # )
-    # # convert label to string
-    # df_final["labels"] = df_final["labels"].astype(str)
-
-    return df_final
-
-
 @flow(
     name="DWH Subflow Datamarts Russia Blocked Sites",
     flow_run_name="dwh-subflow-dmt-russia-blocked-sites",
@@ -288,37 +233,29 @@ def flow_dmt_russia_blocked_sites():
     print("df")
     print(df)
 
-    # df["month"] = df["month"].dt.to_period("M")
-    # df["year"] = df["year"].dt.to_period("Y")
-
     # Cont Global
     df_tmp = dmt_global(df)
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/count_global.parquet"
+    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_global.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # By Date
     df_tmp = dmt_by_date(df)
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/count_by_date.parquet"
+    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_by_date.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # By date and metrics
-    df_tmp = dmt_by_date_by_metrics(df)
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/count_by_date_and_metrics.parquet"
+    df_tmp = dmt_by_metrics_over_time(df)
+    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_by_metrics_over_time.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # By Authorithy and Category
     df_tmp = dmt_by_authority_category(df)
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/count_by_authority_category.parquet"
-    df_tmp.to_parquet(path, index=False)
-
-    # Block by Category over time
-    df_tmp = dmt_by_category_over_time(df)
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/count_by_category_over_time.parquet"
+    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_by_authority_category.parquet"
     df_tmp.to_parquet(path, index=False)
 
     # Blocked by Country Domain and Category
     df_tmp = df.groupby(["country_domain", "category"]).size().reset_index(name="count")
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/count_by_country_domain_category.parquet"
+    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_by_country_by_category.parquet"
     df_tmp.to_parquet(path, index=False)
 
     if df.empty:
