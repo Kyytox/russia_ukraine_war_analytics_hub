@@ -6,6 +6,7 @@ import streamlit as st
 import altair as alt
 import plotly.graph_objects as go
 
+from variables import path_dmt_block_site
 from utils import jump_lines, init_css, add_analytics_tag, developper_link
 
 # Google Analytics
@@ -15,28 +16,20 @@ add_analytics_tag()
 init_css()
 
 
-path = "data/data_warehouse/datamarts/russia_block_sites"
-
-
-dmt_global = pd.read_parquet(f"{path}/count_global.parquet")
-dmt_by_date = pd.read_parquet(f"{path}/count_by_date.parquet")
-dmt_by_date_and_metrics = pd.read_parquet(f"{path}/count_by_date_and_metrics.parquet")
+dmt_global = pd.read_parquet(f"{path_dmt_block_site}/dmt_global.parquet")
+dmt_by_date = pd.read_parquet(f"{path_dmt_block_site}/dmt_by_date.parquet")
+dmt_by_metrics_over_time = pd.read_parquet(
+    f"{path_dmt_block_site}/dmt_by_metrics_over_time.parquet"
+)
 dmt_by_authority_category = pd.read_parquet(
-    f"{path}/count_by_authority_category.parquet"
+    f"{path_dmt_block_site}/dmt_by_authority_category.parquet"
 )
-dmt_by_category_over_time = pd.read_parquet(
-    f"{path}/count_by_category_over_time.parquet"
-)
-
 dmt_by_country_category = pd.read_parquet(
-    f"{path}/count_by_country_domain_category.parquet"
-)
-
-dmt_by_subcategory_over_time = pd.read_parquet(
-    f"{path}/count_by_subcategory_over_time.parquet"
+    f"{path_dmt_block_site}/dmt_by_country_by_category.parquet"
 )
 
 
+# List of top 30 country domain
 LIST_TOP_30 = (
     dmt_global[dmt_global["type_metric"] == "by_country_domain"]
     .sort_values(by="count", ascending=False)
@@ -44,6 +37,7 @@ LIST_TOP_30 = (
     .metric.tolist()
 )
 
+# List of top banning authority
 list_ban_authority = dmt_global[dmt_global["type_metric"] == "by_banning_authority"][
     "metric"
 ].unique()
@@ -99,9 +93,9 @@ with st.sidebar:
         #     dmt_by_country_category["country_domain"].isin(selected_countries)
         # ]
 
-        dmt_by_date_and_metrics = dmt_by_date_and_metrics[
-            (dmt_by_date_and_metrics["type_metric"] != "by_country_domain")
-            | (dmt_by_date_and_metrics["metric"].isin(selected_countries))
+        dmt_by_metrics_over_time = dmt_by_metrics_over_time[
+            (dmt_by_metrics_over_time["type_metric"] != "by_country_domain")
+            | (dmt_by_metrics_over_time["metric"].isin(selected_countries))
         ]
 
     if len(selected_categories) > 0:
@@ -112,18 +106,11 @@ with st.sidebar:
         # dmt_by_country_category = dmt_by_country_category[
         #     dmt_by_country_category["category"].isin(selected_categories)
         # ]
-        dmt_by_category_over_time = dmt_by_category_over_time[
-            dmt_by_category_over_time["category"].isin(selected_categories)
-        ]
 
     if len(selected_subcategories) > 0:
         dmt_global = dmt_global[
             (dmt_global["type_metric"] != "by_subcategory")
             | (dmt_global["metric"].isin(selected_subcategories))
-        ]
-
-        dmt_by_subcategory_over_time = dmt_by_subcategory_over_time[
-            dmt_by_subcategory_over_time["subcategory"].isin(selected_subcategories)
         ]
 
     developper_link()
@@ -300,7 +287,9 @@ df = dmt_by_date[dmt_by_date["type_metric"] == "by_year"]
 df["date"] = df["date"].astype(str).str[:4]
 year = (
     alt.Chart(df)
-    .mark_bar()
+    .mark_bar(
+        cornerRadius=4,
+    )
     .encode(
         alt.X("date", title="Year", axis=alt.Axis(labelAngle=0)),
         alt.Y("count", title="Count"),
@@ -366,7 +355,6 @@ jump_lines(4)
 ## BLOXK SITES BY DAY ##
 ##     CHARTS BAR     ##
 ########################
-
 col1, col2 = st.columns([0.5, 0.5])
 
 date_range = (dt.date(2022, 1, 1), dt.date(2024, 12, 31))
@@ -482,102 +470,25 @@ with col2:
 st.divider()
 
 
-#########################################
-## BLOCKED SITES BY CATEGORY OVER TIME ##
-##         CHARTS BAR STACKED          ##
-#########################################
-col1, col2 = st.columns([0.5, 0.5], gap="medium")
-
-dmt_by_category_over_time["month"] = (
-    dmt_by_category_over_time["month"].astype(str).str[:7]
-)
-
-selection = alt.selection_point(fields=["category"], bind="legend")
-
-bar = (
-    alt.Chart(dmt_by_category_over_time)
-    .mark_bar(
-        cornerRadius=2,
-    )
-    .encode(
-        x=alt.X("month", title="Month"),
-        y=alt.Y("count", title="Count"),
-        color=alt.Color(
-            "category",
-            scale=alt.Scale(scheme="category20b"),
-        ),
-        tooltip=["category", "count"],
-        order=alt.Order("count", sort="descending"),
-        opacity=alt.when(selection).then(alt.value(1)).otherwise(alt.value(0.4)),
-    )
-    .properties(
-        title=alt.TitleParams(
-            "Blocked Sites by Category over Time",
-            subtitle="",
-            subtitleColor="grey",
-        ),
-        height=700,
-    )
-    .add_params(selection)
-)
-
-st.altair_chart(bar, use_container_width=True)
-
-
-# #############################################
-# ## BLOCKED SITES BY SUBBCATEGORY OVER TIME ##
-# ##           CHARTS BAR STACKED            ##
-# #############################################
-
-# dmt_by_subcategory_over_time["month"] = (
-#     dmt_by_subcategory_over_time["month"].astype(str).str[:7]
-# )
-
-# selection = alt.selection_point(fields=["subcategory"], bind="legend")
-
-# # Charts bar stacked
-# bar = (
-#     alt.Chart(dmt_by_subcategory_over_time)
-#     .mark_bar(
-#         cornerRadius=2,
-#     )
-#     .encode(
-#         x=alt.X("month", title="Month"),
-#         y=alt.Y("count", title="Count"),
-#         color=alt.Color(
-#             "subcategory",
-#             scale=alt.Scale(scheme="category20c"),
-#         ),
-#         tooltip=["subcategory", "count"],
-#         order=alt.Order("count", sort="descending"),
-#         opacity=alt.when(selection).then(alt.value(1)).otherwise(alt.value(0.4)),
-#     )
-#     .properties(
-#         title=alt.TitleParams(
-#             "Blocked Sites by SubCategory over Time",
-#             subtitle="",
-#             subtitleColor="grey",
-#         ),
-#         height=700,
-#     )
-#     .add_params(selection)
-# )
-
-# st.altair_chart(bar, use_container_width=True)
-
-
 ################################################
 ##  BLOCK SITES BY MONTH, BY COUNTRY DOMAIN   ##
 ## BLOCK SITES BY MONTH, BY BANNING AUTHORITY ##
 ################################################
-for type_metric in dmt_by_date_and_metrics["type_metric"].unique():
-    df = dmt_by_date_and_metrics[dmt_by_date_and_metrics["type_metric"] == type_metric]
+col1, col2 = st.columns([0.5, 0.5], gap="medium")
+
+for type_metric in dmt_by_metrics_over_time["type_metric"].unique():
+
+    df = dmt_by_metrics_over_time[
+        dmt_by_metrics_over_time["type_metric"] == type_metric
+    ]
     df["month"] = df["month"].astype(str).str[:7]
 
     if type_metric == "by_country_domain":
         color = "tableau20"
-    else:
+    elif type_metric == "by_banning_authority":
         color = "magma"
+    else:
+        color = "category20b"
 
     selection = alt.selection_point(fields=["metric"], bind="legend")
 
@@ -594,12 +505,20 @@ for type_metric in dmt_by_date_and_metrics["type_metric"].unique():
                 "metric",
                 scale=alt.Scale(scheme=color),
                 legend=alt.Legend(
-                    orient="right" if type_metric == "by_country_domain" else "top",
+                    orient=(
+                        "right"
+                        if (
+                            type_metric == "by_country_domain"
+                            or type_metric == "by_category"
+                        )
+                        else "top"
+                    ),
                     title=None,
-                    values=df["metric"].value_counts().nlargest(14).index.tolist(),
+                    values=df["metric"].value_counts().nlargest(20).index.tolist(),
                 ),
             ),
             tooltip=["metric", "count"],
+            order=alt.Order("count", sort="descending"),
             opacity=alt.when(selection).then(alt.value(1)).otherwise(alt.value(0.4)),
         )
         .properties(
@@ -611,8 +530,10 @@ for type_metric in dmt_by_date_and_metrics["type_metric"].unique():
 
     if type_metric == "by_country_domain":
         col1.altair_chart(bar, use_container_width=True)
-    else:
+    elif type_metric == "by_banning_authority":
         col2.altair_chart(bar, use_container_width=True)
+    else:
+        st.altair_chart(bar, use_container_width=True)
 
     jump_lines(2)
 
