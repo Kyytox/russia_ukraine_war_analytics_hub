@@ -120,10 +120,10 @@ with st.sidebar:
 ## MAIN PAGE ##
 ###############
 
-st.title("Blocked Sites in Russia")
+st.title("Blocked Websites in Russia", anchor="Blocked Websites in Russia")
 st.error(
     """
-    The data has been collected from **[Websites Blocked in Russia Since February 2022](https://www.top10vpn.com/research/websites-blocked-in-russia/countries-with-most-blocked-domains/)**
+    The data has been collected from **[Websites Blocked in Russia Since February 2022](https://www.top10vpn.com/research/websites-blocked-in-russia/)**
     
     This page is a graphical representation of the data.
     """,
@@ -136,11 +136,8 @@ st.error(
 ##############
 
 jump_lines(1)
-st.header("Overview of Blocked Sites in Russia", divider="grey")
+st.header("Overview of Blocked Websites in Russia", divider="grey")
 jump_lines(3)
-
-
-st.write(dmt_global)
 
 
 # Cards for global metrics
@@ -148,7 +145,7 @@ col1, col2, col3, col4 = st.columns(4)
 
 # Max number of sites blocked
 col1.metric(
-    "Total Sites Blocked",
+    "Total Websites Blocked",
     dmt_global[dmt_global["type_metric"] == "by_country_domain"]["count"].sum(),
 )
 
@@ -157,8 +154,8 @@ max_year = (
     dmt_by_date[dmt_by_date["type_metric"] == "by_year"].nlargest(1, "count").iloc[0]
 )
 col2.metric(
-    f"Year with the most sites blocked : **{max_year['date'].date().year}**",
-    f"{max_year['count']} in {max_year['date'].date().year}",
+    f"Year with the most websites blocked : **{max_year['date'].date().year}**",
+    max_year["count"],
 )
 
 # Category with the most sites blocked
@@ -177,7 +174,7 @@ max_authority = (
     .iloc[0]
 )
 col4.metric(
-    f"Most active \n banning authority : **{max_authority['metric']}**",
+    f"Most active banning authority : **{max_authority['metric']}**",
     max_authority["count"],
 )
 
@@ -205,21 +202,25 @@ for group_tm in lst_type_metric:
             by="count", ascending=False
         )
 
-        dict_colors = {
+        dict_infos = {
             "by_country_domain": {
                 "color": "purples",
-                "subtitle": "Top 30",
+                "title": "Countries With Most Blocked Domains",
+                "subtitle": "Top 30 Countries",
             },
             "by_subcategory": {
                 "color": "viridis",
-                "subtitle": "Top 30",
+                "title": "Subcategories of Websites Blocked in Russia",
+                "subtitle": "Top 30 Subcategories",
             },
             "by_category": {
                 "color": "plasma",
+                "title": "Categories of Websites Blocked",
                 "subtitle": "",
             },
             "by_banning_authority": {
                 "color": "magma",
+                "title": "Russian authorities most active in censoring websites",
                 "subtitle": "",
             },
         }
@@ -237,17 +238,18 @@ for group_tm in lst_type_metric:
                 color=alt.Color(
                     "metric",
                     legend=None,
-                    scale=alt.Scale(scheme=dict_colors[type_metric]["color"]),
+                    scale=alt.Scale(scheme=dict_infos[type_metric]["color"]),
                     sort=alt.EncodingSortField("count", order="ascending"),
                 ),
                 tooltip=["metric", "count"],
             )
             .properties(
                 title=alt.TitleParams(
-                    f"Blocked Sites {type_metric.title().replace('_', ' ')}",
+                    dict_infos[type_metric]["title"],
                     anchor=None,
-                    subtitle=dict_colors[type_metric]["subtitle"],
+                    subtitle=dict_infos[type_metric]["subtitle"],
                     subtitleColor="grey",
+                    subtitleFontSize=14,
                 ),
             )
         )
@@ -321,8 +323,11 @@ year = (
     )
     .properties(
         title=alt.TitleParams(
-            "Blocked Sites by Year",
+            "Blocked Websites by Year",
             anchor=None,
+            subtitle="In Russia since 2022",
+            subtitleColor="grey",
+            subtitleFontSize=14,
         ),
         height=500,
     )
@@ -357,7 +362,10 @@ month = (
     )
     .properties(
         title=alt.TitleParams(
-            "Blocked Sites by Month",
+            "Blocked Websites by Month",
+            subtitle="In Russia since 2022",
+            subtitleColor="grey",
+            subtitleFontSize=14,
             anchor=None,
         ),
         height=500,
@@ -391,7 +399,10 @@ base = (
     )
     .properties(
         title=alt.TitleParams(
-            "Blocked Sites by Day",
+            "Blocked Websites by Day",
+            subtitle="In Russia since 2022",
+            subtitleColor="grey",
+            subtitleFontSize=14,
             anchor=None,
         ),
     )
@@ -418,7 +429,13 @@ day_cumul = (
         tooltip=["date", "count"],
     )
     .properties(
-        title=alt.TitleParams("Blocked Sites by Day Cumulative", anchor=None),
+        title=alt.TitleParams(
+            "Cumulative Total of Blocked Websites Over Time",
+            subtitle="In Russia since 2022",
+            subtitleColor="grey",
+            subtitleFontSize=14,
+            anchor=None,
+        ),
         height=710,
     )
 )
@@ -457,9 +474,7 @@ for year in dmt_by_date["date"].dt.year.unique():
         )
         .properties(
             title=alt.TitleParams(
-                f"Blocked Sites by Day in {year}",
-                subtitle="For each day of the year",
-                subtitleColor="grey",
+                f"Blocked Websites by Day in {year}",
                 anchor=None,
             ),
         )
@@ -470,8 +485,11 @@ for year in dmt_by_date["date"].dt.year.unique():
     else:
         col2.altair_chart(day_rect, use_container_width=True)
 
+
 with col2:
-    st.write("Day with the most sites blocked for each year")
+    html_content = "<div style='margin-left: 60px;'>"
+    html_content += "<p>Day with the most websites blocked for each year</p>"
+
     for year in dmt_by_date["date"].dt.year.unique():
         year_data = dmt_by_date[
             (dmt_by_date["date"].dt.year == year)
@@ -479,10 +497,10 @@ with col2:
         ]
         max_date = year_data["date"].loc[year_data["count"].idxmax()]
         count_for_day = year_data["count"].max()
-        st.write(
-            f"- **{max_date.date().strftime('%B %d %Y')}**, with **{count_for_day}** sites blocked"
-        )
+        html_content += f"<p>- <strong>{max_date.date().strftime('%B %d %Y')}</strong>, avec <strong>{count_for_day}</strong> sites bloqués</p>"
+    html_content += "</div>"
 
+    st.html(html_content)
 
 st.divider()
 
@@ -500,12 +518,23 @@ for type_metric in dmt_by_metrics_over_time["type_metric"].unique():
     ]
     df["month"] = df["month"].astype(str).str[:7]
 
-    if type_metric == "by_country_domain":
-        color = "tableau20"
-    elif type_metric == "by_banning_authority":
-        color = "magma"
-    else:
-        color = "category20b"
+    dict_infos = {
+        "by_country_domain": {
+            "color": "tableau20",
+            "title": "Website Blocking Trends by Country",
+            "subtitle": "Monthly distribution of blocked domains by country",
+        },
+        "by_banning_authority": {
+            "color": "magma",
+            "title": "Censorship Activity by Russian Authorities",
+            "subtitle": "Monthly breakdown of website blocks by regulatory body",
+        },
+        "by_category": {
+            "color": "category20b",
+            "title": "Content Categories Targeted for Blocking",
+            "subtitle": "Monthly distribution of blocked websites by content type",
+        },
+    }
 
     selection = alt.selection_point(fields=["metric"], bind="legend")
 
@@ -520,7 +549,7 @@ for type_metric in dmt_by_metrics_over_time["type_metric"].unique():
             y=alt.Y("count", title="Count"),
             color=alt.Color(
                 "metric",
-                scale=alt.Scale(scheme=color),
+                scale=alt.Scale(scheme=dict_infos[type_metric]["color"]),
                 legend=alt.Legend(
                     orient=(
                         "right"
@@ -539,16 +568,22 @@ for type_metric in dmt_by_metrics_over_time["type_metric"].unique():
             opacity=alt.when(selection).then(alt.value(1)).otherwise(alt.value(0.4)),
         )
         .properties(
-            title=f"Blocked Sites by Month {type_metric.title().replace('_', ' ')}",
+            title=alt.TitleParams(
+                dict_infos[type_metric]["title"],
+                subtitle=dict_infos[type_metric]["subtitle"],
+                subtitleColor="grey",
+                subtitleFontSize=14,
+                anchor=None,
+            ),
             height=700,
         )
         .add_params(selection)
     )
 
-    if type_metric == "by_country_domain":
-        col1.altair_chart(bar, use_container_width=True)
-    elif type_metric == "by_banning_authority":
+    if type_metric == "by_category":
         col2.altair_chart(bar, use_container_width=True)
+    elif type_metric == "by_banning_authority":
+        col1.altair_chart(bar, use_container_width=True)
     else:
         st.altair_chart(bar, use_container_width=True)
 
@@ -559,7 +594,7 @@ for type_metric in dmt_by_metrics_over_time["type_metric"].unique():
 ## COMPARAISON METRICS ##
 #########################
 
-st.header("Blocked Sites by Different Metrics Comparison", divider="grey")
+st.header("Blocked Websites by Different Metrics Comparison", divider="grey")
 col1, col2 = st.columns([0.5, 0.5])
 
 ###############################################################
@@ -602,11 +637,13 @@ fig = go.Figure(
     data,
     layout=dict(
         title=dict(
-            text="Blocked Sites by Authority and Category",
+            text="Mapping Censorship: Authorities and Targeted Content Categories",
             pad=dict(l=20),
             y=0.99,
             subtitle=dict(
-                text="Sankey Diagram",
+                text="Relationship between Russian authorities and the types of websites they block",
+                font_size=14,
+                font_color="grey",
             ),
         ),
         font_size=16,
@@ -639,10 +676,17 @@ colors_country = {
     "Belarus": "#4fa24d",
 }
 
+# add labes cols
+df["labels"] = df["category"] + " - " + df["count"].astype(str)
+
+
 # Charts Tree Map (altair rect
 base = (
     alt.Chart(df)
-    .transform_aggregate(count_="sum(count)", groupby=["country_domain", "category"])
+    .transform_aggregate(
+        count_="sum(count)",
+        groupby=["country_domain", "category", "labels"],
+    )
     .transform_stack(
         stack="count_",
         as_=["stack_count_Domain1", "stack_count_Domain2"],
@@ -694,7 +738,6 @@ rect = (
             scale=alt.Scale(
                 domain=list(colors_country.keys()), range=list(colors_country.values())
             ),
-            legend=None,
         ),
         opacity=alt.Opacity("country_domain:N", legend=None),
         tooltip=[
@@ -706,20 +749,18 @@ rect = (
     .properties(height=700)
 )
 
-# Display count
-# text_count = base.mark_text(baseline="middle", fontSize=11).encode(
-#     x=alt.X("xc:Q").axis(None),
-#     y=alt.Y("yc:Q").title(None),
-#     text="count_:Q",
-#     color=alt.value("white"),
-# )
 
 # Display category
-text_category = base.mark_text(baseline="middle", fontSize=11).encode(
+text_category = base.mark_text(baseline="middle", fontSize=11.5).encode(
     x=alt.X("xc:Q").axis(None),
     y=alt.Y("yc:Q").title(None),
-    text="category:N",
+    text=f"labels:N",
     color=alt.value("white"),
+    tooltip=[
+        alt.Tooltip("country_domain:N", title="Country"),
+        alt.Tooltip("category:N", title="Category"),
+        alt.Tooltip("count_:Q", title="Count", format=","),
+    ],
 )
 
 # Display country
@@ -735,11 +776,11 @@ final_chart = (
     .resolve_scale(x="shared")
     .properties(
         title=alt.TitleParams(
-            "Blocked Sites by Country Domain and Category",
+            "Top Blocked Website Categories by Country in Russia",
             subtitle="For the Top 6 Country",
             subtitleColor="grey",
             subtitleFontSize=14,
-            anchor="middle",
+            anchor=None,
         ),
     )
     .configure_view(stroke=None)
@@ -748,6 +789,7 @@ final_chart = (
 
 st.altair_chart(final_chart, use_container_width=True)
 
+jump_lines()
 
 ###################################################
 ## TOP 6 TO 30 COUNTRY SITES BLOCKED BY CATEGORY ##
@@ -777,16 +819,15 @@ bar = (
     )
     .properties(
         title=alt.TitleParams(
-            "Blocked Sites by Country Domain and Category",
+            "Blocked Websites by Country and Category",
             subtitle="For the Top 6 to 30 Country",
             subtitleColor="grey",
             subtitleFontSize=14,
-            anchor="middle",
+            anchor=None,
         ),
-        height=600,
+        height=700,
     )
     .add_params(selection)
 )
 
 st.altair_chart(bar, use_container_width=True)
-jump_lines(2)
