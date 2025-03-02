@@ -488,8 +488,11 @@ for year in dmt_by_date["date"].dt.year.unique():
 
 with col2:
     html_content = "<div style='margin-left: 60px;'>"
-    html_content += "<p>Day with the most websites blocked for each year</p>"
+    html_content += "<p style='margin-bottom: 2px;'> Day with the most websites blocked for each year</p>"
+    html_content += "</div>"
+    st.html(html_content)
 
+    html_content = "<div style='margin-left: 90px;'>"
     for year in dmt_by_date["date"].dt.year.unique():
         year_data = dmt_by_date[
             (dmt_by_date["date"].dt.year == year)
