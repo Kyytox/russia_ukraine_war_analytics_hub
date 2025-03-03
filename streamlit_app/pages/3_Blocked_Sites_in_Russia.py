@@ -28,6 +28,8 @@ dmt_by_country_category = pd.read_parquet(
     f"{path_dmt_block_site}/dmt_by_country_by_category.parquet"
 )
 
+dmt_all_data = pd.read_parquet(f"{path_dmt_block_site}/dmt_all_data.parquet")
+
 
 # List of top 30 country domain
 LIST_TOP_COUNTRY = (
@@ -343,6 +345,7 @@ fig.update_layout(
     dragmode=False,
 )
 st.plotly_chart(fig)
+st.divider()
 jump_lines(3)
 
 
@@ -885,3 +888,68 @@ bar = (
 )
 
 st.altair_chart(bar, use_container_width=True)
+
+st.divider()
+jump_lines(3)
+
+
+########################################
+## EXPLORE WEBSITE BLOCKED BY COUNTRY ##
+########################################
+
+col1, col2 = st.columns([0.4, 0.6])
+
+with col1:
+    st.subheader("Explore Websites Blocked by Country")
+    slt_country = st.selectbox(
+        "Select a country",
+        dmt_all_data["country_domain"].unique(),
+        index=0,
+    )
+
+    df = dmt_all_data[dmt_all_data["country_domain"] == slt_country]
+
+    st.dataframe(
+        df[["domain", "category", "banning_authority", "date_blocked"]].rename(
+            columns={
+                "domain": "Domain",
+                "category": "Category",
+                "banning_authority": "Banning Authority",
+                "date_blocked": "Date Blocked",
+            }
+        ),
+        hide_index=True,
+        use_container_width=True,
+        height=300,
+    )
+
+with col2:
+    st.subheader("Find if a website is blocked in Russia")
+    domain = st.text_input("Enter a domain", "youtube")
+
+    if st.button("Check"):
+
+        df = dmt_all_data[dmt_all_data["domain"].str.contains(domain)]
+
+        if len(df) > 0:
+            st.success(
+                f"**{domain}** was blocked in **Russia** on **{dmt_all_data['date_blocked'].iloc[0].date().strftime('%d %B %Y')}**."
+            )
+            st.dataframe(
+                df[["domain", "category", "banning_authority", "date_blocked"]].rename(
+                    columns={
+                        "domain": "Domain",
+                        "category": "Category",
+                        "banning_authority": "Banning Authority",
+                        "date_blocked": "Date Blocked",
+                    }
+                ),
+                hide_index=True,
+                use_container_width=True,
+            )
+        else:
+            st.warning(f"**{domain}** is not blocked in **Russia**.")
+
+
+st.divider()
+jump_lines(3)
