@@ -468,7 +468,6 @@ def create_map(df_region):
     )
 
     fig.update_layout(
-        # title_text="Geographic Distribution of Incidents on Russian Railways",
         title=dict(
             text="Geographic Distribution of Sabotages on Russian Railways",
             pad=dict(l=20),
