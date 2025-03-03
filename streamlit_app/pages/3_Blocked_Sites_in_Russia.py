@@ -30,10 +30,9 @@ dmt_by_country_category = pd.read_parquet(
 
 
 # List of top 30 country domain
-LIST_TOP_30 = (
+LIST_TOP_COUNTRY = (
     dmt_global[dmt_global["type_metric"] == "by_country_domain"]
     .sort_values(by="count", ascending=False)
-    .head(30)
     .metric.tolist()
 )
 
@@ -41,6 +40,13 @@ LIST_TOP_30 = (
 list_ban_authority = dmt_global[dmt_global["type_metric"] == "by_banning_authority"][
     "metric"
 ].unique()
+
+
+# DF TREE MAP
+# keep only the top 6 country
+df_tree = dmt_by_country_category[
+    dmt_by_country_category["country_domain"].isin(LIST_TOP_COUNTRY[:6])
+]
 
 
 #############
@@ -89,9 +95,9 @@ with st.sidebar:
             | (dmt_global["metric"].isin(selected_countries))
         ]
 
-        # dmt_by_country_category = dmt_by_country_category[
-        #     dmt_by_country_category["country_domain"].isin(selected_countries)
-        # ]
+        dmt_by_country_category = dmt_by_country_category[
+            dmt_by_country_category["country_domain"].isin(selected_countries)
+        ]
 
         dmt_by_metrics_over_time = dmt_by_metrics_over_time[
             (dmt_by_metrics_over_time["type_metric"] != "by_country_domain")
@@ -103,9 +109,9 @@ with st.sidebar:
             (dmt_global["type_metric"] != "by_category")
             | (dmt_global["metric"].isin(selected_categories))
         ]
-        # dmt_by_country_category = dmt_by_country_category[
-        #     dmt_by_country_category["category"].isin(selected_categories)
-        # ]
+        dmt_by_country_category = dmt_by_country_category[
+            dmt_by_country_category["category"].isin(selected_categories)
+        ]
 
     if len(selected_subcategories) > 0:
         dmt_global = dmt_global[
@@ -207,21 +213,25 @@ for group_tm in lst_type_metric:
                 "color": "purples",
                 "title": "Countries With Most Blocked Domains",
                 "subtitle": "Top 30 Countries",
+                "y_axe": "Country",
             },
             "by_subcategory": {
                 "color": "viridis",
                 "title": "Subcategories of Websites Blocked in Russia",
                 "subtitle": "Top 30 Subcategories",
+                "y_axe": "Subcategory",
             },
             "by_category": {
                 "color": "plasma",
                 "title": "Categories of Websites Blocked",
                 "subtitle": "",
+                "y_axe": "Category",
             },
             "by_banning_authority": {
                 "color": "magma",
                 "title": "Russian authorities most active in censoring websites",
                 "subtitle": "",
+                "y_axe": "Banning Authority",
             },
         }
 
@@ -233,7 +243,7 @@ for group_tm in lst_type_metric:
                 orient="horizontal",
             )
             .encode(
-                y=alt.Y("metric", sort="-x"),
+                y=alt.Y("metric", sort="-x", title=dict_infos[type_metric]["y_axe"]),
                 x="count",
                 color=alt.Color(
                     "metric",
@@ -287,7 +297,53 @@ for group_tm in lst_type_metric:
                             are quickly created and shared through social media."""
                         )
 
-            jump_lines(5)
+
+st.divider()
+jump_lines(3)
+
+
+#################################################
+## COUNTRIES WITH AT LEAST ONE BLOCKED WEBSITE ##
+##                 CHARTS MAP                  ##
+#################################################
+
+df = dmt_global[dmt_global["type_metric"] == "by_country_domain"].sort_values(
+    by="count", ascending=False
+)
+
+fig = go.Figure(
+    data=go.Choropleth(
+        locations=df["metric"],
+        locationmode="country names",
+        z=df["count"],
+        showscale=False,
+        colorscale="sunset",
+        hoverinfo="location+z",
+    )
+)
+
+fig.update_layout(
+    geo=dict(
+        scope="world",
+        projection=go.layout.geo.Projection(type="equirectangular", scale=1),
+        showcountries=True,
+        countrycolor="black",
+        showocean=True,
+        oceancolor="LightBlue",
+    ),
+    title=dict(
+        text="Countries where websites are blocked in Russia",
+        font=dict(size=16),
+        x=0,
+        y=1,
+    ),
+    margin={"r": 0, "t": 0, "l": 0, "b": 0},
+    width=1200,
+    height=680,
+    dragmode=False,
+)
+st.plotly_chart(fig)
+jump_lines(3)
 
 
 #############################
@@ -512,7 +568,7 @@ st.divider()
 ##  BLOCK SITES BY MONTH, BY COUNTRY DOMAIN   ##
 ## BLOCK SITES BY MONTH, BY BANNING AUTHORITY ##
 ################################################
-col1, col2 = st.columns([0.5, 0.5], gap="medium")
+col1, col2 = st.columns([0.46, 0.54], gap="medium")
 
 for type_metric in dmt_by_metrics_over_time["type_metric"].unique():
 
@@ -664,11 +720,6 @@ st.divider()
 ##             CHARTS TREE MAP             ##
 #############################################
 
-# keep only the top 6 country
-df = dmt_by_country_category[
-    dmt_by_country_category["country_domain"].isin(LIST_TOP_30[:6])
-]
-
 # Colors for each country
 colors_country = {
     "United States": "#9e6e54",
@@ -680,12 +731,12 @@ colors_country = {
 }
 
 # add labes cols
-df["labels"] = df["category"] + " - " + df["count"].astype(str)
+df_tree["labels"] = df_tree["category"] + " - " + df_tree["count"].astype(str)
 
 
 # Charts Tree Map (altair rect
 base = (
-    alt.Chart(df)
+    alt.Chart(df_tree)
     .transform_aggregate(
         count_="sum(count)",
         groupby=["country_domain", "category", "labels"],
@@ -800,7 +851,7 @@ jump_lines()
 ###################################################
 
 df = dmt_by_country_category[
-    dmt_by_country_category["country_domain"].isin(LIST_TOP_30[6:])
+    dmt_by_country_category["country_domain"].isin(LIST_TOP_COUNTRY[6:])
 ]
 
 selection = alt.selection_point(fields=["category"], bind="legend")
@@ -811,7 +862,7 @@ bar = (
         cornerRadius=2,
     )
     .encode(
-        x=alt.X("country_domain", title="Country Domain", sort="-y"),
+        x=alt.X("country_domain", title="Country", sort="-y"),
         y=alt.Y("count", title="Count"),
         color=alt.Color(
             "category",
@@ -823,7 +874,7 @@ bar = (
     .properties(
         title=alt.TitleParams(
             "Blocked Websites by Country and Category",
-            subtitle="For the Top 6 to 30 Country",
+            subtitle="For the rest of the countries",
             subtitleColor="grey",
             subtitleFontSize=14,
             anchor=None,
