@@ -287,6 +287,7 @@ for group_tm in lst_type_metric:
                         ),
                         hide_index=True,
                         width=300,
+                        height=300,
                     )
 
                 with subcol2:
@@ -299,6 +300,7 @@ for group_tm in lst_type_metric:
                             are quickly created and shared through social media."""
                         )
 
+        jump_lines(3)
 
 st.divider()
 jump_lines(3)
@@ -920,7 +922,7 @@ with col1:
         ),
         hide_index=True,
         use_container_width=True,
-        height=300,
+        height=600,
     )
 
 with col2:
