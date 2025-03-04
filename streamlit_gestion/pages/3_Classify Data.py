@@ -260,7 +260,6 @@ def upd_ref_input(ID, IDX, col_name):
     if col_name == "IDX":
         #  Retrieve existing data from the Excel file or the tmp Excel file
         IDX_new = st.session_state[f"REF_{col_name}_{ID}"]
-        print(f"IDX_new: {IDX_new}")
 
         if IDX_new == "":
 
@@ -269,13 +268,11 @@ def upd_ref_input(ID, IDX, col_name):
 
         # Check if IDX exists in tmp Excel
         if IDX_new in st.session_state["df_tmp_class_excel"]["IDX"].values:
-            print("IDX_new in df_tmp_class_excel")
             # Update data qualif
             maj_row_excel_to_filt_qualif(ID, IDX_new, "df_tmp_class_excel")
 
         if not st.session_state["df_class_excel"].empty:
             if IDX_new in st.session_state["df_class_excel"]["IDX"].values:
-                print("IDX_new in df_class_excel")
                 # Update data qualif
                 maj_row_excel_to_filt_qualif(ID, IDX_new, "df_class_excel")
 
@@ -321,7 +318,6 @@ def upd_ref_input(ID, IDX, col_name):
     if col_name != "IDX":
         col_name_class = col_name.replace("qualif_", "class_")
         if col_name_class in st.session_state["schema_excel"]:
-            print("------", col_name_class)
             st.session_state["df_tmp_class_excel"].loc[
                 st.session_state["df_tmp_class_excel"]["IDX"] == IDX,
                 col_name_class,
@@ -720,8 +716,6 @@ def apply_incident_filters(df, dict_filter):
     for el in dict_filter:
         if dict_filter[el]:
             query += f"({el} != '') & ({el} != 'no') & ({el}.notnull()) & "
-
-    print(query)
 
     if query:
         query = query[:-3]
@@ -1124,7 +1118,6 @@ for index, row in st.session_state["df_tmp_filt_qualif"].iterrows():
                     )
 
                 elif dict_ref["type"] == "multiselect":
-                    st.write(row[dict_ref["name"]])
                     st.multiselect(
                         dict_ref["label"],
                         options=[row[dict_ref["name"]], *dict_ref["options"]],
