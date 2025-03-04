@@ -111,6 +111,15 @@ def init_raw_data():
         # elif st.session_state["theme_data"] == "Incidents Sabotage":
         #     st.session_state["schema_excel"] = SCHEMA_EXCEL_SABOTAGE
 
+    # get remaining data
+    st.session_state["remaining_data"] = (
+        st.session_state["df_filt_src"]
+        .loc[
+            st.session_state["df_filt_src"][st.session_state["name_col_filter"]] == True
+        ]
+        .shape[0]
+    )
+
 
 def init_tmp_data():
     """
@@ -899,6 +908,9 @@ with st.expander("Filters", expanded=True):
             df_tmp = apply_basic_filters(df_all, dict_filter)
             df_tmp = apply_incident_filters(df_tmp, filters)
 
+            # update remaining data
+            st.session_state["remaining_data"] = df_tmp.shape[0]
+
             # upd tmp data
             st.session_state["df_tmp_filt_qualif"] = df_tmp.head(HEAD_CLASS)
 
@@ -970,11 +982,7 @@ with st.sidebar:
 
     data = {
         "Next IDX": st.session_state["next_idx"],
-        "Remaining Data": st.session_state["df_filt_src"]
-        .loc[
-            st.session_state["df_filt_src"][st.session_state["name_col_filter"]] == True
-        ]
-        .shape[0],
+        "Remaining Data": st.session_state["remaining_data"],
         "Filter Source": st.session_state["path_filter_source"].split("/")[-1],
         "Qualif": st.session_state["path_qualif"].split("/")[-1],
         "Classify": st.session_state["path_classify"].split("/")[-1],
