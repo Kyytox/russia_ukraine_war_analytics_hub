@@ -1,7 +1,4 @@
 import streamlit as st
-import pandas as pd
-
-from streamlit_extras.card import card
 
 
 pg_home = st.Page("pages/1_Home.py", title="Home", icon="🏠")
