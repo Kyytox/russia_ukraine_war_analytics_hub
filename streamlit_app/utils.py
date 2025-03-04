@@ -124,10 +124,10 @@ def developper_link():
         components.html(
             """
             <div style="display: flex; align-items: center; justify-content: center;">
-                <a href="https://twitter.com/kyytox" target="_blank">
+                <a href="https://x.com/kytox__" target="_blank">
                     <img src="https://pbs.twimg.com/profile_images/1471129038022455299/Zn05GePO_400x400.jpg" style="width: 30px; border-radius: 50%;">
                 </a>
-                <a href="https://twitter.com/Kytox_" target="_blank" style="margin-left: 10px; font-size: 0.9rem; color: #ffffff; text-decoration: none; width: 100%;">
+                <a href="https://x.com/kytox__" target="_blank" style="margin-left: 10px; font-size: 0.9rem; color: #ffffff; text-decoration: none; width: 100%;">
                     Developed by: Kytox
                 </a>
             </div>
