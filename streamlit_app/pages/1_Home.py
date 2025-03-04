@@ -1,7 +1,16 @@
 import streamlit as st
-import pandas as pd
 
-from streamlit_extras.card import card
+# from streamlit_extras.card import card
+from utils import jump_lines, init_css, add_analytics_tag, developper_link
+
+# Google Analytics
+add_analytics_tag()
+
+# CSS
+init_css()
+
+with st.sidebar:
+    developper_link()
 
 
 st.title("Russia - Ukraine War Analitycs Hub 🇷🇺🇺🇦")
@@ -10,7 +19,7 @@ st.title("Russia - Ukraine War Analitycs Hub 🇷🇺🇺🇦")
 # Brief introduction
 st.markdown(
     """
-Welcome to the Ukraine-Russia Conflict Data Hub. This platform aims to aggregate and analyze data related to the ongoing conflict between Ukraine and Russia. Our goal is to provide insights, track developments, and support informed decision-making through data-driven analysis.
+Welcome to the Ukraine-Russia Conflict Data Hub. This platform aims to aggregate and analyze data related to the ongoing conflict between Ukraine and Russia.
 """
 )
 
@@ -28,51 +37,80 @@ st.markdown(
 st.header("About the Project")
 st.markdown(
     """
-This project is an individual effort led by a data engineer. I am committed to maintaining the accuracy and integrity of the data while ensuring it is presented in a clear and unbiased manner.
+This project is an individual effort led by a data engineer. I am committed to maintaining the accuracy and integrity of the data while ensuring it is presented in a clear manner.
 """
 )
 
+st.divider()
+jump_lines(2)
 
-# Contact Information
-st.header("Contact Us")
+
 st.markdown(
     """
-If you have any questions, suggestions, or would like to contribute to the project, please feel free to reach out to us at [contact@example.com](mailto:contact@example.com).
-"""
+    <style>
+    [data-testid="stPageLink-NavLink"] {
+        padding-left: 23px;
+        padding-right: 23px;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-radius: 9px;
+        background: #0057B8;
+        border: none;
+        font-family: inherit;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.4s;
+    }
+
+    [data-testid="stPageLink-NavLink"]:hover {
+        background: #0057B8;
+        box-shadow: 7px 10px 70px -14px #FFD700;
+    }
+
+    [data-testid="stPageLink-NavLink"]:active {
+        transform: scale(0.97);
+        box-shadow: 7px 10px 70px -10px #FFD700;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
+col1, col2, col3 = st.columns([1, 0.15, 0.15])
 
-col1, col2 = st.columns(2)
 
-with col1:
-    card(
-        title="Incidents Russian Railways",
-        text="Explore incidents related to Russian Railways between 2022 and 2024.",
-        # image="./utils/images/inc_rail.jpeg",
-        image="https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i3RNq1iGQFBU/v1/-1x-1.webp",
-        url="http://localhost:8501/Incidents_Russian_Railways",
-        styles={
-            "card": {
-                "width": "500px",
-                "height": "450px",
-                "box-shadow": "6px 6px 10px rgba(0,0,0,0.5)",
-            },
-        },
-        key="card1",
-    )
+dict_analytics = {
+    "Incidents Russian Railways": {
+        "title": "Incidents Russian Railways",
+        "text": "Explore incidents related to Russian Railways since 2022.",
+        "image": "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i3RNq1iGQFBU/v1/-1x-1.webp",
+        "url": "pages/2_Incidents_Russian_Railways.py",
+    },
+    "Blocked Web Sites in Russia": {
+        "title": "Blocked Web Sites in Russia",
+        "text": "Explore the list of websites blocked in Russia.",
+        "image": "https://sflc.in/wp-content/uploads/2016/12/internet-censorship.png",
+        "url": "pages/3_Blocked_Sites_in_Russia.py",
+    },
+}
 
-with col2:
-    card(
-        title="Blocked Sites in Russia",
-        text="Explore the list of websites blocked in Russia.",
-        image="https://sflc.in/wp-content/uploads/2016/12/internet-censorship.png",
-        url="http://localhost:8501/Blocked_Sites_in_Russia",
-        styles={
-            "card": {
-                "width": "500px",
-                "height": "450px",
-                "box-shadow": "6px 6px 10px rgba(0,0,0,0.5)",
-            },
-        },
-        key="card2",
-    )
+for key, value in dict_analytics.items():
+    with col1:
+        with st.container(border=True):
+
+            subcol1, subcol2, subcol3 = st.columns(
+                [0.3, 0.4, 0.3], vertical_alignment="center", gap="small"
+            )
+
+            with subcol1:
+                st.image(value["image"], use_container_width=True)
+            with subcol2:
+                html_code = f"<h2 style='text-align: center;'>{value['title']}</h2>"
+                st.markdown(html_code, unsafe_allow_html=True)
+
+                html_code = f"<p style='text-align: center;'>{value['text']}</p>"
+                st.markdown(html_code, unsafe_allow_html=True)
+            with subcol3:
+                st.page_link(value["url"], label=f"{value['title']} ->")
+
+        jump_lines(2)
