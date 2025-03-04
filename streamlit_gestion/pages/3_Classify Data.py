@@ -279,10 +279,18 @@ def upd_ref_input(ID, IDX, col_name):
                 # Update data qualif
                 maj_row_excel_to_filt_qualif(ID, IDX_new, "df_class_excel")
 
+    # init new_value
+    new_value = st.session_state[f"REF_{col_name}_{ID}"]
+
     if "date" in col_name:
-        st.session_state[f"REF_{col_name}_{ID}"] = pd.to_datetime(
-            st.session_state[f"REF_{col_name}_{ID}"]
-        )
+        new_value = pd.to_datetime(new_value)
+
+    # convert to str if list
+    if type(st.session_state[f"REF_{col_name}_{ID}"]) == list:
+        if len(st.session_state[f"REF_{col_name}_{ID}"]) > 0:
+            new_value = ",".join(st.session_state[f"REF_{col_name}_{ID}"])
+        else:
+            new_value = ""
 
     #
     # Update df_tmp_filt_qualif by ID
@@ -290,7 +298,7 @@ def upd_ref_input(ID, IDX, col_name):
         st.session_state["df_tmp_filt_qualif"].loc[
             (st.session_state["df_tmp_filt_qualif"]["ID"] == ID),
             col_name,
-        ] = st.session_state[f"REF_{col_name}_{ID}"]
+        ] = new_value
 
     #
     # Update df_tmp_qualif by ID and IDX condition
@@ -300,13 +308,13 @@ def upd_ref_input(ID, IDX, col_name):
                 (st.session_state["df_tmp_filt_qualif"]["ID"] == ID)
                 & (st.session_state["df_tmp_filt_qualif"]["IDX"].isnull()),
                 col_name,
-            ] = st.session_state[f"REF_{col_name}_{ID}"]
+            ] = new_value
         else:
             st.session_state["df_tmp_filt_qualif"].loc[
                 (st.session_state["df_tmp_filt_qualif"]["ID"] == ID)
                 & (st.session_state["df_tmp_filt_qualif"]["IDX"] == IDX),
                 col_name,
-            ] = st.session_state[f"REF_{col_name}_{ID}"]
+            ] = new_value
 
     #
     # Update df_tmp_class_excel by IDX
@@ -317,7 +325,7 @@ def upd_ref_input(ID, IDX, col_name):
             st.session_state["df_tmp_class_excel"].loc[
                 st.session_state["df_tmp_class_excel"]["IDX"] == IDX,
                 col_name_class,
-            ] = st.session_state[f"REF_{col_name}_{ID}"]
+            ] = new_value
 
 
 def add_new_data_classify(ID, date, url):
@@ -1116,6 +1124,7 @@ for index, row in st.session_state["df_tmp_filt_qualif"].iterrows():
                     )
 
                 elif dict_ref["type"] == "multiselect":
+                    st.write(row[dict_ref["name"]])
                     st.multiselect(
                         dict_ref["label"],
                         options=[row[dict_ref["name"]], *dict_ref["options"]],
