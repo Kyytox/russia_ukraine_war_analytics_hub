@@ -83,14 +83,14 @@ dict_analytics = {
     "Incidents Russian Railways": {
         "title": "Incidents Russian Railways",
         "text": "Explore incidents related to Russian Railways since 2022.",
-        "image": "https://assets.bwbx.io/images/users/iqjWHBFdfxIU/i3RNq1iGQFBU/v1/-1x-1.webp",
+        "image": "streamlit_app/utils/images/inc_rail.jpeg",
         "url": "pages/2_Incidents_Russian_Railways.py",
     },
     "Blocked Web Sites in Russia": {
         "title": "Blocked Web Sites in Russia",
         "text": "Explore the list of websites blocked in Russia.",
-        "image": "https://sflc.in/wp-content/uploads/2016/12/internet-censorship.png",
-        "url": "pages/3_Blocked_Sites_in_Russia.py",
+        "image": "streamlit_app/utils/images/logo_blocked_sites.png",
+        "url": "pages/3_Blocked_Websites_in_Russia.py",
     },
 }
 
