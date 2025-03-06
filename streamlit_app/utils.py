@@ -6,11 +6,13 @@ from bs4 import BeautifulSoup
 
 import streamlit as st
 import streamlit.components.v1 as components
+from streamlit_extras.tags import tagger_component
 
 
 def init_css():
     st.markdown(
-        """<style>
+        """
+        <style>
         
         .st-emotion-cache-1jicfl2 {
 
@@ -79,6 +81,53 @@ def init_css():
             font-weight: 700;
         }
 
+        /* -- image -- */
+        img {
+            border-radius: 3px;
+        }
+        
+        
+        /* -- Button page link -- */
+            
+        [data-testid="stPageLink-NavLink"], .stLinkButton a {
+            padding-left: 23px;
+            padding-right: 23px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            margin-left: 2rem;
+            border-radius: 9px;
+            background: #0057B8;
+            border: none;
+            font-family: inherit;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.4s;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        [data-testid="stPageLink-NavLink"]:hover, .stLinkButton a:hover {
+            background: #0057B8;
+            box-shadow: 7px 10px 70px -14px #FFD700;
+            color: #ffffff;
+        }
+
+        [data-testid="stPageLink-NavLink"]:active, .stLinkButton a:active {
+            transform: scale(0.97);
+            box-shadow: 7px 10px 70px -10px #FFD700;
+            color: #ffffff;
+        }
+        
+        
+        /* -- tags streamlit-extras -- */
+        .stColumn [data-testid="stMarkdownContainer"] p {
+            display: flex;
+            justify-content: center;
+        }
+
+        [data-testid="stMarkdownContainer"] p span {
+            border-radius: 5px !important;
+        }
                 
         </style>""",
         unsafe_allow_html=True,
@@ -167,3 +216,73 @@ def get_region():
     }
 
     return dict_region
+
+
+def display_container_content(dict_data: dict):
+    """
+    Display the container content
+
+    Args:
+        dict_data: dictionary containing the data to display
+    """
+    col1, col2, col3 = st.columns([1, 0.1, 0.1])
+
+    for key, value in dict_data.items():
+        with col1:
+            with st.container(border=True):
+
+                if value["image"]:
+
+                    subcol1, subcol2, subcol3 = st.columns(
+                        [0.3, 0.4, 0.3], vertical_alignment="center", gap="small"
+                    )
+
+                    with subcol1:
+                        st.image(value["image"], use_container_width=True)
+                    with subcol2:
+                        html_code = (
+                            f"<h2 style='text-align: center;'>{value['title']}</h2>"
+                        )
+                        st.markdown(html_code, unsafe_allow_html=True)
+
+                        html_code = (
+                            f"<p style='text-align: center;'>{value['text']}</p>"
+                        )
+                        st.markdown(html_code, unsafe_allow_html=True)
+
+                        tagger_component(
+                            "",
+                            value["tags"],
+                            color_name=value["color_tags"],
+                        )
+
+                    with subcol3:
+                        st.page_link(value["url"], label=f"{value['title']} ->")
+
+                else:
+
+                    subcol1, subcol2 = st.columns(
+                        [0.7, 0.3], vertical_alignment="center", gap="small"
+                    )
+
+                    with subcol1:
+                        html_code = (
+                            f"<h2 style='text-align: center;'>{value['title']}</h2>"
+                        )
+                        st.markdown(html_code, unsafe_allow_html=True)
+
+                        html_code = (
+                            f"<p style='text-align: center;'>{value['text']}</p>"
+                        )
+                        st.markdown(html_code, unsafe_allow_html=True)
+
+                        tagger_component(
+                            "",
+                            value["tags"],
+                            color_name=value["color_tags"],
+                        )
+
+                    with subcol2:
+                        st.link_button(label=f"{value['title']} ->", url=value["url"])
+
+            jump_lines(2)

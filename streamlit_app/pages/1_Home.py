@@ -1,7 +1,13 @@
 import streamlit as st
 
-# from streamlit_extras.card import card
-from utils import jump_lines, init_css, add_analytics_tag, developper_link
+from utils import (
+    jump_lines,
+    init_css,
+    add_analytics_tag,
+    developper_link,
+    display_container_content,
+)
+
 
 # Google Analytics
 add_analytics_tag()
@@ -45,72 +51,34 @@ st.divider()
 jump_lines(2)
 
 
-st.markdown(
-    """
-    <style>
-    [data-testid="stPageLink-NavLink"] {
-        padding-left: 23px;
-        padding-right: 23px;
-        padding-bottom: 10px;
-        padding-top: 10px;
-        border-radius: 9px;
-        background: #0057B8;
-        border: none;
-        font-family: inherit;
-        text-align: center;
-        cursor: pointer;
-        transition: 0.4s;
-    }
-
-    [data-testid="stPageLink-NavLink"]:hover {
-        background: #0057B8;
-        box-shadow: 7px 10px 70px -14px #FFD700;
-    }
-
-    [data-testid="stPageLink-NavLink"]:active {
-        transform: scale(0.97);
-        box-shadow: 7px 10px 70px -10px #FFD700;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-col1, col2, col3 = st.columns([1, 0.15, 0.15])
-
-
 dict_analytics = {
     "Incidents Russian Railways": {
         "title": "Incidents Russian Railways",
         "text": "Explore incidents related to Russian Railways since 2022.",
         "image": "streamlit_app/utils/images/inc_rail.jpeg",
+        "width": 300,
         "url": "pages/2_Incidents_Russian_Railways.py",
+        "tags": ["Analytics", "Graphs", "Data Sources"],
+        "color_tags": ["#961010", "#4abb15", "#14aca4"],
     },
     "Blocked Web Sites in Russia": {
         "title": "Blocked Web Sites in Russia",
         "text": "Explore the list of websites blocked in Russia.",
         "image": "streamlit_app/utils/images/logo_blocked_sites.png",
+        "width": 300,
         "url": "pages/3_Blocked_Websites_in_Russia.py",
+        "tags": ["Analytics", "Graphs", "Data Sources", "External Data"],
+        "color_tags": ["#961010", "#4abb15", "#14aca4", "#821f9b"],
+    },
+    "Raid Alerts in Ukraine": {
+        "title": "Raid Alerts in Ukraine",
+        "text": "Explore the alerts related to missile raids in Ukraine.",
+        "image": "streamlit_app/utils/images/raid_alerts_ukraine.png",
+        "width": 300,
+        "url": "pages/4_Raid_Alerts_Ukraine.py",
+        "tags": ["Analytics", "Graphs", "Data Sources", "External Data"],
+        "color_tags": ["#961010", "#4abb15", "#14aca4", "#821f9b"],
     },
 }
 
-for key, value in dict_analytics.items():
-    with col1:
-        with st.container(border=True):
-
-            subcol1, subcol2, subcol3 = st.columns(
-                [0.3, 0.4, 0.3], vertical_alignment="center", gap="small"
-            )
-
-            with subcol1:
-                st.image(value["image"], use_container_width=True)
-            with subcol2:
-                html_code = f"<h2 style='text-align: center;'>{value['title']}</h2>"
-                st.markdown(html_code, unsafe_allow_html=True)
-
-                html_code = f"<p style='text-align: center;'>{value['text']}</p>"
-                st.markdown(html_code, unsafe_allow_html=True)
-            with subcol3:
-                st.page_link(value["url"], label=f"{value['title']} ->")
-
-        jump_lines(2)
+display_container_content(dict_analytics)
