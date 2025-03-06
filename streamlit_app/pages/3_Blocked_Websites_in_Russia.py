@@ -128,7 +128,7 @@ with st.sidebar:
 ## MAIN PAGE ##
 ###############
 
-st.title("Blocked Websites in Russia", anchor="Blocked Websites in Russia")
+st.title("Blocked Websites in Russia 🚫", anchor="Blocked Websites in Russia")
 st.error(
     """
     The data has been collected from **[Websites Blocked in Russia Since February 2022](https://www.top10vpn.com/research/websites-blocked-in-russia/)**
@@ -137,6 +137,7 @@ st.error(
     """,
     icon="⚠️",
 )
+jump_lines(1)
 
 
 ##############
