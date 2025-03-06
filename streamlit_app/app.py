@@ -9,12 +9,18 @@ pg_inc_rail = st.Page(
 )
 
 pg_block_site = st.Page(
-    "pages/3_Blocked_Sites_in_Russia.py",
+    "pages/3_Blocked_Websites_in_Russia.py",
     title="Blocked Sites in Russia",
     icon="🚫",
 )
 
-pg = st.navigation([pg_home, pg_inc_rail, pg_block_site])
+pg_raid_alerts = st.Page(
+    "pages/4_Raid_Alerts_Ukraine.py",
+    title="Raid Alerts in Ukraine",
+    icon="🚨",
+)
+
+pg = st.navigation([pg_home, pg_inc_rail, pg_block_site, pg_raid_alerts])
 
 st.set_page_config(
     page_title="Ukraine-Russia Conflict Data Hub",
