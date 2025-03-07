@@ -197,16 +197,24 @@ def upd_qualif_and_class(idx, col_name):
     print(f"col Name: {col_name}")
     print(f"Value: {st.session_state[f'REF_{col_name}_{idx}']}")
 
+    if "date" in col_name:
+        # convert to datetime
+        new_value = pd.to_datetime(st.session_state[f"REF_{col_name}_{idx}"])
+    else:
+        new_value = st.session_state[f"REF_{col_name}_{idx}"]
+
     #####################
     ## UPD TEMP QUALIF ##
     #####################
     if col_name != "IDX":
         qualif_col_name = col_name.replace("class_", "qualif_")
+    else:
+        qualif_col_name = col_name
 
     # upd col_name, according to idx
     st.session_state["df_temp_qualif"].loc[
         st.session_state["df_temp_qualif"]["IDX"] == idx, qualif_col_name
-    ] = st.session_state[f"REF_{col_name}_{idx}"]
+    ] = new_value
 
     #######################
     ## UPD TEMP CLASSIFY ##
@@ -215,7 +223,7 @@ def upd_qualif_and_class(idx, col_name):
     # upd col_name, according to idx
     st.session_state["df_temp_classify"].loc[
         st.session_state["df_temp_classify"]["IDX"] == idx, col_name
-    ] = st.session_state[f"REF_{col_name}_{idx}"]
+    ] = new_value
 
 
 def upd_filter(id, col_name):
@@ -390,12 +398,12 @@ st.title(f"Update Classify Data - {st.session_state['theme_data']}")
 
 #
 
-st.write("Classify")
-st.dataframe(st.session_state["df_temp_classify"])
 st.write("Filter")
 st.dataframe(st.session_state["df_temp_filter"])
 st.write("Qualif")
 st.dataframe(st.session_state["df_temp_qualif"])
+st.write("Classify")
+st.dataframe(st.session_state["df_temp_classify"])
 
 st.divider()
 
