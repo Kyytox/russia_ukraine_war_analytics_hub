@@ -258,6 +258,10 @@ def flow_dmt_russia_blocked_sites():
     path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_by_country_by_category.parquet"
     df_tmp.to_parquet(path, index=False)
 
+    # dmt_all_data
+    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_all_data.parquet"
+    df.to_parquet(path, index=False)
+
     if df.empty:
         return Failed(message="Data is empty")
 
