@@ -35,9 +35,9 @@ dict_corr_schema = {
     "class_gps": "Gps",
     "class_dmg_eqp": "Damaged Equipment",
     "class_inc_type": "Incident Type",
-    "class_sabotage_success": "Sabotage Success",
-    "class_nb_loco_dmg": "Locomotive Damaged",
-    "class_nb_relay_dmg": "Relay Damaged",
+    # "class_sabotage_success": "Sabotage Success",
+    # "class_nb_loco_dmg": "Locomotive Damaged",
+    # "class_nb_relay_dmg": "Relay Damaged",
     "class_coll_with": "Collision With",
     "class_prtsn_grp": "Partisans Group",
     "class_prtsn_arr": "Partisans Arrest",
@@ -61,11 +61,18 @@ def format_columns(df):
         Dataframe with formatted columns
     """
     # remove ID
-    df = df.drop(columns="ID")
+    df = df.drop(
+        columns=[
+            "ID",
+            "class_nb_loco_dmg",
+            "class_nb_relay_dmg",
+            # "class_sabotage_success",
+        ]
+    )
 
     # add class_sabotage_success, maybe after this column will permanently be in the schema
-    if "class_sabotage_success" not in df.columns:
-        df["class_sabotage_success"] = None
+    # if "class_sabotage_success" not in df.columns:
+    #     df["class_sabotage_success"] = None
 
     # update columns name
     df = df.rename(columns=dict_corr_schema)
@@ -77,8 +84,8 @@ def format_columns(df):
     df["Date"] = df["Date"].dt.strftime("%m/%d/%Y")
 
     # convert Int to str
-    df["Locomotive Damaged"] = df["Locomotive Damaged"].astype(int).astype(str)
-    df["Relay Damaged"] = df["Relay Damaged"].astype(int).astype(str)
+    # df["Locomotive Damaged"] = df["Locomotive Damaged"].astype(int).astype(str)
+    # df["Relay Damaged"] = df["Relay Damaged"].astype(int).astype(str)
     df["Partisans Age"] = df["Partisans Age"].astype(str)
 
     # replace values
@@ -90,6 +97,12 @@ def format_columns(df):
         .apply(lambda x: "TRUE" if x else "FALSE")
         .replace("'", "")
     )
+
+    # remove \n
+    df["Source Links"] = df["Source Links"].apply(lambda x: x.replace("\n", ""))
+
+    # add jump line in source links, after each ,
+    df["Source Links"] = df["Source Links"].apply(lambda x: x.replace(",", ",\n"))
 
     # reorder cols
     df = df[dict_corr_schema.values()]
