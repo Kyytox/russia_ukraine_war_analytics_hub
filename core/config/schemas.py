@@ -77,7 +77,7 @@ SCHEMA_EXCEL_RAILWAY = {
     "class_gps": "object",
     "class_dmg_eqp": "object",
     "class_inc_type": "object",
-    "class_sabotage_success": "object",
+    # "class_sabotage_success": "object",
     "class_coll_with": "object",
     "class_nb_loco_dmg": "int64",
     "class_nb_relay_dmg": "int64",
