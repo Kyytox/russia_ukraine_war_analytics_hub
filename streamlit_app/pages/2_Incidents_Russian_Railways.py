@@ -1,3 +1,6 @@
+import time
+import json
+
 import pandas as pd
 
 import streamlit as st
@@ -21,6 +24,7 @@ from create_charts import (
     create_funnel,
     create_waffle,
     create_waterfall,
+    prepare_df_region,
 )
 
 # Google Analytics
@@ -35,6 +39,13 @@ st.title("🚂 Incidents Russian Railways Analytics 🇷🇺")
 
 # -----------DATAMARTS-----------
 with st.spinner("Loading Data..."):
+
+    # read file json
+    with open("core/utils/ru_region.json") as file:
+        polygons = json.load(file)
+
+    # -----------DATAMARTS-----------
+
     dmt_inc_total = pd.read_parquet(f"{path_dmt_inc_railway}/inc_total.parquet")
     dmt_inc_year = pd.read_parquet(f"{path_dmt_inc_railway}/inc_by_year.parquet")
     dmt_inc_month = pd.read_parquet(f"{path_dmt_inc_railway}/inc_by_month.parquet")
@@ -59,40 +70,324 @@ with st.spinner("Loading Data..."):
         f"{path_dmt_inc_railway}/sabotage_by_prtsn_grp.parquet"
     )
 
+    # -----------LISTS-----------
+    lst_inc_type = dmt_inc_total[dmt_inc_total["type"] == "inc_type"]["label"].unique()
+    lst_dmg_eqp = dmt_inc_total[dmt_inc_total["type"] == "dmg_eqp"]["label"].unique()
+    lst_sabotage_dmg_eqp = dmt_inc_total[dmt_inc_total["type"] == "sabotage"][
+        "label"
+    ].unique()
+    list_partisans_group = dmt_inc_total[dmt_inc_total["type"] == "prtsn_grp"][
+        "label"
+    ].unique()
 
-# -----------DATAMARTS-----------
+    # -----------DF CHARTS-----------
 
+    df_incd_typ_total = dmt_inc_total[dmt_inc_total["type"] == "inc_type"]
+    df_dmg_eqp_total = dmt_inc_total[dmt_inc_total["type"] == "dmg_eqp"]
+    df_incd_reg_total = dmt_inc_total[dmt_inc_total["type"] == "region"]
+    df_inc_type_cumul_month = dmt_inc_cumul_month[
+        dmt_inc_cumul_month["inc_type"].notnull()
+    ]
+    df_dmg_eqp_cumul_month = dmt_inc_cumul_month[
+        dmt_inc_cumul_month["dmg_eqp"].notnull()
+    ]
 
-# -----------LISTS-----------
-lst_inc_type = dmt_inc_total[dmt_inc_total["type"] == "inc_type"]["label"].unique()
-lst_dmg_eqp = dmt_inc_total[dmt_inc_total["type"] == "dmg_eqp"]["label"].unique()
-lst_sabotage_dmg_eqp = dmt_inc_total[dmt_inc_total["type"] == "sabotage"][
-    "label"
-].unique()
-list_partisans_group = dmt_inc_total[dmt_inc_total["type"] == "prtsn_grp"][
-    "label"
-].unique()
+    #
+    df_nb_inc_year = (
+        dmt_inc_year[dmt_inc_year["label"] == "Total"]
+        .drop(columns="type")
+        .melt(id_vars=["label"], var_name="year", value_name="total_inc")
+    )
 
-# -----------LISTS-----------
+    #
+    df_nb_inc_month_line = (
+        dmt_inc_month[
+            (
+                dmt_inc_month["inc_type"].isnull()
+                & dmt_inc_month["dmg_eqp"].isnull()
+                & dmt_inc_month["coll_with"].isnull()
+            )
+        ]
+        .sort_values("year")
+        .pivot(index="month", columns="year", values="total_inc")
+        .reset_index()
+    )
 
-# -----------DF CHARTS-----------
+    #
+    df_nb_inc_month_bar = dmt_inc_month[
+        (
+            dmt_inc_month["inc_type"].isnull()
+            & dmt_inc_month["dmg_eqp"].isnull()
+            & dmt_inc_month["coll_with"].isnull()
+        )
+    ]
 
-df_incd_typ_total = dmt_inc_total[dmt_inc_total["type"] == "inc_type"]
-df_dmg_eqp_total = dmt_inc_total[dmt_inc_total["type"] == "dmg_eqp"]
-df_incd_reg_total = dmt_inc_total[dmt_inc_total["type"] == "region"]
-df_sab_reg_total = dmt_inc_total[dmt_inc_total["type"] == "sab_region"]
-df_inc_type_cumul_month = dmt_inc_cumul_month[dmt_inc_cumul_month["inc_type"].notnull()]
-df_dmg_eqp_cumul_month = dmt_inc_cumul_month[dmt_inc_cumul_month["dmg_eqp"].notnull()]
+    #
+    df_inc_type_cumul = df_inc_type_cumul_month.pivot(
+        index="month_year", columns="inc_type", values="cumul_inc"
+    ).reset_index()
 
+    #
+    df_inc_type_year = dmt_inc_year[(dmt_inc_year["type"] == "inc_type")]
 
-# -----------DF CHARTS-----------
+    #
+    df_inc_type_month = (
+        dmt_inc_month[
+            (
+                dmt_inc_month["inc_type"].notnull()
+                & dmt_inc_month["dmg_eqp"].isnull()
+                & dmt_inc_month["coll_with"].isnull()
+            )
+        ]
+        .pivot(index="month_year", columns="inc_type", values="total_inc")
+        .reset_index()
+    )
+
+    #
+    df_sun_tree = dmt_sun_tree[
+        (dmt_sun_tree["tab"] == "inc_type") & (dmt_sun_tree["chart"] == "sun_tree")
+    ]
+
+    df_map_inc_reg = df_incd_reg_total.copy()
+    df_map_inc_reg = prepare_df_region(df_map_inc_reg)
+
+    #
+    df_sankey = dmt_sun_tree[
+        (dmt_sun_tree["tab"] == "inc_type") & (dmt_sun_tree["chart"] == "sankey")
+    ].reset_index(drop=True)
+
+    #
+
+    df_inc_type_region = dmt_inc_region[["region"] + list(lst_inc_type)]
+    df_inc_type_region["region"] = pd.Categorical(
+        df_inc_type_region["region"],
+        categories=df_incd_reg_total["label"],
+        ordered=True,
+    )
+    df_inc_type_region = df_inc_type_region.sort_values("region", ascending=False)
+
+    # TAB 3
+    # Damaged Equipments
+    df_inc_inc_type = df_dmg_eqp_cumul_month.pivot(
+        index="month_year", columns="dmg_eqp", values="cumul_inc"
+    ).reset_index()
+
+    # damaged equipment by year
+    df_inc_dmg_eqp_year = dmt_inc_year[(dmt_inc_year["type"] == "dmg_eqp")]
+
+    # damaged equipment by month
+    df_inc_dmg_eqp_month = (
+        dmt_inc_month[
+            (dmt_inc_month["inc_type"].isnull() & dmt_inc_month["dmg_eqp"].notnull())
+        ]
+        .pivot(
+            index="month_year",
+            columns="dmg_eqp",
+            values="total_inc",
+        )
+        .reset_index()
+    )
+
+    # sunburst chart
+    df_sunburst_tab3 = dmt_sun_tree[
+        (dmt_sun_tree["tab"] == "dmg_eqp") & (dmt_sun_tree["chart"] == "sun_tree")
+    ]
+
+    # sankey diagram
+    df_sankey_tab3 = dmt_sun_tree[
+        (dmt_sun_tree["tab"] == "dmg_eqp") & (dmt_sun_tree["chart"] == "sankey")
+    ].reset_index(drop=True)
+
+    # dmg equip by region
+    df_dmg_eqp_region = dmt_inc_region[["region"] + list(lst_dmg_eqp)]
+    df_dmg_eqp_region["region"] = pd.Categorical(
+        df_dmg_eqp_region["region"], categories=df_incd_reg_total["label"], ordered=True
+    )
+    df_dmg_eqp_region["total"] = df_dmg_eqp_region.drop(columns="region").sum(axis=1)
+    df_dmg_eqp_region = df_dmg_eqp_region.sort_values("total", ascending=True).drop(
+        columns="total"
+    )
+
+    # TAB 4
+    # Pie chart
+    df_coll_pie = dmt_inc_total[dmt_inc_total["type"] == "coll_with"]
+
+    # Collisions by month
+    df_coll_month = (
+        dmt_inc_month[
+            (dmt_inc_month["inc_type"].isnull())
+            & (dmt_inc_month["dmg_eqp"].isnull())
+            & (dmt_inc_month["coll_with"].notnull())
+        ]
+        .pivot(index="month_year", columns="coll_with", values="total_inc")
+        .reset_index()
+    )
+
+    # Collisions by damaged equipment
+    df_col_dmg_eqp = dmt_inc_total[dmt_inc_total["type"] == "coll_eqp"]
+
+    # Collisions by damaged equipment by month
+    df_col_dmg_eqp_month = (
+        dmt_inc_month[
+            (dmt_inc_month["inc_type"] == "Collision")
+            & (dmt_inc_month["dmg_eqp"].notnull())
+            & (dmt_inc_month["coll_with"].isnull())
+        ]
+        .pivot(index="month_year", columns="dmg_eqp", values="total_inc")
+        .reset_index()
+    )
+
+    # TAB 5
+    # Sabotage by year
+    df_sab_year = (
+        dmt_inc_year[(dmt_inc_year["label"] == "Sabotage")]
+        .drop(columns="type")
+        .melt(id_vars=["label"], var_name="year", value_name="total_inc")
+    )
+
+    # Sabotage by month
+    df_sab_month = (
+        dmt_inc_month[
+            (dmt_inc_month["inc_type"] == "Sabotage")
+            & (dmt_inc_month["dmg_eqp"].isnull() & dmt_inc_month["coll_with"].isnull())
+        ]
+        .pivot(index="month", columns="year", values="total_inc")
+        .reset_index()
+    )
+
+    # Comparison between incidents and sabotage
+    df_comp_sab_inc = (
+        dmt_inc_month[
+            (
+                (dmt_inc_month["inc_type"] == "Sabotage")
+                & (dmt_inc_month["dmg_eqp"].isnull())
+                & (dmt_inc_month["coll_with"].isnull())
+            )
+            | (
+                (dmt_inc_month["inc_type"].isnull())
+                & (dmt_inc_month["dmg_eqp"].isnull())
+                & (dmt_inc_month["coll_with"].isnull())
+            )
+        ]
+        .fillna("Total")
+        .pivot(index="month_year", columns="inc_type", values="total_inc")
+        .reset_index()
+    )
+    df_comp_sab_inc = df_comp_sab_inc[["month_year", "Total", "Sabotage"]]
+
+    # Sabotage by Partisans Group
+    df_sab_prtsn_grp = dmt_inc_total[dmt_inc_total["type"] == "prtsn_grp"]
+
+    # Sabotage by Damaged Equipment by Partisans Group
+    df_dmg_eqp_prtsn_grp = (
+        dmt_inc_total[dmt_inc_total["type"].isin(list_partisans_group)]
+        .pivot(index="label", columns="type", values="total_inc")
+        .reset_index()
+    )
+
+    # Tree map Sabotage Partisans Group by Damaged Equipment
+    df_tree_prtsn_eqp = dmt_sun_tree[
+        (dmt_sun_tree["tab"] == "dmg_eqp_prtsn_grp")
+        & (dmt_sun_tree["chart"] == "sun_tree")
+    ]
+
+    # Tree map Sabotage Damaged Equipment by Partisans Group
+    df_tree_eqp_prtsn = dmt_sun_tree[
+        (dmt_sun_tree["tab"] == "prtsn_grp_dmg_eqp")
+        & (dmt_sun_tree["chart"] == "sun_tree")
+    ]
+
+    # Bar Sabotage damaged equipment by Partisans Group
+    df_bar_eqp_prtsn = (
+        dmt_inc_total[dmt_inc_total["type"].isin(list_partisans_group)]
+        .pivot(index="type", columns="label", values="total_inc")
+        .reset_index()
+    )
+
+    # Bar Sabotage by Damaged Equipment
+    df_pie_sab_eqp = dmt_inc_total[dmt_inc_total["type"] == "sabotage"]
+
+    # Bar Sabotage by Damaged Equipment by Month
+    df_bar_sab_eqp_month = (
+        dmt_inc_month[
+            (dmt_inc_month["inc_type"] == "Sabotage")
+            & (dmt_inc_month["dmg_eqp"].notnull())
+            & (dmt_inc_month["coll_with"].isnull())
+        ]
+        .pivot(
+            index="month_year",
+            columns="dmg_eqp",
+            values="total_inc",
+        )
+        .reset_index()
+    )
+
+    # Bar Sabotage by Damaged Equipment by Region
+    df_sab_eqp_region = dmt_inc_region[
+        ["region"] + [col for col in dmt_inc_region.columns if col.startswith("sab_")]
+    ]
+    # remove sab_
+    df_sab_eqp_region.columns = df_sab_eqp_region.columns.str.replace("sab_", "")
+    df_sab_eqp_region["region"] = pd.Categorical(
+        df_sab_eqp_region["region"], categories=df_incd_reg_total["label"], ordered=True
+    )
+
+    # remove rows where all 0 except region
+    df_sab_eqp_region = df_sab_eqp_region[
+        (df_sab_eqp_region.drop(columns="region") != 0).any(axis=1)
+    ]
+
+    df_sab_eqp_region = df_sab_eqp_region.sort_values("region", ascending=False)
+
+    df_map_sab_reg = dmt_inc_total[dmt_inc_total["type"] == "sab_region"]
+    df_map_sab_reg = prepare_df_region(df_map_sab_reg)
+
+    # TAB 6
+    # Funnel
+    df_funnel = pd.DataFrame(
+        {
+            "niv": ["Sabotage", "Sabotage with Arrest", "Total Arrested"],
+            "count": [
+                dmt_inc_total[dmt_inc_total["label"] == "Sabotage"]["total_inc"].values[
+                    0
+                ],
+                dmt_inc_total[dmt_inc_total["label"] == "Sabotage with Arrest"][
+                    "total_inc"
+                ].values[0],
+                dmt_inc_total[dmt_inc_total["label"] == "Total Arrested"][
+                    "total_inc"
+                ].values[0],
+            ],
+        }
+    )
+
+    # Nb Partisans Arrested
+    df_prtsn_arr = dmt_inc_total[dmt_inc_total["type"] == "prtsn_arr"]
+
+    # Nb App Laws
+    df_app_laws = dmt_inc_total[dmt_inc_total["type"] == "app_laws"]
+
+    # Waffle chart
+    df_waffle = dmt_inc_total[
+        (dmt_inc_total["type"] == "prtsn_age")
+        & (dmt_inc_total["label"] != "Mean")
+        & (~dmt_inc_total["label"].str.startswith("age"))
+    ]
+
+    # Waterfall chart
+    df_waterfall = dmt_inc_total[
+        (dmt_inc_total["type"] == "prtsn_age")
+        & (dmt_inc_total["label"].str.startswith("age"))
+    ]
+    df_waterfall["label"] = df_waterfall["label"].str.split("_").str[1]
+    df_waterfall = df_waterfall.sort_values("label")
+
+    # time.sleep(1)
 
 
 # -----------VARIABLES-----------
 
 sufix_subtitle = "on the Russian Railways Network from 2022 to 2024"
-
-# -----------VARIABLES-----------
 
 
 # ------------SIDEBAR------------
@@ -115,7 +410,8 @@ with st.sidebar:
 # bouton to add, remove region Moscow
 if remove_moscow:
     df_incd_reg_total = df_incd_reg_total[df_incd_reg_total["label"] != "Moscow"]
-    df_sab_reg_total = df_sab_reg_total[df_sab_reg_total["label"] != "Moscow"]
+    df_map_sab_reg = df_map_sab_reg[df_map_sab_reg["label"] != "Moscow"]
+    df_map_inc_reg = df_map_inc_reg[df_map_inc_reg["label"] != "Moscow"]
 
 
 # Tabs
@@ -130,7 +426,6 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
         "Informations",
     ]
 )
-
 
 with tab1:
     st.title("Overview")
@@ -164,10 +459,9 @@ with tab1:
     # -------------------------------
     # Wordcloud
     with col1:
-        st.write("")
-        st.write("")
+        jump_lines(2)
         for i in range(5):
-            st.write("")
+            jump_lines(1)
         fig = create_wordcloud(dmt_wordcloud)
         st.pyplot(fig)
 
@@ -175,14 +469,9 @@ with tab1:
     # Number of Incidents by Year
     # Bar Chart
     with col2:
-        df = (
-            dmt_inc_year[dmt_inc_year["label"] == "Total"]
-            .drop(columns="type")
-            .melt(id_vars=["label"], var_name="year", value_name="total_inc")
-        )
         fig = create_bar(
             multi=False,
-            df=df,
+            df=df_nb_inc_year,
             col_x="year",
             col_y="total_inc",
             title="Annual Railway Incidents in Russia",
@@ -198,22 +487,9 @@ with tab1:
     # Number of Incidents by Month
     # Line Chart
     with col1:
-        df = (
-            dmt_inc_month[
-                (
-                    dmt_inc_month["inc_type"].isnull()
-                    & dmt_inc_month["dmg_eqp"].isnull()
-                    & dmt_inc_month["coll_with"].isnull()
-                )
-            ]
-            .sort_values("year")
-            .pivot(index="month", columns="year", values="total_inc")
-            .reset_index()
-        )
-        df = df[["month", 2024, 2023, 2022]]
-
+        df_nb_inc_month_line = df_nb_inc_month_line[["month", 2025, 2024, 2023, 2022]]
         fig = create_line(
-            df,
+            df_nb_inc_month_line,
             col_x="month",
             title="Monthly Incident Trends on Russian Railways",
             subtitle=f"Number of Incidents by Month {sufix_subtitle}",
@@ -222,19 +498,13 @@ with tab1:
         st.plotly_chart(fig, use_container_width=True)
 
     # -------------------------------
+    # -------------------------------
     # Number of Incidents by Month
     # Bar Chart
     with col2:
-        df = dmt_inc_month[
-            (
-                dmt_inc_month["inc_type"].isnull()
-                & dmt_inc_month["dmg_eqp"].isnull()
-                & dmt_inc_month["coll_with"].isnull()
-            )
-        ]
         fig = create_bar(
             multi=False,
-            df=df,
+            df=df_nb_inc_month_bar,
             col_x="month_year",
             col_y="total_inc",
             title="Monthly Incident Trends on Russian Railways",
@@ -245,6 +515,7 @@ with tab1:
     st.divider()
     col1, col2 = st.columns([1, 1])
 
+    # -------------------------------
     # -------------------------------
     # Number of Incidents Types
     # Bar Chart
@@ -294,9 +565,7 @@ with tab1:
     # -------------------------------
     # Number of Incidents by Region
     # Map
-    fig = create_map(
-        df_incd_reg_total,
-    )
+    fig = create_map(df_map_inc_reg, polygons)
     st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
@@ -318,6 +587,7 @@ with tab2:
     # Number of Incidents by Incident Type
     # Pie Chart
     with col1:
+
         fig = create_pie(
             df_incd_typ_total["label"],
             df_incd_typ_total["total_inc"],
@@ -331,11 +601,9 @@ with tab2:
     # Evolution of Incidents by Incident Type
     # Line Chart
     with col2:
-        df = df_inc_type_cumul_month.pivot(
-            index="month_year", columns="inc_type", values="cumul_inc"
-        ).reset_index()
+
         fig = create_line(
-            df,
+            df_inc_type_cumul,
             col_x="month_year",
             title="Trends in Cumulative Incidents by Type Over Time",
             subtitle=f"Cumulative number of incidents by type {sufix_subtitle}",
@@ -351,10 +619,10 @@ with tab2:
     # Number of Incidents by Incident Type by Year
     # Bar Chart
     with col1:
-        df = dmt_inc_year[(dmt_inc_year["type"] == "inc_type")]
+
         fig = create_bar(
             multi=True,
-            df=df,
+            df=df_inc_type_year,
             col_x="label",
             col_y=None,
             title="Incidents by Type: Yearly Comparison",
@@ -368,20 +636,10 @@ with tab2:
     # Number of Incidents by Incident Type by Month
     # Bar Chart
     with col2:
-        df = (
-            dmt_inc_month[
-                (
-                    dmt_inc_month["inc_type"].notnull()
-                    & dmt_inc_month["dmg_eqp"].isnull()
-                    & dmt_inc_month["coll_with"].isnull()
-                )
-            ]
-            .pivot(index="month_year", columns="inc_type", values="total_inc")
-            .reset_index()
-        )
+
         fig = create_bar(
             multi=True,
-            df=df,
+            df=df_inc_type_month,
             col_x="month_year",
             col_y=None,
             title="Monthly Incidents by Type",
@@ -398,28 +656,24 @@ with tab2:
     # ---------------------------------
     #  Sunburst chart
     with col1:
-        df = dmt_sun_tree[
-            (dmt_sun_tree["tab"] == "inc_type") & (dmt_sun_tree["chart"] == "sun_tree")
-        ]
+
         fig = create_sunburst(
-            ids=df["id"],
-            labels=df["label"],
-            parents=df["parent"],
-            values=df["value"],
+            ids=df_sun_tree["id"],
+            labels=df_sun_tree["label"],
+            parents=df_sun_tree["parent"],
+            values=df_sun_tree["value"],
             title="Distribution of Damaged Equipment by Incident Type",
             subtitle=f"Relationship between incident types and damaged equipment {sufix_subtitle}",
-            map_colors=[colors[label] for label in df["label"]],
+            map_colors=[colors[label] for label in df_sun_tree["label"]],
         )
         st.plotly_chart(fig, use_container_width=True)
 
     # ---------------------------------
     # Sankey diagram
     with col2:
-        df = dmt_sun_tree[
-            (dmt_sun_tree["tab"] == "inc_type") & (dmt_sun_tree["chart"] == "sankey")
-        ].reset_index(drop=True)
+
         fig = create_sankey(
-            df=df,
+            df=df_sankey,
             colx="inc_type",
             coly="dmg_eqp",
             title="Flow of Damaged Equipment by Incident Type",
@@ -433,15 +687,9 @@ with tab2:
     # -------------------------------
     # Number of Incidents by Incident Type by Region
     # Bar Chart
-    df = dmt_inc_region[["region"] + list(lst_inc_type)]
-    df["region"] = pd.Categorical(
-        df["region"], categories=df_incd_reg_total["label"], ordered=True
-    )
-    df = df.sort_values("region", ascending=False)
-
     fig = create_bar(
         multi=True,
-        df=df,
+        df=df_inc_type_region,
         col_x="region",
         col_y=None,
         title="Distribution of Incidents by Type and Region",
@@ -463,6 +711,7 @@ with tab3:
     # Number of Incidents by Damaged Equipment
     # Pie Chart
     with col1:
+
         fig = create_pie(
             df_dmg_eqp_total["label"],
             df_dmg_eqp_total["total_inc"],
@@ -476,11 +725,9 @@ with tab3:
     # Evolution of Incidents by Incident Type
     # Line Chart
     with col2:
-        df = df_dmg_eqp_cumul_month.pivot(
-            index="month_year", columns="dmg_eqp", values="cumul_inc"
-        ).reset_index()
+
         fig = create_line(
-            df,
+            df_inc_inc_type,
             col_x="month_year",
             title="Trends in Cumulative Damaged Equipments Over Time",
             subtitle=f"Cumulative number of damaged equipments {sufix_subtitle}",
@@ -496,10 +743,10 @@ with tab3:
     # Number of Incidents by Damaged Equipment by Year
     # Bar Chart
     with col1:
-        df = dmt_inc_year[(dmt_inc_year["type"] == "dmg_eqp")]
+
         fig = create_bar(
             multi=True,
-            df=df,
+            df=df_inc_dmg_eqp_year,
             col_x="label",
             col_y=None,
             title="Damaged Equipment: Yearly Comparison",
@@ -513,23 +760,10 @@ with tab3:
     # Number of Incidents by Damaged Equipment by Month
     # Bar Chart
     with col2:
-        df = (
-            dmt_inc_month[
-                (
-                    dmt_inc_month["inc_type"].isnull()
-                    & dmt_inc_month["dmg_eqp"].notnull()
-                )
-            ]
-            .pivot(
-                index="month_year",
-                columns="dmg_eqp",
-                values="total_inc",
-            )
-            .reset_index()
-        )
+
         fig = create_bar(
             multi=True,
-            df=df,
+            df=df_inc_dmg_eqp_month,
             col_x="month_year",
             col_y=None,
             title="Monthly Damaged Equipments",
@@ -543,30 +777,24 @@ with tab3:
     # ---------------------------------
     #  Sunburst chart
     with col1:
-        df = dmt_sun_tree[
-            (dmt_sun_tree["tab"] == "dmg_eqp") & (dmt_sun_tree["chart"] == "sun_tree")
-        ]
 
         fig = create_sunburst(
-            ids=df["id"],
-            labels=df["label"],
-            parents=df["parent"],
-            values=df["value"],
+            ids=df_sunburst_tab3["id"],
+            labels=df_sunburst_tab3["label"],
+            parents=df_sunburst_tab3["parent"],
+            values=df_sunburst_tab3["value"],
             title="Distribution of Incident Types by Damaged Equipment",
             subtitle=f"Relationship between damaged equipment and incident types {sufix_subtitle}",
-            map_colors=[colors[label] for label in df["label"]],
+            map_colors=[colors[label] for label in df_sunburst_tab3["label"]],
         )
         st.plotly_chart(fig, use_container_width=True)
 
     # ---------------------------------
     # Sankey diagram
     with col2:
-        df = dmt_sun_tree[
-            (dmt_sun_tree["tab"] == "dmg_eqp") & (dmt_sun_tree["chart"] == "sankey")
-        ].reset_index(drop=True)
 
         fig = create_sankey(
-            df=df,
+            df=df_sankey_tab3,
             colx="dmg_eqp",
             coly="inc_type",
             title="Flow of Incident Types by Damaged Equipment",
@@ -579,16 +807,9 @@ with tab3:
     # -------------------------------
     # Number of Incidents by Damaged Equipment by Region
     # Bar Chart
-    df = dmt_inc_region[["region"] + list(lst_dmg_eqp)]
-    df["region"] = pd.Categorical(
-        df["region"], categories=df_incd_reg_total["label"], ordered=True
-    )
-
-    df["total"] = df.drop(columns="region").sum(axis=1)
-    df = df.sort_values("total", ascending=True).drop(columns="total")
     fig = create_bar(
         multi=True,
-        df=df,
+        df=df_dmg_eqp_region,
         col_x="region",
         col_y=None,
         title="Distribution of Damaged Equipment by Region",
@@ -606,10 +827,10 @@ with tab4:
     # Number of Incidents by Collision With
     # Pie Chart
     with col1:
-        df = dmt_inc_total[dmt_inc_total["type"] == "coll_with"]
+
         fig = create_pie(
-            df["label"],
-            df["total_inc"],
+            df_coll_pie["label"],
+            df_coll_pie["total_inc"],
             title="Distribution of Collisions",
             subtitle=f"Distribution of collisions {sufix_subtitle}",
             center_txt="Collisions With",
@@ -620,18 +841,10 @@ with tab4:
     # Number of Incidents by Collision With by Month
     # Bar Chart
     with col2:
-        df = (
-            dmt_inc_month[
-                (dmt_inc_month["inc_type"].isnull())
-                & (dmt_inc_month["dmg_eqp"].isnull())
-                & (dmt_inc_month["coll_with"].notnull())
-            ]
-            .pivot(index="month_year", columns="coll_with", values="total_inc")
-            .reset_index()
-        )
+
         fig = create_bar(
             multi=True,
-            df=df,
+            df=df_coll_month,
             col_x="month_year",
             col_y=None,
             title="Monthly Collisions",
@@ -646,10 +859,10 @@ with tab4:
     # Number of Incidents by Collision With by Damaged Equipment
     # Pie Chart
     with col1:
-        df = dmt_inc_total[dmt_inc_total["type"] == "coll_eqp"]
+
         fig = create_pie(
-            df["label"],
-            df["total_inc"],
+            df_col_dmg_eqp["label"],
+            df_col_dmg_eqp["total_inc"],
             title="Distribution of Collisions by Implicated Equipment",
             subtitle=f"Distribution of collisions by implicated equipment {sufix_subtitle}",
             center_txt="Implicated Equipments",
@@ -660,18 +873,10 @@ with tab4:
     # Number of Damaged Equipment by Collision With by Month
     # Bar Chart
     with col2:
-        df = (
-            dmt_inc_month[
-                (dmt_inc_month["inc_type"] == "Collision")
-                & (dmt_inc_month["dmg_eqp"].notnull())
-                & (dmt_inc_month["coll_with"].isnull())
-            ]
-            .pivot(index="month_year", columns="dmg_eqp", values="total_inc")
-            .reset_index()
-        )
+
         fig = create_bar(
             multi=True,
-            df=df,
+            df=df_col_dmg_eqp_month,
             col_x="month_year",
             col_y=None,
             title="Monthly Implicated Equipments in Collisions",
@@ -690,14 +895,10 @@ with tab5:
     # Number of Sabotage by Year
     # Bar Chart
     with col1:
-        df = (
-            dmt_inc_year[(dmt_inc_year["label"] == "Sabotage")]
-            .drop(columns="type")
-            .melt(id_vars=["label"], var_name="year", value_name="total_inc")
-        )
+
         fig = create_bar(
             multi=False,
-            df=df,
+            df=df_sab_year,
             col_x="year",
             col_y="total_inc",
             title="Annual Number of Sabotage",
@@ -709,19 +910,9 @@ with tab5:
     # Number of Sabotage by Month
     # Line Chart
     with col2:
-        df = (
-            dmt_inc_month[
-                (dmt_inc_month["inc_type"] == "Sabotage")
-                & (
-                    dmt_inc_month["dmg_eqp"].isnull()
-                    & dmt_inc_month["coll_with"].isnull()
-                )
-            ]
-            .pivot(index="month", columns="year", values="total_inc")
-            .reset_index()
-        )
+
         fig = create_line(
-            df,
+            df_sab_month,
             col_x="month",
             title="Monthly Number of Sabotage by Year",
             subtitle=f"Number of Sabotage {sufix_subtitle}",
@@ -733,26 +924,8 @@ with tab5:
     # -------------------------------
     # Number of Sabotage by Year, compared to the total number of incidents
     # Line Chart
-    df = (
-        dmt_inc_month[
-            (
-                (dmt_inc_month["inc_type"] == "Sabotage")
-                & (dmt_inc_month["dmg_eqp"].isnull())
-                & (dmt_inc_month["coll_with"].isnull())
-            )
-            | (
-                (dmt_inc_month["inc_type"].isnull())
-                & (dmt_inc_month["dmg_eqp"].isnull())
-                & (dmt_inc_month["coll_with"].isnull())
-            )
-        ]
-        .fillna("Total")
-        .pivot(index="month_year", columns="inc_type", values="total_inc")
-        .reset_index()
-    )
-    df = df[["month_year", "Total", "Sabotage"]]
     fig = create_line(
-        df,
+        df_comp_sab_inc,
         col_x="month_year",
         title="Incidents vs Sabotage over Time",
         subtitle=f"Evolution of the number of incidents and sabotage {sufix_subtitle}",
@@ -765,11 +938,10 @@ with tab5:
     # Distribution of Sabotage by Partisans Group
     # Pie Chart
     with col1:
-        # randomize
-        df = dmt_inc_total[dmt_inc_total["type"] == "prtsn_grp"]
+
         fig = create_pie(
-            df["label"],
-            df["total_inc"],
+            df_sab_prtsn_grp["label"],
+            df_sab_prtsn_grp["total_inc"],
             title="Distribution of Sabotage by Partisans Group",
             subtitle=f"Distribution of sabotage incidents by partisan groups {sufix_subtitle}",
             center_txt="Sabotage",
@@ -781,6 +953,7 @@ with tab5:
     # Incident by day over time by partisans group
     # Scatter Chart
     with col2:
+
         fig = go.Figure(
             go.Scatter(
                 x=dmt_sab_prtsn_grp["date"],
@@ -803,7 +976,6 @@ with tab5:
                 height=600,
             ),
         )
-
         st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
@@ -813,18 +985,15 @@ with tab5:
     # Number of Partisans Group by Damaged Equipment
     # Treemap
     with col1:
-        df = dmt_sun_tree[
-            (dmt_sun_tree["tab"] == "dmg_eqp_prtsn_grp")
-            & (dmt_sun_tree["chart"] == "sun_tree")
-        ]
+
         fig = create_treemap(
-            ids=df["id"],
-            labels=df["label"],
-            parents=df["parent"],
-            values=df["value"],
+            ids=df_tree_prtsn_eqp["id"],
+            labels=df_tree_prtsn_eqp["label"],
+            parents=df_tree_prtsn_eqp["parent"],
+            values=df_tree_prtsn_eqp["value"],
             title="Treemap of Damaged Equipment with Partisan Group Attribution",
             subtitle=f"A hierarchical representation of damaged equipment categorized by the responsible partisan groups {sufix_subtitle}",
-            map_colors=[colors[label] for label in df["label"]],
+            map_colors=[colors[label] for label in df_tree_prtsn_eqp["label"]],
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -832,14 +1001,10 @@ with tab5:
     # Number of Sabotage Damaged Equipment by Partisans Group
     # Bar Chart
     with col2:
-        df = (
-            dmt_inc_total[dmt_inc_total["type"].isin(list_partisans_group)]
-            .pivot(index="label", columns="type", values="total_inc")
-            .reset_index()
-        )
+
         fig = create_bar(
             multi=True,
-            df=df,
+            df=df_dmg_eqp_prtsn_grp,
             col_x="label",
             col_y=None,
             title="Implication of Partisans Group in Damaged Equipment",
@@ -855,18 +1020,15 @@ with tab5:
     # Number of Damaged Equipment by Partisans Group
     # Treemap
     with col1:
-        df = dmt_sun_tree[
-            (dmt_sun_tree["tab"] == "prtsn_grp_dmg_eqp")
-            & (dmt_sun_tree["chart"] == "sun_tree")
-        ]
+
         fig = create_treemap(
-            ids=df["id"],
-            labels=df["label"],
-            parents=df["parent"],
-            values=df["value"],
+            ids=df_tree_eqp_prtsn["id"],
+            labels=df_tree_eqp_prtsn["label"],
+            parents=df_tree_eqp_prtsn["parent"],
+            values=df_tree_eqp_prtsn["value"],
             title="Treemap of Partisan Groups and Associated Equipment Damage",
             subtitle=f"Visualizing the relationship between partisan groups and the equipment they have damaged {sufix_subtitle}",
-            map_colors=[colors[label] for label in df["label"]],
+            map_colors=[colors[label] for label in df_tree_eqp_prtsn["label"]],
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -874,14 +1036,10 @@ with tab5:
     # Number of Sabotage Damaged Equipment by Partisans Group
     # Bar Chart
     with col2:
-        df = (
-            dmt_inc_total[dmt_inc_total["type"].isin(list_partisans_group)]
-            .pivot(index="type", columns="label", values="total_inc")
-            .reset_index()
-        )
+
         fig = create_bar(
             multi=True,
-            df=df,
+            df=df_bar_eqp_prtsn,
             col_x="type",
             col_y=None,
             title="Distribution of damaged equipment of partisan groups",
@@ -896,10 +1054,10 @@ with tab5:
     # Number of Sabotage by Damaged Equipment
     # Pie Chart
     with col1:
-        df = dmt_inc_total[dmt_inc_total["type"] == "sabotage"]
+
         fig = create_pie(
-            df["label"],
-            df["total_inc"],
+            df_pie_sab_eqp["label"],
+            df_pie_sab_eqp["total_inc"],
             title="Distribution of Damaged Equipment for Sabotage Incidents",
             subtitle=f"Distribution of damaged equipment for sabotage incidents {sufix_subtitle}",
             center_txt="Act of Sabotage",
@@ -910,22 +1068,10 @@ with tab5:
     # Number of Sabotage by Damaged Equipment by Month
     # Bar Chart
     with col2:
-        df = (
-            dmt_inc_month[
-                (dmt_inc_month["inc_type"] == "Sabotage")
-                & (dmt_inc_month["dmg_eqp"].notnull())
-                & (dmt_inc_month["coll_with"].isnull())
-            ]
-            .pivot(
-                index="month_year",
-                columns="dmg_eqp",
-                values="total_inc",
-            )
-            .reset_index()
-        )
+
         fig = create_bar(
             multi=True,
-            df=df,
+            df=df_bar_sab_eqp_month,
             col_x="month_year",
             col_y=None,
             title="Monthly Number of Damaged Equipments",
@@ -938,23 +1084,9 @@ with tab5:
     # -------------------------------
     # Number of Sabotage by Damaged Equipment by Region
     # Bar Chart
-    df = dmt_inc_region[
-        ["region"] + [col for col in dmt_inc_region.columns if col.startswith("sab_")]
-    ]
-    # remove sab_
-    df.columns = df.columns.str.replace("sab_", "")
-    df["region"] = pd.Categorical(
-        df["region"], categories=df_incd_reg_total["label"], ordered=True
-    )
-
-    # remove rows where all 0 except region
-    df = df[(df.drop(columns="region") != 0).any(axis=1)]
-
-    df = df.sort_values("region", ascending=False)
-
     fig = create_bar(
         multi=True,
-        df=df,
+        df=df_sab_eqp_region,
         col_x="region",
         col_y=None,
         title="Number of Damaged Equipments by Region",
@@ -970,46 +1102,22 @@ with tab5:
         "Warning: Crimea is represented on this map, it is good to remember that Crimea is Ukrainian, but being occupied the rail network is under the responsibility of the Orcs."
     )
 
-    fig = create_map(
-        df_sab_reg_total,
-    )
+    fig = create_map(df_map_sab_reg, polygons)
     st.plotly_chart(fig, use_container_width=True)
 
 
 with tab6:
     st.title("Partisans Arrest")
 
-    import plotly.graph_objects as go
-    import plotly.express as px
-
-    # get data
-    df = pd.DataFrame(
-        {
-            "niv": ["Sabotage", "Sabotage with Arrest", "Total Arrested"],
-            "count": [
-                dmt_inc_total[dmt_inc_total["label"] == "Sabotage"]["total_inc"].values[
-                    0
-                ],
-                dmt_inc_total[dmt_inc_total["label"] == "Sabotage with Arrest"][
-                    "total_inc"
-                ].values[0],
-                dmt_inc_total[dmt_inc_total["label"] == "Total Arrested"][
-                    "total_inc"
-                ].values[0],
-            ],
-        }
-    )
-
-    # create figure
+    # create funnel
     fig = create_funnel(
-        df,
+        df_funnel,
         title="Funnel of Partisans Arrested",
         subtitle=f"Visual representation of the funnel of partisans arrested for sabotage incidents {sufix_subtitle}",
     )
-
-    # display figure
     st.plotly_chart(fig, use_container_width=True)
 
+    #
     st.divider()
     col1, col2 = st.columns([1, 1])
 
@@ -1017,10 +1125,10 @@ with tab6:
     # Number of Partisans Arrested
     # Pie Chart
     with col1:
-        df = dmt_inc_total[dmt_inc_total["type"] == "prtsn_arr"]
+
         fig = create_pie(
-            df["label"],
-            df["total_inc"],
+            df_prtsn_arr["label"],
+            df_prtsn_arr["total_inc"],
             title="Number of Sabotage where partisans was arrested",
             subtitle=f"Distribution of sabotage incidents where one or more partisans was arrested {sufix_subtitle}",
             center_txt="Act of Sabotage",
@@ -1032,15 +1140,15 @@ with tab6:
     # Number of Applicable Laws
     # Treemap
     with col2:
-        df = dmt_inc_total[dmt_inc_total["type"] == "app_laws"]
+
         fig = create_treemap(
-            ids=df["label"],
-            labels=df["label"],
-            parents=[""] * len(df),
-            values=df["total_inc"],
+            ids=df_app_laws["label"],
+            labels=df_app_laws["label"],
+            parents=[""] * len(df_app_laws),
+            values=df_app_laws["total_inc"],
             title="Distribution of Applicable Laws",
             subtitle=f"Laws of the Criminal Code of the Russian Federation applied to the partisans arrested <br>for sabotage incidents {sufix_subtitle}",
-            map_colors=[colors[label] for label in df["label"]],
+            map_colors=[colors[label] for label in df_app_laws["label"]],
         )
         st.plotly_chart(fig, use_container_width=True)
 
@@ -1095,14 +1203,8 @@ with tab6:
     # -------------------------------
     # Number of Partisans Age
     # Waffle Chart
-    df = dmt_inc_total[
-        (dmt_inc_total["type"] == "prtsn_age")
-        & (dmt_inc_total["label"] != "Mean")
-        & (~dmt_inc_total["label"].str.startswith("age"))
-    ]
-
     fig = create_waffle(
-        df,
+        df_waffle,
     )
     st.pyplot(fig)
 
@@ -1112,16 +1214,9 @@ with tab6:
     # Number of Partisans Age
     # Waterfall Chart
     with col1:
-        df = dmt_inc_total[
-            (dmt_inc_total["type"] == "prtsn_age")
-            & (dmt_inc_total["label"].str.startswith("age"))
-        ]
-
-        df["label"] = df["label"].str.split("_").str[1]
-        df = df.sort_values("label")
 
         fig = create_waterfall(
-            df,
+            df_waterfall,
             title="Number of Partisans Arrested by Age",
             subtitle=f"Number of partisans arrested by age for sabotage incidents {sufix_subtitle}",
         )
@@ -1131,8 +1226,9 @@ with tab6:
     # Number of Age Group
     # Waterfall Chart
     with col2:
+
         fig = create_waterfall(
-            df,
+            df_waterfall,
             title="Number of Partisans Arrested by Age Group",
             subtitle=f"Number of partisans arrested by age group for sabotage incidents {sufix_subtitle}",
             is_group=True,
@@ -1144,6 +1240,7 @@ with tab6:
     # Number of Applicable Laws by Partisans Age
     # Heatmap
     with col1:
+
         fig = go.Figure(
             go.Heatmap(
                 z=dmt_app_laws_prtsn_age,
@@ -1215,7 +1312,7 @@ with tab7:
         "Search of messages, tweets, and news evoking incidents on Russian Railways Network."
     )
 
-    st.image("streamlit/utils/images/architecture_project.png")
+    st.image("streamlit_app/utils/images/architecture_project.png")
     st.divider()
 
     col1, col2, col3 = st.columns([1, 1, 1])
