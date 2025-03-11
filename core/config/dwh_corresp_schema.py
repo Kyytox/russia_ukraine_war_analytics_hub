@@ -1,4 +1,5 @@
 CORRESP_SCHEMA_INCIDENT_RAILWAY = {
+    "IDX": "IDX",
     "Date": "date",
     "Region": "region",
     "Location": "location",
@@ -6,20 +7,20 @@ CORRESP_SCHEMA_INCIDENT_RAILWAY = {
     "Damaged Equipment": "dmg_eqp",
     "Incident Type": "inc_type",
     "Collision With": "coll_with",
-    "Locomotive Damaged": "nb_loco_dmg",
-    "Relay Damaged": "nb_relay_dmg",
+    # "Locomotive Damaged": "nb_loco_dmg",
+    # "Relay Damaged": "nb_relay_dmg",
     "Partisans Group": "prtsn_grp",
     "Partisans Arrest": "prtsn_arr",
     "Partisans Names": "prtsn_names",
     "Partisans Age": "prtsn_age",
     "Applicable Laws": "app_laws",
     "Source Links": "source_links",
-    "Locomotive Damaged": "nb_loco_dmg",
-    "Relay Damaged": "nb_relay_dmg",
+    # "Locomotive Damaged": "nb_loco_dmg",
+    # "Relay Damaged": "nb_relay_dmg",
     #
-    "Sabotage Success": "sabotage_success",
+    # "Sabotage Success": "sabotage_success",
     "Comments": "comments",
-    "Exact Date": "exact_date",
+    # "Exact Date": "exact_date",
 }
 
 
