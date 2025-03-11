@@ -14,13 +14,13 @@ ID_EXCEL_INCIDENT_ARREST = "1yMzTidLDj-sdsACYMkhRFuGIGOtscvpvijAAmVlLCfM"
 # ID_EXCEL_INCIDENT_SABOTAGE = "1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk"
 
 # IA OLLAMA
-IA_TRANSLATE = "ia_translate:latest"
+# IA_TRANSLATE = "ia_translate:latest" # hermes 3
+IA_TRANSLATE = "ia_translate_2:latest"
 # IA_CLASSIFY = "ia_classify:latest"
 IA_CLASSIFY = "mistral-nemo:latest"
 
-CPT_LOOP_PROCESS_TRANSLATE = 10
-SIZE_TO_TRANSLATE = 29
-SIZE_TO_QUALIF = 99
+SIZE_TO_TRANSLATE = 99
+SIZE_TO_QUALIF = 49
 
 ###############
 ## PROMPT IA ##
@@ -184,6 +184,7 @@ LIST_LAWS = [
     "205.2 - Public Promotion or Justification of Terrorism",
     "207 - Knowingly Making a False Threat of Terrorism",
     "208 - Organisation or Participation of an Illegal Armed Formation",
+    "Unknown",
 ]
 
 
