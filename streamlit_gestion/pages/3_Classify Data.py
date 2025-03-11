@@ -111,6 +111,12 @@ def init_raw_data():
         # elif st.session_state["theme_data"] == "Incidents Sabotage":
         #     st.session_state["schema_excel"] = SCHEMA_EXCEL_SABOTAGE
 
+    if st.session_state["theme_data"] == "Incidents Railway":
+        # remove data with id start with belzhd_live
+        st.session_state["df_filt_src"] = st.session_state["df_filt_src"].loc[
+            ~st.session_state["df_filt_src"]["ID"].str.startswith("belzhd_live")
+        ]
+
     # get remaining data
     st.session_state["remaining_data"] = (
         st.session_state["df_filt_src"]
