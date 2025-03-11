@@ -46,11 +46,12 @@ def remove_cols(df):
     # remove cols
     df = df.drop(
         columns=[
+            "IDX",
             "comments",
-            "exact_date",
-            "sabotage_success",
-            "nb_loco_dmg",
-            "nb_relay_dmg",
+            # "exact_date",
+            # "sabotage_success",
+            # "nb_loco_dmg",
+            # "nb_relay_dmg",
         ]
     )
 
@@ -72,6 +73,7 @@ def update_type(df):
     df["date"] = pd.to_datetime(df["date"])
 
     # str to boolean
+    df["prtsn_arr"] = df["prtsn_arr"].replace({"TRUE": True, "FALSE": False})
     df["prtsn_arr"] = df["prtsn_arr"].astype("bool")
 
     return df
@@ -99,6 +101,11 @@ def format_values(df):
 
     # Fill NaN values
     df = df.fillna(np.nan)
+
+    # replace app laws 205-205.5 - Terrorism
+    df["app_laws"] = df["app_laws"].str.replace(
+        "205-205.5 - Terrorism", "205 - Terrorism"
+    )
 
     return df
 
@@ -374,11 +381,12 @@ def control_data_quality(df):
         f"Control partisans information: {st_partisans.result()}",
         st_partisans.message,
     )
+    print(top_completed)
 
     if top_completed == False:
-        return Failed(message="Ingestion incident railway Failed")
+        return Failed(message="Control data quality Failed")
 
-    return Completed(message="Ingestion incident railway Completed")
+    return Completed(message="Control data quality Completed")
 
 
 @flow(
@@ -410,6 +418,8 @@ def flow_ingest_incident_railway():
 
     # control data
     st_data = control_data_quality(df)
+
+    print(st_data)
 
     if st_data.is_failed():
         return Failed(message="Ingestion incident railway Failed")
