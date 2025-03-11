@@ -88,13 +88,21 @@ def init_css():
         
         
         /* -- Button page link -- */
+        
+        .stLinkButton {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+        
             
         [data-testid="stPageLink-NavLink"], .stLinkButton a {
             padding-left: 23px;
             padding-right: 23px;
             padding-bottom: 10px;
             padding-top: 10px;
-            margin-left: 2rem;
+            margin-top: 0.7rem;
+            margin-bottom: 1rem;
             border-radius: 9px;
             background: #0057B8;
             border: none;
@@ -225,7 +233,11 @@ def display_container_content(dict_data: dict):
     Args:
         dict_data: dictionary containing the data to display
     """
-    col1, col2, col3 = st.columns([1, 0.1, 0.1])
+
+    if dict_data[list(dict_data.keys())[0]]["image"]:
+        col1, col2, col3 = st.columns([1, 0.1, 0.1])
+    else:
+        col1, col2 = st.columns([1, 0.3])
 
     for key, value in dict_data.items():
         with col1:

@@ -9,6 +9,8 @@ colors = {
     "2023": "#6D597A",
     2024: "#B56576",
     "2024": "#B56576",
+    2025: "#d85f63",
+    "2025": "#d85f63",
     #
     "Total": "rgb(102, 80, 80)",
     "Sabotage": "#6a040f",
@@ -55,6 +57,7 @@ colors = {
     "281 - Sabotage": "#f8961e",
     "267 - Damage Transport Vehicles or Communications": "#f9c74f",
     "205-205.5 - Terrorism": "#7ea75f",
+    "205 - Terrorism": "#7ea75f",
     "213 - Hooliganism": "#4d908e",
     "Go To WAR": "#e60909",
     #
