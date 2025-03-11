@@ -1,4 +1,3 @@
-import json
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -137,6 +136,8 @@ def create_bar(
                     return colors["2023"]
                 elif "2024" in str(elem):
                     return colors["2024"]
+                elif "2025" in str(elem):
+                    return colors["2025"]
 
         fig = go.Figure(
             go.Bar(
@@ -430,10 +431,11 @@ def create_heatmap(df, year):
     return fig
 
 
-def create_map(df_region):
+def prepare_df_region(df_region):
     """
-    Create a map chart
+    Prepare the dataframe for the map chart
     """
+    # get the total number of incidents by region
     df_json_region = get_region()
 
     # convert to df
@@ -448,9 +450,13 @@ def create_map(df_region):
         .rename(columns={"id_region_y": "id_region"})
     )
 
-    # read file json
-    with open("core/utils/ru_region.json") as file:
-        polygons = json.load(file)
+    return df
+
+
+def create_map(df, polygons):
+    """
+    Create a map chart
+    """
 
     fig = go.Figure(
         data=go.Choropleth(
@@ -468,6 +474,7 @@ def create_map(df_region):
     )
 
     fig.update_layout(
+        # mapbox_style="carto-positron",
         title=dict(
             text="Geographic Distribution of Sabotages on Russian Railways",
             pad=dict(l=20),
@@ -478,7 +485,7 @@ def create_map(df_region):
         ),
         geo=dict(
             showframe=False,
-            projection=dict(type="eckert1", scale=3.8),
+            projection=dict(type="eckert1", scale=3.3),
             center=dict(lat=60, lon=91),
             showland=True,
             landcolor="rgb(172, 172, 172)",
@@ -491,6 +498,7 @@ def create_map(df_region):
             "l": 0,
             "b": 0,
         },
+        dragmode=False,
     )
 
     return fig
