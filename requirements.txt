@@ -1,378 +1,246 @@
-aiosqlite=0.18.0=py312h06a4308_0
-alembic=1.13.3=py312h06a4308_0
-altair=5.5.0=pyhd8ed1ab_1
-altair-all=5.5.0=pyhd8ed1ab_1
-altair_tiles=0.4.0=pyhd8ed1ab_0
-annotated-types=0.6.0=py312h06a4308_0
-anyio=4.6.2=py312h06a4308_0
-anywidget=0.9.15=pyhd8ed1ab_0
-apprise=1.9.2=pyhd8ed1ab_0
-argon2-cffi=21.3.0=pyhd3eb1b0_0
-argon2-cffi-bindings=21.2.0=py312h5eee18b_1
-arro3-core=0.4.6=py312ha738696_0
-arrow-cpp=19.0.0=h865e1df_0
-asgi-lifespan=2.1.0=pyhd8ed1ab_1
-asttokens=2.0.5=pyhd3eb1b0_0
-async-exit-stack=1.0.1=pyhd8ed1ab_1
-async-lru=2.0.4=py312h06a4308_0
-asyncpg=0.29.0=py312h5eee18b_0
-atk-1.0=2.36.0=ha1a6a79_0
-attrs=24.3.0=py312h06a4308_0
-aws-c-auth=0.6.19=h5eee18b_0
-aws-c-cal=0.5.20=hdbd6064_0
-aws-c-common=0.8.5=h5eee18b_0
-aws-c-compression=0.2.16=h5eee18b_0
-aws-c-event-stream=0.2.15=h6a678d5_0
-aws-c-http=0.6.25=h5eee18b_0
-aws-c-io=0.13.10=h5eee18b_0
-aws-c-mqtt=0.7.13=h5eee18b_0
-aws-c-s3=0.1.51=hdbd6064_0
-aws-c-sdkutils=0.1.6=h5eee18b_0
-aws-checksums=0.1.13=h5eee18b_0
-aws-crt-cpp=0.18.16=h6a678d5_0
-aws-sdk-cpp=1.11.212=hecad206_0
-babel=2.16.0=py312h06a4308_0
-bcrypt=3.2.0=py312h5eee18b_2
-beautifulsoup4=4.13.3=pypi_0
-blas=1.0=openblas
-bleach=6.2.0=py312h06a4308_0
-blinker=1.9.0=py312h06a4308_0
-boost-cpp=1.82.0=hdb19cb5_2
-bottleneck=1.4.2=py312ha883a20_0
-brotli-python=1.0.9=py312h6a678d5_9
-bzip2=1.0.8=h5eee18b_6
-c-ares=1.19.1=h5eee18b_0
-ca-certificates=2025.2.25=h06a4308_0
-cachetools=5.5.1=py312h06a4308_0
-cairo=1.16.0=hb05425b_5
-certifi=2025.1.31=py312h06a4308_0
-cffi=1.17.1=py312h1fdaa30_1
-charset-normalizer=3.3.2=pyhd3eb1b0_0
-click=8.1.7=py312h06a4308_0
-cloudpickle=3.0.0=py312h06a4308_0
-colorama=0.4.6=py312h06a4308_0
-comm=0.2.1=py312h06a4308_0
-contourpy=1.3.1=pypi_0
-coolname=2.2.0=pyhd8ed1ab_0
-croniter=3.0.3=py312h06a4308_0
-cryptography=44.0.1=py312h7825ff9_0
-cuda-cudart=12.4.127=h99ab3db_0
-cuda-cudart_linux-64=12.4.127=hd681fbe_0
-cuda-nvrtc=12.4.127=h99ab3db_1
-cuda-version=12.4=hbda6634_3
-cycler=0.12.1=pypi_0
-dateparser=1.1.8=py312h06a4308_0
-debugpy=1.8.11=py312h6a678d5_0
-decorator=5.1.1=pyhd3eb1b0_0
-defusedxml=0.7.1=pyhd3eb1b0_0
-deprecated=1.2.13=py312h06a4308_0
-docker-py=7.1.0=py312h06a4308_0
-entrypoints=0.4=pypi_0
-exceptiongroup=1.2.0=py312h06a4308_0
-executing=0.8.3=pyhd3eb1b0_0
-expat=2.6.4=h6a678d5_0
-faker=37.0.0=pypi_0
-fastapi=0.112.2=py312h06a4308_0
-favicon=0.7.0=pypi_0
-filetype=1.2.0=pypi_0
-font-ttf-dejavu-sans-mono=2.37=hd3eb1b0_0
-font-ttf-inconsolata=2.001=hcb22688_0
-font-ttf-source-code-pro=2.030=hd3eb1b0_0
-font-ttf-ubuntu=0.83=h8b1ccd4_0
-fontawesomefree=6.6.0=pypi_0
-fontconfig=2.14.2=h14ed4e7_0
-fonts-anaconda=1=h8fa9717_0
-fonts-conda-ecosystem=1=hd3eb1b0_0
-fonttools=4.56.0=pypi_0
-freetype=2.12.1=h4a9f257_0
-fribidi=1.0.10=h7b6447c_0
-fsspec=2024.12.0=py312h06a4308_0
-gdk-pixbuf=2.42.10=h5eee18b_1
-gflags=2.2.2=h6a678d5_1
-giflib=5.2.2=h5eee18b_0
-gitdb=4.0.7=pyhd3eb1b0_0
-gitpython=3.1.43=py312h06a4308_0
-glib=2.78.4=h6a678d5_0
-glib-tools=2.78.4=h6a678d5_0
-glog=0.5.0=h6a678d5_1
-gobject-introspection=1.78.1=py312h42194e9_1
-google-api-core=2.24.2=pypi_0
-google-api-python-client=2.163.0=pypi_0
-google-auth=2.38.0=pypi_0
-google-auth-httplib2=0.2.0=pypi_0
-google-auth-oauthlib=1.2.1=pypi_0
-googleapis-common-protos=1.69.1=pypi_0
-graphite2=1.3.14=h295c915_1
-graphviz=2.50.0=h78213b7_2
-greenlet=3.1.1=py312h6a678d5_0
-griffe=1.6.0=pyhd8ed1ab_0
-gtk2=2.24.33=h27e1c3a_3
-gts=0.7.6=hb67d8dd_3
-h11=0.14.0=py312h06a4308_0
-h2=4.0.0=py312h06a4308_3
-harfbuzz=10.2.0=hf296adc_0
-hpack=4.0.0=py_0
-htbuilder=0.9.0=pypi_0
-httpcore=1.0.7=pyh29332c3_1
-httplib2=0.22.0=pypi_0
-httpx=0.27.0=py312h06a4308_0
-humanize=4.12.1=pyhd8ed1ab_0
-hyperframe=6.0.1=pyhd3eb1b0_0
-icu=73.1=h6a678d5_0
-idna=3.7=py312h06a4308_0
-importlib-metadata=8.5.0=py312h06a4308_0
-ipykernel=6.29.5=py312h06a4308_1
-ipython=8.30.0=py312h06a4308_0
-ipython_genutils=0.2.0=pyhd3eb1b0_1
-ipywidgets=7.8.1=py312h06a4308_0
-jedi=0.19.2=py312h06a4308_0
-jinja2=3.1.6=py312h06a4308_0
-jinja2-humanize-extension=0.4.0=pyhd8ed1ab_1
-jpeg=9e=h5eee18b_3
-js2py-3-13=0.74.1=pypi_0
-json5=0.9.25=py312h06a4308_0
-jsonpatch=1.33=py312h06a4308_1
-jsonpointer=2.1=pyhd3eb1b0_0
-jsonschema=4.23.0=py312h06a4308_0
-jsonschema-specifications=2023.7.1=py312h06a4308_0
-jupyter-lsp=2.2.0=py312h06a4308_0
-jupyter_client=8.6.3=py312h06a4308_0
-jupyter_core=5.7.2=py312h06a4308_0
-jupyter_events=0.12.0=py312h06a4308_0
-jupyter_server=2.15.0=py312h06a4308_0
-jupyter_server_terminals=0.4.4=py312h06a4308_1
-jupyterlab=4.3.4=py312h06a4308_0
-jupyterlab_pygments=0.3.0=py312h06a4308_0
-jupyterlab_server=2.27.3=py312h06a4308_0
-jupyterlab_widgets=1.0.0=pyhd3eb1b0_1
-kiwisolver=1.4.8=pypi_0
-krb5=1.20.1=h143b758_1
-lcms2=2.16=hb9589c4_0
-ld_impl_linux-64=2.40=h12ee557_0
-lerc=4.0.0=h6a678d5_0
-libabseil=20240116.2=cxx17_h6a678d5_0
-libboost=1.82.0=h109eef0_2
-libbrotlicommon=1.0.9=h5eee18b_9
-libbrotlidec=1.0.9=h5eee18b_9
-libbrotlienc=1.0.9=h5eee18b_9
-libcublas=12.4.5.8=h99ab3db_1
-libcurl=8.12.1=hc9e6f67_0
-libdeflate=1.22=h5eee18b_0
-libedit=3.1.20230828=h5eee18b_0
-libev=4.33=h7f8727e_1
-libevent=2.1.12=hdbd6064_1
-libexpat=2.6.4=h5888daf_0
-libffi=3.4.4=h6a678d5_1
-libgcc=14.2.0=h767d61c_2
-libgcc-ng=14.2.0=h69a702a_2
-libgd=2.3.3=h695aa2c_1
-libgfortran-ng=11.2.0=h00389a5_1
-libgfortran5=11.2.0=h1234567_1
-libglib=2.78.4=hdc74915_0
-libgomp=14.2.0=h767d61c_2
-libgrpc=1.62.2=h2d74bed_0
-libiconv=1.16=h5eee18b_3
-libnghttp2=1.57.0=h2d74bed_0
-libnsl=2.0.1=hd590300_0
-libopenblas=0.3.21=h043d6bf_0
-libpng=1.6.39=h5eee18b_0
-libprotobuf=4.25.3=he621ea3_0
-librsvg=2.56.3=hf6914bd_1
-libsodium=1.0.18=h7b6447c_0
-libsqlite=3.46.0=hde9e2c9_0
-libssh2=1.11.1=h251f7ec_0
-libstdcxx=14.2.0=h8f9b012_2
-libstdcxx-ng=14.2.0=h4852527_2
-libthrift=0.15.0=h1795dd8_2
-libtiff=4.5.1=hffd6297_1
-libtool=2.4.7=h6a678d5_0
-libuuid=2.38.1=h0b41bf4_0
-libwebp=1.3.2=h11a3e52_0
-libwebp-base=1.3.2=h5eee18b_1
-libxcb=1.15=h7f8727e_0
-libxcrypt=4.4.36=hd590300_1
-libxml2=2.13.5=hfdd30dd_0
-libzlib=1.2.13=h4ab18f5_6
-lxml=5.3.1=pypi_0
-lz4-c=1.9.4=h6a678d5_1
-m3u8=6.0.0=pypi_0
-mako=1.2.3=py312h06a4308_0
-markdown=3.7=pypi_0
-markdown-it-py=2.2.0=py312h06a4308_1
-markdownlit=0.0.7=pypi_0
-markupsafe=3.0.2=py312h5eee18b_0
-matplotlib=3.10.1=pypi_0
-matplotlib-inline=0.1.6=py312h06a4308_0
-mdurl=0.1.0=py312h06a4308_0
-mercantile=1.2.1=pyhd8ed1ab_1
-mistune=3.1.2=py312h06a4308_0
-narwhals=1.30.0=pyhd8ed1ab_0
-nbclient=0.10.2=py312h06a4308_0
-nbconvert-core=7.16.6=py312h06a4308_0
-nbformat=5.10.4=py312h06a4308_0
-ncurses=6.4=h6a678d5_0
-nest-asyncio=1.6.0=py312h06a4308_0
-ninja=1.12.1=h06a4308_0
-ninja-base=1.12.1=hdb19cb5_0
-notebook=7.3.2=py312h06a4308_0
-notebook-shim=0.2.3=py312h06a4308_0
-nspr=4.35=h6a678d5_0
-nss=3.89.1=h6a678d5_0
-numexpr=2.10.1=py312hd28fd6d_0
-numpy=2.2.2=py312h2809609_0
-numpy-base=2.2.2=py312he1a6c75_0
-oauthlib=3.2.2=py312h06a4308_0
-ollama=0.4.7=pypi_0
-openjpeg=2.5.2=he7f1fd0_0
-openssl=3.4.1=h7b32b05_0
-opentelemetry-api=1.30.0=pyhd8ed1ab_0
-orc=2.0.1=h2d29ad5_0
-orjson=3.10.14=py312h4aa5aa6_0
-overrides=7.4.0=py312h06a4308_0
-packaging=24.2=py312h06a4308_0
-pandas=2.2.3=py312h6a678d5_0
-pandocfilters=1.5.0=pyhd3eb1b0_0
-pango=1.50.7=h0fee60c_1
-paramiko=3.5.0=py312h06a4308_0
-parso=0.8.4=py312h06a4308_0
-pathspec=0.10.3=py312h06a4308_0
-pcre2=10.42=hebb0a14_1
-pendulum=3.0.0=py312h4aa5aa6_0
-pexpect=4.8.0=pyhd3eb1b0_3
-pillow=11.1.0=py312hcea889d_0
-pip=25.0=py312h06a4308_0
-pixman=0.40.0=h7f8727e_1
-platformdirs=3.10.0=py312h06a4308_0
-plotly=5.24.1=py312he106c6f_1
-poppler=24.09.0=hcf11d46_1
-poppler-data=0.4.11=h06a4308_1
-prefect=3.2.12=pyhd8ed1ab_0
-prometheus_client=0.21.0=py312h06a4308_0
-prompt-toolkit=3.0.43=py312h06a4308_0
-prompt_toolkit=3.0.43=hd3eb1b0_0
-proto-plus=1.26.1=pypi_0
-protobuf=4.25.3=py312he36ed58_1
-psutil=5.9.0=py312h5eee18b_1
-psygnal=0.12.0=pyhd8ed1ab_0
-ptyprocess=0.7.0=pyhd3eb1b0_2
-pure_eval=0.2.2=pyhd3eb1b0_0
-pyaes=1.6.1=pypi_0
-pyarrow=19.0.0=py312h6a678d5_1
-pyasn1=0.6.1=pypi_0
-pyasn1-modules=0.4.1=pypi_0
-pycparser=2.21=pyhd3eb1b0_0
-pydantic=2.10.3=py312h06a4308_0
-pydantic-core=2.27.1=py312h4aa5aa6_0
-pydantic-extra-types=2.10.3=pyh3cfb1c2_0
-pydantic-settings=2.6.1=py312h06a4308_0
-pydeck=0.9.1=py312h06a4308_0
-pygments=2.15.1=py312h06a4308_1
-pyjsparser=2.7.1=pypi_0
-pyjwt=2.10.1=py312h06a4308_0
-pymdown-extensions=10.14.3=pypi_0
-pynacl=1.5.0=py312h5eee18b_1
-pyotp=2.9.0=pypi_0
-pyparsing=3.2.1=pypi_0
-pysocks=1.7.1=py312h06a4308_0
-python=3.12.2=hab00c5b_0_cpython
-python-dateutil=2.9.0post0=py312h06a4308_2
-python-dotenv=0.21.0=py312h06a4308_0
-python-fastjsonschema=2.20.0=py312h06a4308_0
-python-graphviz=0.20.1=py312h06a4308_1
-python-json-logger=3.2.1=py312h06a4308_0
-python-slugify=5.0.2=pyhd3eb1b0_0
-python-socks=2.7.1=pyhff2d567_0
-python-tzdata=2023.3=pyhd3eb1b0_0
-python-uv=0.6.6=pyhd8ed1ab_0
-python_abi=3.12=5_cp312
-pytz=2024.1=py312h06a4308_0
-pywaffle=1.1.1=pypi_0
-pyyaml=6.0.2=py312h5eee18b_0
-pyzmq=26.2.0=py312h6a678d5_0
-re2=2022.04.01=h295c915_0
-readchar=4.0.5=py312h06a4308_0
-readline=8.2=h5eee18b_0
-referencing=0.30.2=py312h06a4308_0
-regex=2024.11.6=py312h5eee18b_0
-requests=2.32.3=py312h06a4308_1
-requests-oauthlib=2.0.0=py312h06a4308_0
-rfc3339-validator=0.1.4=py312h06a4308_0
-rfc3986-validator=0.1.1=py312h06a4308_0
-rich=13.9.4=py312h06a4308_0
-rpds-py=0.22.3=py312h4aa5aa6_0
-rsa=4.9=pypi_0
-ruamel.yaml=0.18.6=py312h5eee18b_0
-ruamel.yaml.clib=0.2.8=py312h5eee18b_0
-s2n=1.3.27=hdbd6064_0
-send2trash=1.8.2=py312h06a4308_1
-setuptools=72.1.0=py312h06a4308_0
-shellingham=1.5.0=py312h06a4308_0
-six=1.16.0=pyhd3eb1b0_1
-smmap=4.0.0=pyhd3eb1b0_0
-snappy=1.2.1=h6a678d5_0
-sniffio=1.3.0=py312h06a4308_0
-socksio=1.0.0=pypi_0
-soupsieve=2.6=pypi_0
-sqlalchemy=2.0.37=py312h00e1ef3_0
-sqlite=3.45.3=h5eee18b_0
-st-annotated-text=4.0.2=pypi_0
-st-theme=1.2.3=pypi_0
-stack_data=0.2.0=pyhd3eb1b0_0
-starlette=0.38.2=py312h06a4308_0
-streamlit=1.42.0=py312h06a4308_0
-streamlit-camera-input-live=0.2.0=pypi_0
-streamlit-card=1.0.2=pypi_0
-streamlit-embedcode=0.1.2=pypi_0
-streamlit-extras=0.5.5=pypi_0
-streamlit-faker=0.0.3=pypi_0
-streamlit-image-coordinates=0.1.9=pypi_0
-streamlit-keyup=0.3.0=pypi_0
-streamlit-toggle-switch=1.0.2=pypi_0
-streamlit-vertical-slider=2.5.5=pypi_0
-telethon=1.39.0=pypi_0
-tenacity=9.0.0=py312h06a4308_0
-terminado=0.17.1=py312h06a4308_0
-text-unidecode=1.3=pyhd3eb1b0_0
-time-machine=2.16.0=py312h5eee18b_0
-tinycss2=1.4.0=py312h06a4308_0
-tk=8.6.14=h39e8969_0
-toml=0.10.2=pyhd3eb1b0_0
-toolz=1.0.0=py312h06a4308_0
-tornado=6.4.2=py312h5eee18b_0
-tqdm=4.67.1=py312he106c6f_0
-traitlets=5.14.3=py312h06a4308_0
-twikit=2.3.3=pypi_0
-typer=0.12.5=pyhd8ed1ab_0
-typer-slim=0.12.5=pyhd8ed1ab_0
-typer-slim-standard=0.12.5=hd8ed1ab_0
-typing-extensions=4.12.2=py312h06a4308_0
-typing_extensions=4.12.2=py312h06a4308_0
-tzdata=2025a=h04d1e81_0
-tzlocal=5.2=py312h06a4308_0
-ujson=5.10.0=py312h6a678d5_1
-unidecode=1.3.8=py312h06a4308_0
-uritemplate=4.1.1=pypi_0
-urllib3=2.3.0=py312h06a4308_0
-utf8proc=2.6.1=h5eee18b_1
-uv=0.6.6=h0f3a69f_0
-uvicorn=0.32.1=py312h06a4308_0
-validators=0.34.0=pypi_0
-vegafusion=2.0.1=py312hf35e0b5_1
-vl-convert-python=1.7.0=py312h66e93f0_1
-watchdog=4.0.2=py312h06a4308_0
-wcwidth=0.2.5=pyhd3eb1b0_0
-webencodings=0.5.1=py312h06a4308_2
-websocket-client=1.8.0=py312h06a4308_0
-websockets=15.0.1=pypi_0
-webvtt-py=0.5.1=pypi_0
-wheel=0.45.1=py312h06a4308_0
-widgetsnbextension=3.6.6=py312h06a4308_0
-wordcloud=1.9.4=pypi_0
-wrapt=1.17.0=py312h5eee18b_0
-xyzservices=2022.9.0=py312h06a4308_1
-xz=5.6.4=h5eee18b_1
-yaml=0.2.5=h7b6447c_0
-zeromq=4.3.5=h6a678d5_0
-zipp=3.21.0=py312h06a4308_0
-zlib=1.2.13=h4ab18f5_6
-zstd=1.5.6=hc292b87_0
+aiosqlite @ file:///work/perseverance-python-buildout/croot/aiosqlite_1698866598631/work
+alembic @ file:///croot/alembic_1729532425530/work
+altair @ file:///home/conda/feedstock_root/build_artifacts/altair-split_1734244716962/work
+altair_tiles @ file:///home/conda/feedstock_root/build_artifacts/altair_tiles_1739029622329/work
+annotated-types @ file:///croot/annotated-types_1709542908624/work
+anyio @ file:///croot/anyio_1729121277521/work
+anywidget @ file:///home/conda/feedstock_root/build_artifacts/anywidget_1740898520705/work
+apprise @ file:///home/conda/feedstock_root/build_artifacts/apprise_1736463979473/work
+argon2-cffi @ file:///opt/conda/conda-bld/argon2-cffi_1645000214183/work
+argon2-cffi-bindings @ file:///croot/argon2-cffi-bindings_1736182440035/work
+arro3-core @ file:///home/conda/feedstock_root/build_artifacts/arro3-core_1741639738773/work/arro3-core
+asgi-lifespan @ file:///home/conda/feedstock_root/build_artifacts/asgi-lifespan_1734814003568/work
+asttokens @ file:///opt/conda/conda-bld/asttokens_1646925590279/work
+async-lru @ file:///work/perseverance-python-buildout/croot/async-lru_1701732681408/work
+async_exit_stack @ file:///home/conda/feedstock_root/build_artifacts/async-exit-stack_1735589545796/work
+asyncpg @ file:///croot/asyncpg_1703165600383/work
+attrs @ file:///croot/attrs_1734533101012/work
+babel @ file:///croot/babel_1737454360933/work
+bcrypt @ file:///croot/bcrypt_1736182451882/work
+beautifulsoup4 @ file:///croot/beautifulsoup4-split_1718029820055/work
+bleach @ file:///croot/bleach_1732290411627/work
+blinker @ file:///croot/blinker_1737448726027/work
+Bottleneck @ file:///croot/bottleneck_1731058641041/work
+Brotli @ file:///croot/brotli-split_1736182456865/work
+cachetools @ file:///croot/cachetools_1738224668060/work
+certifi @ file:///croot/certifi_1738623731865/work/certifi
+cffi @ file:///croot/cffi_1736182485317/work
+charset-normalizer @ file:///croot/charset-normalizer_1721748349566/work
+click @ file:///work/perseverance-python-buildout/croot/click_1698845879718/work
+cloudpickle @ file:///croot/cloudpickle_1721657346512/work
+colorama @ file:///work/perseverance-python-buildout/croot/colorama_1698847155966/work
+comm @ file:///croot/comm_1709322850197/work
+contourpy==1.3.1
+coolname @ file:///home/conda/feedstock_root/build_artifacts/coolname_1673305982850/work
+croniter @ file:///croot/croniter_1723503223961/work
+cryptography @ file:///croot/cryptography_1740577825284/work
+cycler==0.12.1
+dateparser @ file:///work/perseverance-python-buildout/croot/dateparser_1698884383391/work
+debugpy @ file:///croot/debugpy_1736267418885/work
+decorator @ file:///opt/conda/conda-bld/decorator_1643638310831/work
+defusedxml @ file:///tmp/build/80754af9/defusedxml_1615228127516/work
+Deprecated @ file:///work/perseverance-python-buildout/croot/deprecated_1698868068243/work
+docker @ file:///croot/docker-py_1731594427906/work
+entrypoints==0.4
+exceptiongroup @ file:///croot/exceptiongroup_1706031385326/work
+executing @ file:///opt/conda/conda-bld/executing_1646925071911/work
+Faker==37.0.0
+fastapi @ file:///croot/fastapi_1724789151288/work
+fastjsonschema @ file:///croot/python-fastjsonschema_1731939362158/work
+favicon==0.7.0
+filetype==1.2.0
+fontawesomefree==6.6.0
+fonttools==4.56.0
+fsspec @ file:///croot/fsspec_1736274672181/work
+gitdb @ file:///tmp/build/80754af9/gitdb_1617117951232/work
+GitPython @ file:///croot/gitpython_1720455034730/work
+google-api-core==2.24.2
+google-api-python-client==2.163.0
+google-auth==2.38.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.1
+googleapis-common-protos==1.69.1
+graphviz @ file:///croot/python-graphviz_1739534123233/work
+greenlet @ file:///croot/greenlet_1733860072744/work
+griffe @ file:///home/conda/feedstock_root/build_artifacts/griffe_1740849676897/work
+h11 @ file:///croot/h11_1706652277403/work
+h2 @ file:///work/perseverance-python-buildout/croot/h2_1698851900593/work
+hpack==4.0.0
+htbuilder==0.9.0
+httpcore @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_httpcore_1731707562/work
+httplib2==0.22.0
+httpx @ file:///croot/httpx_1723474802858/work
+humanize @ file:///home/conda/feedstock_root/build_artifacts/humanize_1739952453614/work
+hyperframe==6.0.1
+idna @ file:///croot/idna_1714398848350/work
+importlib_metadata @ file:///croot/importlib_metadata-suite_1732633488278/work
+ipykernel @ file:///croot/ipykernel_1737660677549/work
+ipython @ file:///croot/ipython_1734548052611/work
+ipython-genutils @ file:///tmp/build/80754af9/ipython_genutils_1606773439826/work
+ipywidgets @ file:///croot/ipywidgets_1710961502038/work
+jedi @ file:///croot/jedi_1733987392413/work
+Jinja2 @ file:///croot/jinja2_1741710844255/work
+jinja2_humanize_extension @ file:///home/conda/feedstock_root/build_artifacts/jinja2-humanize-extension_1734858876329/work
+Js2Py_3.13==0.74.1
+json5 @ file:///croot/json5_1730786798687/work
+jsonpatch @ file:///croot/jsonpatch_1714483231291/work
+jsonpointer==2.1
+jsonschema @ file:///croot/jsonschema_1728486696720/work
+jsonschema-specifications @ file:///work/perseverance-python-buildout/croot/jsonschema-specifications_1701731664072/work
+jupyter-events @ file:///croot/jupyter_events_1741184577592/work
+jupyter-lsp @ file:///work/perseverance-python-buildout/croot/jupyter-lsp-meta_1707343107456/work
+jupyter_client @ file:///croot/jupyter_client_1737570961872/work
+jupyter_core @ file:///croot/jupyter_core_1718818295206/work
+jupyter_server @ file:///croot/jupyter_server_1741200034823/work
+jupyter_server_terminals @ file:///work/perseverance-python-buildout/croot/jupyter_server_terminals_1701732095362/work
+jupyterlab @ file:///croot/jupyterlab_1737555423487/work
+jupyterlab-widgets @ file:///tmp/build/80754af9/jupyterlab_widgets_1609884341231/work
+jupyterlab_pygments @ file:///croot/jupyterlab_pygments_1741124142640/work
+jupyterlab_server @ file:///croot/jupyterlab_server_1725865349919/work
+kiwisolver==1.4.8
+lxml==5.3.1
+m3u8==6.0.0
+Mako @ file:///work/perseverance-python-buildout/croot/mako_1698863160651/work
+Markdown==3.7
+markdown-it-py @ file:///work/perseverance-python-buildout/croot/markdown-it-py_1698846045803/work
+markdownlit==0.0.7
+MarkupSafe @ file:///croot/markupsafe_1738584038848/work
+matplotlib==3.10.1
+matplotlib-inline @ file:///work/perseverance-python-buildout/croot/matplotlib-inline_1698864771271/work
+mdurl @ file:///work/perseverance-python-buildout/croot/mdurl_1698845653285/work
+mercantile @ file:///home/conda/feedstock_root/build_artifacts/mercantile_1734075348980/work
+mistune @ file:///croot/mistune_1741124011532/work
+narwhals @ file:///home/conda/feedstock_root/build_artifacts/narwhals_1741613434061/work
+nbclient @ file:///croot/nbclient_1741123995822/work
+nbconvert @ file:///croot/nbconvert-meta_1741184653315/work
+nbformat @ file:///croot/nbformat_1728049424075/work
+nest-asyncio @ file:///croot/nest-asyncio_1708532673751/work
+notebook @ file:///croot/notebook_1738159946465/work
+notebook_shim @ file:///work/perseverance-python-buildout/croot/notebook-shim_1707343174853/work
+numexpr @ file:///croot/numexpr_1730215937391/work
+numpy @ file:///croot/numpy_and_numpy_base_1738078506782/work/dist/numpy-2.2.2-cp312-cp312-linux_x86_64.whl#sha256=7d2390e6e5e021476342cc677e084d59436888478eea96f3d0ccfdf531104b68
+oauthlib @ file:///work/perseverance-python-buildout/croot/oauthlib_1698865093348/work
+ollama==0.4.7
+opentelemetry-api @ file:///home/conda/feedstock_root/build_artifacts/opentelemetry-api_1738813058459/work
+orjson @ file:///croot/orjson_1737039092779/work
+overrides @ file:///work/perseverance-python-buildout/croot/overrides_1701732220415/work
+packaging @ file:///croot/packaging_1734472117206/work
+pandas @ file:///croot/pandas_1732735089971/work/dist/pandas-2.2.3-cp312-cp312-linux_x86_64.whl#sha256=57b66702d418720ec8483f7c4ec7c08d41815316ad7ce09d5b7bbc34eefcfdfd
+pandocfilters @ file:///opt/conda/conda-bld/pandocfilters_1643405455980/work
+paramiko @ file:///croot/paramiko_1732273359911/work
+parso @ file:///croot/parso_1733963305961/work
+pathspec @ file:///work/perseverance-python-buildout/croot/pathspec_1698805478393/work
+pendulum @ file:///croot/pendulum_1733254163912/work
+pexpect @ file:///tmp/build/80754af9/pexpect_1605563209008/work
+pillow @ file:///croot/pillow_1738010226202/work
+platformdirs @ file:///work/perseverance-python-buildout/croot/platformdirs_1701732573265/work
+plotly @ file:///croot/plotly_1740385556434/work
+prefect @ file:///home/conda/feedstock_root/build_artifacts/prefect_1741669476785/work
+prometheus_client @ file:///croot/prometheus_client_1731953121795/work
+prompt-toolkit @ file:///croot/prompt-toolkit_1704404351921/work
+proto-plus==1.26.1
+protobuf==4.25.3
+psutil @ file:///croot/psutil_1736367091698/work
+psygnal @ file:///home/conda/feedstock_root/build_artifacts/psygnal_1738721299228/work
+ptyprocess @ file:///tmp/build/80754af9/ptyprocess_1609355006118/work/dist/ptyprocess-0.7.0-py2.py3-none-any.whl
+pure-eval @ file:///opt/conda/conda-bld/pure_eval_1646925070566/work
+pyaes==1.6.1
+pyarrow @ file:///croot/pyarrow_1738229418212/work/python
+pyasn1==0.6.1
+pyasn1_modules==0.4.1
+pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pydantic @ file:///croot/pydantic_1734736067156/work
+pydantic-extra-types @ file:///home/conda/feedstock_root/build_artifacts/pydantic-extra-types_1741724138919/work
+pydantic-settings @ file:///croot/pydantic-settings_1730800837989/work
+pydantic_core @ file:///croot/pydantic-core_1734726052986/work
+pydeck @ file:///croot/pydeck_1738340956155/work
+Pygments @ file:///work/perseverance-python-buildout/croot/pygments_1698846270603/work
+pyjsparser==2.7.1
+PyJWT @ file:///croot/pyjwt_1736178889029/work
+pymdown-extensions==10.14.3
+PyNaCl @ file:///croot/pynacl_1736540781734/work
+pyotp==2.9.0
+pyparsing==3.2.1
+PySocks @ file:///work/perseverance-python-buildout/croot/pysocks_1698845478203/work
+python-dateutil @ file:///croot/python-dateutil_1716495738603/work
+python-dotenv @ file:///work/perseverance-python-buildout/croot/python-dotenv_1698846722824/work
+python-json-logger @ file:///croot/python-json-logger_1734370021104/work
+python-slugify @ file:///tmp/build/80754af9/python-slugify_1620405669636/work
+python-socks @ file:///home/conda/feedstock_root/build_artifacts/python-socks_1738527332220/work
+pytz @ file:///croot/pytz_1713974312559/work
+pywaffle==1.1.1
+PyYAML @ file:///croot/pyyaml_1728657952215/work
+pyzmq @ file:///croot/pyzmq_1734687138743/work
+readchar @ file:///work/perseverance-python-buildout/croot/readchar_1698863555393/work
+referencing @ file:///work/perseverance-python-buildout/croot/referencing_1701731622327/work
+regex @ file:///croot/regex_1736540786412/work
+requests @ file:///croot/requests_1730999120400/work
+requests-oauthlib @ file:///croot/requests-oauthlib_1720615017878/work
+rfc3339-validator @ file:///work/perseverance-python-buildout/croot/rfc3339-validator_1698873973408/work
+rfc3986-validator @ file:///work/perseverance-python-buildout/croot/rfc3986-validator_1698874010100/work
+rich @ file:///croot/rich_1732638981168/work
+rpds-py @ file:///croot/rpds-py_1736541261634/work
+rsa==4.9
+ruamel.yaml @ file:///croot/ruamel.yaml_1727980156079/work
+ruamel.yaml.clib @ file:///croot/ruamel.yaml.clib_1727769819935/work
+Send2Trash @ file:///croot/send2trash_1736540790175/work
+setuptools==72.1.0
+shellingham @ file:///work/perseverance-python-buildout/croot/shellingham_1698846956774/work
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+smmap @ file:///tmp/build/80754af9/smmap_1611694433573/work
+sniffio @ file:///croot/sniffio_1705431295498/work
+socksio==1.0.0
+soupsieve==2.6
+SQLAlchemy @ file:///croot/sqlalchemy_1736565039440/work
+st-annotated-text==4.0.2
+st-theme==1.2.3
+stack-data @ file:///opt/conda/conda-bld/stack_data_1646927590127/work
+starlette @ file:///croot/starlette-recipe_1724683205298/work
+streamlit @ file:///croot/streamlit-split_1740431213355/work/streamlit
+streamlit-camera-input-live==0.2.0
+streamlit-card==1.0.2
+streamlit-embedcode==0.1.2
+streamlit-extras==0.5.5
+streamlit-faker==0.0.3
+streamlit-image-coordinates==0.1.9
+streamlit-keyup==0.3.0
+streamlit-toggle-switch==1.0.2
+streamlit-vertical-slider==2.5.5
+Telethon==1.39.0
+tenacity @ file:///croot/tenacity_1730302500303/work
+terminado @ file:///work/perseverance-python-buildout/croot/terminado_1698874934826/work
+text-unidecode @ file:///Users/ktietz/demo/mc3/conda-bld/text-unidecode_1629401354553/work
+time-machine @ file:///croot/time-machine_1733244247926/work/dist
+tinycss2 @ file:///croot/tinycss2_1738337643607/work
+toml @ file:///tmp/build/80754af9/toml_1616166611790/work
+toolz @ file:///croot/toolz_1736796253816/work
+tornado @ file:///croot/tornado_1733960490606/work
+tqdm @ file:///croot/tqdm_1738943501192/work
+traitlets @ file:///croot/traitlets_1718227057033/work
+twikit==2.3.3
+typer==0.12.5
+typer-slim==0.12.5
+typing_extensions @ file:///croot/typing_extensions_1734714854207/work
+tzdata @ file:///croot/python-tzdata_1690578112552/work
+tzlocal @ file:///croot/tzlocal_1715108795189/work
+ujson @ file:///croot/ujson_1736541024667/work
+Unidecode @ file:///croot/unidecode_1724790039185/work
+uritemplate==4.1.1
+urllib3 @ file:///croot/urllib3_1737133630106/work
+uv @ file:///home/conda/feedstock_root/build_artifacts/python-uv_1741801532324/work
+uvicorn @ file:///croot/uvicorn-split_1732660726596/work
+validators==0.34.0
+vegafusion @ file:///home/conda/feedstock_root/build_artifacts/vegafusion_1736384211580/work
+vl-convert-python @ file:///home/conda/feedstock_root/build_artifacts/vl-convert-python_1728157674145/work
+watchdog @ file:///croot/watchdog_1740409902579/work
+wcwidth @ file:///Users/ktietz/demo/mc3/conda-bld/wcwidth_1629357192024/work
+webencodings @ file:///work/perseverance-python-buildout/croot/webencodings_1698866454420/work
+websocket-client @ file:///croot/websocket-client_1715878298792/work
+websockets==15.0.1
+webvtt-py==0.5.1
+wheel==0.45.1
+widgetsnbextension @ file:///croot/widgetsnbextension_1710960037596/work
+wordcloud==1.9.4
+wrapt @ file:///croot/wrapt_1736540904746/work
+xyzservices @ file:///work/perseverance-python-buildout/croot/xyzservices_1698866513675/work
+zipp @ file:///croot/zipp_1732630741423/work
