@@ -56,7 +56,7 @@ def process_dwh():
     Process Data Warehouse
     """
     flow_dwh_inc_railway()
-    flow_dwh_ru_block_sites()
+    # flow_dwh_ru_block_sites()
 
 
 COMMANDS = {
