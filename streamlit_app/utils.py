@@ -144,19 +144,18 @@ def init_css():
 
 def add_analytics_tag():
     # replace G-XXXXXXXXXX to your web app's ID
-
     analytics_js = """
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GKBT8QLJ3W"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PSVZK81FYS"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-GKBT8QLJ3W');
+        gtag('config', 'G-PSVZK81FYS');
     </script>
-    <div id="G-GKBT8QLJ3W"></div>
+    <div id="G-PSVZK81FYS"></div>
     """
-    analytics_id = "G-GKBT8QLJ3W"
+    analytics_id = "G-PSVZK81FYS"
 
     # Identify html path of streamlit
     index_path = pathlib.Path(st.__file__).parent / "static" / "index.html"
