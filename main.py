@@ -32,6 +32,7 @@ from core.process_datalake.classify.cloud_to_classify import (
 # # Process Applicatifs
 from core.process_data_warehouse.flow_dwh_inc_railway import flow_dwh_inc_railway
 from core.process_data_warehouse.flow_dwh_ru_block_sites import flow_dwh_ru_block_sites
+from core.process_data_warehouse.flow_dwh_compo_weapons import flow_dwh_compo_weapons
 
 
 def process_telegram():
@@ -56,7 +57,8 @@ def process_dwh():
     Process Data Warehouse
     """
     flow_dwh_inc_railway()
-    # flow_dwh_ru_block_sites()
+    flow_dwh_ru_block_sites()
+    # flow_dwh_compo_weapons()
 
 
 COMMANDS = {
