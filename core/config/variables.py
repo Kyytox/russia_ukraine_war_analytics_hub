@@ -3,10 +3,6 @@
 #############
 
 
-# Path Excel file to classify
-ID_EXCEL_TO_CLASSIFY = "1G6C-EG9r3m7nm8jl_zCiHszj1S4W0uvMyTdtrHaePfY"
-
-
 # Path Excel file Incident Railway
 ID_EXCEL_INCIDENT_RAILWAY = "1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk"
 ID_EXCEL_RUSSIA_BLOCK_SITE = "1KN3isOEE7A4vBL9-QbEd-gQUgYcg4Hn50pKHJ75SS-A"
@@ -19,8 +15,8 @@ IA_TRANSLATE = "ia_translate_2:latest"
 # IA_CLASSIFY = "ia_classify:latest"
 IA_CLASSIFY = "mistral-nemo:latest"
 
-SIZE_TO_TRANSLATE = 99
-SIZE_TO_QUALIF = 49
+SIZE_TO_TRANSLATE = 49
+SIZE_TO_QUALIF = 99
 
 ###############
 ## PROMPT IA ##
