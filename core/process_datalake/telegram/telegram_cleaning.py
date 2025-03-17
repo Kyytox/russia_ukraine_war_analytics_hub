@@ -81,7 +81,7 @@ def clean_text_original(df):
 
 @flow(
     name="DLK Flow Telegram Cleaning",
-    flow_run_name="dlk-flow-telegram-cleaning",
+    flow_run_name="dlk-flow-telegram-clean",
     log_prints=True,
 )
 def flow_telegram_cleaning():
@@ -122,4 +122,4 @@ def flow_telegram_cleaning():
     )
 
     # create artifact
-    create_artifact("dlk-flow-telegram-cleaning-artifact")
+    create_artifact("dlk-flow-telegram-clean-artifact")

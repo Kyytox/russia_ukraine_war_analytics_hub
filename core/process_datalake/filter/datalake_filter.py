@@ -10,6 +10,7 @@ from core.libs.utils import (
     save_data,
     upd_data_artifact,
     create_artifact,
+    concat_old_new_df,
 )
 
 # Variables
@@ -286,13 +287,8 @@ def update_final_data(df, df_old, type):
         # get data not in old
         mask = df[~df["ID"].isin(df_old["ID"])]
 
-    df_old = (
-        pd.concat([df_old, mask])
-        .drop_duplicates(subset=["ID"], keep="last")
-        .sort_values("date" if "date" in df_old.columns else [])
-        .reset_index(drop=True)
-        .ffill()
-    )
+    df_old = concat_old_new_df(df_old, mask, cols=["ID"])
+    df_old = df_old.ffill()
 
     return df_old
 

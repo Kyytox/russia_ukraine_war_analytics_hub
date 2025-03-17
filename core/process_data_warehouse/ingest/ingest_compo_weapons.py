@@ -27,6 +27,7 @@ from core.libs.utils import (
     save_data,
     create_artifact,
     upd_data_artifact,
+    concat_old_new_df,
 )
 
 
@@ -258,7 +259,8 @@ def flow_ingest_compo_weapons():
         new_df["ingest_date"] = pd.to_datetime(new_df["ingest_date"], format="%d.%m.%Y")
 
         # concat with previous data
-        df = pd.concat([df, new_df], ignore_index=True)
+
+        df = concat_old_new_df(df, new_df, [])
         df.drop_duplicates()
 
     # Links to Types
