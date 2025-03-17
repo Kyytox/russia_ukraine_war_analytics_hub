@@ -937,58 +937,47 @@ def flow_dmt_incident_railway():
 
     # Incidents total
     df_tmp = incidents_total(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/inc_total.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_INC_RAILWAY, "inc_total", df_tmp)
 
     # Incidents by year
     df_tmp = incidents_by_year(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/inc_by_year.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_INC_RAILWAY, "inc_by_year", df_tmp)
 
     # Incidents by month
     df_tmp = incidents_by_month(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/inc_by_month.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_INC_RAILWAY, "inc_by_month", df_tmp)
 
     # Incidents by day, week
     df_tmp = incidents_by_day_week(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/inc_by_day_week.parquet"
-    df_tmp.to_parquet(path)
+    save_data(PATH_DMT_INC_RAILWAY, "inc_by_day_week", df_tmp)
 
     # Incidents by region
     df_tmp = incidents_by_region(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/inc_by_region.parquet"
-    df_tmp.to_parquet(path)
+    save_data(PATH_DMT_INC_RAILWAY, "inc_by_region", df_tmp)
 
     # count occurrences of incident type and damaged equipment
     df_tmp = incident_type_damaged_equipment(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/inc_type_dmg_eqp.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_INC_RAILWAY, "inc_type_dmg_eqp", df_tmp)
 
     # Incidents by incident type and damaged equipment
     # For Graphs: Sunburst, Treemap
     df_tmp = incident_type_damaged_equipment_sunburst_treemap(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/inc_type_dmg_eqp_sun_tree.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_INC_RAILWAY, "inc_type_dmg_eqp_sun_tree", df_tmp)
 
     # Sabotage by partisans group
     df_tmp = sabotage_by_partisans_group(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/sabotage_by_prtsn_grp.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_INC_RAILWAY, "sabotage_by_prtsn_grp", df_tmp)
 
     # Applicable laws by partisans age
     df_tmp = applicable_laws_partisans_age(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/app_laws_prtsn_age.parquet"
-    df_tmp.to_parquet(path)
+    save_data(PATH_DMT_INC_RAILWAY, "app_laws_prtsn_age", df_tmp)
 
     # Wordcloud
     df_tmp = wordcloud(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/wordcloud.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_INC_RAILWAY, "wordcloud", df_tmp)
 
     # # Incidents cumul by month
     df_tmp = incidents_cumul_by_month(df)
-    path = f"{PATH_DMT_INC_RAILWAY}/inc_cumul_by_month.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_INC_RAILWAY, "inc_cumul_by_month", df_tmp)
 
     return Completed(message="All DataMarts Incidents Railway Completed")

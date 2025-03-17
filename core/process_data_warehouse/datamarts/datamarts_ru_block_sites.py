@@ -235,32 +235,26 @@ def flow_dmt_russia_blocked_sites():
 
     # Cont Global
     df_tmp = dmt_global(df)
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_global.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_global", df_tmp)
 
     # By Date
     df_tmp = dmt_by_date(df)
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_by_date.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_date", df_tmp)
 
     # By date and metrics
     df_tmp = dmt_by_metrics_over_time(df)
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_by_metrics_over_time.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_metrics_over_time", df_tmp)
 
     # By Authorithy and Category
     df_tmp = dmt_by_authority_category(df)
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_by_authority_category.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_authority_category", df_tmp)
 
     # Blocked by Country Domain and Category
     df_tmp = df.groupby(["country_domain", "category"]).size().reset_index(name="count")
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_by_country_by_category.parquet"
-    df_tmp.to_parquet(path, index=False)
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_country_by_category", df_tmp)
 
     # dmt_all_data
-    path = f"{PATH_DMT_RU_BLOCK_SITES}/dmt_all_data.parquet"
-    df.to_parquet(path, index=False)
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_all_data", df)
 
     if df.empty:
         return Failed(message="Data is empty")

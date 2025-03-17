@@ -173,9 +173,4 @@ def flow_telegram_extract():
     create_artifact("dlk-flow-telegram-extract-artifact")
 
     # save data
-    df_final.to_parquet(
-        PATH_TELEGRAM_RAW + "/raw_telegram.parquet",
-        engine="fastparquet",
-        partition_cols=["account"],
-        compression="snappy",
-    )
+    save_data(PATH_TELEGRAM_RAW, "raw_telegram", df_final, ["account"])

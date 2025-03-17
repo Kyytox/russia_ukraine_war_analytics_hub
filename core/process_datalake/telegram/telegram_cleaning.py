@@ -114,12 +114,7 @@ def flow_telegram_cleaning():
     df = concat_old_new_df(df_raw=df_clean, df_new=df, cols=["ID"])
 
     # save data
-    df.to_parquet(
-        f"{PATH_TELEGRAM_CLEAN}/clean_telegram.parquet",
-        engine="fastparquet",
-        partition_cols=["account"],
-        compression="snappy",
-    )
+    save_data(PATH_TELEGRAM_CLEAN, "clean_telegram", df, ["account"])
 
     # create artifact
     create_artifact("dlk-flow-telegram-clean-artifact")

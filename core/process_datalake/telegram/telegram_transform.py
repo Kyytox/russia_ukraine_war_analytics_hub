@@ -229,12 +229,7 @@ def flow_telegram_transform():
     print(f"Final data shape: {df_final.shape}")
 
     # save data
-    df_final.to_parquet(
-        f"{PATH_TELEGRAM_TRANSFORM}/transform_telegram.parquet",
-        engine="fastparquet",
-        partition_cols=["account"],
-        compression="snappy",
-    )
+    save_data(PATH_TELEGRAM_TRANSFORM, "transform_telegram", df_final, ["account"])
 
     # create artifact
     create_artifact("dlk-flow-telegram-transform-artifact")

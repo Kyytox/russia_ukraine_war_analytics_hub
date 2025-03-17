@@ -129,7 +129,9 @@ def read_data(base_path: str, file_name: str) -> pd.DataFrame:
 
 
 @task(name="Save data", task_run_name=generate_task_name, tags=["save"])
-def save_data(base_path: str, file_name: str, df: pd.DataFrame):
+def save_data(
+    base_path: str, file_name: str, df: pd.DataFrame, partition_cols: list = []
+):
     """
     Save data to parquet
 
@@ -138,6 +140,7 @@ def save_data(base_path: str, file_name: str, df: pd.DataFrame):
         file_name: file name
         df_old: old dataframe
         df: dataframe to save
+        partition_cols: list of columns to partition
 
     Returns:
         None
@@ -147,14 +150,20 @@ def save_data(base_path: str, file_name: str, df: pd.DataFrame):
         print(f"No data to save")
         return
 
-    print(base_path)
     # create folder if not exist
     if not os.path.exists(base_path):
         os.makedirs(base_path)
 
+    path = os.path.join(base_path, f"{file_name}.parquet")
+    print(f"Saving {df.shape} data to {path}")
+
     # save data to parquet
-    print(f"Saving {df.shape} data to {base_path}/{file_name}.parquet")
-    df.to_parquet(os.path.join(base_path, f"{file_name}.parquet"))
+    df.to_parquet(
+        path,
+        engine="fastparquet",
+        partition_cols=partition_cols,
+        compression="snappy",
+    )
 
     return
 
@@ -252,18 +261,18 @@ def format_clean_text(text):
     # Remove special characters
     regex_pattern = re.compile(
         pattern="["
-        "\U0001F600-\U0001F64F"  # emoticons
-        "\U0001F300-\U0001F5FF"  # symbols & pictographs
-        "\U0001F680-\U0001F6FF"  # transport & map symbols
-        "\U0001F1E0-\U0001F1FF"  # flags (iOS)
-        "\U00002500-\U00002BEF"  # chinese char
-        "\U00002702-\U000027B0"
-        "\U00002702-\U000027B0"
-        "\U000024C2-\U0001F251"
+        "\U0001f600-\U0001f64f"  # emoticons
+        "\U0001f300-\U0001f5ff"  # symbols & pictographs
+        "\U0001f680-\U0001f6ff"  # transport & map symbols
+        "\U0001f1e0-\U0001f1ff"  # flags (iOS)
+        "\U00002500-\U00002bef"  # chinese char
+        "\U00002702-\U000027b0"
+        "\U00002702-\U000027b0"
+        "\U000024c2-\U0001f251"
         "\U0001f926-\U0001f937"
         "\U00010000-\U0010ffff"
         "\u2640-\u2642"
-        "\u2600-\u2B55"
+        "\u2600-\u2b55"
         "\u200d"
         "\u23cf"
         "\u23e9"
