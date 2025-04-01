@@ -130,7 +130,7 @@ def read_data(base_path: str, file_name: str) -> pd.DataFrame:
 
 @task(name="Save data", task_run_name=generate_task_name, tags=["save"])
 def save_data(
-    base_path: str, file_name: str, df: pd.DataFrame, partition_cols: list = []
+    base_path: str, file_name: str, df: pd.DataFrame, partition_cols: list | None = None
 ):
     """
     Save data to parquet
@@ -156,6 +156,9 @@ def save_data(
 
     path = os.path.join(base_path, f"{file_name}.parquet")
     print(f"Saving {df.shape} data to {path}")
+
+    # # remove file
+    # os.remove(path)
 
     # save data to parquet
     df.to_parquet(
