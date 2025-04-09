@@ -25,7 +25,7 @@ st.title("Russia - Ukraine War Analitycs Hub 🇷🇺🇺🇦")
 # Brief introduction
 st.markdown(
     """
-Welcome to the Ukraine-Russia Conflict Data Hub. This platform aims to aggregate and analyze data related to the ongoing conflict between Ukraine and Russia.
+Welcome to the Ukraine-Russia Conflict Data Hub. This platform aims to aggregate and analyze data related to the ongoing invasion of Ukraine by Russia.
 """
 )
 
@@ -78,6 +78,15 @@ dict_analytics = {
         "url": "pages/4_Raid_Alerts_Ukraine.py",
         "tags": ["Analytics", "Graphs", "Data Sources", "External Data"],
         "color_tags": ["#961010", "#4abb15", "#14aca4", "#821f9b"],
+    },
+    "Components Weapons": {
+        "title": "Components Weapons",
+        "text": "Explore the components used in weapons.",
+        "image": "streamlit_app/utils/images/components_weapons.jpg",
+        "width": 300,
+        "url": "pages/5_Components_Weapons.py",
+        "tags": ["Analytics", "Graphs", "Data Sources"],
+        "color_tags": ["#961010", "#4abb15", "#14aca4"],
     },
 }
 
