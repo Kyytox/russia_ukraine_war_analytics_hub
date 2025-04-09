@@ -636,12 +636,20 @@ def save_data():
 
     # save data filter
     st.session_state["df_filt_src"].to_parquet(
-        f"{st.session_state['path_filter_source']}", index=False
+        f"{st.session_state['path_filter_source']}",
+        index=False,
+        engine="fastparquet",
+        partition_cols=None,
+        compression="snappy",
     )
 
     # save data qualif
     st.session_state["df_qualif"].to_parquet(
-        f"{st.session_state['path_qualif']}", index=False
+        f"{st.session_state['path_qualif']}",
+        index=False,
+        engine="fastparquet",
+        partition_cols=None,
+        compression="snappy",
     )
 
     # save data classify

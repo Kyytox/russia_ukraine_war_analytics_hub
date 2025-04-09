@@ -136,7 +136,8 @@ if st.session_state.df_final.shape[0] > 0:
 
     if st.button("Comfirm", type="primary", use_container_width=True, key="confirm"):
         st.session_state.df_final.to_parquet(
-            f"{select_folder}/{select_file}", index=False
+            f"{select_folder}/{select_file}",
+            index=False,
         )
 
         init_data(select_folder, select_file)
