@@ -15,7 +15,7 @@ IA_TRANSLATE = "ia_translate_2:latest"
 # IA_CLASSIFY = "ia_classify:latest"
 IA_CLASSIFY = "mistral-nemo:latest"
 
-SIZE_TO_TRANSLATE = 49
+SIZE_TO_TRANSLATE = 199
 SIZE_TO_QUALIF = 99
 
 ###############
@@ -51,6 +51,8 @@ LIST_ACCOUNTS_TELEGRAM = [
     "Sib_EXpress",
     "algizrpd",  # t.me/algizrpd
     "idelrealii",  # t.me/idelrealii
+    "mchsYakutia",
+    "ostorozhno_novosti",
 ]
 
 
@@ -79,6 +81,8 @@ DICT_UTC = {
     "Sib_EXpress": 7,
     "algizrpd": 3,
     "idelrealii": 3,
+    "mchsYakutia": 7,
+    "ostorozhno_novosti": 3,
 }
 
 
