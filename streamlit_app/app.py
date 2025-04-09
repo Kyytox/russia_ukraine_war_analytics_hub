@@ -1,5 +1,12 @@
 import streamlit as st
 
+from utils import (
+    add_analytics_tag,
+)
+
+
+# Google Analytics
+add_analytics_tag()
 
 pg_home = st.Page("pages/1_Home.py", title="Home", icon="🏠")
 pg_inc_rail = st.Page(
@@ -20,7 +27,15 @@ pg_raid_alerts = st.Page(
     icon="🚨",
 )
 
-pg = st.navigation([pg_home, pg_inc_rail, pg_block_site, pg_raid_alerts])
+pg_compo_weapons = st.Page(
+    "pages/5_Components_Weapons.py",
+    title="Components Weapons",
+    icon="⚙️",
+)
+
+pg = st.navigation(
+    [pg_home, pg_inc_rail, pg_block_site, pg_raid_alerts, pg_compo_weapons]
+)
 
 st.set_page_config(
     page_title="Ukraine-Russia Conflict Data Hub",

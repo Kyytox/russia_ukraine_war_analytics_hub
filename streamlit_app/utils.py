@@ -14,6 +14,11 @@ def init_css():
         """
         <style>
         
+        .stMainBlockContainer {
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        
         .st-emotion-cache-1jicfl2 {
 
             padding-bottom: 3rem;
@@ -262,9 +267,7 @@ def display_container_content(dict_data: dict):
                         st.markdown(html_code, unsafe_allow_html=True)
 
                         tagger_component(
-                            "",
-                            value["tags"],
-                            color_name=value["color_tags"],
+                            "", value["tags"], color_name=value["color_tags"]
                         )
 
                     with subcol3:
@@ -288,9 +291,7 @@ def display_container_content(dict_data: dict):
                         st.markdown(html_code, unsafe_allow_html=True)
 
                         tagger_component(
-                            "",
-                            value["tags"],
-                            color_name=value["color_tags"],
+                            "", value["tags"], color_name=value["color_tags"]
                         )
 
                     with subcol2:

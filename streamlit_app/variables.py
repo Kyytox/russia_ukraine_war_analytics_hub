@@ -1,6 +1,10 @@
+# Data paths
 path_dmt_inc_railway = "data/data_warehouse/datamarts/incidents_railway"
 path_dmt_block_site = "data/data_warehouse/datamarts/russia_block_sites"
+PATH_DMT_COMPO_WEAPONS = "data/data_warehouse/datamarts/compo_weapons"
 
+
+# Data colors
 colors = {
     #
     2022: "#355070",
@@ -65,4 +69,30 @@ colors = {
     "18-30": "#63a063",
     "31-50": "#FFFF00",
     ">50": "#FFA500",
+}
+
+
+COLORS_COMP_WEAPONS = {
+    "UAV": "#67259e",
+    "Equipment": "#882da3",
+    "Missile": "#b61fa9",
+    "Vehicule": "#9e2562",
+    "Other": "#3b259e",
+    #
+    #
+    "UAV Combat": "#b8747a",
+    "UAV Surveillance": "#A8DADC",
+    "Electronic Equipment": "#4976b6",
+    "Communication Equipment": "#446275",
+    "Cruise Missile": "#F4A261",
+    "Ballistic Missile": "#E76F51",
+    "UAV Combat and Surveillance": "#F9C74F",
+    "Armored Vehicle": "#4ab695",
+    "Navigation Equipment": "#4D908E",
+    "Helicopter": "#1c2e3d",
+    "Guided Missile": "#b81f22",
+    "Artillery": "#90BE6D",
+    "Glide Bomb": "#F8961E",
+    "FPV": "#9C6644",
+    "Air Defense": "#6A4C93",
 }
