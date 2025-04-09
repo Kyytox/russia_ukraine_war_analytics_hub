@@ -23,4 +23,4 @@ def flow_dwh_compo_weapons():
     flow_ingest_compo_weapons()
 
     # Datamarts
-    # flow_dmt_compo_weapons()
+    flow_dmt_compo_weapons()

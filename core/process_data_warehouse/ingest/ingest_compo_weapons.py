@@ -18,9 +18,6 @@ from prefect.states import Completed, Failed
 # Variables
 from core.config.paths import PATH_DWH_SOURCES
 
-# from core.config.variables import ID_EXCEL_INCIDENT_RAILWAY
-# from core.config.dwh_corresp_schema import CORRESP_SCHEMA_INCIDENT_RAILWAY
-
 # Functions
 from core.libs.utils import (
     read_data,
@@ -53,6 +50,34 @@ def gestion_artifact(start_date, end_date, count_new_data):
         f"{count_new_data}",
     )
     create_artifact("dwh-subflow-ingestion-compo-weapons-artifact")
+
+
+@task(
+    name="Format values",
+    task_run_name="task-format-values",
+)
+def format_values(df):
+    """
+    Format values
+
+    Args:
+        df: DataFrame
+
+    Returns:
+        df: DataFrame
+    """
+    country_mapping = {
+        "United States of America": "USA",
+        "People's Republic of China": "China",
+        "russian federation": "Russia",
+        "": "Not Identified",
+        None: "Not Identified",
+    }
+
+    # replace values
+    df["manufacturer_country"] = df["manufacturer_country"].replace(country_mapping)
+
+    return df
 
 
 @task(
@@ -96,7 +121,9 @@ def add_types_weapons_equipment(df):
     df_categories = pd.read_csv(
         f"{PATH_DWH_SOURCES}/components_weapons_types.csv",
     )
-    df_categories = df_categories.drop(columns=["Unnamed: 4", "weapon_country"])
+    df_categories = df_categories.drop(
+        columns=["Unnamed: 4", "Unnamed: 5", "weapon_country"]
+    )
 
     # merge with categories
     df = df.merge(df_categories, on="weapon", how="left")
@@ -134,6 +161,7 @@ def check_weapons_in_types(df):
             print(f"At least one weapon is not in {col}")
             missing_weapons = df[df[col].isnull()]["weapon"].unique()
             print(f"Missing weapons in {col}:", missing_weapons)
+            print(f"Update components_weapons_types.csv with new weapons")
 
             upd_data_artifact(
                 f"At least one weapon is not in {col}",
@@ -259,9 +287,11 @@ def flow_ingest_compo_weapons():
         new_df["ingest_date"] = pd.to_datetime(new_df["ingest_date"], format="%d.%m.%Y")
 
         # concat with previous data
-
         df = concat_old_new_df(df, new_df, [])
         df.drop_duplicates()
+
+    # Format values
+    df = format_values(df)
 
     # Links to Types
     df = add_types_weapons_equipment(df)
@@ -274,6 +304,6 @@ def flow_ingest_compo_weapons():
     gestion_artifact(start_date, end_date, count_new_data)
 
     # save data
-    save_data(PATH_DWH_SOURCES, "components_weapons", df)
+    save_data(PATH_DWH_SOURCES, "components_weaponss", df)
 
     return Completed(message="Ingestion components weapons Completed")
