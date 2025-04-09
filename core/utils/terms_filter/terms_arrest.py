@@ -34,7 +34,6 @@ list_words_set_arrest = [
     ("woman", "arrests"),
     ("woman", "arrestable"),
     ("woman", "arrestation"),
-    # ("sgdjgsdjhgsjhdgjsgd", "sgdjgsdjhgsjhdgjsgd"),
 ]
 
 # list with combinations of substrings to search in the text
@@ -98,20 +97,20 @@ list_expression_arrest = [
 
 # List with individual words to search in the text
 list_word_arrest = [
-    "167",
-    "205",
+    # "167",
+    # "205",
     "205.1",
     "205.2",
     "205.3",
     "205.5",
     "205-205.5",
-    "207",
+    # "207",
     "207.3",
-    "208",
-    "267",
-    "275",
+    # "208",
+    # "267",
+    # "275",
     "275.1",
-    "281",
+    # "281",
 ]
 
 

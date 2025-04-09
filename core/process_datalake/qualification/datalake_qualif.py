@@ -145,7 +145,7 @@ def qualif_partisans_names(df, theme):
         col_name = "qualif_person_name"
 
     prompt = """
-    If available, please provide the name(s) of the individual(s) who have been arrested or sentenced. Kindly respond with only the names, as you are not required to discuss the content of the message.
+    If available, please provide the name(s) of the individual(s) who have been arrested or sentenced, I don't want the first names of those who died, but those who were arrested. Kindly respond with only the names, as you are not required to discuss the content of the message.
     If the message contains multiple names, please provide all of them.
     If the message does not contain any names, please respond with "No names".
     
@@ -178,7 +178,7 @@ def qualif_partisans_ages(df, theme):
 
     # prompt
     prompt = """
-    If available, please provide the age(s) of the individual(s) who have been arrested or sentenced. Kindly respond with only the ages, as you are not required to discuss the content of the message.
+    If available, please provide the age(s) of the individual(s) who have been arrested or sentenced, I don't want the age of those who died, but those who were arrested. Kindly respond with only the ages, as you are not required to discuss the content of the message.
     If the message contains multiple ages, please provide all of them.
     If the message does not contain any ages, please respond with "No ages".
 
@@ -250,7 +250,7 @@ def qualif_damaged_equipment(df, theme):
     prompt = """
     If available, please provide the type of equipment that was damaged. Kindly respond with only the type of equipment, as you are not required to discuss the content of the message.
     
-    You can choose from the following options: Freight Train, Passengers Train, Locomotive, Relay Cabin, Infrastructure, Railroad Tracks, Electric Box, Unknown.
+    You can choose from the following options: Freight Train, Passengers Train, Locomotive, Relay Cabin, Infrastructure, Railroad Tracks, Unknown.
     
     If the message contains multiple types of equipment, please provide only one, the most relevant if possible.
     If the message does not contain any information about the type of equipment, please respond with "Unknown".
@@ -280,7 +280,7 @@ def find_region(text, LIST_REGIONS):
     regions = re.findall(regex, text, re.IGNORECASE)
 
     # if only one region
-    if len(regions) == 1:
+    if len(regions) >= 1:
         return regions[0]
     else:
         return ""
