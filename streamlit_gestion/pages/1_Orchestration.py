@@ -14,14 +14,6 @@ from prefect.artifacts import Artifact
 
 st.set_page_config(page_title="Orchestration", page_icon=":gear:", layout="wide")
 
-# Get list of all Task Runs
-# async def get_all_task_runs():
-#     async with get_client() as client:
-#         return await client.read_task_runs()
-
-
-# st.write(asyncio.run(get_all_task_runs()))
-
 
 # Get list of all flows
 async def get_all_flows():
@@ -207,7 +199,7 @@ with st.sidebar:
                 for step in range(1, st.session_state.nb_loop + 1):
                     st.write(f"Run n°{step} of {st.session_state.nb_loop}")
                     asyncio.run(call(st.session_state.list_flows_to_run, step))
-                    time.sleep(15)
+                    time.sleep(130)
             else:
                 asyncio.run(call(st.session_state.list_flows_to_run, 0))
 

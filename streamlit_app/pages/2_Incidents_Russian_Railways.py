@@ -391,14 +391,7 @@ sufix_subtitle = "on the Russian Railways Network from 2022 to 2024"
 
 # ------------SIDEBAR------------
 with st.sidebar:
-    st.title("Menu")
-
-    st.warning(
-        """
-        App in test and not finalised.\n
-        Best experience on a **desktop** or **laptop**.\n
-        """
-    )
+    # st.title("Menu")
 
     developper_link()
 
