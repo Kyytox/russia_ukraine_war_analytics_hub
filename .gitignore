@@ -1,5 +1,6 @@
 
 data/
+data_save/
 brouillon.ipynb
 kyytox.session
 code/utils/credentials.yaml
@@ -184,3 +185,17 @@ _brouillons/*
 /*.ipynb
 /*.py
 streamlit_gestion/3_Classify Data copy.py
+
+
+
+# Save 
+data copy/*
+data_after_read_tg_partition_180225/*
+data_before_new_class_040225/*
+data_before_new_class_160225/*
+data_before_upd_gestion_190225/*
+data_before_070325_cloud_to_data/*
+
+# Docs
+doc/thread/*
+core/utils/service_account.json
