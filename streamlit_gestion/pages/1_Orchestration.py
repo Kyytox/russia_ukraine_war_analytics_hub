@@ -262,9 +262,14 @@ with col3:
 
 st.divider()
 
-# st.write(st.session_state.list_artifacts)
+
 if st.session_state.list_artifacts:
     st.subheader("Artifacts")
+    df = pd.DataFrame()
+
     for artifact in st.session_state.list_artifacts:
-        st.write(artifact.key)
-        st.write(pd.DataFrame(json.loads(artifact.data)))
+        df_ = pd.DataFrame(json.loads(artifact.data))
+        df_["flow_name"] = artifact.key
+        df = pd.concat([df, df_], ignore_index=True)
+
+    st.dataframe(df, width=800)
