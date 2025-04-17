@@ -1,7 +1,7 @@
 import dash
 from dash import html, dcc
 
-from variables import DICT_CONTENT
+from utils.variables import DICT_CONTENT
 from assets.components.cards import create_card
 
 dash.register_page(__name__, path="/")

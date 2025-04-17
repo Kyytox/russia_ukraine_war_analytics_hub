@@ -1,0 +1,32 @@
+.tabs-container {
+	display: flex;
+	overflow-x: auto;
+	margin-bottom: 20px;
+	background-color: #302c2c;
+}
+
+.tab {
+	background-color: #302c2c !important;
+	color: #d8d8d8;
+	padding: 10px 15px !important;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	border-radius: 3% 3% 0% 0% / 25% 25% 25% 25% !important;
+	border: 1px solid rgba(48, 44, 44, 0.325) !important;
+	flex-shrink: 0;
+	white-space: nowrap;
+}
+
+.tab--selected {
+	border-bottom: none;
+	border-top: none !important;
+	background-color: #3a3636 !important;
+	color: #ea7d00 !important;
+}
+
+/* Styles pour écrans plus petits */
+@media screen and (max-width: 992px) {
+	.tab {
+		padding: 10px 15px !important;
+	}
+}

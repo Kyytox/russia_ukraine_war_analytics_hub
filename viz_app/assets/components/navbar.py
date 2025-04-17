@@ -1,40 +1,40 @@
 import dash
-from dash import html, dcc
+from dash import html, dcc, callback
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
-from variables import DICT_CONTENT
+from utils.variables import DICT_CONTENT
 
 
 def create_navbar():
     navbar = html.Div(
         [
-            # Button to develop / collapse the sidebar
+            # Button to develop / collapse the navbar
             html.Button(
-                html.I(className="fas fa-bars", id="sidebar-toggle-icon"),
-                id="sidebar-toggle",
-                className="sidebar-toggle-button",
+                html.I(className="fas fa-bars", id="navbar-toggle-icon"),
+                id="navbar-toggle",
+                className="navbar-toggle-button",
             ),
-            # Sidebar content
+            # navbar content
             html.Div(
                 [
                     # App logo or name at the top
                     html.Div(
-                        html.I(
-                            className="fas fa-analytics",
-                            style={"fontSize": "24px"},
-                        ),
-                        className="sidebar-header",
+                        [
+                            html.I(
+                                className="fas fa-analytics",
+                                style={"fontSize": "24px"},
+                            ),
+                        ],
+                        className="navbar-header",
                     ),
                     # Navigation links
                     html.Div(
                         [
-                            # home link (élément fixe)
                             html.A(
                                 [
                                     html.I(
                                         className="fas fa-home",
-                                        style={"marginRight": "15px"},
                                     ),
                                     html.Span("Home", className="nav-text"),
                                 ],
@@ -43,45 +43,41 @@ def create_navbar():
                             ),
                         ]
                         + [
-                            # other pages (compréhension de liste)
                             html.A(
                                 [
                                     html.I(
                                         className=f"fas {data['icon']}",
-                                        style={"marginRight": "15px"},
                                     ),
                                     html.Span(data["title"], className="nav-text"),
                                 ],
                                 href=data["url"],
                                 className="nav-link",
+                                id=f"nav-link-{key}",
                             )
                             for key, data in DICT_CONTENT.items()
                         ],
-                        className="sidebar-nav",
+                        className="navbar-nav",
                     ),
-                    # Footer or additional links (git, contact, etc.)
+                    # Footer with GitHub link
                     html.Div(
                         [
                             html.A(
                                 [
                                     html.I(
                                         className="fab fa-github",
-                                        style={"marginRight": "10px"},
                                     ),
-                                    html.Span("GitHub", className="nav-text"),
                                 ],
                                 href="https://github.com/Kyytox/russia_ukraine_war_analytics_hub",
                                 target="_blank",
                                 className="nav-link",
                             ),
                         ],
-                        className="sidebar-footer",
+                        className="navbar-footer",
                     ),
                 ],
-                id="sidebar",
-                className="sidebar",
+                id="navbar",
+                className="navbar",
             ),
-            # Add overlay for mobile view when sidebar is expanded
             html.Div(id="overlay", className="overlay"),
         ],
         className="navbar-container",
@@ -90,26 +86,25 @@ def create_navbar():
     return navbar
 
 
-def init_navbar_callbacks(app):
-    @app.callback(
-        [
-            Output("sidebar", "className"),
-            Output("overlay", "className"),
-            Output("sidebar-toggle-icon", "className"),
-        ],
-        [Input("sidebar-toggle", "n_clicks"), Input("overlay", "n_clicks")],
-        [State("sidebar", "className")],
-    )
-    def toggle_sidebar(n1, n2, sidebar_class):
-        ctx = dash.callback_context
-        if not ctx.triggered:
-            return "sidebar", "overlay", "fas fa-bars"
-        else:
-            button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+@callback(
+    [
+        Output("navbar", "className"),
+        Output("overlay", "className"),
+        Output("navbar-toggle-icon", "className"),
+    ],
+    [Input("navbar-toggle", "n_clicks"), Input("overlay", "n_clicks")],
+    [State("navbar", "className")],
+)
+def toggle_navbar(n1, n2, navbar_class):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        return "navbar", "overlay", "fas fa-bars"
+    else:
+        button_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-            if "expanded" in sidebar_class:
-                # Collapse the sidebar
-                return "sidebar", "overlay", "fas fa-bars"
-            else:
-                # Expand the sidebar
-                return "sidebar expanded", "overlay show", "fas fa-times"
+        if "expanded" in navbar_class:
+            # Collapse the navbar
+            return "navbar", "overlay", "fas fa-bars"
+        else:
+            # Expand the navbar
+            return "navbar expanded", "overlay show", "fas fa-times"

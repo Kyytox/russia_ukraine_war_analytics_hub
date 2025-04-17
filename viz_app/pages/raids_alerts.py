@@ -1,18 +1,17 @@
-import dash
-from dash import html
+import pandas as pd
 
+import dash
+from dash import Input, Output, callback, html, dcc
+from utils.variables import PATH_DMT_BLOCK_SITE
 
 from assets.components.cards import create_card
+
 
 dash.register_page(__name__)
 
 
-theme = {
-    "dark": True,
-    "detail": "#743800",
-    "primary": "#ea7d00",
-    "secondary": "#6E6E6E",
-}
+dmt_global = pd.read_parquet(f"{PATH_DMT_BLOCK_SITE}/dmt_global.parquet")
+
 
 page_content = {
     "Air Raid Alert Map of Ukraine": {
@@ -41,6 +40,7 @@ page_content = {
     },
 }
 
+
 layout = html.Div(
     className="page-content",
     children=[
@@ -68,6 +68,10 @@ layout = html.Div(
                 "flexWrap": "wrap",
                 "justifyContent": "center",
             },
+        ),
+        html.Div(
+            className="div-group-chart",
+            children=[],
         ),
     ],
 )
