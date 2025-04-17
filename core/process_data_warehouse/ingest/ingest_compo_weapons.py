@@ -304,6 +304,6 @@ def flow_ingest_compo_weapons():
     gestion_artifact(start_date, end_date, count_new_data)
 
     # save data
-    save_data(PATH_DWH_SOURCES, "components_weaponss", df)
+    save_data(PATH_DWH_SOURCES, "components_weapons", df)
 
     return Completed(message="Ingestion components weapons Completed")
