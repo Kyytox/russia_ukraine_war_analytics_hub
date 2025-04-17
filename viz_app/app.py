@@ -12,7 +12,7 @@ app = Dash(
         dbc.themes.BOOTSTRAP,
         "https://use.fontawesome.com/releases/v5.15.4/css/all.css",
     ],
-    # suppress_callback_exceptions=True,
+    suppress_callback_exceptions=True,
 )
 
 

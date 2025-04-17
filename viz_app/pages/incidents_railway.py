@@ -4,8 +4,11 @@ import numpy as np
 
 import dash
 from dash import Dash, dcc, html, Input, Output, callback
+import dash_daq as daq
 
 import plotly.graph_objects as go
+
+from dash_holoniq_wordcloud import DashWordcloud
 
 from utils.variables import PATH_DMT_INC_RAILWAY
 from utils.variables_charts import COLORS_RAILWAY, PAPER_BGCOLOR, PLOT_BGCOLOR
@@ -32,8 +35,9 @@ from utils.generate_chart import (
     generate_treemap,
     generate_treemap2,
     generate_sunburst,
-    generate_map,
     generate_stacked_bar,
+    generate_map,
+    generate_wordcloud,
 )
 
 dash.register_page(
@@ -382,6 +386,11 @@ def tab_overview():
 
     # #########################################
     # #########################################
+    # Wordcloud
+    # fig0 = create_wordcloud(df=dmt_wordcloud)
+
+    # #########################################
+    # #########################################
     # Number of Incidents by Year
     # Line Chart
     fig1 = generate_bar(
@@ -392,10 +401,7 @@ def tab_overview():
         text=df_nb_inc_year["total_inc"],
         colors=COLORS_RAILWAY,
     )
-    fig1 = fig_upd_layout(
-        fig1,
-        xgrid=False,
-    )
+    fig1 = fig_upd_layout(fig1, xgrid=False)
 
     # #########################################
     # #########################################
@@ -422,10 +428,7 @@ def tab_overview():
         col_x="month",
         fill=None,
     )
-    fig2 = fig_upd_layout(
-        fig2,
-        xgrid=False,
-    )
+    fig2 = fig_upd_layout(fig2, xgrid=False)
 
     # #########################################
     # #########################################
@@ -447,10 +450,7 @@ def tab_overview():
         colors=COLORS_RAILWAY,
     )
 
-    fig3 = fig_upd_layout(
-        fig3,
-        xgrid=False,
-    )
+    fig3 = fig_upd_layout(fig3, xgrid=False)
 
     # #########################################
     # #########################################
@@ -464,10 +464,7 @@ def tab_overview():
         text=df_incd_typ_total["total_inc"],
         colors=COLORS_RAILWAY,
     )
-    fig4 = fig_upd_layout(
-        fig4,
-        xgrid=False,
-    )
+    fig4 = fig_upd_layout(fig4, xgrid=False)
 
     # #########################################
     # #########################################
@@ -481,10 +478,7 @@ def tab_overview():
         text=df_dmg_eqp_total["total_inc"],
         colors=COLORS_RAILWAY,
     )
-    fig5 = fig_upd_layout(
-        fig5,
-        xgrid=False,
-    )
+    fig5 = fig_upd_layout(fig5, xgrid=False)
 
     # #########################################
     # #########################################
@@ -497,6 +491,7 @@ def tab_overview():
         labels_=df_incd_reg_total["label"],
         parents_=[""] * len(df_incd_reg_total),
         values_=df_incd_reg_total["total_inc"],
+        colors=df_incd_reg_total["total_inc"],
     )
 
     # #########################################
@@ -553,6 +548,12 @@ def tab_overview():
         )
         heats.append(fig_heat)
 
+    security_data = []
+    for _, row in dmt_wordcloud.iterrows():
+        text = row.iloc[0]  # First column (text or label)
+        value = row.iloc[1]  # Second column (frequency or value)
+        security_data.append([text, value])
+
     return html.Div(
         children=[
             html.H2("Overview"),
@@ -605,7 +606,7 @@ def tab_overview():
                         style={"width": "14%"},
                     ),
                     box_chart("rail_1_fig1", fig1, "30%", "55vh"),
-                    box_chart("rail_1_fig2", fig2, "53%", "55vh"),
+                    box_chart("rail_1_fig2", fig2, "54%", "55vh"),
                 ],
             ),
             html.Div(
@@ -617,15 +618,29 @@ def tab_overview():
                 ],
             ),
             html.Div(
-                className="div-group-chart",
+                className="div-interact-chart",
                 children=[
+                    daq.BooleanSwitch(
+                        id="togl_rail_1_fig6",
+                        on=True,
+                        className="switch",
+                        label="Hide Moscow",
+                        color="#ea7d00",
+                    ),
                     box_chart("rail_1_fig6", fig6, "100%", "55vh"),
                 ],
             ),
             html.Div(
-                className="div-group-chart",
+                className="div-interact-chart",
                 children=[
-                    box_chart("rail_1_fig7", fig7, "100%", "65vh"),
+                    daq.BooleanSwitch(
+                        id="togl_rail_1_fig7",
+                        on=True,
+                        className="switch",
+                        label="Hide Moscow",
+                        color="#ea7d00",
+                    ),
+                    box_chart("rail_1_fig7", fig7, "100%", "85vh"),
                 ],
             ),
             html.Div(
@@ -671,6 +686,7 @@ def tab_incidents_types():
         mode="lines",
         fill=None,
     )
+    fig2 = fig_upd_layout(fig2, xgrid=False)
 
     # #########################################
     # #########################################
@@ -685,10 +701,7 @@ def tab_incidents_types():
         colors=COLORS_RAILWAY,
         start_col=2,
     )
-    fig3 = fig_upd_layout(
-        fig3,
-        xgrid=False,
-    )
+    fig3 = fig_upd_layout(fig3, xgrid=False, barmode="group")
 
     # #########################################
     # #########################################
@@ -702,6 +715,7 @@ def tab_incidents_types():
         y_=None,
         colors=COLORS_RAILWAY,
     )
+    fig4 = fig_upd_layout(fig4, xgrid=False)
 
     # #########################################
     # #########################################
@@ -738,10 +752,7 @@ def tab_incidents_types():
         colors=COLORS_RAILWAY,
         orientation="h",
     )
-    fig7 = fig_upd_layout(
-        fig7,
-        ygrid=False,
-    )
+    fig7 = fig_upd_layout(fig7, ygrid=False)
 
     return html.Div(
         children=[
@@ -818,11 +829,7 @@ def tab_damaged_equipments():
         colors=COLORS_RAILWAY,
         start_col=2,
     )
-    fig3 = fig_upd_layout(
-        fig3,
-        xgrid=False,
-        barmode="group",
-    )
+    fig3 = fig_upd_layout(fig3, xgrid=False, barmode="group")
 
     # #########################################
     # #########################################
@@ -872,10 +879,7 @@ def tab_damaged_equipments():
         colors=COLORS_RAILWAY,
         orientation="h",
     )
-    fig7 = fig_upd_layout(
-        fig7,
-        ygrid=False,
-    )
+    fig7 = fig_upd_layout(fig7, ygrid=False)
 
     return html.Div(
         children=[
@@ -1000,10 +1004,7 @@ def tab_sabotage():
         text=df_sab_year["total_inc"],
         colors=COLORS_RAILWAY,
     )
-    fig1 = fig_upd_layout(
-        fig1,
-        xgrid=False,
-    )
+    fig1 = fig_upd_layout(fig1, xgrid=False)
 
     # #########################################
     # #########################################
@@ -1016,10 +1017,7 @@ def tab_sabotage():
         col_x="month",
         fill=None,
     )
-    fig2 = fig_upd_layout(
-        fig2,
-        xgrid=False,
-    )
+    fig2 = fig_upd_layout(fig2, xgrid=False)
 
     # #########################################
     # #########################################
@@ -1031,10 +1029,7 @@ def tab_sabotage():
         df=df_comp_sab_inc,
         col_x="month_year",
     )
-    fig3 = fig_upd_layout(
-        fig3,
-        xgrid=False,
-    )
+    fig3 = fig_upd_layout(fig3, xgrid=False)
 
     # #########################################
     # #########################################
@@ -1102,10 +1097,7 @@ def tab_sabotage():
         y_=None,
         colors=COLORS_RAILWAY,
     )
-    fig7 = fig_upd_layout(
-        fig7,
-        ygrid=False,
-    )
+    fig7 = fig_upd_layout(fig7, ygrid=False)
 
     # #########################################
     # #########################################
@@ -1130,10 +1122,7 @@ def tab_sabotage():
         y_=None,
         colors=COLORS_RAILWAY,
     )
-    fig9 = fig_upd_layout(
-        fig9,
-        ygrid=False,
-    )
+    fig9 = fig_upd_layout(fig9, ygrid=False)
 
     # #########################################
     # #########################################
@@ -1174,10 +1163,7 @@ def tab_sabotage():
         colors=COLORS_RAILWAY,
         orientation="h",
     )
-    fig12 = fig_upd_layout(
-        fig12,
-        ygrid=False,
-    )
+    fig12 = fig_upd_layout(fig12, ygrid=False)
 
     # #########################################
     # #########################################
@@ -1203,7 +1189,6 @@ def tab_sabotage():
 
     return html.Div(
         children=[
-            html.H2("Sabotage"),
             html.H2("Sabotage"),
             html.Div(
                 className="div-group-chart",
@@ -1682,3 +1667,70 @@ def render_content(tab):
     if tab in tab_functions:
         return html.Div([tab_functions[tab]()])
     return html.Div([])
+
+
+@callback(
+    Output("rail_1_fig6", "figure"),
+    Input("togl_rail_1_fig6", "on"),
+)
+def update_treemap(value):
+    # #########################################
+    # #########################################
+    # Number of Incidents by Region
+    # Treemap
+
+    if value:
+        # Remove label "Moscow"
+        df = df_incd_reg_total[df_incd_reg_total["label"] != "Moscow"]
+    else:
+        # Add label "Moscow"
+        df = df_incd_reg_total
+
+    fig6 = generate_treemap2(
+        title="Distribution of Railway Incidents by Region in Russia",
+        subtitle="",
+        ids_=df["label"],
+        labels_=df["label"],
+        parents_=[""] * len(df),
+        values_=df["total_inc"],
+        colors=df["total_inc"],
+    )
+
+    return fig6
+
+
+@callback(
+    Output("rail_1_fig7", "figure"),
+    Input("togl_rail_1_fig7", "on"),
+)
+def update_treemap(value):
+    # #########################################
+    # #########################################
+    # Number of Incidents by Region
+    # Map
+
+    if value:
+        # Remove label "Moscow"
+        df = df_map_inc_reg[df_map_inc_reg["label"] != "Moscow"]
+    else:
+        # Add label "Moscow"
+        df = df_map_inc_reg
+
+    fig7 = generate_map(
+        title="Geographic Distribution of Sabotages on Russian Railways",
+        subtitle="Number of Railway Sabotages by Region in Russia from 2023 to 2024",
+        polygons=polygons,
+        loc=df["id_region"],
+        text_=df["region"],
+        z_=df["total_inc"],
+        locationmode="geojson-id",
+    )
+    fig7 = fig_upd_layout(
+        fig7,
+        geo=dict(
+            projection=dict(type="eckert1", scale=3.4),
+            center=dict(lat=62, lon=98),
+        ),
+        dragmode=False,
+    )
+    return fig7

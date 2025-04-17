@@ -1,6 +1,12 @@
 import pandas as pd
 import plotly.graph_objects as go
 
+import dash
+from dash import Dash, dcc, html, Input, Output, callback
+
+from dash_holoniq_wordcloud import DashWordcloud
+
+
 from utils.utils_charts import fig_upd_layout
 
 
@@ -305,7 +311,7 @@ def generate_treemap(title, subtitle, df, colors, **kwargs):
     return fig
 
 
-def generate_treemap2(title, subtitle, ids_, labels_, parents_, values_):
+def generate_treemap2(title, subtitle, ids_, labels_, parents_, values_, colors):
     """
     Generate a treemap chart.
 
@@ -331,8 +337,9 @@ def generate_treemap2(title, subtitle, ids_, labels_, parents_, values_):
             values=values_,
             marker=dict(
                 cornerradius=CORNER_RADIUS,
-                # colors=df["color"],
+                colors=colors,
             ),
+            marker_colorscale="solar",
             textinfo="label+percent parent+value",
             branchvalues="total",
             textfont=dict(size=13),
@@ -416,15 +423,40 @@ def generate_map(title, subtitle, polygons, loc, text_, z_, **kwargs):
         showcountries=True,
         countrycolor="#242424",
         showocean=True,
-        oceancolor="#111c33",
+        oceancolor="#302c2c",
         showland=True,
-        landcolor="#4b4b4b",
+        landcolor="#5f5f5f",
         showframe=False,
         framecolor="#1f1f1f",
-        bgcolor="#111c33",
+        bgcolor="#302c2c",
         showlakes=False,
     )
 
     fig = fig_upd_layout(fig, title, subtitle)
 
     return fig
+
+
+def generate_wordcloud(df):
+    """
+    Create a wordcloud chart
+    """
+    security_data = []
+    for _, row in df.iterrows():
+        text = row.iloc[0]  # First column (text or label)
+        value = row.iloc[1]  # Second column (frequency or value)
+        security_data.append([text, value])
+
+    fig = DashWordcloud(
+        id="wordcloud",
+        list=security_data,
+        width=500,
+        height=500,
+        gridSize=16,
+        color="#ea7d00",
+        backgroundColor="#302c2c",
+        shuffle=True,
+        rotateRatio=0.5,
+        # shrinkToFit=True,
+        shape="square",
+    )
