@@ -12,7 +12,6 @@ from prefect import flow, task
 from core.config.paths import PATH_TWITTER_RAW, PATH_CREDS_API
 
 # Functions
-# from core.libs.twitter_api import twitter_connect
 from core.libs.utils import (
     read_data,
     save_data,
@@ -31,7 +30,6 @@ def get_credentials():
         list_creds: list of credentials
     """
     # get credentials
-    print(os.getcwd())
     with open(PATH_CREDS_API) as file:
         credentials = yaml.safe_load(file)
 
@@ -64,7 +62,6 @@ def create_search_query(
     text_accounts = " OR ".join([f"from:{account}" for account in list_accounts_filter])
 
     query = f"({text_words}) ({text_accounts}) until:{date_until} since:{date_since} -filter:replies"
-    print("Search query:", query)
 
     return query
 
@@ -182,13 +179,11 @@ async def search_messages(df_raw):
         list_tweets = await client.search_tweet(search_query, "Latest")
 
         while len(list_tweets) > 0:
-            print("######## While ########")
             for tweet in list_tweets:
 
                 # check if account in list_accounts_filter
                 # because Twitter search is not working properly
                 if tweet.user.screen_name in list_accounts_filter:
-                    print(f"user: {tweet.user.screen_name} id: {tweet.id}")
                     data.append(
                         {
                             "ID": f"{tweet.user.screen_name}_{tweet.id}",
@@ -238,8 +233,6 @@ async def search_messages(df_raw):
             .reset_index(drop=True)
             .sort_values("id_message")
         )
-        print(f"Extracted {df.shape[0]} messages")
-        print(df)
 
         if df.shape[0] == 0:
             break
