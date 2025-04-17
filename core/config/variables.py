@@ -15,7 +15,8 @@ IA_TRANSLATE = "ia_translate_2:latest"
 # IA_CLASSIFY = "ia_classify:latest"
 IA_CLASSIFY = "mistral-nemo:latest"
 
-SIZE_TO_TRANSLATE = 199
+GROUP_SIZE_TO_TRANSLATE = 20
+SIZE_TO_TRANSLATE = 69
 SIZE_TO_QUALIF = 99
 
 ###############
