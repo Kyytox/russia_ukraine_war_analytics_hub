@@ -11,6 +11,7 @@ from core.config.paths import (
     PATH_SCRIPT_SERVICE_OLLAMA,
 )
 from core.config.variables import (
+    GROUP_SIZE_TO_TRANSLATE,
     SIZE_TO_TRANSLATE,
 )
 
@@ -45,16 +46,15 @@ def translate_data(df_to_trt):
     df = df_to_trt.loc[:SIZE_TO_TRANSLATE].copy()
     print(f"Size to translate: {df.shape}")
 
-    group_size = 10
     df_result = pd.DataFrame()
 
     # Calcul number of batches
-    total_batches = (len(df) + group_size - 1) // group_size
+    total_batches = (len(df) + GROUP_SIZE_TO_TRANSLATE - 1) // GROUP_SIZE_TO_TRANSLATE
 
     # Create progress bar
     with tqdm(total=total_batches, desc=f"Translate data") as pbar:
-        for i in range(0, len(df), group_size):
-            df_group = df.loc[i : i + group_size].copy()
+        for i in range(0, len(df), GROUP_SIZE_TO_TRANSLATE):
+            df_group = df.loc[i : i + GROUP_SIZE_TO_TRANSLATE].copy()
 
             # ask IA
             df_group.loc[:, "text_translate"] = df_group["text_original"].apply(
