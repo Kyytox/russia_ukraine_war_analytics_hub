@@ -124,7 +124,7 @@ def incidents_total(df):
     # get age and name
     df_age_name_laws = df[["prtsn_age", "prtsn_names", "app_laws"]].dropna()
     df_age_name_laws = df_age_name_laws.query(
-        "prtsn_age != '' and prtsn_names != '' and app_laws != ''"
+        "prtsn_age != '' and prtsn_names != '' and app_laws != '' and prtsn_age != '0'"
     )
     df_age_name_laws = df_age_name_laws.drop_duplicates()
 
