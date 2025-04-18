@@ -218,6 +218,60 @@ def dmt_by_authority_category(df: pd.DataFrame) -> pd.DataFrame:
     return df_final
 
 
+@task(name="dmt-country-by-category", task_run_name="dmt-country-by-category")
+def dmt_country_by_category(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create datamart for number of blocked sites by country and category
+    For use in Treemap diagram
+
+    Args:
+        df (pd.DataFrame): Dataframe to control
+
+    Returns:
+        df (pd.DataFrame): Dataframe with datamart by country and category
+    """
+
+    # Filter out rows with missing country_domain
+    df = df.copy()
+    df["country_domain"] = df["country_domain"].fillna("Unknown")
+
+    # Get the top 6 countries with the most blocked sites
+    top_countries = df["country_domain"].value_counts().head(6).index.tolist()
+
+    # Filter dataframe to only include top countries
+    df_filtered = df[df["country_domain"].isin(top_countries)]
+
+    # Count by country and category
+    counts = (
+        df_filtered.groupby(["country_domain", "category"])
+        .size()
+        .reset_index(name="value")
+    )
+
+    # Create dataframe for treemap
+    df_final = []
+
+    # Add country rows (first level)
+    for country in top_countries:
+        country_total = counts[counts["country_domain"] == country]["value"].sum()
+        df_final.append(
+            {"id": country, "label": country, "parent": "", "value": country_total}
+        )
+
+    # Add category rows (second level)
+    for _, row in counts.iterrows():
+        df_final.append(
+            {
+                "id": f"{row['country_domain']}-{row['category']}",
+                "label": row["category"],
+                "parent": row["country_domain"],
+                "value": row["value"],
+            }
+        )
+
+    return pd.DataFrame(df_final)
+
+
 @flow(
     name="DWH Subflow Datamarts Russia Blocked Sites",
     flow_run_name="dwh-subflow-dmt-russia-blocked-sites",
@@ -251,7 +305,11 @@ def flow_dmt_russia_blocked_sites():
 
     # Blocked by Country Domain and Category
     df_tmp = df.groupby(["country_domain", "category"]).size().reset_index(name="count")
-    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_country_by_category", df_tmp)
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_country_by_category_after_6", df_tmp)
+
+    # Blocked by Country Domain and Category
+    df_tmp = dmt_country_by_category(df)
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_country_by_category_top_6", df_tmp)
 
     # dmt_all_data
     save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_all_data", df)
