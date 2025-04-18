@@ -50,7 +50,8 @@ layout = html.Div(
         ),
         # Cards
         html.Div(
-            [
+            className="section-cards",
+            children=[
                 create_card(
                     data["title"],
                     data["text"],
@@ -61,13 +62,6 @@ layout = html.Div(
                 )
                 for key, data in DICT_CONTENT.items()
             ],
-            style={
-                "display": "flex",
-                "flexDirection": "row",
-                "flexWrap": "wrap",
-                "justifyContent": "center",
-                "marginBottom": "100px",
-            },
         ),
     ],
     className="page-content",

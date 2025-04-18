@@ -1,3 +1,12 @@
+.section-cards {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin-bottom: 100px;
+}
+
+
 .card {
 	display: flex;
 	flex-direction: column;
@@ -57,4 +66,18 @@
 	font-size: 12px;
 	display: inline-block;
 	margin-bottom: 5px;
+}
+
+
+/* Responsive */
+@media (max-width: 1150px) {
+	.card {
+		width: 45%;
+	}
+}
+
+@media (max-width: 768px) {
+	.card {
+		width: 90%;
+	}
 }
