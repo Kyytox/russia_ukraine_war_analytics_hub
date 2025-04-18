@@ -605,16 +605,16 @@ def tab_overview():
                         ],
                         style={"width": "14%"},
                     ),
-                    box_chart("rail_1_fig1", fig1, "30%", "55vh"),
-                    box_chart("rail_1_fig2", fig2, "54%", "55vh"),
+                    box_chart("rail_1_fig1", fig1, "30%", "58vh"),
+                    box_chart("rail_1_fig3", fig3, "53%", "58vh"),
                 ],
             ),
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_1_fig3", fig3, "48%", "65vh"),
-                    box_chart("rail_1_fig4", fig4, "25%", "65vh"),
-                    box_chart("rail_1_fig5", fig5, "25%", "65vh"),
+                    box_chart("rail_1_fig2", fig2, "49%", "65vh"),
+                    box_chart("rail_1_fig4", fig4, "24%", "65vh"),
+                    box_chart("rail_1_fig5", fig5, "24%", "65vh"),
                 ],
             ),
             html.Div(
@@ -646,12 +646,7 @@ def tab_overview():
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart(
-                        "rail_1_fig8",
-                        fig_heat,
-                        "49.5%",
-                        "35vh",
-                    )
+                    box_chart("rail_1_fig8", fig_heat, "49%", "35vh")
                     for fig_heat in heats
                 ],
             ),
@@ -761,21 +756,21 @@ def tab_incidents_types():
                 className="div-group-chart",
                 children=[
                     box_chart("rail_2_fig1", fig1, "40%", "55vh"),
-                    box_chart("rail_2_fig2", fig2, "59%", "55vh"),
+                    box_chart("rail_2_fig2", fig2, "58%", "55vh"),
                 ],
             ),
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_2_fig3", fig3, "39.5%", "55vh"),
-                    box_chart("rail_2_fig4", fig4, "59.5%", "55vh"),
+                    box_chart("rail_2_fig3", fig3, "39%", "55vh"),
+                    box_chart("rail_2_fig4", fig4, "59%", "55vh"),
                 ],
             ),
             html.Div(
                 className="div-group-chart",
                 children=[
                     box_chart("rail_2_fig5", fig5, "39%", "70vh"),
-                    box_chart("rail_2_fig6", fig6, "60%", "70vh"),
+                    box_chart("rail_2_fig6", fig6, "59%", "70vh"),
                 ],
             ),
             html.Div(
@@ -890,21 +885,21 @@ def tab_damaged_equipments():
                 className="div-group-chart",
                 children=[
                     box_chart("rail_3_fig1", fig1, "40%", "55vh"),
-                    box_chart("rail_3_fig2", fig2, "59%", "55vh"),
+                    box_chart("rail_3_fig2", fig2, "58%", "55vh"),
                 ],
             ),
             html.Div(
                 className="div-group-chart",
                 children=[
                     box_chart("rail_3_fig3", fig3, "39%", "55vh"),
-                    box_chart("rail_3_fig4", fig4, "60%", "55vh"),
+                    box_chart("rail_3_fig4", fig4, "59%", "55vh"),
                 ],
             ),
             html.Div(
                 className="div-group-chart",
                 children=[
                     box_chart("rail_3_fig5", fig5, "39%", "70vh"),
-                    box_chart("rail_3_fig6", fig6, "60%", "70vh"),
+                    box_chart("rail_3_fig6", fig6, "59%", "70vh"),
                 ],
             ),
             html.Div(
@@ -979,14 +974,14 @@ def tab_collisions():
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_4_fig1", fig1, "40%", "55vh"),
+                    box_chart("rail_4_fig1", fig1, "39%", "55vh"),
                     box_chart("rail_4_fig2", fig2, "59%", "55vh"),
                 ],
             ),
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_4_fig3", fig3, "40%", "55vh"),
+                    box_chart("rail_4_fig3", fig3, "39%", "55vh"),
                     box_chart("rail_4_fig4", fig4, "59%", "55vh"),
                 ],
             ),
@@ -1198,7 +1193,7 @@ def tab_sabotage():
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_5_fig1", fig1, "35%", "55vh"),
+                    box_chart("rail_5_fig1", fig1, "34%", "55vh"),
                     box_chart("rail_5_fig2", fig2, "64%", "55vh"),
                 ],
             ),
@@ -1211,28 +1206,28 @@ def tab_sabotage():
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_5_fig4", fig4, "35%", "55vh"),
+                    box_chart("rail_5_fig4", fig4, "34%", "55vh"),
                     box_chart("rail_5_fig5", fig5, "64%", "55vh"),
                 ],
             ),
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_5_fig6", fig6, "56%", "60vh"),
+                    box_chart("rail_5_fig6", fig6, "55%", "60vh"),
                     box_chart("rail_5_fig7", fig7, "43%", "60vh"),
                 ],
             ),
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_5_fig8", fig8, "56%", "60vh"),
+                    box_chart("rail_5_fig8", fig8, "55%", "60vh"),
                     box_chart("rail_5_fig9", fig9, "43%", "60vh"),
                 ],
             ),
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_5_fig10", fig10, "38%", "55vh"),
+                    box_chart("rail_5_fig10", fig10, "37%", "55vh"),
                     box_chart("rail_5_fig11", fig11, "61%", "55vh"),
                 ],
             ),
@@ -1245,7 +1240,7 @@ def tab_sabotage():
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_5_fig13", fig13, "100%", "65vh"),
+                    box_chart("rail_5_fig13", fig13, "100%", "85vh"),
                 ],
             ),
         ],
@@ -1347,8 +1342,8 @@ def tab_partisans_arrest():
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_6_fig1", fig1, "49.5%", "55vh"),
-                    box_chart("rail_6_fig2", fig2, "49.5%", "55vh"),
+                    box_chart("rail_6_fig1", fig1, "49%", "55vh"),
+                    box_chart("rail_6_fig2", fig2, "49%", "55vh"),
                 ],
             ),
             html.Div(
@@ -1367,8 +1362,8 @@ def tab_partisans_arrest():
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_6_fig5", fig5, "49.5%", "75vh"),
-                    box_chart("rail_6_fig6", fig6, "49.5%", "75vh"),
+                    box_chart("rail_6_fig5", fig5, "49%", "75vh"),
+                    box_chart("rail_6_fig6", fig6, "49%", "75vh"),
                 ],
             ),
             html.Div(

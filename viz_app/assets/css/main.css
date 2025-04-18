@@ -17,11 +17,15 @@ body {
 
 
 .page-content {
+	display: flex;
 	background-color: var(--background-color);
 	font-family: 'Arial', sans-serif;
 	min-height: 90vh;
-	padding: 21px;
+	padding: 20px;
 	margin-left: 60px;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: stretch;
 }
 
 .page-title {
