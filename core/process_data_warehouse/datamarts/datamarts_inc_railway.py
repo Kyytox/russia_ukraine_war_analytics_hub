@@ -226,6 +226,8 @@ def incidents_by_year(df):
         }
         df_tmp = pd.concat([df_tmp, pd.DataFrame(data, index=[0])], ignore_index=True)
 
+    print(df_tmp)
+
     df_tmp["label"] = df_tmp["label"].astype(str)
     df_tmp = df_tmp[["year", "type", "label", "total_inc"]]
 
@@ -239,6 +241,9 @@ def incidents_by_year(df):
         values="total_inc",
         fill_value=0,
     ).reset_index()
+
+    # convert columns name to str
+    df_tmp.columns = df_tmp.columns.astype(str)
 
     return df_tmp
 
