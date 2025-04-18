@@ -1,7 +1,7 @@
 import pandas as pd
 
 import dash
-from dash import Dash, Input, Output, callback, html, dcc, no_update
+from dash import Dash, Input, Output, callback, html, dcc
 import dash_bootstrap_components as dbc
 
 import plotly.graph_objects as go
@@ -14,7 +14,6 @@ from assets.components.figure_chart import box_chart
 from utils.variables import PATH_DMT_BLOCK_SITE
 from utils.variables_charts import (
     MONTHS,
-    CORNER_RADIUS,
     COLORS_BLOCK_SITE,
 )
 from utils.utils_charts import fig_upd_layout

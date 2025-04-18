@@ -13,6 +13,7 @@ from dash_holoniq_wordcloud import DashWordcloud
 from utils.variables import PATH_DMT_INC_RAILWAY
 from utils.variables_charts import COLORS_RAILWAY, PAPER_BGCOLOR, PLOT_BGCOLOR
 
+from assets.components.warning_sources import warning_sources
 from assets.components.figure_chart import box_chart, figure_chart_2
 
 from utils.railway_charts import (
@@ -554,9 +555,14 @@ def tab_overview():
         value = row.iloc[1]  # Second column (frequency or value)
         security_data.append([text, value])
 
+    markdown_text = """
+    Warning: Rail incidents in **Crimea** have been accounted for., it is good to remember, **Crimea** is Ukrainian, but being occupied the rail network is under the responsibility of the Orcs.
+    """
+
     return html.Div(
         children=[
             html.H2("Overview"),
+            warning_sources(markdown_text),
             html.Div(
                 className="div-group-chart",
                 children=[
