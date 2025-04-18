@@ -58,7 +58,7 @@ def process_dwh():
     """
     flow_dwh_inc_railway()
     flow_dwh_ru_block_sites()
-    # flow_dwh_compo_weapons()
+    flow_dwh_compo_weapons()
 
 
 COMMANDS = {

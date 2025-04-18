@@ -16,6 +16,8 @@ app = Dash(
     suppress_callback_exceptions=True,
 )
 
+server = app.server
+
 
 # Create the navbar
 navbar = create_navbar()
@@ -25,7 +27,6 @@ footer = create_footer()
 
 # layout
 app.layout = html.Div(
-    # className="app-container",
     children=[
         navbar,
         dash.page_container,
@@ -34,5 +35,4 @@ app.layout = html.Div(
 )
 
 if __name__ == "__main__":
-    # app.run_server(debug=False)
-    app.run(debug=True, port=8070)
+    app.run(debug=True, port=8501)
