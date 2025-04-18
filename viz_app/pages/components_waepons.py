@@ -102,26 +102,26 @@ layout = html.Div(
         html.Div(
             className="div-group-chart",
             children=[
-                box_chart("pg_weap_fig3", {}, "48.5%", "85vh"),
-                box_chart("pg_weap_fig4", {}, "48.5%", "85vh"),
+                box_chart("pg_weap_fig3", {}, "49%", "85vh"),
+                box_chart("pg_weap_fig4", {}, "49%", "85vh"),
             ],
         ),
         html.Div(
             className="div-group-chart",
             children=[
-                box_chart("pg_weap_fig5", {}, "98%", "125vh"),
+                box_chart("pg_weap_fig5", {}, "100%", "125vh"),
             ],
         ),
         html.Div(
             className="div-group-chart",
             children=[
-                box_chart("pg_weap_fig8", {}, "98%", "125vh"),
+                box_chart("pg_weap_fig8", {}, "100%", "125vh"),
             ],
         ),
         html.Div(
             className="div-group-chart",
             children=[
-                box_chart("pg_weap_fig6", {}, "57%", "80vh"),
+                box_chart("pg_weap_fig6", {}, "58%", "80vh"),
                 box_chart("pg_weap_fig7", {}, "40%", "63vh"),
             ],
         ),

@@ -1,0 +1,31 @@
+/* responsive */
+@media (max-width: 1100px) {
+	.div-group-metrics {
+		width: 100% !important;
+		flex-direction: row;
+		align-items: flex-start;
+	}
+
+	.div-metrics {
+		width: 100%;
+		margin-bottom: 0;
+	}
+
+	.div-metrics p {
+		margin-bottom: 0;
+	}
+
+	#container-pg_weap_fig1,
+	#container-pg_weap_fig2 {
+		width: 49% !important;
+	}
+}
+
+
+@media (max-width: 850px) {
+
+	#container-pg_weap_fig1,
+	#container-pg_weap_fig2 {
+		width: 100% !important;
+	}
+}

@@ -6,6 +6,7 @@ import dash_bootstrap_components as dbc
 def box_chart(id, fig={}, width=None, height=None):
     """Generate figure cards for the layout"""
     return html.Div(
+        id=f"container-{id}",
         className="div-figure-chart",
         children=dcc.Loading(
             dcc.Graph(

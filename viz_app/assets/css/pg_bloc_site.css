@@ -1,0 +1,16 @@
+/* responsive */
+@media (max-width: 1100px) {
+
+	#container-pg_block_fig_map,
+	#container-pg_block_fig_auth_month,
+	#container-pg_block_fig_cat_month,
+	#container-pg_block_fig_sankey,
+	#container-pg_block_fig_treemap,
+	#container-pg_block_fig_bar_country_cat,
+	#container-pg_block_fig_country_month {
+		width: 100% !important;
+	}
+}
+
+
+@media (max-width: 850px) {}

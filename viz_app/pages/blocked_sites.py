@@ -154,16 +154,16 @@ layout = html.Div(
                     ],
                     style={"width": "14%"},
                 ),
-                box_chart("pg_block_fig_bar_country", {}, "42%", "75vh"),
-                box_chart("pg_block_fig_bar_sub_cat", {}, "42%", "75vh"),
+                box_chart("pg_block_fig_bar_country", {}, "41%", "75vh"),
+                box_chart("pg_block_fig_bar_sub_cat", {}, "41%", "75vh"),
             ],
         ),
         # Second row of charts - Category and authority
         html.Div(
             className="div-group-chart",
             children=[
-                box_chart("pg_block_fig_bar_cat", {}, "49.5%", "50vh"),
-                box_chart("pg_block_fig_bar_auth", {}, "49.5%", "50vh"),
+                box_chart("pg_block_fig_bar_cat", {}, "49%", "50vh"),
+                box_chart("pg_block_fig_bar_auth", {}, "49%", "50vh"),
             ],
         ),
         # World map
@@ -221,8 +221,8 @@ layout = html.Div(
         html.Div(
             className="div-group-chart",
             children=[
-                box_chart("pg_block_fig_auth_month", {}, "49.5%", "80vh"),
-                box_chart("pg_block_fig_cat_month", {}, "49.5%", "80vh"),
+                box_chart("pg_block_fig_auth_month", {}, "49%", "80vh"),
+                box_chart("pg_block_fig_cat_month", {}, "49%", "80vh"),
             ],
         ),
         # Country by month (full width)

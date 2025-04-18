@@ -21,7 +21,7 @@ body {
 	font-family: 'Arial', sans-serif;
 	min-height: 90vh;
 	padding: 21px;
-	margin-left: 3%;
+	margin-left: 60px;
 }
 
 .page-title {
@@ -118,10 +118,8 @@ h3 {
 .warning-data-source {
 	display: flex;
 	flex-direction: row;
-	width: 98%;
+	width: 99%;
 	text-align: center;
-	margin-left: 20px;
-	margin-right: 20px;
 	margin-top: 10px;
 	margin-bottom: 30px;
 	padding: 28px;
@@ -235,7 +233,7 @@ h3 {
 	align-items: center;
 	background-color: #302c2c;
 	width: 100%;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 }
 
 .div-metrics h3 {
@@ -334,7 +332,55 @@ h3 {
 }
 
 
+
+@media (max-width: 1100px) {
+
+	.div-figure-chart {
+		width: 49% !important;
+	}
+
+	.div-group-metrics {
+		width: 100% !important;
+		flex-direction: row;
+		align-items: flex-start;
+	}
+
+	.div-metrics {
+		width: 100%;
+		margin-bottom: 0;
+	}
+
+	.div-metrics p {
+		margin-bottom: 0;
+	}
+}
+
+@media (max-width: 850px) {
+
+	.warning-data-source {
+		width: 100%;
+	}
+
+	.div-figure-chart {
+		width: 100% !important;
+	}
+
+	.div-metrics {
+		width: 100%;
+		margin-bottom: 0;
+	}
+
+	.div-metrics p {
+		margin-bottom: 0;
+	}
+}
+
 @media (max-width: 768px) {
+
+	.page-content {
+		margin-left: 0px;
+	}
+
 	.section-infos {
 		flex-direction: column;
 		align-items: center;
