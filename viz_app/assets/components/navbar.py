@@ -60,7 +60,17 @@ def create_navbar():
                     ),
                     # Footer with GitHub link
                     html.Div(
-                        [
+                        className="navbar-footer",
+                        children=[
+                            html.A(
+                                [
+                                    html.I(
+                                        className="fa fa-question-circle",
+                                    ),
+                                ],
+                                href="/infos",
+                                className="nav-link",
+                            ),
                             html.A(
                                 [
                                     html.I(
@@ -72,7 +82,6 @@ def create_navbar():
                                 className="nav-link",
                             ),
                         ],
-                        className="navbar-footer",
                     ),
                 ],
                 id="navbar",

@@ -9,7 +9,7 @@
 	top: 0;
 	left: 0;
 	height: 100vh;
-	width: 3%;
+	width: 60px;
 	background-color: #1A1A1A;
 	color: white;
 	transition: all 0.3s ease;
@@ -22,7 +22,7 @@
 }
 
 .navbar.expanded {
-	width: 17%;
+	width: 19%;
 }
 
 .navbar-header {
@@ -134,12 +134,13 @@
 	width: 100%;
 	margin-top: auto;
 	border-top: 1px solid #333;
-	padding: 15px 0;
+	padding: 15px 0 5px 0;
 
 }
 
 .navbar-footer i {
 	color: var(--primary-color);
+	font-size: 22px;
 }
 
 /* Styles responsive pour mobile */
@@ -149,36 +150,14 @@
 	}
 
 	.navbar.expanded {
-		width: 220px;
+		width: 100%;
 	}
 
 	.navbar-toggle-button {
 		background-color: rgba(26, 26, 26, 0.7);
-		border-radius: 50%;
-		padding: 10px;
 	}
 
 	.overlay.show {
 		opacity: 1;
 	}
-}
-
-/* Masquer les barres de défilement mais permettre le défilement */
-.navbar::-webkit-scrollbar,
-.navbar-nav::-webkit-scrollbar {
-	width: 0;
-	height: 0;
-	display: none;
-}
-
-/* Pour Firefox */
-.navbar,
-.navbar-nav {
-	scrollbar-width: none;
-}
-
-/* Pour IE et Edge */
-.navbar,
-.navbar-nav {
-	-ms-overflow-style: none;
 }
