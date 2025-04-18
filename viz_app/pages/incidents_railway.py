@@ -649,7 +649,7 @@ def tab_overview():
                     box_chart(
                         "rail_1_fig8",
                         fig_heat,
-                        "48.5%",
+                        "49.5%",
                         "35vh",
                     )
                     for fig_heat in heats
@@ -815,6 +815,7 @@ def tab_damaged_equipments():
         mode="lines",
         fill="none",
     )
+    fig2 = fig_upd_layout(fig2, xgrid=False)
 
     # #########################################
     # #########################################
@@ -843,6 +844,7 @@ def tab_damaged_equipments():
         y_=None,
         colors=COLORS_RAILWAY,
     )
+    fig4 = fig_upd_layout(fig4, xgrid=False)
 
     # #########################################
     # #########################################
@@ -942,6 +944,7 @@ def tab_collisions():
         y_=None,
         colors=COLORS_RAILWAY,
     )
+    fig2 = fig_upd_layout(fig2, xgrid=False)
 
     # #########################################
     # #########################################
@@ -968,6 +971,7 @@ def tab_collisions():
         y_=None,
         colors=COLORS_RAILWAY,
     )
+    fig4 = fig_upd_layout(fig4, xgrid=False)
 
     return html.Div(
         children=[
@@ -1097,7 +1101,7 @@ def tab_sabotage():
         y_=None,
         colors=COLORS_RAILWAY,
     )
-    fig7 = fig_upd_layout(fig7, ygrid=False)
+    fig7 = fig_upd_layout(fig7, xgrid=False)
 
     # #########################################
     # #########################################
@@ -1122,7 +1126,7 @@ def tab_sabotage():
         y_=None,
         colors=COLORS_RAILWAY,
     )
-    fig9 = fig_upd_layout(fig9, ygrid=False)
+    fig9 = fig_upd_layout(fig9, xgrid=False)
 
     # #########################################
     # #########################################
@@ -1149,6 +1153,7 @@ def tab_sabotage():
         y_=None,
         colors=COLORS_RAILWAY,
     )
+    fig11 = fig_upd_layout(fig11, xgrid=False)
 
     # #########################################
     # #########################################
@@ -1306,12 +1311,7 @@ def tab_partisans_arrest():
         title="Number of Partisans Arrested by Age",
         subtitle=f"Number of partisans arrested by age for sabotage incidents {sufix_subtitle}",
     )
-    fig5 = fig_upd_layout(
-        fig5,
-        title="Number of Partisans Arrested by Age",
-        subtitle=f"Number of partisans arrested by age for sabotage incidents {sufix_subtitle}",
-        xgrid=False,
-    )
+    fig5 = fig_upd_layout(fig5)
 
     # #########################################
     # #########################################
@@ -1323,12 +1323,7 @@ def tab_partisans_arrest():
         subtitle=f"Number of partisans arrested by age group for sabotage incidents {sufix_subtitle}",
         is_group=True,
     )
-    fig6 = fig_upd_layout(
-        fig6,
-        title="Number of Partisans Arrested by Age Group",
-        subtitle=f"Number of partisans arrested by age group for sabotage incidents {sufix_subtitle}",
-        xgrid=False,
-    )
+    fig6 = fig_upd_layout(fig6)
 
     # #########################################
     # #########################################
