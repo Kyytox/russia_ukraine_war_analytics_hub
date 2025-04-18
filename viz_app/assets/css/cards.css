@@ -16,8 +16,9 @@
 	margin: 15px;
 	padding: 15px;
 	border-radius: 8px;
-	background-color: #333333;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	background-color: var(--secondary-bg-color);
+	;
+	box-shadow: var(--box-shadow);
 	text-decoration: none;
 	transition: border 0.3s;
 	border: 2px solid transparent;
