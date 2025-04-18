@@ -16,6 +16,7 @@ def create_card(title, text, image, url, tags, color_tags):
             html.H3(className="card-title", children=title),
             html.P(className="card-text", children=text),
             html.Div(
+                className="card-tags-container",
                 children=[
                     html.Span(
                         className="card-tags",
@@ -25,7 +26,7 @@ def create_card(title, text, image, url, tags, color_tags):
                         },
                     )
                     for i, tag in enumerate(tags)
-                ]
+                ],
             ),
         ],
         href=url,

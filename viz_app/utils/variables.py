@@ -34,8 +34,8 @@ DICT_CONTENT = {
         "icon": "fa-bell",
     },
     "Components Weapons": {
-        "title": "Components Weapons",
-        "text": "Explore the components used in weapons.",
+        "title": "Components in Aggressor's Weapons",
+        "text": "Explore the components used in the aggressor`s weapon.",
         "image": "assets/images/components_weapons.jpg",
         "width": 300,
         "url": "/components-waepons",
