@@ -3,6 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import Dash, dcc, html
 
 from assets.components.navbar import create_navbar
+from assets.components.footer import create_footer
 
 app = Dash(
     __name__,
@@ -19,6 +20,8 @@ app = Dash(
 # Create the navbar
 navbar = create_navbar()
 
+# Footer
+footer = create_footer()
 
 # layout
 app.layout = html.Div(
@@ -26,6 +29,7 @@ app.layout = html.Div(
     children=[
         navbar,
         dash.page_container,
+        footer,
     ],
 )
 
