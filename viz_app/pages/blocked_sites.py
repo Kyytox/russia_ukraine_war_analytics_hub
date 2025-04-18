@@ -39,8 +39,11 @@ dmt_by_metrics_over_time = pd.read_parquet(
 dmt_by_authority_category = pd.read_parquet(
     f"{PATH_DMT_BLOCK_SITE}/dmt_by_authority_category.parquet"
 )
-dmt_by_country_category = pd.read_parquet(
-    f"{PATH_DMT_BLOCK_SITE}/dmt_by_country_by_category.parquet"
+dmt_by_country_category_top_6 = pd.read_parquet(
+    f"{PATH_DMT_BLOCK_SITE}/dmt_by_country_by_category_top_6.parquet"
+)
+dmt_by_country_category_after_6 = pd.read_parquet(
+    f"{PATH_DMT_BLOCK_SITE}/dmt_by_country_by_category_after_6.parquet"
 )
 
 dmt_all_data = pd.read_parquet(f"{PATH_DMT_BLOCK_SITE}/dmt_all_data.parquet")
@@ -57,13 +60,6 @@ LIST_TOP_COUNTRY = (
 list_ban_authority = dmt_global[dmt_global["type_metric"] == "by_banning_authority"][
     "metric"
 ].unique()
-
-
-# DF TREE MAP
-# keep only the top 6 country
-df_tree = dmt_by_country_category[
-    dmt_by_country_category["country_domain"].isin(LIST_TOP_COUNTRY[:6])
-]
 
 
 markdown_text = """
@@ -698,8 +694,8 @@ def group_8(f1):
     df_country["month"] = df_country["month"].astype(str).str[:7]
 
     # Get top countries for better visibility
-    top_countries = df_country["metric"].value_counts().nlargest(20).index.tolist()
-    df_country_filtered = df_country[df_country["metric"].isin(top_countries)]
+    top_countries = df_country["metric"].value_counts().nlargest(25).index.tolist()
+    df_country = df_country[df_country["metric"].isin(top_countries)]
 
     # Pivot
     df_country = df_country.pivot_table(
@@ -713,7 +709,7 @@ def group_8(f1):
 
     fig_country_month = generate_stacked_bar(
         title="Website Blocking Trends by Country",
-        subtitle="Monthly distribution of blocked domains by country",
+        subtitle="Monthly distribution of blocked domains by country (top 25)",
         df=df_country,
         x_="month",
         y_=None,
@@ -790,53 +786,26 @@ def group_10(f1):
     #########################################
     # Top 6 countries by category
     # Treemap
-    colors_country = {
-        "United States": "#9e6e54",
-        "Russia": "#f3cf60",
-        "Unknown": "#dbbaab",
-        "Ukraine": "#aa6795",
-        "United Kingdom": "#e0afd2",
-        "Belarus": "#4fa24d",
-    }
 
-    # Prepare data for treemap
-    df_top_countries = df_tree.copy()
-    df_top_countries["parents"] = "Total"
-    df_top_countries["colors"] = df_top_countries["country_domain"].map(colors_country)
+    # Get unique countries from the dataframe
+    unique_countries = dmt_by_country_category_top_6["label"].unique()
 
-    fig_treemap = go.Figure(
-        go.Treemap(
-            labels=df_top_countries["country_domain"]
-            + " - "
-            + df_top_countries["category"],
-            parents=df_top_countries["parents"],
-            values=df_top_countries["count"],
-            branchvalues="total",
-            marker=dict(
-                colors=df_top_countries["colors"],
-                line=dict(width=0.5, color="#0E1117"),
-            ),
-            texttemplate="%{label}<br>%{value} blocked websites",
-            hovertemplate="%{label}<br>%{value} blocked websites<extra></extra>",
-        )
-    )
-    # fig_treemap = generate_treemap(
-    #     df_top_countries,
-    #     id="country_domain" + " - " + "category",
-    #     label="country_domain" + " - " + "category",
-    #     parent="parents",
-    #     value="count",
-    #     color="colors",
-    #     texttemplate="%{label}<br>%{value} blocked websites",
-    #     hovertemplate="%{label}<br>%{value} blocked websites<extra></extra>",
-    # )
+    # Get a color palette with enough colors
+    color_palette = px.colors.qualitative.Safe + px.colors.qualitative.Vivid
 
-    fig_treemap = fig_upd_layout(
-        fig_treemap,
+    # Create colors_country dictionary dynamically
+    colors_country = {}
+    for i, country in enumerate(unique_countries):
+        # Assign color from palette (cycling if needed)
+        colors_country[country] = color_palette[i % len(color_palette)]
+
+    # Create the treemap
+    fig_treemap = generate_treemap(
         title="Top Blocked Website Categories by Country in Russia",
-        subtitle="For the Top 6 Country",
+        subtitle="",
+        df=dmt_by_country_category_top_6,
+        colors=colors_country,
     )
-    fig_treemap.update_layout(height=600)
 
     return [fig_treemap]
 
@@ -853,8 +822,8 @@ def group_11(f1):
     # Top 6+ countries by category
     # Stacked bar chart
     # Assuming df is your DataFrame and LIST_TOP_COUNTRY is defined
-    df = dmt_by_country_category[
-        dmt_by_country_category["country_domain"].isin(LIST_TOP_COUNTRY[6:])
+    df = dmt_by_country_category_after_6[
+        dmt_by_country_category_after_6["country_domain"].isin(LIST_TOP_COUNTRY[6:])
     ]
 
     # Sort df according to list TOP_COUNTRY

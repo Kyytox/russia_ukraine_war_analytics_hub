@@ -288,8 +288,6 @@ def generate_treemap(title, subtitle, df, colors, **kwargs):
         plotly.graph_objects.Figure: Treemap chart figure.
     """
 
-    df["color"] = df["label"].apply(lambda x: get_colors(x, colors))
-
     fig = go.Figure(
         go.Treemap(
             ids=df["id"],
@@ -298,7 +296,7 @@ def generate_treemap(title, subtitle, df, colors, **kwargs):
             values=df["value"],
             marker=dict(
                 cornerradius=CORNER_RADIUS,
-                colors=df["color"],
+                colors=[get_colors(elem, colors) for elem in df["label"]],
             ),
             textinfo="label+percent parent+value",
             branchvalues="total",
