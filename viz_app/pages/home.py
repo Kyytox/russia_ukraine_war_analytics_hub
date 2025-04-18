@@ -4,6 +4,7 @@ from dash import html, dcc
 from utils.variables import DICT_CONTENT
 from assets.components.cards import create_card
 
+
 dash.register_page(__name__, path="/")
 
 
@@ -26,6 +27,27 @@ layout = html.Div(
                 "paddingTop": "20px",
             },
         ),
+        # Brief introduction
+        html.Div(
+            className="section-intro",
+            children=[
+                html.Div(
+                    className="intro-header",
+                    children=[
+                        html.Div(
+                            className="intro-content",
+                            children=[
+                                dcc.Markdown(
+                                    """
+                                Welcome to the Ukraine-Russia Conflict Data Hub. This platform aims to aggregate and analyze data related to the ongoing invasion of Ukraine by Russia.
+                                """,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            ],
+        ),
         # Cards
         html.Div(
             [
@@ -44,6 +66,7 @@ layout = html.Div(
                 "flexDirection": "row",
                 "flexWrap": "wrap",
                 "justifyContent": "center",
+                "marginBottom": "100px",
             },
         ),
     ],
