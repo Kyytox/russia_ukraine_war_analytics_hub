@@ -1,4 +1,7 @@
 import pandas as pd
+import numpy as np
+import json
+
 import plotly.graph_objects as go
 
 import dash
@@ -385,6 +388,53 @@ def generate_sunburst(title, subtitle, df, colors, **kwargs):
     return fig
 
 
+def get_region():
+    """
+    Get the region and id from the json file
+    """
+
+    # read file json
+    with open("core/utils/ru_region.json") as file:
+        data = json.load(file)
+
+    # get id and name
+    dict_region = {}
+    for i in range(len(data["features"])):
+        dict_region[data["features"][i]["properties"]["name"]] = data["features"][i][
+            "id"
+        ]
+
+    # update dict
+    dict_region = {
+        k.replace("Moskva", "Moscow").replace("'", ""): v
+        for k, v in dict_region.items()
+    }
+
+    return dict_region
+
+
+def prepare_df_region(df_region):
+    """
+    Prepare the dataframe for the map chart
+    """
+    # get the total number of incidents by region
+    df_json_region = get_region()
+
+    # convert to df
+    df_json_region = pd.DataFrame(
+        df_json_region.items(), columns=["region", "id_region"]
+    )
+
+    # add id_region missing in the geojson file
+    df = (
+        df_region.merge(df_json_region, left_on="label", right_on="region", how="right")
+        .fillna(0)
+        .rename(columns={"id_region_y": "id_region"})
+    )
+
+    return df
+
+
 def generate_map(title, subtitle, polygons, loc, text_, z_, **kwargs):
     """
     Generate a map chart.
@@ -458,3 +508,190 @@ def generate_wordcloud(df):
         # shrinkToFit=True,
         shape="square",
     )
+
+
+def generate_funnel(df, title, subtitle=""):
+    """
+    Create a funnel chart
+    """
+    fig = go.Figure(
+        go.Funnel(
+            y=df["niv"],
+            x=df["count"],
+            textinfo="label+value",
+            marker=dict(
+                color=[COLORS_RAILWAY[label] for label in df["niv"]],
+                line=dict(width=4, color="rgb(38, 45, 58)"),
+            ),
+            connector=dict(
+                line=dict(color="rgb(38, 45, 58)", width=1),
+                fillcolor="rgb(29, 34, 44)",
+            ),
+            textposition="inside",
+            textfont=dict(color="white", size=16),
+            insidetextanchor="middle",
+            opacity=0.90,
+        )
+    )
+
+    # Update the layout to modify the color between blocks
+    fig.update_traces(connector=dict(line=dict(color="rgba(153, 131, 131, 0.5)")))
+
+    fig.update_layout(
+        title=dict(
+            text=title,
+            pad=dict(l=20),
+            y=0.99,
+            subtitle=dict(
+                text=subtitle,
+            ),
+        ),
+    )
+
+    fig.update_yaxes(visible=False)
+    fig = fig_upd_layout(fig)
+
+    return fig
+
+
+def generate_waterfall(df, title, subtitle="", is_group=False):
+    """
+    Create a waterfall chart
+    """
+
+    def categorize_age(age):
+        if int(age) < 18:
+            return "<18"
+        elif 18 <= int(age) <= 30:
+            return "18-30"
+        elif 31 <= int(age) <= 50:
+            return "31-50"
+        else:
+            return ">50"
+
+    if is_group:
+
+        # create age group
+        df["age_group"] = df["label"].apply(categorize_age)
+
+        fig = go.Figure()
+
+        # add traces
+        for age_group, group_df in df.groupby("age_group"):
+            fig.add_trace(
+                go.Waterfall(
+                    name=f"Age Group {age_group}",
+                    orientation="v",
+                    measure=["relative"] * len(group_df),
+                    x=group_df["label"],
+                    y=group_df["total_inc"],
+                    textposition="outside",
+                    text=group_df["total_inc"],
+                    hovertemplate="Arrested: %{text}",
+                    hovertext=group_df["label"],
+                    connector={"visible": False},
+                    increasing=dict(marker=dict(color=COLORS_RAILWAY[age_group])),
+                )
+            )
+
+    else:
+        fig = go.Figure(
+            go.Waterfall(
+                orientation="v",
+                measure=["relative"] * len(df),
+                x=df["label"],
+                y=df["total_inc"],
+                textposition="outside",
+                text=df["total_inc"],
+                connector={
+                    "visible": False,
+                },
+                name="",
+                hovertemplate="Age: %{x}<br>Arrested: %{text}",
+                hovertext=df["label"],
+            ),
+        )
+
+    # add x-axis data age
+    fig.update_xaxes(
+        title_text="Age",
+        type="linear" if is_group else "log",
+        showgrid=True,
+        tickvals=np.arange(int(df["label"].min()), int(df["label"].max()) + 1, 5),
+    )
+
+    fig.update_yaxes(
+        title_text="Number of Partisans",
+        showgrid=True,
+        tickvals=np.arange(0, df["total_inc"].sum() + 1, 10),
+    )
+
+    fig.update_layout(
+        title=dict(
+            text=title,
+            subtitle=dict(
+                text=subtitle,
+            ),
+        ),
+        showlegend=False,
+        font=dict(size=14),
+    )
+
+    fig = fig_upd_layout(fig)
+
+    return fig
+
+
+# Get the total number of incidents for a given label
+def get_total_incidents(df, label, colx, coly):
+    if label in df[colx].values:
+        return df[df[colx] == label]["total_inc"].sum()
+    return df[df[coly] == label]["total_inc"].sum()
+
+
+def generate_sankey(df, colx, coly, title, subtitle="", df_total=None):
+    """
+    Create a sankey chart
+    """
+    data = dict(
+        type="sankey",
+        node=dict(
+            pad=21,
+            thickness=15,
+            line=dict(color="black", width=0.6),
+            label=df["label"].dropna(),
+            color=[COLORS_RAILWAY[label] for label in df["label"] if label != ""],
+            hovertemplate="Incident: %{label}<br>Number Incidents: %{value}",
+        ),
+        link=dict(
+            source=df["source"],
+            target=df["target"],
+            value=df["value"],
+            color=[COLORS_RAILWAY[df["label"][i]] for i in df["source"]],
+            hovertemplate="Source: %{source.label}<br>Target: %{target.label}<br>Number Incidents: %{value}",
+        ),
+    )
+
+    # Add the total number of incidents to the labels
+    for i, label in enumerate(data["node"]["label"]):
+        total_incidents = get_total_incidents(df_total, label, colx, coly)
+        data["node"]["label"][i] += f" ({total_incidents})"
+
+    fig = go.Figure(
+        data,
+        layout=dict(
+            title=dict(
+                text=title,
+                pad=dict(l=20),
+                y=0.99,
+                subtitle=dict(
+                    text=subtitle,
+                ),
+            ),
+            font_size=16,
+            height=680,
+        ),
+    )
+    fig = fig_upd_layout(fig)
+
+    return fig

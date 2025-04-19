@@ -180,7 +180,7 @@ h3 {
 	align-items: flex-start;
 	padding: 10px;
 	background-color: var(--secondary-bg-color);
-	border: var(--border);
+	/* border: var(--border); */
 	border-radius: 8px;
 	-webkit-box-shadow: var(--box-shadow);
 	-moz-box-shadow: var(--box-shadow);
@@ -205,7 +205,7 @@ h3 {
 	/* margin: 7px; */
 	padding: 10px;
 	background-color: var(--secondary-bg-color);
-	border: var(--border);
+	/* border: var(--border); */
 	border-radius: 8px;
 	-webkit-box-shadow: var(--box-shadow);
 	-moz-box-shadow: var(--box-shadow);
@@ -227,7 +227,7 @@ h3 {
 	align-items: center;
 	padding: 10px;
 	background-color: var(--secondary-bg-color);
-	border: var(--border);
+	/* border: var(--border); */
 	border-radius: 8px;
 	-webkit-box-shadow: var(--box-shadow);
 	-moz-box-shadow: var(--box-shadow);

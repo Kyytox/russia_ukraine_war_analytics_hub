@@ -8,27 +8,16 @@ import dash_daq as daq
 
 import plotly.graph_objects as go
 
-from dash_holoniq_wordcloud import DashWordcloud
-
 from utils.variables import PATH_DMT_INC_RAILWAY
-from utils.variables_charts import COLORS_RAILWAY, PAPER_BGCOLOR, PLOT_BGCOLOR
+from utils.variables_charts import COLORS_RAILWAY
 
 from assets.components.warning_sources import warning_sources
-from assets.components.figure_chart import box_chart, figure_chart_2
-
-from utils.railway_charts import (
-    create_treemap,
-    create_sankey,
-    create_wordcloud,
-    create_funnel,
-    create_waffle,
-    create_waterfall,
-    prepare_df_region,
-)
+from assets.components.figure_chart import box_chart
 
 
 from utils.utils_charts import fig_upd_layout
 from utils.generate_chart import (
+    prepare_df_region,
     generate_pie,
     generate_bar,
     generate_line,
@@ -39,14 +28,14 @@ from utils.generate_chart import (
     generate_stacked_bar,
     generate_map,
     generate_wordcloud,
+    generate_funnel,
+    generate_sankey,
+    generate_waterfall,
 )
 
 dash.register_page(
     __name__,
-    external_stylesheets=[
-        # "/assets/css/main.css",
-        # "/assets/css/pg_incidents_railway.css",
-    ],
+    external_stylesheets=[],
 )
 
 sufix_subtitle = "on the Russian Railways Network from 2022 to 2024"
@@ -731,7 +720,7 @@ def tab_incidents_types():
     # #########################################
     # #########################################
     # Sankey diagram
-    fig6 = create_sankey(
+    fig6 = generate_sankey(
         df=df_sankey,
         colx="inc_type",
         coly="dmg_eqp",
@@ -860,7 +849,7 @@ def tab_damaged_equipments():
     # #########################################
     # #########################################
     # Sankey diagram
-    fig6 = create_sankey(
+    fig6 = generate_sankey(
         df=df_sankey_tab3,
         colx="dmg_eqp",
         coly="inc_type",
@@ -1258,7 +1247,7 @@ def tab_partisans_arrest():
     # #########################################
     # #########################################
     # create funnel
-    fig1 = create_funnel(
+    fig1 = generate_funnel(
         df_funnel,
         title="Funnel of Partisans Arrested",
         subtitle=f"Visual representation of the funnel of partisans arrested for sabotage incidents {sufix_subtitle}",
@@ -1282,19 +1271,17 @@ def tab_partisans_arrest():
     # #########################################
     # Number of Applicable Laws
     # Treemap
-    fig3 = create_treemap(
-        ids=df_app_laws["label"],
-        labels=df_app_laws["label"],
-        parents=[""] * len(df_app_laws),
-        values=df_app_laws["total_inc"],
+    # create column colors
+    df_app_laws["color"] = [COLORS_RAILWAY[label] for label in df_app_laws["label"]]
+
+    fig3 = generate_treemap2(
         title="Distribution of Applicable Laws",
         subtitle=f"Laws of the Criminal Code of the Russian Federation applied to the partisans arrested <br>for sabotage incidents {sufix_subtitle}",
-        map_colors=[COLORS_RAILWAY[label] for label in df_app_laws["label"]],
-    )
-    fig3 = fig_upd_layout(
-        fig3,
-        title="Distribution of Applicable Laws",
-        subtitle=f"Laws of the Criminal Code of the Russian Federation applied to the partisans arrested <br>for sabotage incidents {sufix_subtitle}",
+        ids_=df_app_laws["label"],
+        labels_=df_app_laws["label"],
+        parents_=[""] * len(df_app_laws),
+        values_=df_app_laws["total_inc"],
+        colors=df_app_laws["color"],
     )
 
     # #########################################
@@ -1307,7 +1294,7 @@ def tab_partisans_arrest():
     # #########################################
     # Number of Partisans Age
     # Waterfall Chart
-    fig5 = create_waterfall(
+    fig5 = generate_waterfall(
         df_waterfall,
         title="Number of Partisans Arrested by Age",
         subtitle=f"Number of partisans arrested by age for sabotage incidents {sufix_subtitle}",
@@ -1318,7 +1305,7 @@ def tab_partisans_arrest():
     # #########################################
     # Number of Age Group
     # Waterfall Chart
-    fig6 = create_waterfall(
+    fig6 = generate_waterfall(
         df_waterfall,
         title="Number of Partisans Arrested by Age Group",
         subtitle=f"Number of partisans arrested by age group for sabotage incidents {sufix_subtitle}",
