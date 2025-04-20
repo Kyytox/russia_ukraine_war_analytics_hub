@@ -32,6 +32,19 @@ dash.register_page(__name__)
 
 dmt_global = pd.read_parquet(f"{PATH_DMT_BLOCK_SITE}/dmt_global.parquet")
 dmt_by_date = pd.read_parquet(f"{PATH_DMT_BLOCK_SITE}/dmt_by_date.parquet")
+
+# New files with pre-calculated pivots
+dmt_by_authority_over_time = pd.read_parquet(
+    f"{PATH_DMT_BLOCK_SITE}/dmt_by_authority_over_time.parquet"
+)
+dmt_by_category_over_time = pd.read_parquet(
+    f"{PATH_DMT_BLOCK_SITE}/dmt_by_category_over_time.parquet"
+)
+dmt_by_country_over_time = pd.read_parquet(
+    f"{PATH_DMT_BLOCK_SITE}/dmt_by_country_over_time.parquet"
+)
+
+# Keep the old file for compatibility with the rest of the code
 dmt_by_metrics_over_time = pd.read_parquet(
     f"{PATH_DMT_BLOCK_SITE}/dmt_by_metrics_over_time.parquet"
 )
@@ -447,7 +460,9 @@ def group_4(f1, f2):
     #########################################
     #########################################
     # Bar chart by month
-    df_month = dmt_by_date[dmt_by_date["type_metric"] == "by_month"]
+    df_month = dmt_by_date[
+        (dmt_by_date["type_metric"] == "by_month") & (dmt_by_date["count"] > 0)
+    ]
     df_month["date"] = df_month["date"].astype(str).str[:7]
     df_month["year"] = df_month["date"].str[:4]
 
@@ -594,29 +609,21 @@ def group_6(f1, f2, f3):
     ],
 )
 def group_7(f1, f2):
-    # For banning authority
-    df_auth = dmt_by_metrics_over_time[
-        dmt_by_metrics_over_time["type_metric"] == "by_banning_authority"
-    ]
-    df_auth["month"] = df_auth["month"].astype(str).str[:7]
+    # For the blocking authority, use the pivoted dataframe directly
+    # Format the date for display
+    df_auth = dmt_by_authority_over_time.copy()
+    df_auth["month_str"] = pd.to_datetime(df_auth["month"]).dt.strftime("%Y-%m")
 
-    # Pivot
-    df_auth = df_auth.pivot_table(
-        index="month",
-        columns="metric",
-        values="count",
-        aggfunc="sum",
-        fill_value=0,
-    ).reset_index()
-    df_auth["month"] = pd.to_datetime(df_auth["month"]).dt.strftime("%Y-%m")
+    print(dmt_by_authority_over_time)
 
     fig_auth_month = generate_stacked_bar(
         title="Censorship Activity by Russian Authorities",
         subtitle="Monthly breakdown of website blocks by regulatory body",
         df=df_auth,
-        x_="month",
+        x_="month_str",
         y_=None,
         hovertemplate="%{x}<br>%{y} blocked websites<extra></extra>",
+        start_col=2,
     )
 
     fig_auth_month = fig_upd_layout(
@@ -632,29 +639,19 @@ def group_7(f1, f2):
         ),
     )
 
-    # For category
-    df_cat = dmt_by_metrics_over_time[
-        dmt_by_metrics_over_time["type_metric"] == "by_category"
-    ]
-    df_cat["month"] = df_cat["month"].astype(str).str[:7]
-
-    # Pivot
-    df_cat = df_cat.pivot_table(
-        index="month",
-        columns="metric",
-        values="count",
-        aggfunc="sum",
-        fill_value=0,
-    ).reset_index()
-    df_cat["month"] = pd.to_datetime(df_cat["month"]).dt.strftime("%Y-%m")
+    # For the category, use the pivoted dataframe directly
+    # Format the date for display
+    df_cat = dmt_by_category_over_time.copy()
+    df_cat["month_str"] = pd.to_datetime(df_cat["month"]).dt.strftime("%Y-%m")
 
     fig_cat_month = generate_stacked_bar(
         title="Content Categories Targeted for Blocking",
         subtitle="Monthly distribution of blocked websites by content type",
         df=df_cat,
-        x_="month",
+        x_="month_str",
         y_=None,
         hovertemplate="%{x}<br>%{y} blocked websites<extra></extra>",
+        start_col=2,
     )
 
     fig_cat_month = fig_upd_layout(
@@ -664,7 +661,7 @@ def group_7(f1, f2):
         legend=dict(
             orientation="v",
             xanchor="right",
-            title_text="Banning Authority",
+            title_text="Content Category",
             title_font=dict(size=12),
             font=dict(size=10),
         ),
@@ -682,37 +679,23 @@ def group_7(f1, f2):
 def group_8(f1):
     #########################################
     #########################################
-    # Block sites by month, by country domain and by banning authority
-    # Stacked bar charts for each metric over time
+    # Block sites by month, by country domain
+    # Stacked bar chart for country distribution over time
 
-    # For country domain
-    df_country = dmt_by_metrics_over_time[
-        dmt_by_metrics_over_time["type_metric"] == "by_country_domain"
-    ]
-    df_country = df_country.sort_values("count", ascending=False)
-    df_country["month"] = df_country["month"].astype(str).str[:7]
-
-    # Get top countries for better visibility
-    top_countries = df_country["metric"].value_counts().nlargest(25).index.tolist()
-    df_country = df_country[df_country["metric"].isin(top_countries)]
-
-    # Pivot
-    df_country = df_country.pivot_table(
-        index="month",
-        columns="metric",
-        values="count",
-        aggfunc="sum",
-        fill_value=0,
-    ).reset_index()
-    df_country["month"] = pd.to_datetime(df_country["month"]).dt.strftime("%Y-%m")
+    # Use the country pivoted dataframe directly
+    # Format the date for display
+    dmt_by_country_over_time["month_str"] = pd.to_datetime(
+        dmt_by_country_over_time["month"]
+    ).dt.strftime("%Y-%m")
 
     fig_country_month = generate_stacked_bar(
         title="Website Blocking Trends by Country",
         subtitle="Monthly distribution of blocked domains by country (top 25)",
-        df=df_country,
-        x_="month",
+        df=dmt_by_country_over_time,
+        x_="month_str",
         y_=None,
         hovertemplate="%{x}<br>%{y} blocked websites<extra></extra>",
+        start_col=2,
     )
 
     fig_country_month = fig_upd_layout(
@@ -820,30 +803,11 @@ def group_11(f1):
     #########################################
     # Top 6+ countries by category
     # Stacked bar chart
-    # Assuming df is your DataFrame and LIST_TOP_COUNTRY is defined
-    df = dmt_by_country_category_after_6[
-        dmt_by_country_category_after_6["country_domain"].isin(LIST_TOP_COUNTRY[6:])
-    ]
-
-    # Sort df according to list TOP_COUNTRY
-    df["country_domain"] = pd.Categorical(
-        df["country_domain"], categories=LIST_TOP_COUNTRY[6:], ordered=True
-    )
-    df = df.sort_values("country_domain")
-
-    # Pivot
-    df = df.pivot_table(
-        index="country_domain",
-        columns="category",
-        values="count",
-        aggfunc="sum",
-        fill_value=0,
-    ).reset_index()
 
     fig_bar_country_cat = generate_stacked_bar(
         title="Blocked Websites by Country and Category",
         subtitle="",
-        df=df,
+        df=dmt_by_country_category_after_6,
         x_="country_domain",
         y_=None,
         hovertemplate="%{x}<br>%{y} blocked websites<extra></extra>",
