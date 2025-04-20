@@ -69,9 +69,5 @@ layout = html.Div(
                 "justifyContent": "center",
             },
         ),
-        html.Div(
-            className="div-group-chart",
-            children=[],
-        ),
     ],
 )
