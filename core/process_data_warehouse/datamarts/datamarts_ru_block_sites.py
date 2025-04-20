@@ -129,48 +129,61 @@ def dmt_by_date(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @task(name="dmt-by-metrics-over-time", task_run_name="dmt-by-metrics-over-time")
-def dmt_by_metrics_over_time(df: pd.DataFrame) -> pd.DataFrame:
+def dmt_by_metrics_over_time(df: pd.DataFrame, metric: str) -> pd.DataFrame:
     """
-    Create datamart for number of blocked sites by date and metrics
-    - Month
-    - Metrics
+    Create datamart for number of blocked sites by month and metrics with pivot
 
     Args:
         df (pd.DataFrame): Dataframe to control
 
     Returns:
-        df (pd.DataFrame): Dataframe with datamart by date and metrics
+        df_cat (pd.DataFrame): Pivoted dataframe with months as index and categories as columns
     """
-
-    df_final = pd.DataFrame()
-    # list_metrics = ["banning_authority", "country_domain", "category", "subcategory"]
-    list_metrics = ["banning_authority", "country_domain", "category"]
-
     # range date
     df_date = pd.DataFrame(
-        {
-            "month": pd.date_range(start="2022-01-01", end="2024-12-31", freq="MS"),
-        }
+        {"month": pd.date_range(start="2022-01-01", end="2024-12-31", freq="MS")}
     )
 
-    for metric in list_metrics:
-        df_tmp = df.groupby(["month", metric]).size().reset_index(name="count")
-        df_tmp.rename(columns={metric: "metric"}, inplace=True)
+    # Group by month and authority
+    df_tmp = df.groupby(["month", metric]).size().reset_index(name="count")
 
-        # merge with date (for missing values)
-        df_tmp = df_date.merge(df_tmp, on="month", how="left")
+    if metric == "banning_authority":
+        # Replace NaN in banning_authority with "Not specified"
+        df_tmp[metric] = df_tmp[metric].fillna("Not specified")
+    elif metric == "country_domain":
+        # Replace None in country_domain with "Unknown"
+        df_tmp[metric] = df_tmp[metric].fillna("Unknown")
 
-        df_tmp["type_metric"] = f"by_{metric}"
-        df_tmp["count"] = df_tmp["count"].fillna(0).astype(int)
+    # Merge with date range for missing values
+    df_tmp = df_date.merge(df_tmp, on="month", how="left")
+    df_tmp["count"] = df_tmp["count"].fillna(0).astype(int)
 
-        # replcae metric None by "Not specified"
-        if metric == "country_domain":
-            df_tmp["metric"] = df_tmp["metric"].replace({None: "Unknown"})
-        elif metric == "banning_authority":
-            df_tmp["metric"] = df_tmp["metric"].replace({np.nan: "Not specified"})
+    # Format month as string
+    df_tmp["month_str"] = df_tmp["month"].astype(str).str[:7]
 
-        # concat
-        df_final = pd.concat([df_final, df_tmp], ignore_index=True)
+    if metric == "country_domain":
+        # Get top 25 countries for better visibility
+        top_countries = (
+            df_tmp.groupby("country_domain")["count"].sum().nlargest(25).index.tolist()
+        )
+        df_tmp = df_tmp[df_tmp["country_domain"].isin(top_countries)]
+
+    # Pivot the data
+    df_final = df_tmp.pivot_table(
+        index="month",
+        columns=metric,
+        values="count",
+        aggfunc="sum",
+        fill_value=0,
+    ).reset_index()
+
+    # Format month for display
+    df_final["month_str"] = pd.to_datetime(df_final["month"]).dt.strftime("%Y-%m")
+
+    # Reorder columns to put month_str first
+    cols = df_final.columns.tolist()
+    cols.remove("month_str")
+    df_final = df_final[["month_str"] + cols]
 
     return df_final
 
@@ -218,8 +231,26 @@ def dmt_by_authority_category(df: pd.DataFrame) -> pd.DataFrame:
     return df_final
 
 
-@task(name="dmt-country-by-category", task_run_name="dmt-country-by-category")
-def dmt_country_by_category(df: pd.DataFrame) -> pd.DataFrame:
+@task(name="get-list-top-countries", task_run_name="get-list-top-countries")
+def get_list_top_countries(df: pd.DataFrame, n: int = 6) -> list:
+    """
+    Get the top n countries with the most blocked sites
+
+    Args:
+        df (pd.DataFrame): Dataframe to control
+        n (int): Number of top countries to get
+
+    Returns:
+        list: List of top n countries
+    """
+
+    # Get the top n countries with the most blocked sites
+    top_countries = df["country_domain"].value_counts().head(n).index.tolist()
+    return top_countries
+
+
+@task(name="dmt-country-by-category-top6", task_run_name="dmt-country-by-category-top6")
+def dmt_country_by_category_top6(df: pd.DataFrame) -> pd.DataFrame:
     """
     Create datamart for number of blocked sites by country and category
     For use in Treemap diagram
@@ -236,7 +267,7 @@ def dmt_country_by_category(df: pd.DataFrame) -> pd.DataFrame:
     df["country_domain"] = df["country_domain"].fillna("Unknown")
 
     # Get the top 6 countries with the most blocked sites
-    top_countries = df["country_domain"].value_counts().head(6).index.tolist()
+    top_countries = get_list_top_countries(df, n=6)
 
     # Filter dataframe to only include top countries
     df_filtered = df[df["country_domain"].isin(top_countries)]
@@ -272,6 +303,56 @@ def dmt_country_by_category(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(df_final)
 
 
+@task(
+    name="dmt-country-by-category-after6",
+    task_run_name="dmt-country-by-category-after6",
+)
+def dmt_country_by_category_after6(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create datamart for number of blocked sites by country and category
+    For countrues that are not in the top 6
+    For use in Stacked Bar diagram
+
+    Args:
+        df (pd.DataFrame): Dataframe to control
+
+    Returns:
+        df (pd.DataFrame): Dataframe with datamart by country and category
+    """
+
+    # Get the top 6 countries with the most blocked sites
+    top_countries = get_list_top_countries(df, n=6)
+
+    # Filter dataframe to not include top countries
+    df = df[~df["country_domain"].isin(top_countries)]
+
+    # get list of countries sorted by count
+    df_sorted = df.groupby("country_domain").size().reset_index(name="count")
+    list_sorted_countries = df_sorted.sort_values("count", ascending=False)[
+        "country_domain"
+    ].tolist()
+
+    # Count by country and category
+    df = df.groupby(["country_domain", "category"]).size().reset_index(name="count")
+
+    # Sort df according to list TOP_COUNTRY
+    df["country_domain"] = pd.Categorical(
+        df["country_domain"], categories=list_sorted_countries, ordered=True
+    )
+    df = df.sort_values("country_domain")
+
+    # Pivot
+    df = df.pivot_table(
+        index="country_domain",
+        columns="category",
+        values="count",
+        aggfunc="sum",
+        fill_value=0,
+    ).reset_index()
+
+    return df
+
+
 @flow(
     name="DWH Subflow Datamarts Russia Blocked Sites",
     flow_run_name="dwh-subflow-dmt-russia-blocked-sites",
@@ -284,8 +365,6 @@ def flow_dmt_russia_blocked_sites():
 
     # read data from transform
     df = read_data(PATH_DWH_SOURCES, "russia_blocked_sites")
-    print("df")
-    print(df)
 
     # Cont Global
     df_tmp = dmt_global(df)
@@ -295,21 +374,29 @@ def flow_dmt_russia_blocked_sites():
     df_tmp = dmt_by_date(df)
     save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_date", df_tmp)
 
-    # By date and metrics
-    df_tmp = dmt_by_metrics_over_time(df)
-    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_metrics_over_time", df_tmp)
+    # Authority over time
+    df_tmp = dmt_by_metrics_over_time(df, "banning_authority")
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_authority_over_time", df_tmp)
+
+    # Country over time
+    df_tmp = dmt_by_metrics_over_time(df, "country_domain")
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_country_over_time", df_tmp)
+
+    # Category over time
+    df_tmp = dmt_by_metrics_over_time(df, "category")
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_category_over_time", df_tmp)
 
     # By Authorithy and Category
     df_tmp = dmt_by_authority_category(df)
     save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_authority_category", df_tmp)
 
-    # Blocked by Country Domain and Category
-    df_tmp = df.groupby(["country_domain", "category"]).size().reset_index(name="count")
-    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_country_by_category_after_6", df_tmp)
-
-    # Blocked by Country Domain and Category
-    df_tmp = dmt_country_by_category(df)
+    # Blocked by Country Domain and Category Top 6
+    df_tmp = dmt_country_by_category_top6(df)
     save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_country_by_category_top_6", df_tmp)
+
+    # Blocked by Country Domain and Category Top 6 +
+    df_tmp = dmt_country_by_category_after6(df)
+    save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_by_country_by_category_after_6", df_tmp)
 
     # dmt_all_data
     save_data(PATH_DMT_RU_BLOCK_SITES, "dmt_all_data", df)
