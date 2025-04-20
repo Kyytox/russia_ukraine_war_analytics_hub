@@ -28,4 +28,18 @@
 	#container-pg_weap_fig2 {
 		width: 100% !important;
 	}
+
+	#container-pg_weap_fig2 #pg_weap_fig2 {
+		height: 75vh !important;
+	}
+
+}
+
+
+@media (max-width: 850px) {
+	/* 
+	#container-pg_weap_fig1,
+	#container-pg_weap_fig2 {
+		width: 100% !important;
+	} */
 }
