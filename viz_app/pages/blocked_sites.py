@@ -43,11 +43,6 @@ dmt_by_category_over_time = pd.read_parquet(
 dmt_by_country_over_time = pd.read_parquet(
     f"{PATH_DMT_BLOCK_SITE}/dmt_by_country_over_time.parquet"
 )
-
-# Keep the old file for compatibility with the rest of the code
-dmt_by_metrics_over_time = pd.read_parquet(
-    f"{PATH_DMT_BLOCK_SITE}/dmt_by_metrics_over_time.parquet"
-)
 dmt_by_authority_category = pd.read_parquet(
     f"{PATH_DMT_BLOCK_SITE}/dmt_by_authority_category.parquet"
 )
