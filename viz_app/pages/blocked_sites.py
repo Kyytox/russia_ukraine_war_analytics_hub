@@ -103,7 +103,7 @@ layout = html.Div(
     children=[
         html.H1(
             className="page-title",
-            children="🚫 Sites Web Bloqués en Russie",
+            children="🚫 Websites Blocked in Russia",
         ),
         warning_sources(markdown_text),
         html.Div(
@@ -173,7 +173,7 @@ layout = html.Div(
             className="section-title",
             children=[
                 html.H2(
-                    "Évolution des blocages de sites web au fil du temps",
+                    "Evolution of Website Blocking Over Time",
                     style={"marginTop": "40px"},
                 ),
             ],
@@ -207,7 +207,7 @@ layout = html.Div(
             className="section-title",
             children=[
                 html.H2(
-                    "Tendances de blocage par pays, autorité et catégorie",
+                    "Blocking Trends by Country, Authority and Category",
                     style={"marginTop": "40px"},
                 ),
             ],
@@ -232,7 +232,7 @@ layout = html.Div(
             className="section-title",
             children=[
                 html.H2(
-                    "Relations entre autorités, catégories et pays",
+                    "Relationships Between Authorities, Categories and Countries",
                     style={"marginTop": "40px"},
                 ),
             ],

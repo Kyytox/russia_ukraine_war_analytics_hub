@@ -25,6 +25,7 @@ navbar = create_navbar()
 # Footer
 footer = create_footer()
 
+
 # layout
 app.layout = html.Div(
     children=[
