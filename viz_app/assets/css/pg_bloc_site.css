@@ -1,6 +1,22 @@
 /* responsive */
+@media (max-width: 1270px) {
+
+	#container-pg_block_fig_bar_country,
+	#container-pg_block_fig_bar_sub_cat,
+	#container-pg_block_fig_heat_22,
+	#container-pg_block_fig_heat_23,
+	#container-pg_block_fig_heat_24 {
+		width: 49% !important;
+	}
+}
+
 @media (max-width: 1100px) {
 
+	/* #container-pg_block_fig_bar_country,
+	#container-pg_block_fig_bar_sub_cat, */
+	#container-pg_block_fig_heat_22,
+	#container-pg_block_fig_heat_23,
+	#container-pg_block_fig_heat_24,
 	#container-pg_block_fig_map,
 	#container-pg_block_fig_auth_month,
 	#container-pg_block_fig_cat_month,
@@ -13,4 +29,10 @@
 }
 
 
-@media (max-width: 850px) {}
+@media (max-width: 850px) {
+
+	#container-pg_block_fig_bar_country,
+	#container-pg_block_fig_bar_sub_cat {
+		width: 100% !important;
+	}
+}

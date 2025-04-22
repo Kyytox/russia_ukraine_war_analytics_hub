@@ -341,6 +341,26 @@ h3 {
 
 
 
+@media (max-width: 1270px) {
+
+	.div-group-metrics {
+		width: 100% !important;
+		flex-direction: row;
+		align-items: flex-start;
+	}
+
+	.div-metrics {
+		width: 100%;
+		margin-bottom: 0;
+	}
+
+	.div-metrics p {
+		margin-bottom: 0;
+	}
+}
+
+
+
 @media (max-width: 1100px) {
 
 	.div-figure-chart {

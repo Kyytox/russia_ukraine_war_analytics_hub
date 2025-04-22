@@ -4,9 +4,6 @@ import json
 
 import plotly.graph_objects as go
 
-import dash
-from dash import Dash, dcc, html, Input, Output, callback
-
 from dash_holoniq_wordcloud import DashWordcloud
 
 
@@ -67,6 +64,7 @@ def generate_pie(title, subtitle, labels, values, center_txt, dict_colors, **kwa
                 colors=[get_colors(elem, dict_colors) for elem in labels],
                 line=dict(width=0.4, color="#0E1117"),
             ),
+            textfont=dict(size=12),
             textinfo=f"label+percent+value",
             hoverinfo="label+percent+value",
             title=dict(
@@ -110,7 +108,8 @@ def generate_bar(title, subtitle, x_, y_, text, colors, **kwargs):
                 line=dict(width=0.3, color="#171718"),
             ),
             text=text,
-            textposition="outside",
+            textfont=dict(size=12),
+            # textposition="outside",
             # hoverinfo="y+text",
             **kwargs,
         )
@@ -154,6 +153,7 @@ def generate_stacked_bar(
                 ),
                 text=df[value],
                 textposition="auto",
+                textfont=dict(size=12),
                 **kwargs,
             )
             for value in df.columns[start_col:]
@@ -201,6 +201,7 @@ def generate_line(
                 fill=fill,
                 marker=dict(color=COLORS_RAILWAY[value]),
                 text=df[value],
+                textfont=dict(size=12),
                 textposition="top left",
                 name=value,
                 hovertemplate="Incidents: %{y}<br>Month: %{x}",
@@ -379,6 +380,7 @@ def generate_sunburst(title, subtitle, df, colors, **kwargs):
                 colors=df["color"],
                 line=dict(width=0.4, color="#0E1117"),
             ),
+            textfont=dict(size=12),
             textinfo="label+percent parent+value",
         ),
     )
@@ -528,7 +530,7 @@ def generate_funnel(df, title, subtitle=""):
                 fillcolor="rgb(29, 34, 44)",
             ),
             textposition="inside",
-            textfont=dict(color="white", size=16),
+            textfont=dict(color="white", size=12),
             insidetextanchor="middle",
             opacity=0.90,
         )

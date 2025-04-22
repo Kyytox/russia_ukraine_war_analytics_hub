@@ -1,4 +1,8 @@
 from utils.variables_charts import (
+    TITLE_FONT_SIZE,
+    TITLE_COLOR,
+    SUBTITLE_FONT_SIZE,
+    SUBTITLE_COLOR,
     PAPER_BGCOLOR,
     PLOT_BGCOLOR,
     TEXT_COLOR,
@@ -44,7 +48,11 @@ def fig_upd_layout(
                 text=title,
                 subtitle=dict(
                     text=subtitle,
-                    font=dict(color="#d1d1d1"),
+                    font=dict(color=SUBTITLE_COLOR, size=SUBTITLE_FONT_SIZE),
+                ),
+                font=dict(
+                    color=TITLE_COLOR,
+                    size=TITLE_FONT_SIZE,
                 ),
                 xanchor="center",
                 x=0.5,

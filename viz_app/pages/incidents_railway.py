@@ -1579,9 +1579,9 @@ layout = html.Div(
             children="🚂 Incidents Russian Railways Analytics 🇷🇺",
         ),
         dcc.Tabs(
-            id="tabs-example-graph",
-            value="tab-overview",
+            id="tabs-container",
             className="tabs-container",
+            value="tab-overview",
             children=[
                 dcc.Tab(
                     label="Overview",
@@ -1627,14 +1627,14 @@ layout = html.Div(
                 ),
             ],
         ),
-        html.Div(id="tabs-content-example-graph"),
+        html.Div(id="tabs-content"),
     ],
 )
 
 
 @callback(
-    Output("tabs-content-example-graph", "children"),
-    Input("tabs-example-graph", "value"),
+    Output("tabs-content", "children"),
+    Input("tabs-container", "value"),
 )
 def render_content(tab):
     tab_functions = {

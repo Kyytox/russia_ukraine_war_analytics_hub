@@ -19,6 +19,12 @@
 	#container-pg_weap_fig2 {
 		width: 49% !important;
 	}
+
+	#container-pg_weap_fig5,
+	#container-pg_weap_fig7,
+	#container-pg_weap_fig8 {
+		width: 100% !important;
+	}
 }
 
 

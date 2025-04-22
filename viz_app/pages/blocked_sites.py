@@ -190,16 +190,16 @@ layout = html.Div(
         html.Div(
             className="div-group-chart",
             children=[
-                box_chart("pg_block_fig_year", {}, "26.5%", "60vh"),
-                box_chart("pg_block_fig_month", {}, "72.5%", "60vh"),
+                box_chart("pg_block_fig_year", {}, "26%", "60vh"),
+                box_chart("pg_block_fig_month", {}, "72%", "60vh"),
             ],
         ),
         # Cumulative chart
         html.Div(
             className="div-group-chart",
             children=[
-                box_chart("pg_block_fig_day", {}, "61%", "60vh"),
-                box_chart("pg_block_fig_cumul", {}, "38%", "60vh"),
+                box_chart("pg_block_fig_day", {}, "60.5%", "60vh"),
+                box_chart("pg_block_fig_cumul", {}, "37.5%", "60vh"),
             ],
         ),
         html.Div(
