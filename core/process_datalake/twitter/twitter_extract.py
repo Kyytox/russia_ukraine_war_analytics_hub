@@ -1,9 +1,11 @@
+import time
 import asyncio
 import yaml
 import pandas as pd
-import os
 import datetime
+from typing import List, Dict, Tuple, Any, Optional
 from twikit import Client
+from prefect.cache_policies import TASK_SOURCE
 
 from prefect import flow, task
 
@@ -11,7 +13,6 @@ from prefect import flow, task
 # Variables
 from core.config.paths import PATH_TWITTER_RAW, PATH_CREDS_API
 
-# Functions
 from core.libs.utils import (
     read_data,
     save_data,
@@ -21,169 +22,184 @@ from core.libs.utils import (
 )
 
 
+RAILWAY_WORDS = [
+    "train",
+    "derail",
+    "derailment",
+    "freight",
+    "derailed",
+    "locomotive",
+    "rails",
+    "carriages",
+]
+
+RAILWAY_ACCOUNTS = [
+    "Prune602",
+    "LXSummer1",
+    "igorsushko",
+    "wartranslated",
+    "Schizointel",
+]
+
+MAX_TWEETS = 149
+
+
 @task(name="Get credentials", task_run_name="get-credentials")
-def get_credentials():
+def get_credentials() -> List[Dict[str, str]]:
     """
-    Get credentials
+    Get Twitter account credentials from config file
 
     Returns:
-        list_creds: list of credentials
+        list_creds: List of credential dictionaries containing username, email, and password
     """
-    # get credentials
     with open(PATH_CREDS_API) as file:
         credentials = yaml.safe_load(file)
 
-    # get all 'name'
-    list_creds = []
-    for account in credentials["twitter"]:
-        list_creds.append(account)
+    return credentials.get("twitter", [])
 
-    return list_creds
+
+@task(name="Get date since and until", task_run_name="get-date-since-until")
+def get_date_since_until(df: pd.DataFrame) -> Tuple[str, str]:
+    """
+    Calculate date range for Twitter search query
+
+    Args:
+        df: DataFrame with historical tweet data
+
+    Returns:
+        tuple: (date_since, date_until) formatted as YYYY-MM-DD strings
+    """
+    # Always search up to tomorrow
+    date_until = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(
+        "%Y-%m-%d"
+    )
+
+    # Set default start date if no existing data
+    if df.empty:
+        date_since = "2022-01-01"
+    else:
+        # Get date of most recent tweet and go back one day for overlap
+        latest_date = df.loc[df["id_message"].idxmax(), "date"]
+        date_since = (
+            datetime.datetime.strptime(latest_date, "%a %b %d %H:%M:%S %z %Y")
+            - datetime.timedelta(days=1)
+        ).strftime("%Y-%m-%d")
+
+    print(f"Search date range: {date_since} to {date_until}")
+
+    return date_since, date_until
 
 
 @task(name="Create search query", task_run_name="create-search-query")
-def create_search_query(
-    list_words_filter, list_accounts_filter, date_since, date_until
-):
+def create_search_query(date_since: str, date_until: str) -> str:
     """
-    Create search query
+    Create Twitter search query with railway-related keywords and specific accounts
 
     Args:
-        list_words_filter: list of words
-        list_accounts_filter: list of accounts
-        date_since: date since
-        date_until: date until
+        date_since: Start date in YYYY-MM-DD format
+        date_until: End date in YYYY-MM-DD format
 
     Returns:
-        query: str
+        query: Formatted Twitter search query string
     """
-
-    text_words = " OR ".join(list_words_filter)
-    text_accounts = " OR ".join([f"from:{account}" for account in list_accounts_filter])
+    text_words = " OR ".join(RAILWAY_WORDS)
+    text_accounts = " OR ".join([f"from:{account}" for account in RAILWAY_ACCOUNTS])
 
     query = f"({text_words}) ({text_accounts}) until:{date_until} since:{date_since} -filter:replies"
 
     return query
 
 
-@task(name="Get date since and until", task_run_name="get-date-since-until")
-def get_date_since_until(df):
+@task(
+    name="Get Tweets",
+    task_run_name="get-tweets",
+    cache_policy=TASK_SOURCE,
+    persist_result=False,
+)
+async def get_tweets(client: Client, date_since: str, date_until: str) -> Any:
     """
-    Get date since and until
+    Fetch tweets using the Twitter API client with date filters
 
     Args:
-        df: dataframe
+        client: Authenticated Twitter API client
+        date_since: Start date in YYYY-MM-DD format
+        date_until: End date in YYYY-MM-DD format
 
     Returns:
-        date_since: str
-        date_until: str
+        list_tweets: List of tweet objects from Twitter API
     """
+    # Create search query based on keywords, accounts and dates
+    search_query = create_search_query(date_since, date_until)
 
-    day_delta = 100
+    # Execute search and get tweet results
+    list_tweets = await client.search_tweet(search_query, "Latest")
 
-    if df.empty:
-        date_since = "2022-01-01"
-
-        # date until datesince + 4 months
-        date_until = (
-            datetime.datetime.strptime(date_since, "%Y-%m-%d")
-            + datetime.timedelta(days=day_delta)
-        ).strftime("%Y-%m-%d")
-    else:
-        date_since = (
-            datetime.datetime.strptime(
-                df.loc[df["id_message"].idxmax(), "date"], "%a %b %d %H:%M:%S %z %Y"
-            )
-            - datetime.timedelta(days=1)
-        ).strftime("%Y-%m-%d")
-
-        # date until datesince + 4 months
-        date_until = (
-            datetime.datetime.strptime(date_since, "%Y-%m-%d")
-            + datetime.timedelta(days=day_delta)
-        ).strftime("%Y-%m-%d")
-
-    print("date_since from df:", date_since)
-    print("date_until from df:", date_until)
-
-    return date_since, date_until
+    print(f"Retrieved {len(list_tweets) if list_tweets else 0} tweets")
+    return list_tweets
 
 
 @task(name="Search messages", task_run_name="search-messages")
-async def search_messages(df_raw):
+async def search_messages(df_raw: pd.DataFrame) -> pd.DataFrame:
     """
-    Search messages in Twitter
-    With specific keywords and accounts
+    Search Twitter for railway incident messages using multiple accounts
 
     Args:
-        client: TwitterClient
+        df_raw: DataFrame containing existing tweets
 
     Returns:
-        df: dataframe with messages
+        result_df: DataFrame with newly collected tweets
     """
+    last_id = 0
+    result_df = pd.DataFrame()
 
-    # init data
-    list_words_filter = [
-        "train",
-        "derail",
-        "derailment",
-        "freight",
-        "derailed",
-        "locomotive",
-        "rails",
-        "carriages",
-    ]
-    list_accounts_filter = [
-        "Prune602",
-        "LXSummer1",
-        "igorsushko",
-        "wartranslated",
-        "Schizointel",
-    ]
-
-    # init data
-    df = pd.DataFrame()
-
-    # get date since and until
+    # Get initial date range based on existing data
     date_since, date_until = get_date_since_until(df_raw)
 
-    # get credentials
+    # Get Twitter account credentials
     list_credentials = get_credentials()
 
     for account in list_credentials:
         data = []
-        cpt_try = 0
+        retry_count = 0
 
+        # Connect to Twitter with current account
         try:
-            # Connect to Twitter
+            print(f"Connecting to Twitter with {account['username']}")
             client = Client("en-US")
             await client.login(
                 auth_info_1=account["username"],
                 auth_info_2=account["email"],
                 password=account["password"],
+                cookies_file=account["cookies_file"],
             )
         except Exception as e:
-            print(e)
+            print(f"Error connecting to Twitter with {account['username']}: {e}")
+            continue  # Try next account if this one fails
+
+        # Update date range if we already have tweets from other accounts
+        if not result_df.empty:
+            date_since, date_until = get_date_since_until(result_df)
+
+        # Get initial tweets
+        try:
+            list_tweets = await get_tweets(client, date_since, date_until)
+            if not list_tweets:
+                print(f"No tweets found for {account['username']}")
+                continue
+        except Exception as e:
+            print(f"Error getting tweets with {account['username']}: {e}")
             continue
 
-        # get last date for other accounts
-        if not df.empty:
-            date_since, date_until = get_date_since_until(df)
+        # Process tweet batches
+        while list_tweets and len(list_tweets) > 0:
 
-        # create search query
-        search_query = create_search_query(
-            list_words_filter, list_accounts_filter, date_since, date_until
-        )
+            if list_tweets[0].id == last_id:
+                print("No new tweets found, stopping retry")
+                break
 
-        # get tweets
-        list_tweets = await client.search_tweet(search_query, "Latest")
-
-        while len(list_tweets) > 0:
             for tweet in list_tweets:
-
-                # check if account in list_accounts_filter
-                # because Twitter search is not working properly
-                if tweet.user.screen_name in list_accounts_filter:
+                # Filter by account (Twitter search can include other accounts)
+                if tweet.user.screen_name in RAILWAY_ACCOUNTS:
                     data.append(
                         {
                             "ID": f"{tweet.user.screen_name}_{tweet.id}",
@@ -194,60 +210,65 @@ async def search_messages(df_raw):
                         }
                     )
 
-            # break while if more than 150 messages (limit)
-            print(f"Extracted {len(data)} messages")
-            if len(data) > 149:
+            print(f"Collected {len(data)} tweets so far")
+
+            # Check if we have reached the maximum number of tweets
+            if len(data) >= MAX_TWEETS:
+                print(f"Reached maximum tweets limit ({MAX_TWEETS})")
                 break
 
+            last_id = list_tweets[0].id
+
+            # Get next batch of tweets
             try:
-                # get next tweets
-                print("Next tweets")
                 list_tweets = await list_tweets.next()
-                if len(list_tweets) == 0:
-                    if cpt_try < 2:
-                        # get date since and until of data
-                        date_since, date_until = get_date_since_until(
-                            pd.DataFrame(data)
-                        )
+                # If no more tweets and we haven't reached max retries
+                if not list_tweets or len(list_tweets) == 0:
+                    if retry_count < 2:
+                        # Try with updated date range
+                        if data:
+                            temp_df = pd.DataFrame(data)
 
-                        # get next tweets
-                        search_query = create_search_query(
-                            list_words_filter,
-                            list_accounts_filter,
-                            date_since,
-                            date_until,
-                        )
-                        list_tweets = await client.search_tweet(search_query, "Latest")
+                            # Get new date range based on collected tweets
+                            date_since, date_until = get_date_since_until(temp_df)
 
-                        # increment cpt_try
-                        cpt_try += 1
+                            # Retry fetching tweets with updated date range
+                            list_tweets = await get_tweets(
+                                client, date_since, date_until
+                            )
+
+                            retry_count += 1
+                        else:
+                            break
                     else:
                         break
             except Exception as e:
-                print(e)
-                break  # break while
+                print(f"Error fetching next batch of tweets: {e}")
+                break
 
-        # add to df
-        df = (
-            pd.concat([df, pd.DataFrame(data)])
-            .reset_index(drop=True)
-            .sort_values("id_message")
-        )
+        # Add collected tweets to result DataFrame
+        if data:
+            new_data_df = pd.DataFrame(data)
+            result_df = (
+                pd.concat([result_df, new_data_df])
+                .reset_index(drop=True)
+                .sort_values("id_message")
+            )
 
-        if df.shape[0] == 0:
-            break
+    # End processing if no tweets were found
+    if result_df.empty:
+        print("No tweets found matching criteria")
+        return result_df
 
-    print(f"Extracted {df.shape[0]} messages")
+    print(f"Total extracted tweets: {result_df.shape[0]}")
 
-    # add url col
-    df["url"] = df.apply(
+    # Add URL and theme columns
+    result_df["url"] = result_df.apply(
         lambda x: f"https://x.com/{x['account']}/status/{x['id_message']}", axis=1
     )
+    result_df["filter_theme"] = "incident_railway"
 
-    # add col filter_theme
-    df["filter_theme"] = "incident_railway"
-
-    return df
+    return result_df
 
 
 @flow(
@@ -255,28 +276,43 @@ async def search_messages(df_raw):
     flow_run_name="flow-master-twitter-extract",
     log_prints=True,
 )
-def flow_twitter_extract():
+def flow_twitter_extract() -> None:
     """
-    Job Twitter extract
+    Main flow function to extract railway incident tweets,
+    save them to storage, and track as artifacts
     """
-    print("********************************")
-    print("Start extracting Twitter")
-    print("********************************")
+    print("=" * 50)
+    print("Starting Twitter railway incident extraction")
+    print("=" * 50)
 
-    # get messages already extracted
+    # Load existing data
     df_raw = read_data(PATH_TWITTER_RAW, "twitter")
+    print(f"Loaded existing data: {df_raw.shape[0] if not df_raw.empty else 0} records")
 
-    # get messages
-    df = asyncio.run(search_messages(df_raw))
+    # Search for new tweets
+    print("Searching for new tweets...")
+    df_new = asyncio.run(search_messages(df_raw))
 
-    # update data artifact
-    upd_data_artifact("twitter-extract", df.shape[0])
+    if df_new.empty:
+        print("No new tweets found")
+        new_count = 0
+    else:
+        print(f"Found {df_new.shape[0]} new tweets")
 
-    # concat data
-    df = concat_old_new_df(df_raw, df, cols=["ID"])
+        # Merge with existing data, deduplicating by ID
+        df_combined = concat_old_new_df(df_raw, df_new, cols=["ID"])
+        new_count = df_combined.shape[0] - (0 if df_raw.empty else df_raw.shape[0])
 
-    # save data
-    save_data(PATH_TWITTER_RAW, "twitter", df)
+        print(df_combined)
+        print("timestamp")
+        time.sleep(120)
 
-    # create artifacts
+        # Save the combined data
+        save_data(PATH_TWITTER_RAW, "twitter", df_combined)
+        print(f"Saved {df_combined.shape[0]} total records (added {new_count} new)")
+
+    # Update tracking artifacts
+    upd_data_artifact("twitter-extract", new_count)
     create_artifact("flow-master-twitter-extract-artifact")
+
+    print("Twitter extraction completed successfully")
