@@ -3,9 +3,12 @@ from core.config.variables import (
     LIST_LAWS,
     LIST_INC_TYPE_RAIL,
     LIST_DMG_EQUIP_RAIL,
-    LIST_ARREST_REASON,
     LIST_COLL_WITH_RAIL,
     LIST_PARTISANS_GRP,
+    LIST_ARREST_REASON,
+    LIST_JOBS,
+    LIST_SOCIAL_MEDIA,
+    LIST_PLACES_DETENTION,
 )
 
 LIST_EXP_LAWS = [
@@ -275,7 +278,7 @@ DICT_REF_INPUT_RAILWAY = [
         "st_col": "col4",
     },
     {
-        "name": "qualif_sentence_years",
+        "name": "qualif_sentence_time",
         "label": "Sentence Years",
         "type": "number_input",
         "value": None,
@@ -370,8 +373,9 @@ DICT_REF_INPUT_ARREST = [
     {
         "name": "qualif_arrest_reason",
         "label": "Select Reason Arrest",
-        "type": "text_input",
+        "type": "selectbox",
         "value": "",
+        "options": LIST_ARREST_REASON,
         "st_col": "col3",
     },
     {
@@ -390,10 +394,18 @@ DICT_REF_INPUT_ARREST = [
         "st_col": "col4",
     },
     {
-        "name": "qualif_sentence_years",
-        "label": "Sentence Years",
-        "type": "number_input",
-        "value": None,
+        "name": "qualif_sentence_time",
+        "label": "Sentence Time",
+        "type": "text_input",
+        "value": "",
+        "st_col": "col4",
+    },
+    {
+        "name": "qualif_location_detention",
+        "label": "Select Location Detention",
+        "type": "selectbox",
+        "value": "",
+        "options": LIST_PLACES_DETENTION,
         "st_col": "col4",
     },
     {
@@ -408,20 +420,22 @@ DICT_REF_INPUT_ARREST = [
         "label": "Person Age",
         "type": "number_input",
         "value": "",
-        "st_col": "col4",
+        "st_col": "col3",
     },
     {
         "name": "qualif_person_job",
         "label": "Person Job",
-        "type": "text_input",
+        "type": "selectbox",
         "value": "",
-        "st_col": "col4",
+        "options": LIST_JOBS,
+        "st_col": "col3",
     },
     {
         "name": "qualif_media_post",
         "label": "Media Post",
-        "type": "text_input",
+        "type": "selectbox",
         "value": "",
+        "options": LIST_SOCIAL_MEDIA,
         "st_col": "col4",
     },
     {
@@ -629,7 +643,7 @@ DICT_REF_INPUT_CLASS = [
         "st_col": "col4",
     },
     {
-        "name": "class_sentence_years",
+        "name": "class_sentence_time",
         "label": "Sentence Years",
         "type": "number_input",
         "value": None,

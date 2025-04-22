@@ -15,9 +15,9 @@ IA_TRANSLATE = "ia_translate_2:latest"
 # IA_CLASSIFY = "ia_classify:latest"
 IA_CLASSIFY = "mistral-nemo:latest"
 
-GROUP_SIZE_TO_TRANSLATE = 20
-SIZE_TO_TRANSLATE = 69
-SIZE_TO_QUALIF = 99
+GROUP_SIZE_TO_TRANSLATE = 40
+SIZE_TO_TRANSLATE = 19
+SIZE_TO_QUALIF = 199
 
 ###############
 ## PROMPT IA ##
@@ -244,15 +244,6 @@ LIST_COLL_WITH_RAIL = [
 ]
 
 
-LIST_ARREST_REASON = [
-    "Post on social media",
-    "Arson",
-    "Attempt Sabotage",
-    "Sabotage",
-    "Kill",
-]
-
-
 LIST_PARTISANS_GRP = [
     "Wanted",
     "No affiliation",
@@ -270,6 +261,39 @@ LIST_PARTISANS_GRP = [
 ]
 
 
-####################
-## DATA WAREHOUSE ##
-####################
+LIST_ARREST_REASON = [
+    "Post on social media",
+    "Arson",
+    "Attempt Sabotage",
+    "Sabotage",
+    "Kill",
+    "Protest",
+    "Anti-war Protest",
+]
+
+LIST_JOBS = [
+    "Military",
+    "Politician",
+    "Student",
+    "Artist",
+    "Journalist",
+    "Activist",
+]
+
+LIST_SOCIAL_MEDIA = [
+    "Telegram",
+    "VK",
+    "Facebook",
+    "Instagram",
+    "Twitter",
+    "YouTube",
+    "Other",
+]
+
+LIST_PLACES_DETENTION = [
+    "Prison",
+    "Work Camp",
+    "Police Station",
+    "Detention Center",
+    "Work Camp + Prison",
+]
