@@ -1,9 +1,8 @@
-import time
 import asyncio
 import yaml
 import pandas as pd
 import datetime
-from typing import List, Dict, Tuple, Any, Optional
+from typing import List, Dict, Tuple, Any
 from twikit import Client
 from prefect.cache_policies import TASK_SOURCE
 
@@ -302,10 +301,6 @@ def flow_twitter_extract() -> None:
         # Merge with existing data, deduplicating by ID
         df_combined = concat_old_new_df(df_raw, df_new, cols=["ID"])
         new_count = df_combined.shape[0] - (0 if df_raw.empty else df_raw.shape[0])
-
-        print(df_combined)
-        print("timestamp")
-        time.sleep(120)
 
         # Save the combined data
         save_data(PATH_TWITTER_RAW, "twitter", df_combined)
