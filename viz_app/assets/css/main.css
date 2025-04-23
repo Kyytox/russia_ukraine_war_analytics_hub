@@ -345,12 +345,12 @@ h3 {
 
 	.div-group-metrics {
 		width: 100% !important;
-		flex-direction: row;
+		flex-direction: row !important;
 		align-items: flex-start;
 	}
 
 	.div-metrics {
-		width: 100%;
+		width: 100% !important;
 		margin-bottom: 0;
 	}
 

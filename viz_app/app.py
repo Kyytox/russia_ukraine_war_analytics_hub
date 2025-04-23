@@ -8,7 +8,7 @@ from assets.components.footer import create_footer
 app = Dash(
     __name__,
     use_pages=True,
-    title="Amazon Dashboard",
+    title="Ukraine War Data Hub",
     external_stylesheets=[
         dbc.themes.BOOTSTRAP,
         "https://use.fontawesome.com/releases/v5.15.4/css/all.css",
@@ -36,4 +36,5 @@ app.layout = html.Div(
 )
 
 if __name__ == "__main__":
+    # app.run(debug=True, port=8503)
     app.run(debug=False, port=8501)
