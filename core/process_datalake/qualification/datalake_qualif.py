@@ -254,6 +254,7 @@ def qualif_damaged_equipment(df, theme):
     
     If the message contains multiple types of equipment, please provide only one, the most relevant if possible.
     If the message does not contain any information about the type of equipment, please respond with "Unknown".
+    If the message contains information about collision, do not respond with Locomotive.
     
     Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with the type of equipment or "Unknown".
     """

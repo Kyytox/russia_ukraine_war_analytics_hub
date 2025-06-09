@@ -265,12 +265,12 @@ def maj_row_excel_to_filt_qualif(ID, IDX, name_df_source):
 def upd_ref_input(ID, IDX, col_name):
     """ """
 
-    print("--------------------------------")
-    print(f"ID: {ID}")
-    print(f"IDX: {IDX}")
-    print(f"col Name: {col_name}")
-    print(f"Value: {st.session_state[f'REF_{col_name}_{ID}']}")
-    print(f"Value: {type(st.session_state[f'REF_{col_name}_{ID}'])}")
+    # print("--------------------------------")
+    # print(f"ID: {ID}")
+    # print(f"IDX: {IDX}")
+    # print(f"col Name: {col_name}")
+    # print(f"Value: {st.session_state[f'REF_{col_name}_{ID}']}")
+    # print(f"Value: {type(st.session_state[f'REF_{col_name}_{ID}'])}")
 
     if col_name == "IDX":
         #  Retrieve existing data from the Excel file or the tmp Excel file

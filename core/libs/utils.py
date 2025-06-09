@@ -157,7 +157,7 @@ def save_data(
     path = os.path.join(base_path, f"{file_name}.parquet")
     print(f"Saving {df.shape} data to {path}")
 
-    # # remove file
+    # remove dir
     # os.remove(path)
 
     # save data to parquet

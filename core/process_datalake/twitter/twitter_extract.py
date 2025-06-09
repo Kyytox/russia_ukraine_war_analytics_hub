@@ -112,7 +112,7 @@ def create_search_query(date_since: str, date_until: str) -> str:
 @task(
     name="Get Tweets",
     task_run_name="get-tweets",
-    cache_policy=TASK_SOURCE,
+    # cache_policy=TASK_SOURCE,
     persist_result=False,
 )
 async def get_tweets(client: Client, date_since: str, date_until: str) -> Any:

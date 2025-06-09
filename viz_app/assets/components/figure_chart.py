@@ -14,7 +14,7 @@ def box_chart(id, fig={}, width=None, height=None):
                 className="chart",
                 figure=fig,
                 style={"height": height},
-                responsive=True,
+                # responsive=True,
             ),
             type="circle",
             color="#f79500",
