@@ -641,8 +641,11 @@ def tab_overview():
             html.Div(
                 className="div-group-chart",
                 children=[
-                    box_chart("rail_1_fig8", fig_heat, "49%", "35vh")
-                    for fig_heat in heats
+                    box_chart("rail_1_fig8", heats[0], "49%", "35vh"),
+                    box_chart("rail_1_fig9", heats[1], "49%", "35vh"),
+                    box_chart("rail_1_fig10", heats[2], "49%", "35vh"),
+                    box_chart("rail_1_fig11", heats[3], "49%", "35vh"),
+                    # we can't use for , i don't know why but if do it, the chart is displayed in Overview and Sabotage tabs
                 ],
             ),
         ],
@@ -1130,6 +1133,7 @@ def tab_sabotage():
         center_txt=f"{df_pie_sab_eqp['total_inc'].sum().astype(int)}<br>Damaged Equipments",
         dict_colors=COLORS_RAILWAY,
     )
+    fig10 = fig10.update_traces(textinfo="percent+value")
 
     # #########################################
     # #########################################
