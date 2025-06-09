@@ -43,6 +43,9 @@
 	#container-rail_1_fig6,
 	#container-rail_1_fig7,
 	#container-rail_1_fig8,
+	#container-rail_1_fig9,
+	#container-rail_1_fig10,
+	#container-rail_1_fig11,
 	#container-rail_1_fig2 {
 		width: 100% !important;
 	}
@@ -100,15 +103,5 @@
 @media screen and (max-width: 992px) {
 	.tab {
 		padding: 10px 15px !important;
-	}
-}
-
-
-
-
-
-@media (max-width: 1100px) {
-	#container-rail_1_fig8 {
-		width: 100% !important;
 	}
 }
