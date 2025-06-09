@@ -107,6 +107,9 @@ def format_values(df):
         "205-205.5 - Terrorism", "205 - Terrorism"
     )
 
+    # Replace empty in partisans group
+    df["prtsn_grp"] = df["prtsn_grp"].replace("", np.nan)
+
     return df
 
 
@@ -418,8 +421,6 @@ def flow_ingest_incident_railway():
 
     # control data
     st_data = control_data_quality(df)
-
-    print(st_data)
 
     if st_data.is_failed():
         return Failed(message="Ingestion incident railway Failed")
