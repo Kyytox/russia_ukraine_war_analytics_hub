@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 import numpy as np
+import datetime
 
 import dash
 from dash import Dash, dcc, html, Input, Output, callback
@@ -563,20 +564,18 @@ def tab_overview():
                                 className="div-metrics",
                                 children=[
                                     html.H3(
-                                        f"{int(dmt_inc_total[dmt_inc_total['label'] == 'Total']['total_inc'].values[0])}"
+                                        f"{datetime.datetime.strptime(dmt_inc_day_week.columns.tolist()[-1].replace("_", "-W") + '-1', "%Y-W%W-%w").strftime('%d %B %Y')}"
                                     ),
-                                    html.P("Total Incidents"),
+                                    html.P("Last Update"),
                                 ],
                             ),
                             html.Div(
                                 className="div-metrics",
                                 children=[
                                     html.H3(
-                                        f"{int(dmt_inc_year['2024'][dmt_inc_year['label'] == 'Total'].values[0])}"
+                                        f"{int(dmt_inc_total[dmt_inc_total['label'] == 'Total']['total_inc'].values[0])}"
                                     ),
-                                    html.P(
-                                        f"+{int(dmt_inc_year['2024'][dmt_inc_year['label'] == 'Total'].values[0] - dmt_inc_year['2023'][dmt_inc_year['label'] == 'Total'].values[0])} from 2023"
-                                    ),
+                                    html.P("Total Incidents"),
                                 ],
                             ),
                             html.Div(
