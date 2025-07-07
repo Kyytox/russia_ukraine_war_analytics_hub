@@ -1407,8 +1407,8 @@ def tab_informations():
     }
 
     return html.Div(
+        style={"padding": "20px"},
         children=[
-            html.H2("Informations"),
             html.H3("Description"),
             html.Div(
                 [
@@ -1441,7 +1441,7 @@ def tab_informations():
                     ),
                 ]
             ),
-            html.Div(style={"margin": "20px 0"}),
+            html.Div(style={"margin": "50px 0"}),
             html.H3("Classification"),
             html.Div(
                 [
@@ -1464,8 +1464,8 @@ def tab_informations():
                     ),
                 ]
             ),
-            html.Hr(style={"margin": "30px 0"}),
-            html.H2("Data Source"),
+            html.Div(style={"margin": "50px 0"}),
+            html.H3("Data Source"),
             html.Div(
                 className="warning-box",
                 children=[
@@ -1503,8 +1503,8 @@ def tab_informations():
                 href="https://docs.google.com/spreadsheets/d/1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk/edit?usp=sharing",
                 target="_blank",
             ),
-            html.Hr(style={"margin": "30px 0"}),
-            html.H2("Methodology"),
+            html.Div(style={"margin": "50px 0"}),
+            html.H3("Methodology"),
             html.P(
                 "Search of messages, tweets, and news evoking incidents on Russian Railways Network."
             ),
@@ -1512,7 +1512,7 @@ def tab_informations():
                 src="/assets/images/architecture_project.png",
                 style={"maxWidth": "100%", "height": "auto", "margin": "20px 0"},
             ),
-            html.Hr(style={"margin": "30px 0"}),
+            html.Hr(style={"margin": "50px 0"}),
             # Three columns layout using Dash
             html.Div(
                 className="three-columns",
