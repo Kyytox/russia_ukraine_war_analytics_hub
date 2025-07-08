@@ -697,3 +697,121 @@ def generate_sankey(df, colx, coly, title, subtitle="", df_total=None):
     fig = fig_upd_layout(fig)
 
     return fig
+
+
+def generate_waffle(df):
+    """
+    Create a waffle chart (Heatmap Plotly)
+    """
+
+    # data
+    labels = df["label"].tolist()
+    values = df["total_inc"].tolist()
+
+    # Parameters for the waffle chart
+    total = sum(values)
+    max_rows = 10  # Limite le nombre de lignes
+    cols = int(np.ceil(total / max_rows))
+    rows = int(np.ceil(total / cols))
+
+    # Build the z matrix
+    z = np.zeros((rows * cols,))
+    category_ids = []
+    for i, v in enumerate(values):
+        category_ids.extend([i + 1] * int(v))  # +1 pour correspondre aux couleurs dict
+    z[: len(category_ids)] = category_ids
+    z = z.reshape((rows, cols))
+
+    # Build the labels matrix
+    d = {1: "<18", 2: "18-30", 3: "31-50", 4: ">50"}
+    colorscale = [
+        [0, COLORS_RAILWAY["<18"]],
+        [0.25, COLORS_RAILWAY["18-30"]],
+        [0.5, COLORS_RAILWAY["31-50"]],
+        [0.75, COLORS_RAILWAY[">50"]],
+        [1, COLORS_RAILWAY[">50"]],
+    ]
+
+    # Create customdata for hover information
+    M = max(len(s) for s in labels)
+    customdata = np.empty((rows, cols), dtype=f"<U{M}")
+    print(customdata)
+    for i in range(rows):
+        for j in range(cols):
+            val = z[i, j]
+            customdata[i, j] = d.get(int(val), "")
+
+    # Remove empty strings from customdata
+    customdata = [[valeur for valeur in ligne if valeur != ""] for ligne in customdata]
+
+    # Remove 0 from z
+    z = [[valeur for valeur in ligne if valeur != 0.0] for ligne in z]
+
+    # Create the heatmap figure
+    fig = go.Figure(
+        go.Heatmap(
+            z=z,
+            customdata=customdata,
+            xgap=3,
+            ygap=3,
+            colorscale=colorscale,
+            showscale=False,
+            hovertemplate="%{customdata} Group<extra></extra>",
+        )
+    )
+
+    fig.update_layout(
+        height=rows * 80,
+        title="Number of Partisans Arrested by Age Group",
+        # hide xaxis and yaxis
+        xaxis=dict(
+            showticklabels=False,
+            ticks="",
+            showgrid=False,
+            zeroline=False,
+        ),
+        yaxis=dict(
+            showticklabels=False,
+            ticks="",
+            showgrid=False,
+            zeroline=False,
+        ),
+        margin=dict(l=50, r=50, t=60, b=50),
+        title_x=0.5,
+        title_y=0.95,
+    )
+
+    fig = fig_upd_layout(fig)
+
+    # Create custom legend with square markers and count values
+    for i, label in enumerate(labels):
+        count = values[i]
+        color = COLORS_RAILWAY[label]
+
+        # Add invisible scatter trace for each legend item
+        fig.add_trace(
+            go.Scatter(
+                x=[None],
+                y=[None],
+                mode="markers",
+                marker=dict(size=10, color=color, symbol="square"),
+                legendgroup=label,
+                name=f"{label} ({int(count)})",
+                hoverinfo="skip",
+            )
+        )
+
+    # Update legend layout
+    fig.update_layout(
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-0.15,
+            xanchor="center",
+            x=0.5,
+            font=dict(size=12),
+            itemsizing="constant",
+        )
+    )
+
+    return fig

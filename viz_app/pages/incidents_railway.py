@@ -32,6 +32,7 @@ from utils.generate_chart import (
     generate_funnel,
     generate_sankey,
     generate_waterfall,
+    generate_waffle,
 )
 
 dash.register_page(
@@ -1268,7 +1269,6 @@ def tab_partisans_arrest():
         dict_colors=COLORS_RAILWAY,
         rotation=65,
     )
-    # showlegend=True,
 
     # #########################################
     # #########################################
@@ -1291,7 +1291,7 @@ def tab_partisans_arrest():
     # #########################################
     # Number of Partisans Age
     # Waffle Chart
-    # fig4 = create_waffle(df_waffle)
+    fig4 = generate_waffle(df_waffle)
 
     # #########################################
     # #########################################
@@ -1346,13 +1346,7 @@ def tab_partisans_arrest():
                 className="div-group-chart",
                 children=[
                     box_chart("rail_6_fig3", fig3, "100%", "55vh"),
-                    # dcc.Graph(
-                    #     id="fig4",
-                    #     className="chart",
-                    #     figure=fig4,
-                    #     style={"width": "59.5%", "height": "55vh"},
-                    #     responsive=True,
-                    # ),
+                    box_chart("rail_6_fig4", fig4, "79%", "55vh"),
                 ],
             ),
             html.Div(
