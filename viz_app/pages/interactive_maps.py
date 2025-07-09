@@ -63,7 +63,7 @@ layout = html.Div(
         # Header
         html.H1(
             className="page-title",
-            children="Raid Alerts in Ukraine 🚨",
+            children="Interactive Maps 🗺️",
         ),
         # Cards
         html.Div(
