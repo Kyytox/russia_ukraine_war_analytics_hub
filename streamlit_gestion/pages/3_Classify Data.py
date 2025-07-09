@@ -161,6 +161,14 @@ def init_tmp_data():
         columns=st.session_state["schema_excel"].keys(),
     )
 
+    # List Account (ID without number (regex))
+    st.session_state["list_account"] = (
+        st.session_state["df_filt_src"]["ID"]
+        .str.extract(r"([a-zA-Z_]+)")[0]
+        .str.rstrip("_")
+        .drop_duplicates()
+    ).tolist()
+
 
 def find_next_idx():
     """
@@ -701,6 +709,10 @@ def apply_basic_filters(df, dict_filter):
         ) | df["text_original"].str.contains(dict_filter["filt_text"], na=False)
         df = df[mask]
 
+    # Filter by Account ID
+    if dict_filter["filt_account_id"]:
+        df = df[df["ID"].str.startswith(dict_filter["filt_account_id"])]
+
     # Date
     if dict_filter["filt_date"]:
         filter_date = pd.to_datetime(dict_filter["filt_date"])
@@ -834,6 +846,13 @@ with st.expander("Filters", expanded=True):
             # date
             st.date_input("After Date", key="slt_filt_date")
 
+        # Filter by Account ID (split by _)
+        st.selectbox(
+            "Filter by Account ID",
+            options=[""] + st.session_state["list_account"],
+            key="slt_filt_id",
+        )
+
         with col2:
             st.subheader("Specifics")
 
@@ -892,6 +911,7 @@ with st.expander("Filters", expanded=True):
                 "filt_reg": st.session_state["slt_filt_reg"],
                 "filt_text": st.session_state["slt_filt_txt"],
                 "filt_date": st.session_state["slt_filt_date"],
+                "filt_account_id": st.session_state["slt_filt_id"],
             }
 
             if st.session_state["theme_data"] == "Incidents Railway":
@@ -939,6 +959,7 @@ with st.expander("Filters", expanded=True):
                     "Class Region",
                     "Text Contains",
                     "After Date",
+                    "Account ID",
                     # "Class Incident Type",
                     # "Class Damage Equipment",
                     # "Class Applied Laws",
@@ -950,6 +971,7 @@ with st.expander("Filters", expanded=True):
                     st.session_state["slt_filt_reg"],
                     st.session_state["slt_filt_txt"],
                     st.session_state["slt_filt_date"],
+                    st.session_state["slt_filt_id"],
                     # st.session_state["slt_filt_inc_type"],
                     # st.session_state["slt_filt_dmg_eqp"],
                     # st.session_state["slt_filt_app_law"],
