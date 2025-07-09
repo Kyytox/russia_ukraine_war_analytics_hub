@@ -492,7 +492,7 @@ def tab_overview():
     # Map
     fig7 = generate_map(
         title="Geographic Distribution of Sabotages on Russian Railways",
-        subtitle="Number of Railway Sabotages by Region in Russia from 2023 to 2024",
+        subtitle="Number of Railway Sabotages by Region in Russia from 2022 to 2025",
         polygons=polygons,
         loc=df_map_inc_reg["id_region"],
         text_=df_map_inc_reg["region"],
@@ -1170,7 +1170,7 @@ def tab_sabotage():
     # Map
     fig13 = generate_map(
         title="Geographic Distribution of Sabotages on Russian Railways",
-        subtitle="Number of Railway Sabotages by Region in Russia from 2023 to 2024",
+        subtitle="Number of Railway Sabotages by Region in Russia from 2022 to 2025",
         polygons=polygons,
         loc=df_map_sab_reg["id_region"],
         text_=df_map_sab_reg["region"],
@@ -1410,7 +1410,7 @@ def tab_informations():
                         [
                             "This project is a data analysis and visualization tool for incidents that I was able to find on the ",
                             html.Strong(
-                                "Russian Railways Network between 2022 and 2024"
+                                "Russian Railways Network between 2022 and 2025"
                             ),
                             ", thanks to the information provided by various open sources.",
                         ]
@@ -1698,7 +1698,7 @@ def update_treemap(value):
 
     fig7 = generate_map(
         title="Geographic Distribution of Sabotages on Russian Railways",
-        subtitle="Number of Railway Sabotages by Region in Russia from 2023 to 2024",
+        subtitle="Number of Railway Sabotages by Region in Russia from 2022 to 2025",
         polygons=polygons,
         loc=df["id_region"],
         text_=df["region"],
