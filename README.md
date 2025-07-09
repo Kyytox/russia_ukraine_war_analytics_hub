@@ -5,7 +5,7 @@ Repo featuring a wealth of data, graphs and analyses relating (directly or indir
 
 ## 🔗 Applications Web
 
-[![Dash Visualisation App](https://img.shields.io/badge/📊_Dash-Visualisation_App-blue?style=for-the-badge&logo=plotly&logoColor=white)](https://ukraine-war-datahub.eu/)
+[![Dash Visualisation App](https://img.shields.io/badge/📊_Dash-Visualisation_App-red?style=for-the-badge&logo=plotly&logoColor=white)](https://ukraine-war-datahub.eu/)
 
 <br/>
 <br/>
