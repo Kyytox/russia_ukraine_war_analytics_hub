@@ -21,9 +21,13 @@ from core.process_datalake.qualification.datalake_qualif import (
 )
 
 # Classify to Excel Final
-from core.process_datalake.classify.classify_to_cloud import (
-    flow_classify_to_cloud,
+from core.process_datalake.classify.inc_railway_classify_to_cloud import (
+    flow_inc_railway_classify_to_cloud,
 )
+from core.process_datalake.classify.arrest_classify_to_cloud import (
+    flow_arrest_classify_to_cloud,
+)
+
 from core.process_datalake.classify.cloud_to_classify import (
     flow_cloud_to_classify,
 )
@@ -57,8 +61,16 @@ def process_dwh():
     Process Data Warehouse
     """
     flow_dwh_inc_railway()
-    # flow_dwh_ru_block_sites()
-    # flow_dwh_compo_weapons()
+    flow_dwh_ru_block_sites()
+    flow_dwh_compo_weapons()
+
+
+def process_classify_to_cloud():
+    """
+    Process Classify to Cloud
+    """
+    flow_inc_railway_classify_to_cloud()
+    flow_arrest_classify_to_cloud()
 
 
 COMMANDS = {
@@ -66,7 +78,7 @@ COMMANDS = {
     "tw": process_twitter,
     "filt": flow_datalake_filter,
     "qual": flow_datalake_qualif,
-    "class": flow_classify_to_cloud,
+    "class": process_classify_to_cloud,
     "sync": flow_cloud_to_classify,
     "dwh": process_dwh,
 }
