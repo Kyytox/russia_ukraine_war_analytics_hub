@@ -374,6 +374,33 @@ def rename_cols(df, dict_cols):
     return df.rename(columns=dict_cols)
 
 
+@task(name="Retype columns", task_run_name="retype-columns")
+def retype_cols(df, dict_types):
+    """
+    Retype columns
+
+    Args:
+        df (pd.DataFrame): Dataframe to control
+        dict_types (dict): Dictionary with columns and types
+
+    Returns:
+        pd.DataFrame: Dataframe with retyped columns
+    """
+
+    for col, dtype in dict_types.items():
+        if col in df.columns:
+            if dtype == "datetime64[ns]":
+                df[col] = pd.to_datetime(df[col], errors="coerce")
+            elif dtype == "int64":
+                df[col] = pd.to_numeric(df[col], errors="coerce").astype("Int64")
+            elif dtype == "float64":
+                df[col] = pd.to_numeric(df[col], errors="coerce").astype("float64")
+            else:
+                df[col] = df[col].astype(dtype)
+
+    return df
+
+
 @task(name="Drop Duplicates", task_run_name="drop-duplicates")
 def drop_duplicates(df, list_cols):
     """
