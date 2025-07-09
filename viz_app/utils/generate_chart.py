@@ -783,9 +783,10 @@ def generate_waffle(df):
 
     fig = fig_upd_layout(fig)
 
-    # Create custom legend with square markers and count values
+    total_count = sum(values)
     for i, label in enumerate(labels):
         count = values[i]
+        percentage = (count / total_count) * 100
         color = COLORS_RAILWAY[label]
 
         # Add invisible scatter trace for each legend item
@@ -796,7 +797,7 @@ def generate_waffle(df):
                 mode="markers",
                 marker=dict(size=10, color=color, symbol="square"),
                 legendgroup=label,
-                name=f"{label} ({int(count)})",
+                name=f"{label} ({int(count)} - {percentage:.1f}%)",
                 hoverinfo="skip",
             )
         )
