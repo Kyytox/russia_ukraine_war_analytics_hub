@@ -16,7 +16,7 @@ Repo featuring a wealth of data, graphs and analyses relating (directly or indir
 
 This section contains data and analyses related to incidents involving Russian Railways, including accidents, fire, derailments, disruptions, and other significant events.
 
-Data sources from Telegram channels and Twitter are collected, filtered, and pre-classified to identify relevant incidents.
+Data sources from Telegram channels and Twitter are collected, filtered, and pre-classified (with AI agents) to identify relevant incidents.
 
 <br/>
 
