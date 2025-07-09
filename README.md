@@ -19,6 +19,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 ## 🚫 Websites Blocked in Russia
 This section provides a charts of websites that have been blocked in Russia, including those blocked by Roskomnadzor and other entities. The data is sourced from [**data source**](https://www.top10vpn.com/research/websites-blocked-in-russia/).
+
 <br/>
 
 ## ⚙️ Components in Aggressor's Weapon
