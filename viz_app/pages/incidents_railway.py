@@ -40,7 +40,7 @@ dash.register_page(
     external_stylesheets=[],
 )
 
-sufix_subtitle = "on the Russian Railways Network from 2022 to 2024"
+sufix_subtitle = "on the Russian Railways Network from 2022 to 2025"
 
 
 # read file json
