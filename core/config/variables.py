@@ -16,7 +16,7 @@ IA_TRANSLATE = "ia_translate_2:latest"
 IA_CLASSIFY = "mistral-nemo:latest"
 
 GROUP_SIZE_TO_TRANSLATE = 40
-SIZE_TO_TRANSLATE = 19
+SIZE_TO_TRANSLATE = 49
 SIZE_TO_QUALIF = 199
 
 ###############
@@ -54,6 +54,7 @@ LIST_ACCOUNTS_TELEGRAM = [
     "idelrealii",  # t.me/idelrealii
     "mchsYakutia",
     "ostorozhno_novosti",
+    # "bazabazon",
 ]
 
 
@@ -88,6 +89,7 @@ DICT_UTC = {
 
 
 LIST_REGIONS = [
+    "",
     "Adygey",
     "Altay",
     "Amur",
@@ -182,9 +184,13 @@ LIST_LAWS = [
     "281 - Sabotage",
     "205 - Terrorism",
     "275 - Treason",
+    "276 - Espionage",
     "205.2 - Public Promotion or Justification of Terrorism",
     "207 - Knowingly Making a False Threat of Terrorism",
     "208 - Organisation or Participation of an Illegal Armed Formation",
+    "354.1 - Rehabilitation of Nazism",
+    "222.1 - Illegal possession of explosives",
+    "223.1 - Illegal manufacture of explosives",
     "Unknown",
 ]
 
@@ -265,10 +271,13 @@ LIST_ARREST_REASON = [
     "Post on social media",
     "Arson",
     "Attempt Sabotage",
+    "Suspicion of preparation for sabotage",
     "Sabotage",
     "Kill",
     "Protest",
     "Anti-war Protest",
+    "Espionage",
+    "Fake News",
 ]
 
 LIST_JOBS = [
@@ -278,6 +287,9 @@ LIST_JOBS = [
     "Artist",
     "Journalist",
     "Activist",
+    "Historian",
+    "Engineer",
+    "Teacher",
 ]
 
 LIST_SOCIAL_MEDIA = [
@@ -296,4 +308,5 @@ LIST_PLACES_DETENTION = [
     "Police Station",
     "Detention Center",
     "Work Camp + Prison",
+    "Colony",
 ]
