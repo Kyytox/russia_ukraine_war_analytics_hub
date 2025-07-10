@@ -341,7 +341,7 @@ def generate_treemap2(title, subtitle, ids_, labels_, parents_, values_, colors)
                 cornerradius=CORNER_RADIUS,
                 colors=colors,
             ),
-            marker_colorscale="solar",
+            marker_colorscale="Sunset",
             textinfo="label+percent parent+value",
             branchvalues="total",
             textfont=dict(size=13),
