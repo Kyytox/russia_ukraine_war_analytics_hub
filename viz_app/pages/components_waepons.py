@@ -81,14 +81,14 @@ layout = html.Div(
                         html.Div(
                             className="div-metrics",
                             children=[
-                                html.H3("Analog Devices"),
+                                html.H3("Texas Instruments"),
                                 html.P("Biggest Manufacturer"),
                             ],
                         ),
                         html.Div(
                             className="div-metrics",
                             children=[
-                                html.H3("Shahed-136 UAV"),
+                                html.H3("Missile Kh-101"),
                                 html.P("Weapon with the most components"),
                             ],
                         ),
@@ -122,7 +122,7 @@ layout = html.Div(
             className="div-group-chart",
             children=[
                 box_chart("pg_weap_fig6", {}, "58%", "80vh"),
-                box_chart("pg_weap_fig7", {}, "40%", "63vh"),
+                box_chart("pg_weap_fig7", {}, "40%", "80vh"),
             ],
         ),
     ],
