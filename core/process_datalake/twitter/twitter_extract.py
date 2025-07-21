@@ -271,8 +271,8 @@ async def search_messages(df_raw: pd.DataFrame) -> pd.DataFrame:
 
 
 @flow(
-    name="Flow Master Twitter Extract",
-    flow_run_name="flow-master-twitter-extract",
+    name="DLK Flow Twitter Extract",
+    flow_run_name="dlk-flow-twitter-extract",
     log_prints=True,
 )
 def flow_twitter_extract() -> None:
@@ -308,6 +308,6 @@ def flow_twitter_extract() -> None:
 
     # Update tracking artifacts
     upd_data_artifact("twitter-extract", new_count)
-    create_artifact("flow-master-twitter-extract-artifact")
+    create_artifact("dlk-flow-twitter-extract-artifact")
 
     print("Twitter extraction completed successfully")

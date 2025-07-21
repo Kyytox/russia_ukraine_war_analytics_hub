@@ -50,8 +50,8 @@ def format_date(df):
 
 
 @flow(
-    name="Flow Master Twitter Cleaning",
-    flow_run_name="flow-master-twitter-cleaning",
+    name="DLK Flow Twitter Cleaning",
+    flow_run_name="dlk-flow-twitter-clean",
     log_prints=True,
 )
 def flow_twitter_cleaning():
@@ -74,9 +74,6 @@ def flow_twitter_cleaning():
     # format text
     df["text_original"] = df["text_original"].apply(format_clean_text)
 
-    # update artifact
-    upd_data_artifact("twitter Clean", df.shape[0])
-
     # concat data
     df = concat_old_new_df(df_clean, df, cols=["ID"])
 
@@ -84,4 +81,5 @@ def flow_twitter_cleaning():
     save_data(PATH_TWITTER_CLEAN, "twitter", df)
 
     # create artifact
-    create_artifact("flow-master-twitter-cleaning-artifact")
+    upd_data_artifact("twitter Clean", df.shape[0])
+    create_artifact("dlk-flow-twitter-clean-artifact")
