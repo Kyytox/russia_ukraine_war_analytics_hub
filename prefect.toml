@@ -1,0 +1,5 @@
+[server.database]
+connection_url = "sqlite+aiosqlite:////mnt/4046B55946B55080/russia_ukraine_war_analytics_hub/prefect/prefect.db"
+echo = false
+migrate_on_start = true
+password = "None"

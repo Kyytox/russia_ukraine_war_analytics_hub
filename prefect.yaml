@@ -26,7 +26,7 @@ pull:
 deployments:
   - name: dlk-flow-telegram-extract
     version: null
-    tags: []
+    tags: ["dlk-telegram"]
     concurrency_limit: null
     description: null
     entrypoint: ./core/process_datalake/telegram/telegram_extract.py:flow_telegram_extract
@@ -40,7 +40,7 @@ deployments:
 
   - name: dlk-flow-telegram-clean
     version: null
-    tags: []
+    tags: ["dlk-telegram"]
     concurrency_limit: null
     description: null
     entrypoint: ./core/process_datalake/telegram/telegram_cleaning.py:flow_telegram_cleaning
@@ -54,7 +54,7 @@ deployments:
 
   - name: dlk-flow-telegram-transform
     version: null
-    tags: []
+    tags: ["dlk-telegram"]
     concurrency_limit: null
     description: null
     entrypoint: ./core/process_datalake/telegram/telegram_transform.py:flow_telegram_transform
@@ -66,9 +66,11 @@ deployments:
     enforce_parameter_schema: true
     schedules: []
 
-  - name: dlk-twitter-extract
+  #
+  # ELT Twitter
+  - name: dlk-flow-twitter-extract
     version: null
-    tags: []
+    tags: ["dlk-twitter"]
     concurrency_limit: null
     description: null
     entrypoint: ./core/process_datalake/twitter/twitter_extract.py:flow_twitter_extract
@@ -80,9 +82,9 @@ deployments:
     enforce_parameter_schema: true
     schedules: []
 
-  - name: dlk-twitter-clean
+  - name: dlk-flow-twitter-clean
     version: null
-    tags: []
+    tags: ["dlk-twitter"]
     concurrency_limit: null
     description: null
     entrypoint: ./core/process_datalake/twitter/twitter_cleaning.py:flow_twitter_cleaning
@@ -96,7 +98,7 @@ deployments:
 
   - name: dlk-flow-filter
     version: null
-    tags: []
+    tags: ["dlk-filter-qualif"]
     concurrency_limit: null
     description: null
     entrypoint: ./core/process_datalake/filter/datalake_filter.py:flow_datalake_filter
@@ -110,7 +112,7 @@ deployments:
 
   - name: dlk-flow-qualification
     version: null
-    tags: []
+    tags: ["dlk-filter-qualif"]
     concurrency_limit: null
     description: null
     entrypoint: ./core/process_datalake/qualification/datalake_qualif.py:flow_datalake_qualif
@@ -122,12 +124,162 @@ deployments:
     enforce_parameter_schema: true
     schedules: []
 
+  #
+  # DWH Incidents Railway
   - name: dwh-incidents-railway
     version: null
-    tags: []
+    tags: ["dwh-incidents"]
     concurrency_limit: null
     description: null
     entrypoint: ./core/process_data_warehouse/flow_dwh_inc_railway.py:flow_dwh_inc_railway
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: dwh-ingest-incidents-railway
+    version: null
+    tags: ["dwh-incidents"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_data_warehouse/ingest/ingest_inc_railway.py:flow_ingest_incident_railway
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: dwh-dmt-incidents-railway
+    version: null
+    tags: ["dwh-incidents"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_data_warehouse/datamarts/datamarts_inc_railway.py:flow_dmt_incident_railway
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  #
+  # DWH Russia blocked sites
+  - name: dwh-ru-block-sites
+    version: null
+    tags: ["dwh-ru-block-sites"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_data_warehouse/flow_dwh_ru_block_sites.py:flow_dwh_ru_block_sites
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: dwh-ingest-ru-block-sites
+    version: null
+    tags: ["dwh-ru-block-sites"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_data_warehouse/ingest/ingest_ru_block_sites.py:flow_ingest_russia_blocked_sites
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: dwh-dmt-ru-block-sites
+    version: null
+    tags: ["dwh-ru-block-sites"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_data_warehouse/datamarts/datamarts_ru_block_sites.py:flow_dmt_russia_blocked_sites
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  #
+  # DWH Components Weapons
+  - name: dwh-compo-weapons
+    version: null
+    tags: ["dwh-compo-weapons"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_data_warehouse/flow_dwh_compo_weapons.py:flow_dwh_compo_weapons
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: dwh-ingest-compo-weapons
+    version: null
+    tags: ["dwh-compo-weapons"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_data_warehouse/ingest/ingest_compo_weapons.py:flow_ingest_compo_weapons
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  - name: dwh-dmt-compo-weapons
+    version: null
+    tags: ["dwh-compo-weapons"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_data_warehouse/datamarts/datamarts_compo_weapons.py:flow_dmt_compo_weapons
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  #
+  # Classify Incidents Railway to Cloud
+  - name: classify-incidents-railway-to-cloud
+    version: null
+    tags: ["classify-to-cloud"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_datalake/classify/inc_railway_classify_to_cloud.py:flow_inc_railway_classify_to_cloud
+    parameters: {}
+    work_pool:
+      name: main-pool
+      work_queue_name: null
+      flow_variables: {}
+    enforce_parameter_schema: true
+    schedules: []
+
+  #
+  # Classify Arrests to Cloud
+  - name: classify-arrests-to-cloud
+    version: null
+    tags: ["classify-to-cloud"]
+    concurrency_limit: null
+    description: null
+    entrypoint: ./core/process_datalake/classify/arrest_classify_to_cloud.py:flow_arrest_classify_to_cloud
     parameters: {}
     work_pool:
       name: main-pool
