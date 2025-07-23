@@ -12,7 +12,7 @@ from datetime import datetime
 from prefect import flow, task
 
 # Functions
-from core.libs.utils import read_data, retype_cols
+from core.libs.utils import read_data, retype_cols, upd_data_artifact, create_artifact
 from core.libs.google_api import (
     connect_google_sheet_api,
     get_sheet_data,
@@ -143,3 +143,8 @@ def flow_arrest_classify_to_cloud():
         # connect to google sheet
         service = connect_google_sheet_api()
         update_sheet_data(service, spreadsheet_id, range_name, df_classify)
+
+    # create artifact
+    print(f"Rows updated in Google Sheet: {df_classify.shape[0]}")
+    upd_data_artifact(f"Rows updated in Google Sheet", df_classify.shape[0])
+    create_artifact("flow-arrest-classify-to-cloud-artifact")

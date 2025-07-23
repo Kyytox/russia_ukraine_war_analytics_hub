@@ -21,7 +21,7 @@ def flow_dwh_inc_railway():
     """
 
     # Ingest
-    # flow_ingest_incident_railway()
+    flow_ingest_incident_railway()
 
     # Datamarts
     flow_dmt_incident_railway()

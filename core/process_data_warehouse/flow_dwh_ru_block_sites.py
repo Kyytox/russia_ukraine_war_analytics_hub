@@ -20,7 +20,7 @@ def flow_dwh_ru_block_sites():
     """
 
     # Ingest
-    # flow_ingest_russia_blocked_sites()
+    flow_ingest_russia_blocked_sites()
 
     # Datamarts
     flow_dmt_russia_blocked_sites()

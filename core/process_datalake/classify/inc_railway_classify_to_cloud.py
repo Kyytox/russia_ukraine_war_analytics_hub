@@ -11,7 +11,7 @@ from datetime import datetime
 from prefect import flow, task
 
 # Functions
-from core.libs.utils import read_data
+from core.libs.utils import read_data, upd_data_artifact, create_artifact
 from core.libs.google_api import (
     connect_google_sheet_api,
     get_sheet_data,
@@ -132,11 +132,9 @@ def flow_inc_railway_classify_to_cloud():
     """
     # get data from Google Sheet
     df_excel_final = get_sheet_data(service, spreadsheet_id, range_name)
-    print(df_excel_final)
 
     # get classify data
     df_classify = read_data(PATH_CLASSIFY_DATALAKE, "classify_inc_railway")
-    print(df_classify.info())
 
     """
     Process Data
@@ -148,18 +146,23 @@ def flow_inc_railway_classify_to_cloud():
 
     # format data
     df_classify = format_columns(df_classify)
-    print(df_classify)
+
     """
     Update Data
     """
-
     # save Excel Final (archive)
     df_excel_final.to_csv(f"{PATH_CLASSIFY_DATALAKE}/old_excel_{today}.csv")
 
     try:
         update_sheet_data(service, spreadsheet_id, range_name, df_classify)
+
     except Exception as e:
         print("Retry Update", e)
         # connect to google sheet
         service = connect_google_sheet_api()
         update_sheet_data(service, spreadsheet_id, range_name, df_classify)
+
+    # create artifact
+    print(f"Rows updated in Google Sheet: {df_classify.shape[0]}")
+    upd_data_artifact(f"Rows updated in Google Sheet", df_classify.shape[0])
+    create_artifact("flow-inc-railway-classify-to-cloud-artifact")
