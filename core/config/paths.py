@@ -8,7 +8,9 @@ PATH_ROOT = "/mnt/4046B55946B55080/russia_ukraine_war_analytics_hub"
 
 # credentials
 PATH_CREDS_API = "core/utils/credentials.yaml"
-PATH_SERVICE_ACCOUNT = "core/utils/service_account.json"
+PATH_SERVICE_ACCOUNT = "core/utils/token.json"
+# PATH_SERVICE_ACCOUNT = "core/utils/creds.json"
+PATH_CREDS_GCP = "core/utils/credentials.json"
 
 # data Telegram
 PATH_TELEGRAM_RAW = "data/datalake/telegram/raw"

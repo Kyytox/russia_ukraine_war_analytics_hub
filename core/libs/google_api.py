@@ -1,14 +1,20 @@
+import os
+from urllib.request import Request
 import pandas as pd
 
 from prefect import task
 
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from google.oauth2 import service_account
+
 
 # Variables
 from core.config.paths import (
     PATH_SERVICE_ACCOUNT,
+    PATH_CREDS_GCP,
 )
 
 
@@ -22,10 +28,24 @@ def connect_google_sheet_api():
     """
     SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
-    credentials = service_account.Credentials.from_service_account_file(
-        PATH_SERVICE_ACCOUNT, scopes=SCOPES
-    )
-    service = build("sheets", "v4", credentials=credentials)
+    creds = None
+
+    if os.path.exists(PATH_SERVICE_ACCOUNT):
+        creds = Credentials.from_authorized_user_file(PATH_SERVICE_ACCOUNT, SCOPES)
+
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(PATH_CREDS_GCP, SCOPES)
+            creds = flow.run_local_server(port=0)
+
+            # Save the credentials for the next run
+            with open(PATH_SERVICE_ACCOUNT, "w") as token:
+                token.write(creds.to_json())
+
+    service = build("sheets", "v4", credentials=creds)
 
     return service
 
