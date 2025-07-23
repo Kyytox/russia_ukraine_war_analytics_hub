@@ -17,7 +17,7 @@ IA_CLASSIFY = "mistral-nemo:latest"
 
 GROUP_SIZE_TO_TRANSLATE = 40
 SIZE_TO_TRANSLATE = 49
-SIZE_TO_QUALIF = 199
+SIZE_TO_QUALIF = 499
 
 ###############
 ## PROMPT IA ##
@@ -55,6 +55,7 @@ LIST_ACCOUNTS_TELEGRAM = [
     "mchsYakutia",
     "ostorozhno_novosti",
     # "bazabazon",
+    "CKREPA4",
 ]
 
 
@@ -85,6 +86,7 @@ DICT_UTC = {
     "idelrealii": 3,
     "mchsYakutia": 7,
     "ostorozhno_novosti": 3,
+    "CKREPA4": 3,
 }
 
 
@@ -269,6 +271,7 @@ LIST_PARTISANS_GRP = [
 
 LIST_ARREST_REASON = [
     "Post on social media",
+    "Post Anti-war",
     "Arson",
     "Attempt Sabotage",
     "Suspicion of preparation for sabotage",
