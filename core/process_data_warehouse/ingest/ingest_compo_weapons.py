@@ -6,6 +6,7 @@
 # - Save data
 
 
+import os
 import datetime
 import pandas as pd
 
@@ -129,13 +130,13 @@ def add_types_weapons_equipment(df):
     df = df.merge(df_categories, on="weapon", how="left")
 
     # remove cols _x , replace _y by ""
-    df = df.drop(columns=["type_equipment_x", "weapon_type_x"])
-    df = df.rename(
-        columns={
-            "type_equipment_y": "type_equipment",
-            "weapon_type_y": "weapon_type",
-        }
-    )
+    # df = df.drop(columns=["type_equipment_x", "weapon_type_x"])
+    # df = df.rename(
+    #     columns={
+    #         "type_equipment_y": "type_equipment",
+    #         "weapon_type_y": "weapon_type",
+    #     }
+    # )
 
     return df
 
@@ -236,6 +237,11 @@ def flow_ingest_compo_weapons():
         start_date = "01.01.2024"
     else:
         start_date = df["ingest_date"].max().strftime("%d.%m.%Y")
+        # remove 1 day
+        start_date = (
+            datetime.datetime.strptime(start_date, "%d.%m.%Y")
+            - datetime.timedelta(days=1)
+        ).strftime("%d.%m.%Y")
 
     end_date = today
     print(f"Start date: {start_date}")
@@ -243,6 +249,18 @@ def flow_ingest_compo_weapons():
 
     # Url template
     url_base = f"https://war-sanctions.gur.gov.ua/en/components?f%5Bsearch%5D=&f%5Bcountry_id%5D=&f%5Bmanufacturer_id%5D=&f%5Btitle_uk%5D=&f%5Bpd%5D={start_date}+-+{end_date}&i%5Bmarking%5D=&page="
+
+    # path_html_files = f"{PATH_DWH_SOURCES}/pages_compo_weapons"
+
+    # Get all files html
+    # list_html_files = os.listdir(path_html_files)
+    # list_html_files = [
+    #     file for file in list_html_files if file.startswith("components_weapons_page_")
+    # ]
+
+    # for file in list_html_files:
+    #     with open(os.path.join(path_html_files, file), "r") as f:
+    #         page_content = BeautifulSoup(f.read(), "html.parser")
 
     for page_num in range(1, MAX_PAGES + 1):
         print(f"Processing page {page_num}")
@@ -256,6 +274,13 @@ def flow_ingest_compo_weapons():
             break
 
         page_content = BeautifulSoup(response.content, "html.parser")
+
+        # save html page
+        with open(
+            f"{PATH_DWH_SOURCES}/pages_compo_weapons/components_weapons_page_{page_num}.html",
+            "w",
+        ) as file:
+            file.write(str(page_content))
 
         # Scrap page
         df_tmp = scrap_page(page_content)
@@ -285,6 +310,10 @@ def flow_ingest_compo_weapons():
 
         # convert date
         new_df["ingest_date"] = pd.to_datetime(new_df["ingest_date"], format="%d.%m.%Y")
+
+        # find duplates on all cols
+        df_duplicates = new_df[new_df.duplicated(keep=False)]
+        save_data(PATH_DWH_SOURCES, "components_weapons_only_duplicates", df_duplicates)
 
         # concat with previous data
         df = concat_old_new_df(df, new_df, [])
