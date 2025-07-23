@@ -25,7 +25,7 @@ from streamlit_gestion.utils.variables import (
 
 st.set_page_config(page_title="Classify Data", page_icon=":bar_chart:", layout="wide")
 
-HEAD_CLASS = 10
+HEAD_CLASS = 15
 
 
 def init_state_theme_data():
