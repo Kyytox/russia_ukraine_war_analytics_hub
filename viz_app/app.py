@@ -25,6 +25,13 @@ navbar = create_navbar()
 # Footer
 footer = create_footer()
 
+app.scripts.append_script(
+    {"external_url": "https://www.googletagmanager.com/gtag/js?id=G-PSVZK81FYS"}
+)
+app.scripts.append_script(
+    {"external_url": "https://cdn.jsdelivr.net/gh/lppier/lppier.github.io/gtag.js"}
+)
+
 
 # layout
 app.layout = html.Div(
@@ -32,7 +39,7 @@ app.layout = html.Div(
         navbar,
         dash.page_container,
         footer,
-    ],
+    ]
 )
 
 if __name__ == "__main__":
