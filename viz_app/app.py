@@ -25,23 +25,28 @@ navbar = create_navbar()
 # Footer
 footer = create_footer()
 
-app.scripts.append_script(
-    {"external_url": "https://www.googletagmanager.com/gtag/js?id=G-PSVZK81FYS"}
-)
-app.scripts.append_script(
-    {"external_url": "https://cdn.jsdelivr.net/gh/lppier/lppier.github.io/gtag.js"}
+# script
+script = html.Script(
+    """
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-PSVZK81FYS');
+        """,
+    src="https://www.googletagmanager.com/gtag/js?id=G-PSVZK81FYS",
 )
 
 
 # layout
 app.layout = html.Div(
     children=[
+        script,
         navbar,
         dash.page_container,
         footer,
-    ]
+    ],
 )
 
 if __name__ == "__main__":
-    # app.run(debug=True, port=8503)
-    app.run(debug=False, port=8501)
+    app.run(debug=True, port=8503)
+    # app.run(debug=False, port=8501)
