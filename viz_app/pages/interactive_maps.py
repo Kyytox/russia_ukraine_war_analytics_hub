@@ -26,7 +26,7 @@ page_content = {
         "title": "UA Control Map",
         "text": "UA Control And Units Map.",
         "image": None,
-        "url": "uacontrolmap.com",
+        "url": "https://www.google.com/maps/d/u/0/viewer?mid=1xPxgT8LtUjuspSOGHJc2VzA5O5jWMTE&ll=47.50751714509709%2C34.14477250205766&z=6",
         "tags": ["Map", "Units"],
         "color_tags": ["#121096", "#aaa824"],
     },
