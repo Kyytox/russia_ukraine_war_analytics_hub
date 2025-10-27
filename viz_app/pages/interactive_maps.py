@@ -88,6 +88,14 @@ page_content = {
         "tags": ["Map"],
         "color_tags": ["#121096"],
     },
+    "card11": {
+        "title": "Civilian Harm Map",
+        "text": "Incidents in Ukraine that have resulted in potential civilian harm. These include: incidents where rockets or missiles struck civilian areas, where attacks have resulted in the destruction of civilian infrastructure, where the presence of civilian injuries are visible and/or the presence of immobile civilian bodies.",
+        "image": "./assets/images/img_map_card11.png",
+        "url": "https://ukraine.bellingcat.com/",
+        "tags": ["Map"],
+        "color_tags": ["#121096"],
+    },
 }
 
 
