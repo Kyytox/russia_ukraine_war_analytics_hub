@@ -96,6 +96,14 @@ page_content = {
         "tags": ["Map"],
         "color_tags": ["#121096"],
     },
+    "card12": {
+        "title": "Fortifications in Ukraine",
+        "text": "Map showing fortifications in Ukraine including trenches, bunkers, and other defensive structures built during the conflict.",
+        "image": "./assets/images/img_map_card12.png",
+        "url": "https://militarysummary.com/map",
+        "tags": ["Map"],
+        "color_tags": ["#121096"],
+    },
 }
 
 
