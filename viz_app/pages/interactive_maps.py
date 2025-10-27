@@ -104,6 +104,14 @@ page_content = {
         "tags": ["Map"],
         "color_tags": ["#121096"],
     },
+    "card13": {
+        "title": "The Undeniable Street View",
+        "text": "Through Street View, walk the streets of 6 Ukrainian cities and regions that have found themselves on the front line and witness the Russian aggression against civilian infrastructure up close.",
+        "image": "./assets/images/img_map_card13.png",
+        "url": "https://theundeniablestreetview.com/",
+        "tags": ["Street View"],
+        "color_tags": ["#df4b4b"],
+    },
 }
 
 
