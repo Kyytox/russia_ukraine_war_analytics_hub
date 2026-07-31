@@ -17,6 +17,7 @@ st.set_page_config(page_title="Orchestration", page_icon=":gear:", layout="wide"
 
 list_tags_sort = ["telegram", "twitter", "filter", "qualification", "dwh", "classify"]
 list_flows_sort = ["extract", "clean", "transform", "ingest", "dmt"]
+slep_time = 130  # seconds
 
 
 # Get list of all flows
@@ -107,6 +108,9 @@ async def call(list_flows, step):
         st.error("No flows to run")
         return
 
+    # truncate list_artifacts
+    st.session_state.list_artifacts = []
+
     # create temp df with infos of flows to run
     df_flows_to_run = pd.DataFrame(list_flows, columns=["name"])
     df_flows_to_run = df_flows_to_run.merge(
@@ -170,7 +174,7 @@ with st.sidebar:
             if st.session_state.nb_loop > 1:
                 for step in range(1, st.session_state.nb_loop + 1):
                     asyncio.run(call(st.session_state.list_flows_to_run, step))
-                    time.sleep(130)
+                    time.sleep(slep_time)
             else:
                 asyncio.run(call(st.session_state.list_flows_to_run, 0))
 
@@ -196,6 +200,7 @@ for _, flow in st.session_state.list_all_flows.iterrows():
             flows_by_tag[tag] = []
         flows_by_tag[tag].append(flow)
 
+
 # Get unique tags for column organization
 unique_tags = list(flows_by_tag.keys())
 unique_tags = sort_list_by_priority(unique_tags, list_tags_sort)
@@ -203,7 +208,7 @@ nb_cols = len(unique_tags)
 
 
 # Determine row number based on the number of cols (Warning number od cols by row is fixed to 4)
-max_cols_per_row = 4
+max_cols_per_row = 3
 nb_rows = nb_cols // max_cols_per_row
 if nb_cols % max_cols_per_row != 0:
     nb_rows += 1
@@ -240,7 +245,6 @@ for row in range(nb_rows):
                         args=(flow, key_name),
                     )
 
-
 st.divider()
 
 if st.session_state.list_artifacts:
@@ -252,4 +256,9 @@ if st.session_state.list_artifacts:
         df_["flow_name"] = artifact.key
         df = pd.concat([df, df_], ignore_index=True)
 
-    st.dataframe(df, width=800, height=1000)
+    # display one df by flow_name
+    for flow_name in df["flow_name"].unique():
+        st.divider()
+        st.subheader(f"{flow_name}")
+        df_flow = df[df["flow_name"] == flow_name]
+        st.dataframe(df_flow, width=800, height=800)
