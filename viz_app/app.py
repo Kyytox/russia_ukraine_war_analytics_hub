@@ -8,12 +8,13 @@ from assets.components.footer import create_footer
 app = Dash(
     __name__,
     use_pages=True,
-    title="Ukraine War Data Hub",
+    title="Ukraine War Data Hub | Open Data & Analytics on Russia-Ukraine War",
     external_stylesheets=[
         dbc.themes.BOOTSTRAP,
         "https://use.fontawesome.com/releases/v5.15.4/css/all.css",
     ],
     suppress_callback_exceptions=True,
+    description="Explore open data and analytics on the Russia-Ukraine war. Access data, visualizations, the list of websites blocked in Russia, alerts related to missile raids in Ukraine, components used in the aggressor`s weapon, interactive maps related to the war. ",
 )
 
 server = app.server
