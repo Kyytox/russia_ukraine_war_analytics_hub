@@ -15,6 +15,26 @@ app = Dash(
     ],
     suppress_callback_exceptions=True,
     description="Explore open data and analytics on the Russia-Ukraine war. Access data, visualizations, the list of websites blocked in Russia, alerts related to missile raids in Ukraine, components used in the aggressor`s weapon, interactive maps related to the war. ",
+    index_string="""
+    <!DOCTYPE html>
+    <html>
+        <head>
+            {%metas%}
+            <title>{%title%}</title>
+            <meta name = "description" content="Explore open data and analytics on the Russia-Ukraine war. Access data, visualizations, the list of websites blocked in Russia, alerts related to missile raids in Ukraine, components used in the aggressor`s weapon, interactive maps related to the war.">
+            {%favicon%}
+            {%css%}
+        </head>
+        <body>
+            {%app_entry%}
+            <footer>
+                {%config%}
+                {%scripts%}
+                {%renderer%}
+            </footer>
+        </body>
+    </html>
+    """,
 )
 
 server = app.server
