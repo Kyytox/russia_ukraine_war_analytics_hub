@@ -51,4 +51,13 @@ DICT_CONTENT = {
         "color_tags": ["#121096", "#821f9b"],
         "icon": "fa-map",
     },
+    "Military Losses": {
+        "title": "Military Losses",
+        "text": "Explore the military losses in Ukraine.",
+        "image": "assets/images/military_losses.png",
+        "url": "/military-losses",
+        "tags": ["Maps", "Graphs", "Data Sources"],
+        "color_tags": ["#121096", "#4abb15", "#14aca4"],
+        "icon": "fa-cross",
+    },
 }
