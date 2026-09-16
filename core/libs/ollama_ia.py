@@ -1,9 +1,14 @@
 import ollama
 
+import json
+
 # Variables
 from core.config.variables import (
     IA_TRANSLATE,
+    IA_TRANS_MILITARY_UNIT,
     IA_CLASSIFY,
+    IA_CLASSIFY_ALL,
+    IA_ASSISTANT,
 )
 
 # Functions
@@ -68,6 +73,35 @@ def format_response_translate(text, response):
     return response
 
 
+def format_response_filter(response):
+    """
+    Format response of filter for theme
+
+    Args:
+        response: response of classify
+
+    Returns:
+        Formatted response
+    """
+
+    if "yes" in response.lower():
+        return "yes"
+    elif "no" in response.lower():
+        return "no"
+    else:
+        return "no"
+
+    #  jump line replace
+    response = (
+        response.replace(", ", ",")
+        .replace("\n", " ")
+        .replace("\r", " ")
+        .replace(".", "")
+    )
+
+    return response
+
+
 def format_response_classify(response):
     """
     Format response of classify
@@ -79,26 +113,41 @@ def format_response_classify(response):
         Formatted response
     """
 
-    if "other" in response.lower():
-        return None
-    elif "name" in response.lower():
-        return None
-    elif "age" in response.lower():
-        return None
-    elif "unknown" in response.lower():
-        return None
-    elif "yes" in response.lower():
-        return "yes"
-    elif "no" in response.lower():
-        return "no"
+    # remove string not in json format
+    response = response.replace("```json", "").replace("```", "")
 
-    #  jump line replace
-    response = (
-        response.replace(", ", ",")
-        .replace("\n", " ")
-        .replace("\r", " ")
-        .replace(".", "")
-    )
+    # check if response is a valid json
+    try:
+        response = json.loads(response)
+    except (json.JSONDecodeError, TypeError) as e:
+        print(f"Erreur : {e}")
+
+        return {
+            "incident_type": "Other",
+            "damaged_equipment": "Unknown",
+            "partisans_names": None,
+            "partisans_ages": None,
+        }
+
+    # check if response is a dict
+    if type(response) != dict:
+        print(f"Error: response is not a valid json: {response}")
+        return {
+            "incident_type": "Other",
+            "damaged_equipment": "Unknown",
+            "partisans_names": None,
+            "partisans_ages": None,
+        }
+
+    # check if all id are in json
+    if "incident_type" not in response:
+        response["incident_type"] = "Other"
+    if "damaged_equipment" not in response:
+        response["damaged_equipment"] = "Unknown"
+    if "partisans_names" not in response:
+        response["partisans_names"] = None
+    if "partisans_ages" not in response:
+        response["partisans_ages"] = None
 
     return response
 
@@ -114,12 +163,27 @@ def ia_treat_message(text, mode, prompt=None):
     Returns:
         Response of IA
     """
+    response = None
+
     if mode == "translate":
         response = chat_ia(text, IA_TRANSLATE, prompt)
         response = format_response_translate(text, response)
         response = format_clean_text(response)
-    elif mode == "classify":
-        response = chat_ia(text, IA_CLASSIFY, prompt)
+    elif mode == "pre_classify":
+        response = chat_ia(text, IA_CLASSIFY_ALL, prompt)
         response = format_response_classify(response)
+    elif mode == "filter":
+        response = chat_ia(text, IA_CLASSIFY, prompt)
+        response = format_response_filter(response)
+        # print(f"text: {text}")
+        # print(f"Response: {response}")
+        # print("--------------------------------------------")
+        # print("--------------------------------------------")
+    elif mode == "ru_officers_kiu_translate":
+        response = chat_ia(text, IA_TRANS_MILITARY_UNIT, prompt)
+        response = format_clean_text(response)
+    elif mode == "ru_officers_kiu_military_unit":
+        response = chat_ia(text, IA_ASSISTANT, prompt)
+        response = format_clean_text(response)
 
     return response

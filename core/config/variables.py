@@ -3,21 +3,29 @@
 #############
 
 
-# Path Excel file Incident Railway
+# Path Excel files
 ID_EXCEL_INCIDENT_RAILWAY = "1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk"
 ID_EXCEL_RUSSIA_BLOCK_SITE = "1KN3isOEE7A4vBL9-QbEd-gQUgYcg4Hn50pKHJ75SS-A"
 ID_EXCEL_INCIDENT_ARREST = "1yMzTidLDj-sdsACYMkhRFuGIGOtscvpvijAAmVlLCfM"
+ID_EXCEL_RU_OFFICERS_KIU = "1InyFVmu1LoSjqcWTHe4iD9cR8CNiL-5Ke5Jiz_Mlvwc"
 # ID_EXCEL_INCIDENT_SABOTAGE = "1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk"
 
 # IA OLLAMA
 # IA_TRANSLATE = "ia_translate:latest" # hermes 3
 IA_TRANSLATE = "ia_translate_2:latest"
+IA_TRANS_MILITARY_UNIT = "ia_translate_2:latest"
 # IA_CLASSIFY = "ia_classify:latest"
-IA_CLASSIFY = "mistral-nemo:latest"
+# IA_CLASSIFY = "mistral-nemo:latest"
+IA_CLASSIFY = "ia_qualif_3:latest"
+IA_CLASSIFY_ALL = "ia_qualif_all:latest"
+IA_ASSISTANT = "ia_assistant:latest"
 
-GROUP_SIZE_TO_TRANSLATE = 40
-SIZE_TO_TRANSLATE = 49
-SIZE_TO_QUALIF = 499
+GROUP_SIZE_TO_TRANSLATE = 15
+SIZE_TO_TRANSLATE = 69
+SIZE_TO_QUALIF = 400
+
+# number of military unit to process by batch (dwh; ru_officers_kiu)
+GROUP_SIZE_MILITARY_UNIT = 400
 
 ###############
 ## PROMPT IA ##
@@ -41,7 +49,7 @@ LIST_ACCOUNTS_TELEGRAM = [
     "magistral_kuvalda",
     "nskzd",
     "news_zszd",
-    "D4msk",
+    # "D4msk", delete
     "rospartizan",
     "boakom",
     "rdpsru",
@@ -50,7 +58,7 @@ LIST_ACCOUNTS_TELEGRAM = [
     "russvolcorps",
     "soprotivleniye_lsr",
     "Sib_EXpress",
-    "algizrpd",  # t.me/algizrpd
+    # "algizrpd",  # t.me/algizrpd private ?
     "idelrealii",  # t.me/idelrealii
     "mchsYakutia",
     "ostorozhno_novosti",
@@ -266,6 +274,7 @@ LIST_PARTISANS_GRP = [
     "BOAK",
     "Green Gendarmerie",
     "Stop the Wagons",
+    "Skrepach",
 ]
 
 

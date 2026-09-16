@@ -4,7 +4,6 @@ import pandas as pd
 from tqdm import tqdm
 from prefect import flow, task
 
-
 # Functions
 from core.libs.utils import (
     get_regions_geojson,
@@ -34,7 +33,7 @@ from core.config.schemas import (
 )
 
 
-@task(name="Qualif with IA", task_run_name="pre-classify-with-ia")
+@task(name="Qualif with IA", task_run_name="quelif-theme-with-ia")
 def qualif_with_ia(df, col, prompt):
     """
     Qualif specific column with IA
@@ -48,7 +47,7 @@ def qualif_with_ia(df, col, prompt):
         Dataframe with Qualif data
     """
 
-    group_size = 10
+    group_size = SIZE_TO_QUALIF
     df_result = pd.DataFrame()
 
     # Calcul number of batches
@@ -61,13 +60,69 @@ def qualif_with_ia(df, col, prompt):
 
             # ask IA
             df_group.loc[:, col] = df_group["text_translate"].apply(
-                lambda x: ia_treat_message(x, "classify", prompt)
+                lambda x: ia_treat_message(x, "filter", prompt)
             )
 
             df_result = pd.concat([df_result, df_group])
 
             # Update progress bar
             pbar.update(1)
+
+    return df_result
+
+
+@task(name="Pre CLassify with IA", task_run_name="pre-classify-with-ia")
+def pre_classify_with_ia(df):
+    """
+    Pre Classify with IA
+    Extract multiple information at once (columns) from text with IA
+    Assign the result to a specific column in the DataFrame (json)
+
+    Args:
+        df: dataframe
+
+    Returns:
+        Dataframe with Qualif data
+    """
+
+    group_size = SIZE_TO_QUALIF
+    df_result = pd.DataFrame()
+
+    # Calcul number of batches
+    total_batches = (len(df) + group_size - 1) // group_size
+
+    # Create progress bar
+    with tqdm(total=total_batches, desc="Pre Classify with IA") as pbar:
+        for i in range(0, len(df), group_size):
+            df_group = df[i : i + group_size]
+
+            # ask IA
+            results = df_group["text_translate"].apply(
+                lambda x: ia_treat_message(
+                    x,
+                    "pre_classify",
+                    "Extract information about the incident, including names, ages, and damaged equipment.",
+                )
+            )
+
+            # assign result to column
+            df_group.loc[:, "qualif_inc_type"] = results.apply(
+                lambda x: x.get("incident_type", "Other")
+            )
+            df_group.loc[:, "qualif_dmg_eqp"] = results.apply(
+                lambda x: x.get("damaged_equipment", "Unknown")
+            )
+            df_group.loc[:, "qualif_prtsn_names"] = results.apply(
+                lambda x: x.get("partisans_names", None)
+            )
+            df_group.loc[:, "qualif_prtsn_age"] = results.apply(
+                lambda x: x.get("partisans_ages", None)
+            )
+
+            # Update progress bar
+            pbar.update(1)
+
+            df_result = pd.concat([df_result, df_group])
 
     return df_result
 
@@ -84,6 +139,7 @@ def qualif_theme(df, theme):
     Returns:
         Dataframe with Qualif data
     """
+    prompt = ""
 
     if theme == "railway":
         prompt = """
@@ -123,144 +179,6 @@ def qualif_theme(df, theme):
     df = qualif_with_ia(df, "qualif_ia", prompt)
 
     return df
-
-
-@task(name="Qualif Partisans Names", task_run_name="pre-classify-partisans-names")
-def qualif_partisans_names(df, theme):
-    """
-    Find partisans names in text with IA
-
-    Args:
-        df: dataframe
-        theme: theme to classify
-
-    Returns:
-        Dataframe with Qualif partisans names
-    """
-
-    # add col
-    if theme == "railway":
-        col_name = "qualif_prtsn_names"
-    elif theme == "arrest":
-        col_name = "qualif_person_name"
-
-    prompt = """
-    If available, please provide the name(s) of the individual(s) who have been arrested or sentenced, I don't want the first names of those who died, but those who were arrested. Kindly respond with only the names, as you are not required to discuss the content of the message.
-    If the message contains multiple names, please provide all of them.
-    If the message does not contain any names, please respond with "No names".
-    
-    Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with names or "No names".
-    """
-
-    # Find partisans names
-    return qualif_with_ia(df, col_name, prompt)
-
-
-@task(name="Qualif Partisans Ages", task_run_name="pre-classify-partisans-ages")
-def qualif_partisans_ages(df, theme):
-    """
-    Find partisans ages in text with IA
-
-    Args:
-        df: dataframe
-        theme: theme to classify
-
-    Returns:
-        Dataframe with Qualif partisans ages
-    """
-
-    # add col
-    if theme == "railway":
-        col_age = "qualif_prtsn_age"
-    elif theme == "arrest":
-        # col_age = "qualif_person_age"
-        return df
-
-    # prompt
-    prompt = """
-    If available, please provide the age(s) of the individual(s) who have been arrested or sentenced, I don't want the age of those who died, but those who were arrested. Kindly respond with only the ages, as you are not required to discuss the content of the message.
-    If the message contains multiple ages, please provide all of them.
-    If the message does not contain any ages, please respond with "No ages".
-
-    Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with ages or "No ages".
-    """
-
-    # Find partisans ages
-    return qualif_with_ia(df, col_age, prompt)
-
-
-@task(name="Qualif Incident Type", task_run_name="pre-classify-incident-type")
-def qualif_incident_type(df, theme):
-    """
-    Find incident type in text with IA
-
-    Args:
-        df: dataframe
-        theme: theme to classify
-
-    Returns:
-        Dataframe with Qualif incident type
-    """
-
-    # add col
-    if theme == "railway":
-        col_age = "qualif_inc_type"
-    elif theme == "arrest":
-        return df
-
-    # prompt
-    prompt = """
-    If available, please provide the type of incident that occurred. Kindly respond with only the type of incident, as you are not required to discuss the content of the message.
-    
-    You can choose from the following options: Derailment, Sabotage, Fire, Collision, Attack, Other.
-    
-    If the message contains multiple types of incidents, please provide only one, the most relevant if possible.
-    If the message does not contain any information about the type of incident, please respond with "Other".
-    
-    Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with the type of incident or "Other".
-    """
-
-    # Find Incident Type
-    return qualif_with_ia(df, col_age, prompt)
-
-
-@task(
-    name="Qualif Damaged Equipment",
-    task_run_name="pre-classify-damaged-equipment",
-)
-def qualif_damaged_equipment(df, theme):
-    """
-    Find damaged equipment in text with IA
-
-    Args:
-        df: dataframe
-        theme: theme to classify
-
-    Returns:
-        Dataframe with Qualif damaged equipment
-    """
-
-    # add col
-    if theme == "railway":
-        col_age = "qualif_dmg_eqp"
-    elif theme == "arrest":
-        return df
-
-    # prompt
-    prompt = """
-    If available, please provide the type of equipment that was damaged. Kindly respond with only the type of equipment, as you are not required to discuss the content of the message.
-    
-    You can choose from the following options: Freight Train, Passengers Train, Locomotive, Relay Cabin, Infrastructure, Railroad Tracks, Unknown.
-    
-    If the message contains multiple types of equipment, please provide only one, the most relevant if possible.
-    If the message does not contain any information about the type of equipment, please respond with "Unknown".
-    If the message contains information about collision, do not respond with Locomotive.
-    
-    Please, give only the response, If the message is ambiguous, base your answer on the most likely clues in the text. Do not ask questions or provide additional explanations in your answer. Answer only with the type of equipment or "Unknown".
-    """
-
-    # Find Damaged Equipment
-    return qualif_with_ia(df, col_age, prompt)
 
 
 def find_region(text, LIST_REGIONS):
@@ -448,11 +366,11 @@ def process_qualification(theme, df_filt):
         schema = SCHEMA_QUALIF_ARREST
         col_add_final = "add_final_inc_arrest"
         col_filter = "filter_inc_arrest"
-    # elif theme == "sabotage":
-    #     file_name = "qualification_sabotage"
-    #     schema = SCHEMA_QUALIF_SABOTAGE
-    #     col_add_final = "add_final_inc_sabotage"
-    #     col_filter = "filter_inc_sabotage"
+    elif theme == "sabotage":
+        file_name = "qualification_sabotage"
+        # schema = SCHEMA_QUALIF_SABOTAGE
+        col_add_final = "add_final_inc_sabotage"
+        col_filter = "filter_inc_sabotage"
 
     # get data already Qualif
     df_qualif = read_data(PATH_QUALIF_DATALAKE, file_name)
@@ -507,7 +425,6 @@ def process_qualification(theme, df_filt):
     upd_data_artifact(f"Data to Qualify without IA - {theme}", df_to_class.shape[0])
 
     if not df_to_class.empty:
-
         # qualif Region
         df_to_class = qualif_region(df_to_class)
 
@@ -561,10 +478,7 @@ def process_qualification(theme, df_filt):
     print("Data to classify after SIZE_TO_QUALIF: ", df_to_class_wh_ia.shape)
 
     df_to_class_wh_ia = qualif_theme(df_to_class_wh_ia, theme)
-    df_to_class_wh_ia = qualif_partisans_names(df_to_class_wh_ia, theme)
-    df_to_class_wh_ia = qualif_partisans_ages(df_to_class_wh_ia, theme)
-    df_to_class_wh_ia = qualif_incident_type(df_to_class_wh_ia, theme)
-    df_to_class_wh_ia = qualif_damaged_equipment(df_to_class_wh_ia, theme)
+    df_to_class_wh_ia = pre_classify_with_ia(df_to_class_wh_ia)
 
     # concat data
     df_to_class = (
@@ -604,7 +518,7 @@ def flow_datalake_qualif():
     process_qualification("railway", df_filter)
 
     # Incidents Arrest
-    process_qualification("arrest", df_filter)
+    # process_qualification("arrest", df_filter)
 
     # Incidents Sabotage
     # process_qualification("sabotage", df_filter)
