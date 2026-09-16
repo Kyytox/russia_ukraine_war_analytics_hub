@@ -107,10 +107,10 @@ def pre_classify_with_ia(df):
 
             # assign result to column
             df_group.loc[:, "qualif_inc_type"] = results.apply(
-                lambda x: x.get("incident_type", "Other")
+                lambda x: x.get("incident_type", None)
             )
             df_group.loc[:, "qualif_dmg_eqp"] = results.apply(
-                lambda x: x.get("damaged_equipment", "Unknown")
+                lambda x: x.get("damaged_equipment", None)
             )
             df_group.loc[:, "qualif_prtsn_names"] = results.apply(
                 lambda x: x.get("partisans_names", None)

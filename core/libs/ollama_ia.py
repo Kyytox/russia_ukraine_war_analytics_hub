@@ -123,8 +123,8 @@ def format_response_classify(response):
         print(f"Erreur : {e}")
 
         return {
-            "incident_type": "Other",
-            "damaged_equipment": "Unknown",
+            "incident_type": None,
+            "damaged_equipment": None,
             "partisans_names": None,
             "partisans_ages": None,
         }
@@ -133,17 +133,17 @@ def format_response_classify(response):
     if type(response) != dict:
         print(f"Error: response is not a valid json: {response}")
         return {
-            "incident_type": "Other",
-            "damaged_equipment": "Unknown",
+            "incident_type": None,
+            "damaged_equipment": None,
             "partisans_names": None,
             "partisans_ages": None,
         }
 
     # check if all id are in json
     if "incident_type" not in response:
-        response["incident_type"] = "Other"
+        response["incident_type"] = None
     if "damaged_equipment" not in response:
-        response["damaged_equipment"] = "Unknown"
+        response["damaged_equipment"] = None
     if "partisans_names" not in response:
         response["partisans_names"] = None
     if "partisans_ages" not in response:
