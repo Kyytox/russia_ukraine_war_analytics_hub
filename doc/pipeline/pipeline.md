@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Data Lake is used for storing, clean, transform, filter, and pre-classify data from Datalake (Telegram, Twitter)
+Data Lake is used for storing, clean, transform, filter, and pre-classify data (Telegram, Twitter)
 
-Data are stored in .parquet files
+Data are stored in .parquet files, partitioned by account
 
 The pipeline is composed of the following steps:
 
@@ -56,12 +56,21 @@ All messages after 2022-01-01, from the following channels are collected:
 | date          | datetime64[ns, UTC] | Date and time of the message |
 | text_original | object              | Original text of the message |
 
-#### ..........
+#### Processing
 
-#### ..........
+For each account in the list (LIST_ACCOUNTS_TELEGRAM), the following steps are performed:
 
-#### ..........
+- Check if account has already been processed
+- If account has not been processed, get all messages from date 2022-01-01 else get the last ID message processed.
+- Retrieve the messages
 
+#### Storage
+
+Data are stored in .parquet files, partitioned by account in the following path:
+
+```
+/data/datalake/telegram/raw/raw_telegram.parquet
+```
 
 ### Cleaning
 
@@ -75,13 +84,21 @@ All messages after 2022-01-01, from the following channels are collected:
 | date          | datetime64[ns] | Date and time of the message |
 | text_original | object         | Original text of the message |
 
-#### ..........
+#### Processing
 
-#### ..........
+- Get data previously extracted
+- Get data already cleaned
+- Keep only the new data
+- Update Date with the correct timezone
+- Clean the text of the message
 
-#### ..........
+#### Storage
 
+Data are stored in .parquet files, partitioned by account in the following path:
 
+```
+/data/datalake/telegram/clean/clean_telegram.parquet
+```
 
 ### Transformation
 
@@ -97,11 +114,28 @@ All messages after 2022-01-01, from the following channels are collected:
 | text_translate | object         | Translated text of the message |
 | url            | object         | URL in the message             |
 
-#### ..........
+#### Processing
 
-#### ..........
+- Get data previously cleaned
+- Get data already transformed
+- For data already transformed, remove data where the text translated is 65% less than the original text, for retranlate it
+- Keep only the new data
 
-#### ..........
+- For each account in the data
+  - Add a new column `url` with concatenate account and id_message
+  - Sort data by the number of words in the message (for translate in first the shortest messages)
+  - Keep x messages to translate (x = SIZE_TO_TRANSLATE)
+  - Translate the messages
+  - Clean the text translated
+
+
+#### Storage
+
+Data are stored in .parquet files, partitioned by account in the following path:
+
+```
+/data/datalake/telegram/transform/transform_telegram.parquet
+```
 
 ### Twitter
 
