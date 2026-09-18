@@ -38,6 +38,20 @@ This section contains data and analyses related to the components used in the ag
 
 <br/>
 
+## Military Losses in Ukraine
+
+This section provides data and analyses related to military losses in Ukraine, including personnel, equipment, and other relevant information.
+
+ | Title | Description |
+ | ------- | ------------- |
+ | [Equipment losses & Death Toll & Military Wounded & Prisoner of War of Russians](https://www.kaggle.com/datasets/piterfm/2022-ukraine-russian-war) | Dataset on Russian military losses in Ukraine. |
+ | [UA losses](https://ualosses.org/en/soldiers/) | Ukrainian military losses tracker. |
+ | [Russian Losses in Ukraine](https://www.ukrainewarlosses.com/) | Tracker for Russian military losses. |
+ | [Russian Casualties in Ukraine](https://russian-casualties.in.ua/) | Data on Russian casualties in Ukraine. |
+ | [Russo-Ukrainian Warspotting](https://ukr.warspotting.net/) | Warspotting data for the Russo-Ukrainian conflict. |
+
+<br/>
+
 ## Raid Alerts in Ukraine 🚨
 
 This section provides data related to raid alerts in Ukraine, multiple sources are available.
