@@ -24,6 +24,22 @@ app = Dash(
             <meta name = "description" content="Explore open data and analytics on the Russia-Ukraine war. Access data, visualizations, the list of websites blocked in Russia, alerts related to missile raids in Ukraine, components used in the aggressor`s weapon, interactive maps related to the war.">
             {%favicon%}
             {%css%}
+
+            <!-- Matomo -->
+            <script>
+            var _paq = window._paq = window._paq || [];
+            /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+                var u="//matomo.kytox-lab.com/";
+                _paq.push(['setTrackerUrl', u+'matomo.php']);
+                _paq.push(['setSiteId', '1']);
+                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+            })();
+            </script>
+            <!-- End Matomo Code -->
         </head>
         <body>
             {%app_entry%}
@@ -47,21 +63,21 @@ navbar = create_navbar()
 footer = create_footer()
 
 # script
-script = html.Script(
-    """
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-PSVZK81FYS');
-        """,
-    src="https://www.googletagmanager.com/gtag/js?id=G-PSVZK81FYS",
-)
+# script = html.Script(
+#     """
+#         window.dataLayer = window.dataLayer || [];
+#         function gtag(){dataLayer.push(arguments);}
+#         gtag('js', new Date());
+#         gtag('config', 'G-PSVZK81FYS');
+#         """,
+#     src="https://www.googletagmanager.com/gtag/js?id=G-PSVZK81FYS",
+# )
 
 
 # layout
 app.layout = html.Div(
     children=[
-        script,
+        # script,
         navbar,
         dash.page_container,
         footer,
