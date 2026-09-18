@@ -62,22 +62,9 @@ navbar = create_navbar()
 # Footer
 footer = create_footer()
 
-# script
-# script = html.Script(
-#     """
-#         window.dataLayer = window.dataLayer || [];
-#         function gtag(){dataLayer.push(arguments);}
-#         gtag('js', new Date());
-#         gtag('config', 'G-PSVZK81FYS');
-#         """,
-#     src="https://www.googletagmanager.com/gtag/js?id=G-PSVZK81FYS",
-# )
-
-
 # layout
 app.layout = html.Div(
     children=[
-        # script,
         navbar,
         dash.page_container,
         footer,
