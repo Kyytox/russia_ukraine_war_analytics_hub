@@ -8,6 +8,14 @@ dash.register_page(__name__)
 
 
 page_content = {
+    "card0": {
+        "title": "Russo-Ukrainian War Tracker",
+        "text": "An independent research project visualizing the Russo-Ukrainian War through territory control, military losses, humanitarian impact, and international aid from February 2022 to the present.",
+        "image": "./assets/images/img_map_card0.png",
+        "url": "https://ukrainewar.app/?events=true",
+        "tags": ["Map", "data sources", "Analytics"],
+        "color_tags": ["#121096", "#14aca4", "#961010"],
+    },
     "card1": {
         "title": "DeepState Map of Ukraine",
         "text": "News of russia's war against Ukraine on the map.",
