@@ -1,0 +1,176 @@
+# Step 1 - Create a new work-pool
+# prefect work-pool create --type process default-pool
+
+# Step 2 - Start worker
+# prefect worker start --pool main-pool
+
+# Step 3 - Create deployment
+# prefect deploy --all --prefect-file prefect/prefect.yaml
+
+# Generic metadata about this project
+name: russia_ukraine_war_analytics_hub
+
+# build section allows you to manage and build docker images
+build: null
+
+# push section allows you to manage if and how this project is uploaded to remote locations
+push: null
+
+# pull section allows you to provide instructions for cloning this project in remote locations
+pull:
+  - prefect.deployments.steps.set_working_directory:
+      directory: /home/kytox/dev/russia_ukraine_war_analytics_hub
+
+definitions:
+  work_pools:
+    datalake_work_pool: &datalake_work_pool
+      name: main-pool
+      work_queue_name: datalake_queue
+      job_variables: {}
+    warehouse_work_pool: &warehouse_work_pool
+      name: main-pool
+      work_queue_name: warehouse_queue
+      job_variables: {}
+  schedules:
+    every_minutes: &every_minutes
+      cron: "* * * * *"
+      timezone: "Europe/Paris"
+    every_hours: &every_hours
+      cron: "0 * * * *"
+      timezone: "Europe/Paris"
+    every_day: &every_day
+      cron: "0 0 * * *"
+      timezone: "Europe/Paris"
+    every_2_hours: &every_2_hours
+      cron: "0 */2 * * *"
+      timezone: "Europe/Paris"
+    every_4_hours: &every_4_hours
+      cron: "0 */4 * * *"
+      timezone: "Europe/Paris"
+
+# the deployments section allows you to provide configuration for deploying flows
+deployments:
+  - name: dlk-flow-telegram
+    version: null
+    tags: ["dlk-telegram"]
+    concurrency_limit: 3
+    description: null
+    entrypoint: core.process_datalake.flow_dlk_telegram.flow_dlk_telegram
+    parameters: {}
+    work_pool: *datalake_work_pool
+    enforce_parameter_schema: true
+    schedule: *every_hours
+
+  # # ELT Twitter
+  # - name: dlk-flow-twitter
+  #   version: null
+  #   tags: ["dlk-twitter"]
+  #   concurrency_limit: null
+  #   description: null
+  #   entrypoint: .core.process_datalake.flow_dlk_twitter.flow_twitter_extract
+  #   parameters: {}
+  #   work_pool: *datalake_work_pool
+  #   enforce_parameter_schema: true
+  #   schedules: *every_day
+  #
+  # - name: dlk-flow-filter-qualif
+  #   version: null
+  #   tags: ["dlk-filter-qualif"]
+  #   concurrency_limit: null
+  #   description: null
+  #   entrypoint: .core.process_datalake.flow_dlk_filter_qualif.flow_dlk_filter_qualif
+  #   parameters: {}
+  #   work_pool: *datalake_work_pool
+  #   enforce_parameter_schema: true
+  #   schedules: *every_day
+  #
+  # #
+  # # DWH Incidents Railway
+  # - name: dwh-incidents-railway
+  #   version: null
+  #   tags: ["dwh-incidents"]
+  #   concurrency_limit: null
+  #   description: null
+  #   entrypoint: ./core/process_data_warehouse/flow_dwh_inc_railway.py:flow_dwh_inc_railway
+  #   parameters: {}
+  #   work_pool: *warehouse_work_pool
+  #   enforce_parameter_schema: true
+  #   schedules: *every_day
+  #
+  # #
+  # # DWH Russia blocked sites
+  # - name: dwh-ru-block-sites
+  #   version: null
+  #   tags: ["dwh-ru-block-sites"]
+  #   concurrency_limit: null
+  #   description: null
+  #   entrypoint: ./core/process_data_warehouse/flow_dwh_ru_block_sites.py:flow_dwh_ru_block_sites
+  #   parameters: {}
+  #   work_pool: *warehouse_work_pool
+  #   enforce_parameter_schema: true
+  #   schedules: *every_day
+  #
+  # #
+  # # DWH Components Weapons
+  # - name: dwh-compo-weapons
+  #   version: null
+  #   tags: ["dwh-compo-weapons"]
+  #   concurrency_limit: null
+  #   description: null
+  #   entrypoint: ./core/process_data_warehouse/flow_dwh_compo_weapons.py:flow_dwh_compo_weapons
+  #   parameters: {}
+  #   work_pool: *warehouse_work_pool
+  #   enforce_parameter_schema: true
+  #   schedules: *every_day
+  #
+  # #
+  # # DWH Russian Officers KIU
+  # - name: dwh-ru-officers-kiu
+  #   version: null
+  #   tags: ["dwh-ru-officers-kiu"]
+  #   concurrency_limit: null
+  #   description: null
+  #   entrypoint: ./core/process_data_warehouse/flow_dwh_ru_officers_kiu.py:flow_dwh_ru_officers_kiu
+  #   parameters: {}
+  #   work_pool: *warehouse_work_pool
+  #   enforce_parameter_schema: true
+  #   schedules: *every_day
+  #
+  # #
+  # # DWH Military Losses
+  # - name: dwh-military_losses
+  #   version: null
+  #   tags: ["dwh-military_losses"]
+  #   concurrency_limit: null
+  #   description: null
+  #   entrypoint: ./core/process_data_warehouse/flow_dwh_military_losses.py:flow_dwh_military_losses
+  #   parameters: {}
+  #   work_pool: *warehouse_queue
+  #   enforce_parameter_schema: true
+  #   schedules: *every_day
+
+  # #
+  # # Classify Incidents Railway to Cloud
+  # - name: classify-incidents-railway-to-cloud
+  #   version: null
+  #   tags: ["classify-to-cloud"]
+  #   concurrency_limit: null
+  #   description: null
+  #   entrypoint: ./core/process_datalake/classify/inc_railway_classify_to_cloud.py:flow_inc_railway_classify_to_cloud
+  #   parameters: {}
+  #   work_pool: *datalake_work_pool
+  #   enforce_parameter_schema: true
+  #   schedules: *every_day
+  #
+  # #
+  # # Classify Arrests to Cloud
+  # - name: classify-arrests-to-cloud
+  #   version: null
+  #   tags: ["classify-to-cloud"]
+  #   concurrency_limit: null
+  #   description: null
+  #   entrypoint: ./core/process_datalake/classify/arrest_classify_to_cloud.py:flow_arrest_classify_to_cloud
+  #   parameters: {}
+  #   work_pool: *datalake_work_pool
+  #   enforce_parameter_schema: true
+  #   schedules: *every_day
