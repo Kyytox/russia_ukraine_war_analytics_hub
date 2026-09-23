@@ -1,25 +1,28 @@
 # Russia-Ukraine War Analytics Hub 🇺🇦🇷🇺
 
+Repo featuring a wealth of data, graphs and analyses relating (directly or indirectly) to the war between Russia and Ukraine.
+
+</br>
+
 <!--toc:start-->
-- [Russia-Ukraine War Analytics Hub](#russia-ukraine-war-analytics-hub-🇺🇦🇷🇺)
-  - [📊 Applications Web](#📊-applications-web)
-  - [Sections](#sections)
-    - [🚂 Incidents Russian Railways Analytics](#🚂-incidents-russian-railways-analytics-🇷🇺)
-      - [Overview Tab](#overview-tab)
-      - [Incidents Types Tab](#incidents-types-tab)
-      - [Damaged Equipments Tab](#damaged-equipments-tab)
-      - [Collisions Tab](#collisions-tab)
-      - [Sabotage Tab](#sabotage-tab)
-      - [Partisans Arrest Tab](#partisans-arrest-tab)
-    - [🚫 Websites Blocked in Russia](#🚫-websites-blocked-in-russia)
-    - [⚙️ Components in Aggressor's Weapon](#️-components-in-aggressors-weapon)
-    - [🪖 Military Losses in Ukraine](#🪖-military-losses-in-ukraine)
-    - [🚨 Raid Alerts in Ukraine](#🚨-raid-alerts-in-ukraine)
-    - [🗺️ Interactive Maps](#🗺️-interactive-maps)
-  - [Architecture](#architecture)
+- [📊 Applications Web](#📊-applications-web)
+- [Sections](#sections)
+  - [🚂 Incidents Russian Railways Analytics](#🚂-incidents-russian-railways-analytics-🇷🇺)
+    - [Overview Tab](#overview-tab)
+    - [Incidents Types Tab](#incidents-types-tab)
+    - [Damaged Equipments Tab](#damaged-equipments-tab)
+    - [Collisions Tab](#collisions-tab)
+    - [Sabotage Tab](#sabotage-tab)
+    - [Partisans Arrest Tab](#partisans-arrest-tab)
+  - [🚫 Websites Blocked in Russia](#🚫-websites-blocked-in-russia)
+  - [⚙️ Components in Aggressor's Weapon](#️-components-in-aggressors-weapon)
+  - [🪖 Military Losses in Ukraine](#🪖-military-losses-in-ukraine)
+  - [🚨 Raid Alerts in Ukraine](#🚨-raid-alerts-in-ukraine)
+  - [🗺️ Interactive Maps](#🗺️-interactive-maps)
+- [Architecture](#architecture)
 <!--toc:end-->
 
-Repo featuring a wealth of data, graphs and analyses relating (directly or indirectly) to the war between Russia and Ukraine.
+</br>
 
 ## 📊 Application Web
 
