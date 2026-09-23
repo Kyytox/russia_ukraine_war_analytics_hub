@@ -20,7 +20,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 - **[Dataset Incidents Russian Railway](https://docs.google.com/spreadsheets/d/1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk/edit?pli=1&gid=0#gid=0)**
 
-### Overview Tab Charts
+### Overview Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -35,7 +35,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Incidents Types Tab Charts
+### Incidents Types Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -49,7 +49,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Damaged Equipments Tab Charts
+### Damaged Equipments Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -63,7 +63,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Collisions Tab Charts
+### Collisions Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -74,7 +74,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Sabotage Tab Charts
+### Sabotage Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -94,7 +94,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Partisans Arrest Tab Charts
+### Partisans Arrest Tab
 
 | Title | Description |
 | ------- | ------------- |
