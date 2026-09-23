@@ -153,6 +153,13 @@ df_sankey = dmt_sun_tree[
 #
 
 df_inc_type_region = dmt_inc_region[["region"] + list(lst_inc_type)]
+
+#
+#
+#
+# remove Moscow
+# df_inc_type_region = df_inc_type_region[df_inc_type_region["region"] != "Moscow"]
+
 df_inc_type_region["region"] = pd.Categorical(
     df_inc_type_region["region"],
     categories=df_incd_reg_total["label"],
@@ -194,6 +201,13 @@ df_sankey_tab3 = dmt_sun_tree[
 
 # dmg equip by region
 df_dmg_eqp_region = dmt_inc_region[["region"] + list(lst_dmg_eqp)]
+
+#
+#
+#
+# remove Moscow
+# df_dmg_eqp_region = df_dmg_eqp_region[df_dmg_eqp_region["region"] != "Moscow"]
+
 df_dmg_eqp_region["region"] = pd.Categorical(
     df_dmg_eqp_region["region"], categories=df_incd_reg_total["label"], ordered=True
 )
@@ -565,7 +579,7 @@ def tab_overview():
                                 className="div-metrics",
                                 children=[
                                     html.H3(
-                                        f"{datetime.datetime.strptime(dmt_inc_day_week.columns.tolist()[-1].replace("_", "-W") + '-1', "%Y-W%W-%w").strftime('%d %B %Y')}"
+                                        f"{datetime.datetime.strptime(dmt_inc_day_week.columns.tolist()[-1].replace('_', '-W') + '-1', '%Y-W%W-%w').strftime('%d %B %Y')}"
                                     ),
                                     html.P("Last Update"),
                                 ],
@@ -1133,7 +1147,7 @@ def tab_sabotage():
         center_txt=f"{df_pie_sab_eqp['total_inc'].sum().astype(int)}<br>Damaged Equipments",
         dict_colors=COLORS_RAILWAY,
     )
-    fig10 = fig10.update_traces(textinfo="percent+value")
+    # fig10 = fig10.update_traces(textinfo="percent+value")
 
     # #########################################
     # #########################################
