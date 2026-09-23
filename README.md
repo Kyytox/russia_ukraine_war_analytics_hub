@@ -1,18 +1,33 @@
 # Russia-Ukraine War Analytics Hub 🇺🇦🇷🇺
 
+<!--toc:start-->
+- [Russia-Ukraine War Analytics Hub](#russia-ukraine-war-analytics-hub-🇺🇦🇷🇺)
+  - [📊 Applications Web](#📊-applications-web)
+  - [Sections](#sections)
+    - [🚂 Incidents Russian Railways Analytics](#🚂-incidents-russian-railways-analytics-🇷🇺)
+      - [Overview Tab](#overview-tab)
+      - [Incidents Types Tab](#incidents-types-tab)
+      - [Damaged Equipments Tab](#damaged-equipments-tab)
+      - [Collisions Tab](#collisions-tab)
+      - [Sabotage Tab](#sabotage-tab)
+      - [Partisans Arrest Tab](#partisans-arrest-tab)
+    - [🚫 Websites Blocked in Russia](#🚫-websites-blocked-in-russia)
+    - [⚙️ Components in Aggressor's Weapon](#️-components-in-aggressors-weapon)
+    - [🪖 Military Losses in Ukraine](#🪖-military-losses-in-ukraine)
+    - [🚨 Raid Alerts in Ukraine](#🚨-raid-alerts-in-ukraine)
+    - [🗺️ Interactive Maps](#🗺️-interactive-maps)
+  - [Architecture](#architecture)
+<!--toc:end-->
+
 Repo featuring a wealth of data, graphs and analyses relating (directly or indirectly) to the war between Russia and Ukraine.
 
-</br>
-
-## 🔗 Applications Web
+## 📊 Application Web
 
 [![Dash Visualisation App](https://img.shields.io/badge/📊_Dash-Visualisation_App-red?style=for-the-badge&logo=plotly&logoColor=white)](https://ukraine-war-datahub.eu/)
 
-</br>
+## Sections
 
-# Sections
-
-## 🚂 Incidents Russian Railways Analytics 🇷🇺
+### 🚂 Incidents Russian Railways Analytics 🇷🇺
 
 This section contains data and analyses related to incidents involving Russian Railways, including accidents, fire, derailments, disruptions, and other significant events.
 
@@ -20,7 +35,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 - **[Dataset Incidents Russian Railway](https://docs.google.com/spreadsheets/d/1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk/edit?pli=1&gid=0#gid=0)**
 
-### Overview Tab
+#### Overview Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -35,7 +50,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Incidents Types Tab
+#### Incidents Types Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -49,7 +64,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Damaged Equipments Tab
+#### Damaged Equipments Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -63,7 +78,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Collisions Tab
+#### Collisions Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -74,7 +89,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Sabotage Tab
+#### Sabotage Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -94,7 +109,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-### Partisans Arrest Tab
+#### Partisans Arrest Tab
 
 | Title | Description |
 | ------- | ------------- |
@@ -108,7 +123,7 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 </br>
 
-## 🚫 Websites Blocked in Russia
+### 🚫 Websites Blocked in Russia
 
 This section provides a charts of websites that have been blocked in Russia, including those blocked by Roskomnadzor and other entities.
 
@@ -116,7 +131,7 @@ This section provides a charts of websites that have been blocked in Russia, inc
 
 </br>
 
-## ⚙️ Components in Aggressor's Weapon
+### ⚙️ Components in Aggressor's Weapon
 
 This section contains data and analyses related to the components used in the aggressor's weaponry, including their origins, manufacturers.
 
@@ -124,7 +139,7 @@ This section contains data and analyses related to the components used in the ag
 
 </br>
 
-## Military Losses in Ukraine
+### 🪖 Military Losses in Ukraine
 
 This section provides data and analyses related to military losses in Ukraine, including personnel, equipment, and other relevant information.
 
@@ -138,7 +153,7 @@ This section provides data and analyses related to military losses in Ukraine, i
 
 </br>
 
-## Raid Alerts in Ukraine 🚨
+### 🚨 Raid Alerts in Ukraine
 
 This section provides data related to raid alerts in Ukraine, multiple sources are available.
 
@@ -150,7 +165,7 @@ This section provides data related to raid alerts in Ukraine, multiple sources a
 
 </br>
 
-## 🗺️ Interactive Maps
+### 🗺️ Interactive Maps
 
 This section provides lists of interactive maps related to the war in Ukraine.
 
@@ -174,6 +189,6 @@ This section provides lists of interactive maps related to the war in Ukraine.
 </br>
 </br>
 
-# Architecture
+## Architecture
 
 ![Architecture](./viz_app/assets/images/architecture_project.png)
