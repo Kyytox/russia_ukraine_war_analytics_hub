@@ -40,89 +40,89 @@ Data sources from Telegram channels and Twitter are collected, filtered, and pre
 
 #### Overview Tab
 
-| Title | Description |
-| ------- | ------------- |
-| Annual Railway Incidents in Russia | Number of incidents by year displayed as a bar chart. |
-| Monthly Incident Trends on Russian Railways | Monthly trends displayed as a line chart. |
-| Monthly Incident Trends on Russian Railways | Monthly trends displayed as a bar chart. |
-| Railway Incidents by Type in Russia | Distribution of incidents by type as a bar chart. |
-| Railway Damaged Equipments in Russia | Overview of damaged equipment in incidents. |
-| Distribution of Railway Incidents by Region in Russia | Regional incident distribution shown as a treemap. |
-| Geographic Distribution of Sabotages on Russian Railways | Regional sabotage data displayed on a map. |
-| Distribution of Railway Incidents by Day of the Week in {year} | Weekly incident patterns shown as heatmaps (one per year). |
+| Title | Type | Description |
+| :--- | :--- | :--- |
+| Annual Railway Incidents in Russia | Bar | Frequency of railway incidents per year |
+| Monthly Incident Trends on Russian Railways | Line | Timeline showing monthly volume trends of railway incidents |
+| Monthly Incident Trends on Russian Railways | Bar | Comparative view of total incidents per month |
+| Railway Incidents by Type in Russia | Bar | Breakdown of incidents categorized by incident classification |
+| Railway Damaged Equipments in Russia | Bar | Overview of damaged equipment involved across railway incidents |
+| Distribution of Railway Incidents by Region in Russia | Treemap | Hierarchical breakdown of railway incidents across Russian regions |
+| Geographic Distribution of Sabotages on Russian Railways | World Map | Spatial distribution and mapping of recorded sabotage events |
+| Distribution of Railway Incidents by Day of the Week in {year} | Heatmap | Matrix highlighting daily incident intensity across months for a given year |
 
-</br>
+<br/>
 
 #### Incidents Types Tab
 
-| Title | Description |
-| ------- | ------------- |
-| Distribution of Incidents by Type | Distribution of reported incidents categorized by type. |
-| Trends in Cumulative Incidents by Type Over Time | Cumulative number of incidents by type over time. |
-| Incidents by Type: Yearly Comparison | A yearly comparison showing the distribution of incident types. |
-| Monthly Incidents by Type | A detailed view of incidents categorized by type on a monthly basis. |
-| Distribution of Damaged Equipment by Incident Type | Relationship between incident types and damaged equipment. |
-| Flow of Damaged Equipment by Incident Type | A visual representation of how incident types lead to equipment damage. |
-| Distribution of Incidents by Type and Region | Incidents categorized by type and region. |
+| Title | Type | Description |
+| :--- | :--- | :--- |
+| Distribution of Incidents by Type | Pie | Overall breakdown of reported incidents categorized by type |
+| Trends in Cumulative Incidents by Type Over Time | Line | Running cumulative count of incidents over time segmented by type |
+| Incidents by Type: Yearly Comparison | Stacked Bar | Year-over-year comparison showing incident volume by category |
+| Monthly Incidents by Type | Stacked Bar | Temporal monthly trends of incidents broken down by category |
+| Distribution of Damaged Equipment by Incident Type | Stacked Bar | Breakdown showing equipment damage totals for each incident type |
+| Flow of Damaged Equipment by Incident Type | Sankey | Relationship flow illustrating how specific incident types lead to equipment damage |
+| Distribution of Incidents by Type and Region | Stacked Bar | Regional breakdown of incidents categorized by incident classification |
 
-</br>
+<br/>
 
 #### Damaged Equipments Tab
 
-| Title | Description |
-| ------- | ------------- |
-| Distribution of Damaged Equipments | Overview of damaged equipments in all incidents. |
-| Trends in Cumulative Damaged Equipments Over Time | Cumulative number of damaged equipments over time displayed as a line chart. |
-| Damaged Equipment: Yearly Comparison | Yearly comparison of damaged equipment incidents. |
-| Monthly Damaged Equipments | Detailed monthly insights into damaged equipment incidents. |
-| Distribution of Incident Types by Damaged Equipment | Relationship between damaged equipment and incident types visualized through a sunburst chart. |
-| Flow of Incident Types by Damaged Equipment | A Sankey diagram showcasing how damaged equipment corresponds to incident types. |
-| Distribution of Damaged Equipments by Region | Regional distribution of damaged equipment incidents visualized as a bar chart. |
+| Title | Type | Description |
+| :--- | :--- | :--- |
+| Distribution of Damaged Equipments | Bar | Overall count and breakdown of damaged equipment across all incidents |
+| Trends in Cumulative Damaged Equipments Over Time | Line | Cumulative growth trajectory of damaged equipment over time |
+| Damaged Equipment: Yearly Comparison | Stacked Bar | Annual comparison of equipment damage instances |
+| Monthly Damaged Equipments | Stacked Bar | Detailed monthly view of damaged equipment counts |
+| Distribution of Incident Types by Damaged Equipment | Sunburst | Multi-tiered hierarchical breakdown showing incident types within equipment categories |
+| Flow of Incident Types by Damaged Equipment | Sankey | Mapping connection flows between damaged equipment types and corresponding incident categories |
+| Distribution of Damaged Equipments by Region | Bar | Regional comparative view of equipment damage occurrences |
 
-</br>
+<br/>
 
 #### Collisions Tab
 
-| Title | Description |
-| ------- | ------------- |
-| Distribution of Collisions | Overview of collisions in all reported incidents. |
-| Monthly Collisions | Monthly distribution of collision incidents. |
-| Distribution of Collisions by Implicated Equipment | Collisions categorized by implicated equipment. |
-| Monthly Implicated Equipments in Collisions | Monthly distribution of implicated equipment in collisions. |
+| Title | Type | Description |
+| :--- | :--- | :--- |
+| Distribution of Collisions | Pie | Proportion of collisions relative to overall incident types |
+| Monthly Collisions | Bar | Temporal monthly frequency of collision events |
+| Distribution of Collisions by Implicated Equipment | Bar | Breakdown of collisions categorized by the primary equipment involved |
+| Monthly Implicated Equipments in Collisions | Stacked Bar | Monthly trends of specific equipment involved in collision events |
 
-</br>
+<br/>
 
 #### Sabotage Tab
 
-| Title | Description |
-| ------- | ------------- |
-| Annual Number of Sabotage | Yearly sabotage incident data as a bar chart. |
-| Monthly Number of Sabotage by Year | Trends in monthly sabotage incidents over years. |
-| Incidents vs Sabotage over Time | Line chart comparing total incidents and sabotage. |
-| Distribution of Sabotage by Partisans Group | Pie chart showing sabotage distribution among groups. |
-| Sabotage Incidents by Partisans Group | Scatter chart of partisans group incidents by date. |
-| Treemap of Damaged Equipment with Partisan Group Attribution | Hierarchical view of damage attributed to partisans. |
-| Implication of Partisans Group in Damaged Equipment | Chart showing partisan involvement in equipment damage. |
-| Treemap of Partisan Groups and Associated Equipment Damage | Relationship between partisans and damaged equipment. |
-| Distribution of damaged equipment of partisan groups | Bar chart of equipment damage by partisan groups. |
-| Distribution of Damaged Equipment for Sabotage Incidents | Pie chart of damaged equipment in sabotage cases. |
-| Monthly Number of Damaged Equipments | Monthly trends in sabotage-related equipment damage. |
-| Number of Damaged Equipments by Region | Regional distribution of sabotage-related equipment damage. |
-| Geographic Distribution of Sabotages on Russian Railways | Map of sabotage incidents in Russia. |
+| Title | Type | Description |
+| :--- | :--- | :--- |
+| Annual Number of Sabotage | Bar | Total recorded sabotage events grouped by year |
+| Monthly Number of Sabotage by Year | Stacked Bar | Monthly sabotage activity trends compared across years |
+| Incidents vs Sabotage over Time | Line | Comparative timeline measuring total incidents against targeted sabotage events |
+| Distribution of Sabotage by Partisans Group | Pie | Proportion of sabotage events attributed to specific partisan groups |
+| Sabotage Incidents by Partisans Group | Scatter | Timeline mapping individual sabotage incidents by partisan group and date |
+| Treemap of Damaged Equipment with Partisan Group Attribution | Treemap | Hierarchical layout of damaged equipment organized by responsible partisan groups |
+| Implication of Partisans Group in Damaged Equipment | Stacked Bar | Extent of involvement for each partisan group regarding equipment damage |
+| Treemap of Partisan Groups and Associated Equipment Damage | Treemap | Hierarchical structure mapping partisan groups to specific equipment damages |
+| Distribution of damaged equipment of partisan groups | Bar | Volume of equipment damage attributed across partisan organizations |
+| Distribution of Damaged Equipment for Sabotage Incidents | Pie | Share of specific equipment types damaged strictly in sabotage cases |
+| Monthly Number of Damaged Equipments | Line | Temporal monthly trajectory of equipment damaged via sabotage |
+| Number of Damaged Equipments by Region | Bar | Geographical distribution of equipment damage caused by sabotage |
+| Geographic Distribution of Sabotages on Russian Railways | Map | Geographic plot of railway sabotage locations across regions |
 
-</br>
+<br/>
 
 #### Partisans Arrest Tab
 
-| Title | Description |
-| ------- | ------------- |
-| Funnel of Partisans Arrested | Funnel chart showing the process of partisan arrests. |
-| Distribution of Sabotage where partisans were arrested | Pie chart of sabotage incidents involving partisan arrests. |
-| Distribution of Applicable Laws | Treemap showing laws applied to arrested partisans. |
-| Number of Partisans Age | Waffle chart displaying the age distribution of arrested partisans. |
-| Number of Partisans Arrested by Age | Waterfall chart of partisans arrested by age. |
-| Number of Partisans Arrested by Age Group | Waterfall chart of partisans arrested by age groups. |
-| Applicable Laws by Partisans Age | Heatmap displaying laws applied categorized by partisan age. |
+| Title | Type | Description |
+| :--- | :--- | :--- |
+| Funnel of Partisans Arrested | Funnel | Conversion stage mapping showing progression of partisan arrests |
+| Distribution of Sabotage where partisans were arrested | Pie | Proportion of sabotage events resulting in partisan detentions |
+| Distribution of Applicable Laws | Treemap | Hierarchical view of legal statutes applied to detained partisans |
+| Number of Partisans Age | Waffle | Grid layout displaying age composition of arrested partisans |
+| Number of Partisans Arrested by Age | Waterfall | Cumulative step analysis of arrested partisans grouped by exact age |
+| Number of Partisans Arrested by Age Group | Waterfall | Sequential age bracket analysis of partisan arrest metrics |
+| Applicable Laws by Partisans Age | Heatmap | Correlation matrix mapping applied legal charges against partisan age groups |
 
 </br>
 
@@ -132,6 +132,27 @@ This section provides a charts of websites that have been blocked in Russia, inc
 
 - **[Data Source](https://www.top10vpn.com/research/websites-blocked-in-russia/)**
 
+| Title | Type | Description |
+| :--- | :--- | :--- |
+| Countries With Most Blocked Domains | Bar (Horizontal) | Top 30 countries ranked by the number of blocked domain websites |
+| Subcategories of Websites Blocked in Russia | Bar (Horizontal) | Top 30 subcategories of blocked websites |
+| Categories of Websites Blocked | Bar (Horizontal) | Overall distribution of blocked websites sorted by high-level category |
+| Russian authorities most active in censoring websites | Bar (Horizontal) | Breakdown of website blocks categorized by the responsible banning authority |
+| Countries where websites are blocked in Russia | World Map | Geographical distribution showing global volume of blocked websites targeting specific country domains |
+| Blocked Websites by Year | Bar | Annual count of website blocks in Russia since 2022 |
+| Blocked Websites by Month | Bar | Monthly temporal trend of website blocks since 2022 |
+| Blocked Websites by Day | Bar | Daily granularity view showing blocked website volume since 2022 |
+| Cumulative Total of Blocked Websites Over Time | Line | Running total / cumulative growth of blocked websites over time |
+| Blocked Websites by Day in 2022 | Heatmap | Daily intensity pattern matrix (Day vs Month) for blocks occurring in 2022 |
+| Blocked Websites by Day in 2023 | Heatmap | Daily intensity pattern matrix (Day vs Month) for blocks occurring in 2023 |
+| Blocked Websites by Day in 2024 | Heatmap | Daily intensity pattern matrix (Day vs Month) for blocks occurring in 2024 |
+| Censorship Activity by Russian Authorities | Stacked Bar | Monthly volume of website blocks segmented by the enforcing regulatory authority |
+| Content Categories Targeted for Blocking | Stacked Bar | Monthly breakdown of blocked websites categorized by content type |
+| Website Blocking Trends by Country | Stacked Bar | Monthly distribution of blocked website domains across top 25 target countries |
+| Mapping Censorship: Authorities and Targeted Content Categories | Sankey | Flow mapping showing relationships and volume links between authorities and censored content categories |
+| Top Blocked Website Categories by Country in Russia | Treemap | Hierarchical breakdown displaying top categories within the top 6 target countries |
+| Blocked Websites by Country and Category | Stacked Bar | Distribution of website categories across remaining target countries |
+
 </br>
 
 ### ⚙️ Components in Aggressor's Weapon
@@ -139,6 +160,17 @@ This section provides a charts of websites that have been blocked in Russia, inc
 This section contains data and analyses related to the components used in the aggressor's weaponry, including their origins, manufacturers.
 
 - **[Data Source](https://war-sanctions.gur.gov.ua/en/components)**
+
+| Title | Type | Description |
+| :--- | :--- | :--- |
+| Weapon Components by Equipment Type | Pie | Proportion and breakdown of components found across different equipment types |
+| Weapon Components by Weapon Type | Bar | Distribution of weapon components categorized by specific weapon type |
+| Weapon Components by Manufacturer Country | Bar (Horizontal) | Total components segmented by origin country of the manufacturer |
+| Weapon Components by Manufacturer (Top 30) | Bar (Horizontal) | Top 30 manufacturing companies producing the identified weapon components |
+| Components Found in Weapon (Top 60) | Bar (Horizontal) | Top 60 specific weapon systems ranked by number of identified foreign components |
+| Weapon Components by Manufacturer Country and Weapon | Stacked Bar (Horizontal) | Composition of component manufacturing countries across specific weapons |
+| Weapon Components by Manufacturer Country and Weapon Type (Top 10 Countries) | Treemap | Hierarchical layout showing component distribution across weapon types for top 10 countries |
+| Weapon Components by Equipment Type and Weapon Type | Sunburst | Multi-level ring structure displaying equipment types nested within weapon types |
 
 </br>
 
