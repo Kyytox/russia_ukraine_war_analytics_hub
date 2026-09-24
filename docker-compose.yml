@@ -1,0 +1,76 @@
+services:
+  # ── Gestion app (Streamlit) ──────────────
+  streamlit:
+    build: .
+    container_name: streamlit
+    command: streamlit run streamlit_gestion/app.py --server.port 8501 --server.address 0.0.0.0 --server.headless true
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data # l'app lit les mêmes données
+      - ./core:/app/core # hot-reload en dev
+    env_file: .env
+    restart: unless-stopped
+
+  # ── Visualisation (Dash Plotly) ─────────────
+  viz_app:
+    build: .
+    container_name: viz_app
+    command: python viz_app/app.py
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./data:/app/data
+      - ./core:/app/core
+    env_file: .env
+    restart: unless-stopped
+
+  # ── Serveur Prefect (UI + API + scheduler) ──
+  prefect-server:
+    image: prefecthq/prefect:3-latest
+    container_name: prefect_server
+    command: prefect server start --host 0.0.0.0
+    environment:
+      PREFECT_HOME: /root/.prefect
+      PREFECT_SERVER_DATABASE_CONNECTION_URL: "sqlite+aiosqlite:////root/.prefect/prefect.db"
+      PREFECT_SERVER_DATABASE_MIGRATE_ON_START: "true"
+    ports:
+      - "4200:4200"
+    volumes:
+      - prefect-data:/root/.prefect
+    restart: unless-stopped
+
+  # ── Worker Datalake ──────
+  worker-dlk:
+    build: .
+    container_name: worker_dlk
+    command: prefect worker start --pool main-pool --queue dlk-queue
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+    volumes:
+      - ./data:/app/data
+      - ./core:/app/core
+      - ./prefect.yaml:/app/prefect.yaml
+      - ./prefect/prefect.toml:/root/.prefect/prefect.toml:ro
+    depends_on:
+      - prefect-server
+    restart: unless-stopped
+
+  # ── Worker Warehouse ────────────
+  worker-dwh:
+    build: .
+    container_name: worker_dwh
+    command: prefect worker start --pool main-pool --queue dwh-queue
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+    volumes:
+      - ./data:/app/data
+      - ./core:/app/core
+      - ./prefect.yaml:/app/prefect.yaml
+      - ./prefect/prefect.toml:/root/.prefect/prefect.toml:ro
+    depends_on:
+      - prefect-server
+    restart: unless-stopped
+
+volumes:
+  prefect-data:
