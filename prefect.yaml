@@ -25,11 +25,11 @@ definitions:
   work_pools:
     datalake_work_pool: &datalake_work_pool
       name: main-pool
-      work_queue_name: datalake_queue
+      work_queue_name: dlk-queue
       job_variables: {}
     warehouse_work_pool: &warehouse_work_pool
       name: main-pool
-      work_queue_name: warehouse_queue
+      work_queue_name: dwh-queue
       job_variables: {}
   schedules:
     every_minutes: &every_minutes
