@@ -1,11 +1,11 @@
 # Step 1 - Create a new work-pool
-# prefect work-pool create --type process default-pool
+# prefect work-pool create --type process main-pool
 
 # Step 2 - Start worker
 # prefect worker start --pool main-pool
 
 # Step 3 - Create deployment
-# prefect deploy --all --prefect-file prefect/prefect.yaml
+# prefect deploy --all --prefect-file prefect.yaml
 
 # Generic metadata about this project
 name: russia_ukraine_war_analytics_hub
@@ -19,7 +19,7 @@ push: null
 # pull section allows you to provide instructions for cloning this project in remote locations
 pull:
   - prefect.deployments.steps.set_working_directory:
-      directory: /home/kytox/dev/russia_ukraine_war_analytics_hub
+      directory: /app
 
 definitions:
   work_pools:
@@ -37,6 +37,7 @@ definitions:
       timezone: "Europe/Paris"
     every_hours: &every_hours
       cron: "0 * * * *"
+      # interval: 3600
       timezone: "Europe/Paris"
     every_day: &every_day
       cron: "0 0 * * *"
@@ -59,7 +60,7 @@ deployments:
     parameters: {}
     work_pool: *datalake_work_pool
     enforce_parameter_schema: true
-    schedule: *every_hours
+    schedule: *every_minutes
 
   # # ELT Twitter
   # - name: dlk-flow-twitter
