@@ -115,6 +115,3 @@ def flow_telegram_cleaning():
 
     # save data
     save_data(PATH_TELEGRAM_CLEAN, "clean_telegram", df, ["account"])
-
-    # create artifact
-    create_artifact("dlk-flow-telegram-clean-artifact")

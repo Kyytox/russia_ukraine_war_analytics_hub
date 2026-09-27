@@ -169,8 +169,13 @@ def flow_telegram_extract():
     df_final = concat_old_new_df(df_raw, df_new_data, cols=["ID"])
     print("Final shape:", df_final.shape)
 
+    # crate data for artifact ,for each account, count number of messages extracted
+    df_artifact = (
+        df_new_data.groupby("account").size().reset_index(name="count_messages")
+    ).to_dict(orient="records")
+
     # create artifact
-    create_artifact("dlk-flow-telegram-extract-artifact")
+    create_artifact("dlk-flow-telegram-extract-art", df_artifact)
 
     # save data
     save_data(PATH_TELEGRAM_RAW, "raw_telegram", df_final, ["account"])

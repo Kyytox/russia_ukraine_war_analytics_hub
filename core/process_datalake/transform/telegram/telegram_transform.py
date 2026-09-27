@@ -224,6 +224,11 @@ def flow_telegram_transform():
     """
     Save data
     """
+    # create data artifact
+    data_art = (
+        df_final.groupby("account").size().reset_index(name="count_messages_translated")
+    ).to_dict(orient="records")
+
     # concat final
     df_final = concat_old_new_df(df_raw=df_transform, df_new=df_final, cols=["ID"])
     print(f"Final data shape: {df_final.shape}")
@@ -232,4 +237,4 @@ def flow_telegram_transform():
     save_data(PATH_TELEGRAM_TRANSFORM, "transform_telegram", df_final, ["account"])
 
     # create artifact
-    create_artifact("dlk-flow-telegram-transform-artifact")
+    create_artifact("dlk-flow-telegram-transform-art", data_art)

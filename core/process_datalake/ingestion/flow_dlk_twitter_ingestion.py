@@ -6,8 +6,8 @@ from core.process_datalake.twitter.twitter_cleaning import flow_twitter_cleaning
 
 
 @flow(
-    name="DLK Flow Twitter",
-    flow_run_name="dlk-flow-twitter",
+    name="DLK Flow Twitter Ingestion",
+    flow_run_name="dlk-flow-twitter-ingestion",
     log_prints=True,
 )
 def flow_dlk_twitter():

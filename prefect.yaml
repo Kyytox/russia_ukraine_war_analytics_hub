@@ -19,7 +19,8 @@ push: null
 # pull section allows you to provide instructions for cloning this project in remote locations
 pull:
   - prefect.deployments.steps.set_working_directory:
-      directory: /app
+      # directory: /app
+      directory: /home/kytox/dev/russia_ukraine_war_analytics_hub
 
 definitions:
   work_pools:
@@ -37,7 +38,6 @@ definitions:
       timezone: "Europe/Paris"
     every_hours: &every_hours
       cron: "0 * * * *"
-      # interval: 3600
       timezone: "Europe/Paris"
     every_day: &every_day
       cron: "0 0 * * *"
@@ -51,16 +51,27 @@ definitions:
 
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
-  - name: dlk-flow-telegram
+  - name: dlk-flow-telegram-ingestion
     version: null
-    tags: ["dlk-telegram"]
-    concurrency_limit: 3
-    description: null
-    entrypoint: core.process_datalake.flow_dlk_telegram.flow_dlk_telegram
+    tags: ["dlk-flow-telegram-ingestion"]
+    concurrency_limit: 1
+    description: "Ingestion of data from Telegram, process Extract and Clean"
+    entrypoint: core.process_datalake.ingestion.flow_dlk_telegram_ingestion.flow_dlk_telegram_ingestion
     parameters: {}
     work_pool: *datalake_work_pool
     enforce_parameter_schema: true
-    schedule: *every_minutes
+    schedule: *every_day
+
+  - name: dlk-flow-telegram-transform
+    version: null
+    tags: ["dlk-flow-telegram-transform"]
+    concurrency_limit: 1
+    description: "transform data from Telegram, process Translate"
+    entrypoint: core.process_datalake.transform.flow_dlk_telegram_transform.flow_dlk_telegram_transform
+    parameters: {}
+    work_pool: *datalake_work_pool
+    enforce_parameter_schema: true
+    schedule: *every_2_hours
 
   # # ELT Twitter
   # - name: dlk-flow-twitter

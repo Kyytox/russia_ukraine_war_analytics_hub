@@ -1,16 +1,48 @@
 import os
 import re
 import json
+from datetime import datetime, timedelta, timezone
 import pandas as pd
+
 from prefect import task
 from prefect.runtime import task_run
 from prefect.variables import Variable
 from prefect.artifacts import create_table_artifact
+from prefect.runtime import flow_run
 
-
-# Variables
+# import project
 from core.config.paths import PATH_JSON_RU_REGION
 from core.config.variables import LIST_ACCOUNTS_TELEGRAM
+
+
+def should_skip_late_run(max_age_minutes) -> bool:
+    """
+    Check if the flow run is too late to be executed
+
+    Args:
+        max_age_minutes: maximum age in minutes
+
+    Returns:
+        True if the flow run is too late, False otherwise
+    """
+
+    # get scheduled time
+    scheduled_time = flow_run.scheduled_start_time
+
+    if scheduled_time is None:
+        return False
+
+    now = datetime.now(timezone.utc)
+    age = now - scheduled_time
+
+    # check if the flow run is too late
+    if age > timedelta(minutes=max_age_minutes):
+        print(
+            f"Skipping flow run because it is too late. Scheduled time: {scheduled_time}, now: {now}, age: {age}"
+        )
+        return True
+
+    return False
 
 
 def upd_data_artifact(info, data):
@@ -36,25 +68,26 @@ def upd_data_artifact(info, data):
     Variable.set("data_artifact", data_artifact, overwrite=True)
 
 
-def create_artifact(key_name):
+def create_artifact(key_name, data):
     """
     Create artifact
 
     Args:
         key: key of artifact
+        data: data to add
     """
 
     # get data
-    data_artifact = Variable.get("data_artifact", default=[])
+    # data_artifact = Variable.get("data_artifact", default=[])
 
     # create data
     create_table_artifact(
         key=key_name,
-        table=data_artifact,
+        table=data,
     )
 
-    # reset variable
-    Variable.set("data_artifact", [], overwrite=True)
+    # # reset variable
+    # Variable.set("data_artifact", [], overwrite=True)
 
 
 @task(name="Get telegram accounts", task_run_name="get-telegram-accounts")
@@ -372,6 +405,23 @@ def rename_cols(df, dict_cols):
 
     # rename columns
     return df.rename(columns=dict_cols)
+
+
+@task(name="Keep columns", task_run_name="keep-columns")
+def keep_cols(df, dict_cols):
+    """
+    Keep only the columns in the dict_cols (according to the values of the dict)
+
+    Args:
+        df (pd.DataFrame): Dataframe to control
+        dict_cols (dict): Dictionary with old and new names
+
+    Returns:
+        pd.DataFrame: Dataframe with only the columns in the dict_cols
+    """
+
+    # keep only the columns in the dict_cols
+    return df[[col for col in dict_cols.values() if col in df.columns]]
 
 
 @task(name="Retype columns", task_run_name="retype-columns")
