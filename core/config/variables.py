@@ -21,8 +21,14 @@ IA_CLASSIFY_ALL = "ia_qualif_all:latest"
 IA_ASSISTANT = "ia_assistant:latest"
 
 GROUP_SIZE_TO_TRANSLATE = 15
-SIZE_TO_TRANSLATE = 69
-SIZE_TO_QUALIF = 400
+SIZE_TO_TRANSLATE = 30
+
+# Theming
+SIZE_THEME_JEV_AI = 400  # size of data to treat before updating the DB
+ACCEPT_VALID_NOUL = 0.6  # Pourcentage to accept a "valid" answer from the IA (60%)
+
+# Qualification
+SIZE_TO_QUALIF = 100
 
 # number of military unit to process by batch (dwh; ru_officers_kiu)
 GROUP_SIZE_MILITARY_UNIT = 400
