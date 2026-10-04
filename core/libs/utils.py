@@ -7,7 +7,7 @@ import pandas as pd
 from prefect import task
 from prefect.runtime import task_run
 from prefect.variables import Variable
-from prefect.artifacts import create_table_artifact
+from prefect.artifacts import create_table_artifact, create_markdown_artifact
 from prefect.runtime import flow_run
 
 # import project
@@ -68,26 +68,21 @@ def upd_data_artifact(info, data):
     Variable.set("data_artifact", data_artifact, overwrite=True)
 
 
-def create_artifact(key_name, data):
+def create_artifact(key_name, type, data):
     """
-    Create artifact
+    Create artifact according to type
 
     Args:
         key: key of artifact
+        type: type of artifact
         data: data to add
     """
 
-    # get data
-    # data_artifact = Variable.get("data_artifact", default=[])
-
-    # create data
-    create_table_artifact(
-        key=key_name,
-        table=data,
-    )
-
-    # # reset variable
-    # Variable.set("data_artifact", [], overwrite=True)
+    # create artifact
+    if type == "markdown":
+        create_markdown_artifact(key=key_name, markdown=data)
+    elif type == "table":
+        create_table_artifact(key=key_name, table=data)
 
 
 @task(name="Get telegram accounts", task_run_name="get-telegram-accounts")

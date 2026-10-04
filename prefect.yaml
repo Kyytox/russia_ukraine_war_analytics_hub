@@ -61,6 +61,7 @@ deployments:
     work_pool: *datalake_work_pool
     enforce_parameter_schema: true
     schedule: *every_day
+    paused: True
 
   - name: dlk-flow-telegram-transform
     version: null
@@ -72,6 +73,19 @@ deployments:
     work_pool: *datalake_work_pool
     enforce_parameter_schema: true
     schedule: *every_2_hours
+    paused: True
+
+  - name: dlk-flow-qualification
+    version: null
+    tags: ["dlk-flow-qualification"]
+    concurrency_limit: 1
+    description: "Process Qualif, who regroupe 3 section, Fusion , Theming, pre_classify "
+    entrypoint: core.process_datalake.qualification.flow_dlk_qualification.flow_dlk_qualification
+    parameters: {}
+    work_pool: *datalake_work_pool
+    enforce_parameter_schema: true
+    schedule: *every_2_hours
+    paused: True
 
   # # ELT Twitter
   # - name: dlk-flow-twitter

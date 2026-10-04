@@ -175,7 +175,7 @@ def flow_telegram_extract():
     ).to_dict(orient="records")
 
     # create artifact
-    create_artifact("dlk-flow-telegram-extract-art", df_artifact)
+    create_artifact("dlk-flow-telegram-extract-art", "table", df_artifact)
 
     # save data
     save_data(PATH_TELEGRAM_RAW, "raw_telegram", df_final, ["account"])

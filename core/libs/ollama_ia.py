@@ -70,6 +70,10 @@ def format_response_translate(text, response):
     if cpt_words_translate < cpt_words_orginal * 0.6:
         response = chat_ia(text, IA_TRANSLATE, None)
 
+    # block length of response to 10000 characters (for avoid IA loop response)
+    if len(response) > 10000:
+        response = response[:10000]
+
     return response
 
 
@@ -123,8 +127,6 @@ def format_response_classify(response):
         print(f"Erreur : {e}")
 
         return {
-            "incident_type": None,
-            "damaged_equipment": None,
             "partisans_names": None,
             "partisans_ages": None,
         }
@@ -133,17 +135,11 @@ def format_response_classify(response):
     if type(response) != dict:
         print(f"Error: response is not a valid json: {response}")
         return {
-            "incident_type": None,
-            "damaged_equipment": None,
             "partisans_names": None,
             "partisans_ages": None,
         }
 
     # check if all id are in json
-    if "incident_type" not in response:
-        response["incident_type"] = None
-    if "damaged_equipment" not in response:
-        response["damaged_equipment"] = None
     if "partisans_names" not in response:
         response["partisans_names"] = None
     if "partisans_ages" not in response:
@@ -169,16 +165,16 @@ def ia_treat_message(text, mode, prompt=None):
         response = chat_ia(text, IA_TRANSLATE, prompt)
         response = format_response_translate(text, response)
         response = format_clean_text(response)
-    elif mode == "pre_classify":
+    elif mode == "qualif":
         response = chat_ia(text, IA_CLASSIFY_ALL, prompt)
         response = format_response_classify(response)
-    elif mode == "filter":
-        response = chat_ia(text, IA_CLASSIFY, prompt)
-        response = format_response_filter(response)
-        # print(f"text: {text}")
-        # print(f"Response: {response}")
-        # print("--------------------------------------------")
-        # print("--------------------------------------------")
+    # elif mode == "filter":
+    #     response = chat_ia(text, IA_CLASSIFY, prompt)
+    #     response = format_response_filter(response)
+    # print(f"text: {text}")
+    # print(f"Response: {response}")
+    # print("--------------------------------------------")
+    # print("--------------------------------------------")
     elif mode == "ru_officers_kiu_translate":
         response = chat_ia(text, IA_TRANS_MILITARY_UNIT, prompt)
         response = format_clean_text(response)

@@ -104,12 +104,6 @@ def flow_telegram_cleaning():
     # clean data
     df = clean_text_original(df)
 
-    # update artifact
-    for account in df["account"].unique():
-        upd_data_artifact(
-            f"Messages cleaned from {account}", df[df["account"] == account].shape[0]
-        )
-
     # concat data
     df = concat_old_new_df(df_raw=df_clean, df_new=df, cols=["ID"])
 

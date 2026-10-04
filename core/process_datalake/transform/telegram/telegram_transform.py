@@ -237,4 +237,4 @@ def flow_telegram_transform():
     save_data(PATH_TELEGRAM_TRANSFORM, "transform_telegram", df_final, ["account"])
 
     # create artifact
-    create_artifact("dlk-flow-telegram-transform-art", data_art)
+    create_artifact("dlk-flow-telegram-transform-art", "table", data_art)
