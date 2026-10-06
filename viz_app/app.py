@@ -25,21 +25,8 @@ app = Dash(
             {%favicon%}
             {%css%}
 
-            <!-- Matomo -->
-            <script>
-            var _paq = window._paq = window._paq || [];
-            /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-            _paq.push(['trackPageView']);
-            _paq.push(['enableLinkTracking']);
-            (function() {
-                var u="//matomo.kytox-lab.com/";
-                _paq.push(['setTrackerUrl', u+'matomo.php']);
-                _paq.push(['setSiteId', '1']);
-                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-                g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-            })();
-            </script>
-            <!-- End Matomo Code -->
+            <!-- Umammi -->
+            <script defer src="https://umami.kytox-lab.com/script.js" data-website-id="38170119-79a9-4280-9f7d-3a41b9f37692"></script>
         </head>
         <body>
             {%app_entry%}
