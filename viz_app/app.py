@@ -22,6 +22,7 @@ app = Dash(
             {%metas%}
             <title>{%title%}</title>
             <meta name = "description" content="Explore open data and analytics on the Russia-Ukraine war. Access data, visualizations, the list of websites blocked in Russia, alerts related to missile raids in Ukraine, components used in the aggressor`s weapon, interactive maps related to the war.">
+            <meta property="og:site_name" content="Ukraine War Data Hub">
             {%favicon%}
             {%css%}
 
