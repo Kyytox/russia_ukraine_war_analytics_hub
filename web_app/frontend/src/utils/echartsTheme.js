@@ -1,0 +1,77 @@
+import "echarts/theme/vintage.js";
+import "echarts/theme/v5.js";
+import "echarts/theme/tech-blue.js";
+import "echarts/theme/shine.js";
+import "echarts/theme/sakura.js";
+import "echarts/theme/royal.js";
+import "echarts/theme/roma.js";
+import "echarts/theme/red.js";
+import "echarts/theme/red-velvet.js";
+import "echarts/theme/rainbow.js";
+import "echarts/theme/mint.js";
+import "echarts/theme/macarons2.js";
+import "echarts/theme/macarons.js";
+import "echarts/theme/london.js";
+import "echarts/theme/jazz.js";
+import "echarts/theme/inspired.js";
+import "echarts/theme/infographic.js";
+import "echarts/theme/helianthus.js";
+import "echarts/theme/green.js";
+import "echarts/theme/gray.js";
+import "echarts/theme/fruit.js";
+import "echarts/theme/fresh-cut.js";
+import "echarts/theme/forest.js";
+import "echarts/theme/eduardo.js";
+import "echarts/theme/dark.js";
+import "echarts/theme/dark-mushroom.js";
+import "echarts/theme/dark-fresh-cut.js";
+import "echarts/theme/dark-digerati.js";
+import "echarts/theme/dark-bold.js";
+import "echarts/theme/dark-blue.js";
+import "echarts/theme/cool.js";
+import "echarts/theme/carp.js";
+import "echarts/theme/caravan.js";
+import "echarts/theme/blue.js";
+import "echarts/theme/bee-inspired.js";
+import "echarts/theme/azul.js";
+
+export const THEMES = {
+  vintage: "vintage",
+  v5: "v5",
+  "tech-blue": "tech-blue",
+  shine: "shine",
+  sakura: "sakura",
+  royal: "royal",
+  roma: "roma",
+  red: "red",
+  "red-velvet": "red-velvet",
+  rainbow: "rainbow",
+  mint: "mint",
+  macarons2: "macarons2",
+  macarons: "macarons",
+  london: "london",
+  jazz: "jazz",
+  inspired: "inspired",
+  infographic: "infographic",
+  helianthus: "helianthus",
+  green: "green",
+  gray: "gray",
+  fruit: "fruit",
+  freshcut: "fresh-cut",
+  forest: "forest",
+  eduardo: "eduardo",
+  dark: "dark",
+  darkmushroom: "dark-mushroom",
+  darkfreshcut: "dark-fresh-cut",
+  darkdigerati: "dark-digerati",
+  darkbold: "dark-bold",
+  darkblue: "dark-blue",
+  cool: "cool",
+  carp: "carp",
+  caravan: "caravan",
+  blue: "blue",
+  beeinspired: "bee-inspired",
+  azul: "azul",
+};
+
+export const DEFAULT_THEME = THEMES.dark; // Default theme if none is specified

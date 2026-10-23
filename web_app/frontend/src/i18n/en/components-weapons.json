@@ -1,0 +1,64 @@
+{
+  "title": "Components in Russian Weapons",
+  "description": "Explore components manufactured outside Russia but used in their weapons.",
+  "infos1": "The data has been collected from ",
+  "infos2": "This page is a graphical representation of the data.",
+  "kpi1": "Number of components manufactured outside Russia",
+  "kpi2": "Country with the most components in aggressor's weapons",
+  "kpi3": "Company with the most components in aggressor's weapons",
+  "kpi4": "Weapon using the most components manufactured outside Russia",
+  "chart1": {
+    "title": "Components by Equipment Type",
+    "subtitle": "Distribution of components by equipment type used in aggressor's weapons.",
+    "text": "Components",
+    "help": "Each slice represents a type of component found in the analyzed weapons. Hover over a slice to see the exact number."
+  },
+  "chart2": {
+    "title": "Components by Weapon Type",
+    "subtitle": "Number of components in aggressor's weapons by weapon type.",
+    "yaxis": "Number of components",
+    "help": "Each bar represents a type of weapon found in the analyzed weapons. Hover over a bar to see the exact number."
+  },
+  "chart3": {
+    "title": "Components by Manufacturer Country",
+    "subtitle": "Number of components in aggressor's weapons by country of origin.",
+    "xaxis": "Number of components",
+    "help": "Each bar represents a country of origin of the components found in the analyzed weapons. Hover over a bar to see the exact number."
+  },
+  "chart4": {
+    "title": "Components by Company",
+    "subtitle": "Number of components in aggressor's weapons by company of origin.",
+    "xaxis": "Number of components",
+    "help": "Each bar represents a company of origin of the components found in the analyzed weapons. Hover over a bar to see the exact number."
+  },
+  "chart5": {
+    "title": "Components by Weapon",
+    "subtitle": "Number of components in aggressor's weapons by weapon.",
+    "xaxis": "Number of components",
+    "help": "Each bar represents a weapon found in the analyzed weapons. Hover over a bar to see the exact number."
+  },
+  "chart6": {
+    "title": "",
+    "subtitle": "",
+    "text": "",
+    "help": ""
+  },
+  "chart7": {
+    "title": "",
+    "subtitle": "",
+    "text": "",
+    "help": ""
+  },
+  "chart8": {
+    "title": "",
+    "subtitle": "",
+    "text": "",
+    "help": ""
+  },
+  "chart_names": {
+    "Equipment": "Equipments",
+    "UAV": "UAV",
+    "Vehicule": "Vehicules",
+    "Missile": "Missiles"
+  }
+}

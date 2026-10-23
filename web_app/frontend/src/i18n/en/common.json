@@ -1,0 +1,47 @@
+{
+  "site": {
+    "title": "Ukraine War Data Hub",
+    "brand": "UA Data Hub"
+  },
+  "nav": {
+    "home": "Home",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "help": "Help",
+    "github": "GitHub",
+    "language": "Language"
+  },
+  "error": {
+    "api": "API unreachable. Start the FastAPI backend on port 8000."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Back to home"
+  },
+  "sections": {
+    "incidents-railways": {
+      "title": "Incidents on Russian Railways",
+      "description": "Railway-related incidents in Russia since 2022."
+    },
+    "blocked-sites": {
+      "title": "Websites Blocked in Russia",
+      "description": "Explore the list of websites blocked in Russia."
+    },
+    "raid-alerts": {
+      "title": "Raid Alerts",
+      "description": "Explore air raid alerts and warnings in Ukraine."
+    },
+    "components-weapons": {
+      "title": "Components in Russian Weapons",
+      "description": "Explore components manufactured outside Russia but used in their weapons."
+    },
+    "interactive-maps": {
+      "title": "Interactive Maps",
+      "description": "Interactive maps of the conflict"
+    },
+    "military-losses": {
+      "title": "Military Losses",
+      "description": "Military losses and casualties data"
+    }
+  }
+}

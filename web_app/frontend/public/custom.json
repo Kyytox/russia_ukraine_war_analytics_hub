@@ -1,0 +1,171 @@
+{
+  "incidents-railways": {},
+  "blocked-sites": {
+    "chart1": {
+      "default_colors": "#8572AA",
+      "height": 750,
+      "limit": 30
+    },
+    "chart2": {
+      "default_colors": "#edafda",
+      "height": 750,
+      "limit": 30
+    },
+    "chart3": {
+      "default_colors": "#516b91",
+      "height": 400
+    },
+    "chart4": {
+      "default_colors": "#59c4e6",
+      "height": 400
+    },
+    "chart5": {
+      "default_colors": "#7F557D",
+      "height": 500
+    },
+    "chart6": {
+      "default_colors": "#7F557D",
+      "height": 500,
+      "xAxisRotate": 70
+    },
+    "chart7": {
+      "default_colors": "#cbb0e3",
+      "height": 250,
+      "xAxisRotate": 70
+    },
+    "chart8": {
+      "default_colors": "#667E4C",
+      "height": 300
+    },
+    "chart9": {
+      "default_colors": "#667E4C",
+      "height": 700,
+      "tooltip": "Blocked sites",
+      "show_totals": false
+    },
+    "chart10": {
+      "default_colors": "#667E4C",
+      "height": 700,
+      "tooltip": "Blocked sites",
+      "show_totals": false
+    },
+    "chart11": {
+      "default_colors": "#667e4c",
+      "height": 700,
+      "tooltip": "blocked sites",
+      "show_totals": false
+    },
+    "chart12": {
+      "default_colors": "#667e4c",
+      "height": 600,
+      "tooltip": "blocked sites",
+      "show_totals": false
+    },
+    "chart13": {
+      "default_colors": "#667e4c",
+      "height": 1500,
+      "tooltip": "blocked sites",
+      "show_totals": false
+    },
+    "colors_metrics": {
+      "News": "#005f73",
+      "Digital Resistance": "#c32f27",
+      "Blog": "#5470c6",
+      "Civil Society": "#91cc75",
+      "Cultural": "#fac858",
+      "Education": "#a68a64",
+      "Financial": "#3ba272",
+      "Government": "#9a60b4",
+      "Internet Radio & Podcasts": "#fc8452",
+      "Legal": "#d4a017",
+      "Lifestyle": "#f49ac2",
+      "Messaging": "#ff7b00",
+      "Online Marketing": "#7b9ce0",
+      "Politics": "#48b8d0",
+      "Social Media": "#bd6d6c",
+      "USA": "#0353a4",
+      "Ukraine": "#C2A828",
+      "Russia": "#621708",
+      "Russie": "#621708",
+      "Office of the Prosecutor General": "#80426E",
+      "Not specified": "#F2A67B",
+      "Roskomnadzor": "#522D60",
+      "Minstry of Foreign Affairs": "#FFD38B"
+    }
+  },
+  "raid-alerts": {},
+  "components-weapons": {
+    "colors_metrics": {
+      "China": "#B5654A",
+      "Great Britain": "#4F5F8F",
+      "France": "#D4A94F",
+      "Canada": "#3F7F6A",
+      "Turkey": "#5E4B8B",
+      "Iran": "#C48A3F",
+      "Germany": "#3F6F88",
+      "India": "#D9A0B8",
+      "Ukraine": "#86B07A",
+      "Ireland": "#7A5238",
+      "Armenia": "#9A86C4",
+      "Switzerland": "#A9514A",
+      "Belarus": "#5FA3A0",
+      "Israel": "#D9C08F",
+      "Uzbekistan": "#A8678F",
+      "Austria": "#7A8F4E",
+      "Denmark": "#6E9AC2",
+      "Republic of Korea": "#CC7A45",
+      "Australia": "#A5D0BC",
+      "Czech Republic": "#B5707F",
+      "Taiwan": "#9A7452",
+      "United Arab Emirates": "#A3BEDC",
+      "USA": "#8A4A58",
+      "Singapore": "#E0C872",
+      "Sweden": "#6F5A87",
+      "Thailand": "#4F6F55",
+      "Italy": "#E3A98A",
+      "Poland": "#4F7BA3",
+      "Japan": "#B88049",
+      "Russia": "#B8A6DB",
+      "Netherlands": "#B5D19A",
+      "Belgium": "#8C7A6B",
+      "Spain": "#D98876",
+      "Vehicule": "#A3B5D0",
+      "Equipment": "#D0A3B5",
+      "Missile": "#B5D0A3",
+      "UAV": "#D0B5A3"
+    },
+    "chart1": {
+      "default_colors": ["#8572AA", "#D878B7", "#58A0BD", "#5A5180"],
+      "maxWidth": 450,
+      "minHeight": 450
+    },
+    "chart2": {
+      "default_colors": "#edafda",
+      "height": 750
+    },
+    "chart3": {
+      "default_colors": "#516b91",
+      "limit": 50,
+      "height": 750
+    },
+    "chart4": {
+      "default_colors": "#59c4e6",
+      "limit": 30,
+      "height": 750
+    },
+    "chart5": {
+      "default_colors": "#cbb0e3",
+      "limit": 30,
+      "height": 750
+    },
+    "chart6": {
+      "height": 1200,
+      "limit": 50,
+      "default_colors": "#7F557D"
+    },
+    "chart8": {
+      "default_colors": ["#8572AA", "#D878B7", "#58A0BD", "#5A5180"],
+      "height": 750
+    }
+  }
+}

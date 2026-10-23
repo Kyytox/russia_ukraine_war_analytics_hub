@@ -1,0 +1,190 @@
+{
+  "site": {
+    "title": "Ukraine War Data Hub",
+    "brand": "UA Data Hub"
+  },
+  "nav": {
+    "home": "Home",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "help": "Help",
+    "github": "GitHub",
+    "language": "Language"
+  },
+  "home": {
+    "title": "Ukraine War Data Hub",
+    "intro": "A site that collects and analyzes <strong>open data</strong> about Russia's invasion of Ukraine: data, visualizations and insights, all in one place."
+  },
+  "error": {
+    "api": "API unreachable. Start the FastAPI backend on port 8000."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Back to home"
+  },
+  "tags": {
+    "analytics": "Analytics",
+    "graphs": "Graphs",
+    "sources": "Data Sources",
+    "external": "External Data",
+    "maps": "Maps"
+  },
+  "pages": {
+    "incidents-railways": {
+      "title": "Incidents on Russian Railways",
+      "description": "Railway-related incidents in Russia since 2022."
+    },
+    "blocked-sites": {
+      "title": "Websites Blocked in Russia",
+      "description": "Explore the list of websites blocked in Russia.",
+      "infos1": "The data has been collected from ",
+      "infos2": "This page is a graphical representation of the data.",
+      "kpi1": "Number of blocked websites",
+      "kpi2": "",
+      "kpi3": "",
+      "kpi4": "",
+      "kpi5": "Last update",
+      "chart1": {
+        "title": "Countries With Most Blocked Domains",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart2": {
+        "title": "Subcategories of Websites Blocked in Russia",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart3": {
+        "title": "Categories of Websites Blocked",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart4": {
+        "title": "Russian authorities most active in censoring websites",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart5": {
+        "title": "Blocked Websites by Year",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart6": {
+        "title": "Blocked Websites by Month",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart7": {
+        "title": "",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart8": {
+        "title": "Cumulative Total of Blocked Websites Over Time",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart9": {
+        "title": "",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart10": {
+        "title": "Censorship Activity by Russian Authorities",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart11": {
+        "title": "Content Categories Targeted for Blocking",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart12": {
+        "title": "Mapping Censorship: Authorities and Targeted Content Categories",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      },
+      "chart13": {
+        "title": "Blocked Websites by Country and Category",
+        "subtitle": "",
+        "text": "",
+        "help": ""
+      }
+    },
+    "raid-alerts": {
+      "title": "Raid Alerts in Ukraine",
+      "description": "Explore alerts related to missile raids in Ukraine."
+    },
+    "components-weapons": {
+      "title": "Components in Russian Weapons",
+      "description": "Explore components manufactured outside Russia but used in their weapons.",
+      "infos1": "The data has been collected from ",
+      "infos2": "This page is a graphical representation of the data.",
+      "kpi1": "Number of components manufactured outside Russia",
+      "kpi2": "Country with the most components in aggressor's weapons",
+      "kpi3": "Company with the most components in aggressor's weapons",
+      "kpi4": "Weapon using the most components manufactured outside Russia",
+      "chart1": {
+        "title": "Components by Equipment Type",
+        "subtitle": "Distribution of components by equipment type used in aggressor's weapons.",
+        "text": "Components",
+        "help": "Each slice represents a type of component found in the analyzed weapons. Hover over a slice to see the exact number."
+      },
+      "chart2": {
+        "title": "Components by Weapon Type",
+        "subtitle": "Number of components in aggressor's weapons by weapon type.",
+        "yaxis": "Number of components",
+        "help": "Each bar represents a type of weapon found in the analyzed weapons. Hover over a bar to see the exact number."
+      },
+      "chart3": {
+        "title": "Components by Manufacturer Country",
+        "subtitle": "Number of components in aggressor's weapons by country of origin.",
+        "xaxis": "Number of components",
+        "help": "Each bar represents a country of origin of the components found in the analyzed weapons. Hover over a bar to see the exact number."
+      },
+      "chart4": {
+        "title": "Components by Company",
+        "subtitle": "Number of components in aggressor's weapons by company of origin.",
+        "xaxis": "Number of components",
+        "help": "Each bar represents a company of origin of the components found in the analyzed weapons. Hover over a bar to see the exact number."
+      },
+      "chart5": {
+        "title": "Components by Weapon",
+        "subtitle": "Number of components in aggressor's weapons by weapon.",
+        "xaxis": "Number of components",
+        "help": "Each bar represents a weapon found in the analyzed weapons. Hover over a bar to see the exact number."
+      },
+      "chart-names": {
+        "Equipment": "Equipments",
+        "UAV": "UAV",
+        "Vehicule": "Vehicules",
+        "Missile": "Missiles"
+      }
+    },
+    "interactive-maps": {
+      "title": "Interactive Maps",
+      "description": "Explore interactive maps related to the conflict."
+    },
+    "military-losses": {
+      "title": "Military Losses",
+      "description": "Explore military losses in Ukraine."
+    }
+  },
+  "charts": {
+    "components": {
+      "help": "Chaque part représente un type de composant retrouvé dans les armes analysées. Passez la souris sur une part pour voir le nombre exact."
+    }
+  }
+}

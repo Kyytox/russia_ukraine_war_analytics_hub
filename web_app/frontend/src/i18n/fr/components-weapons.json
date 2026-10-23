@@ -1,0 +1,64 @@
+{
+  "title": "Composants dans les armes Russes",
+  "description": "Explorez les composants fabriqués en dehors de Russie mais utilisés dans leurs armes.",
+  "infos1": "Les données ont été collectées à partir de ",
+  "infos2": "Cette page est une représentation graphique des données.",
+  "kpi1": "Nombre de composants fabriqués à l'extérieur de la Russie",
+  "kpi2": "Pays avec le plus de composants présents dans les armes de l'agresseur",
+  "kpi3": "Entreprise avec le plus de composants présents dans les armes de l'agresseur",
+  "kpi4": "Arme utilisant le plus composants fabriqués à l'extérieur de la Russie",
+  "chart1": {
+    "title": "Composants par type d'équipement",
+    "subtitle": "Distribution des composants par type d'équipement utilisés dans les armes de l'agresseur.",
+    "text": "Composants",
+    "help": "Chaque part représente un type de composant retrouvé dans les armes analysées. Passez la souris sur une part pour voir le nombre exact."
+  },
+  "chart2": {
+    "title": "Composants par type d'arme",
+    "subtitle": "Nombre de composants dans les armes de l'agresseur par type d'arme.",
+    "yaxis": "Nombre de composants",
+    "help": "Chaque barre représente un type d'arme trouvé dans les armes analysées. Passez la souris sur une barre pour voir le nombre exact."
+  },
+  "chart3": {
+    "title": "Composants par pays de fabricant",
+    "subtitle": "Nombre de composants dans les armes de l'agresseur par pays d'origine.",
+    "xaxis": "Nombre de composants",
+    "help": "Chaque barre représente un pays d'origine des composants retrouvés dans les armes analysées. Passez la souris sur une barre pour voir le nombre exact."
+  },
+  "chart4": {
+    "title": "Composants par entreprise",
+    "subtitle": "Nombre de composants dans les armes de l'agresseur par entreprise d'origine.",
+    "xaxis": "Nombre de composants",
+    "help": "Chaque barre représente une entreprise d'origine des composants retrouvés dans les armes analysées. Passez la souris sur une barre pour voir le nombre exact."
+  },
+  "chart5": {
+    "title": "Composants par arme",
+    "subtitle": "Nombre de composants dans les armes de l'agresseur par arme.",
+    "xaxis": "Nombre de composants",
+    "help": "Chaque barre représente une arme trouvée dans les armes analysées. Passez la souris sur une barre pour voir le nombre exact."
+  },
+  "chart6": {
+    "title": "",
+    "subtitle": "",
+    "text": "",
+    "help": ""
+  },
+  "chart7": {
+    "title": "",
+    "subtitle": "",
+    "text": "",
+    "help": ""
+  },
+  "chart8": {
+    "title": "",
+    "subtitle": "",
+    "text": "",
+    "help": ""
+  },
+  "chart_names": {
+    "Equipment": "Équipements",
+    "UAV": "UAV",
+    "Vehicule": "Véhicules",
+    "Missile": "Missiles"
+  }
+}

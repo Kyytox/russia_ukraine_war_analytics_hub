@@ -1,0 +1,47 @@
+{
+  "site": {
+    "title": "Ukraine War Data Hub",
+    "brand": "UA Data Hub"
+  },
+  "nav": {
+    "home": "Accueil",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "help": "Aide",
+    "github": "GitHub",
+    "language": "Langue"
+  },
+  "error": {
+    "api": "API injoignable. Lance le backend FastAPI sur le port 8000."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "back": "Retour à l'accueil"
+  },
+  "sections": {
+    "incidents-railways": {
+      "title": "Incidents sur les chemins de fer russes",
+      "description": "Explorez les incidents sur les chemins de fer russes depuis 2022 (type d'incident, date, localisation, équipements endommagés, sabotage, etc.)."
+    },
+    "blocked-sites": {
+      "title": "Sites web bloqués en Russie",
+      "description": "Explorez la liste des sites web bloqués en Russie (nom des sites, date de blocage, catégorie, etc.)."
+    },
+    "raid-alerts": {
+      "title": "Alertes de raids",
+      "description": "Explorez les alertes et avertissements de raids aériens en Ukraine."
+    },
+    "components-weapons": {
+      "title": "Composants dans les armes Russes",
+      "description": "Explorez les composants électronique fabriqués en dehors de Russie mais utilisés dans leurs armes."
+    },
+    "interactive-maps": {
+      "title": "Cartes Interactives",
+      "description": "Cartes interactives du conflit (frontières, zones occupées, zones de combat, unités militaires, etc.)"
+    },
+    "military-losses": {
+      "title": "Pertes Militaires",
+      "description": "Explorez les pertes militaires de la Russie et de l'Ukraine (personnel, véhicules, avions, navires, etc.)"
+    }
+  }
+}

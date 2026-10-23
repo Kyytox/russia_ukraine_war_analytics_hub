@@ -1,0 +1,91 @@
+{
+  "site": { "title": "Russia-Ukraine War Data Hub", "brand": "UA Data Hub" },
+  "nav": {
+    "home": "Accueil",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "help": "Aide",
+    "github": "GitHub",
+    "language": "Langue"
+  },
+  "home": {
+    "title": "Russia-Ukraine War Data Hub",
+    "intro": "Un site qui rassemble et analyse des <strong>données ouvertes</strong> sur l'invasion de l'Ukraine par la Russie : données, visualisations et analyses, réunies au même endroit."
+  },
+  "error": {
+    "api": "API injoignable. Lance le backend FastAPI sur le port 8000."
+  },
+  "notFound": { "title": "Page introuvable", "back": "Retour à l'accueil" },
+  "tags": {
+    "analytics": "Analyses",
+    "graphs": "Graphiques",
+    "sources": "Sources de données",
+    "external": "Données externes",
+    "maps": "Cartes"
+  },
+  "page": {
+    "filters": "Filtres (période, catégorie…)",
+    "kpi": "KPI {{n}}",
+    "chart": "Graphique {{n}}",
+    "map": "Carte interactive",
+    "table": "Tableau de données",
+    "sources": "Sources",
+    "sourcesList": "Liste des sources de données"
+  },
+  "sections": {
+    "incidents-railways": {
+      "title": "Incidents sur les chemins de fer russes",
+      "description": "Incidents liés aux chemins de fer russes depuis 2022."
+    },
+    "blocked-sites": {
+      "title": "Sites web bloqués en Russie",
+      "description": "Explorez la liste des sites web bloqués en Russie."
+    },
+    "raid-alerts": {
+      "title": "Alertes de raids en Ukraine",
+      "description": "Explorez les alertes liées aux raids de missiles en Ukraine."
+    },
+    "components-weapons": {
+      "title": "Composants des armes de l'agresseur",
+      "description": "Explorez les composants utilisés dans les armes de l'agresseur."
+    },
+    "interactive-maps": {
+      "title": "Cartes interactives",
+      "description": "Explorez les cartes interactives liées au conflit."
+    },
+    "military-losses": {
+      "title": "Pertes militaires",
+      "description": "Explorez les pertes militaires en Ukraine."
+    }
+  },
+  "pages": {
+    "incidents-railways": {
+      "title": "Incidents sur les chemins de fer russes",
+      "description": "Incidents liés aux chemins de fer russes depuis 2022."
+    },
+    "blocked-sites": {
+      "title": "Sites web bloqués en Russie",
+      "description": "Explorez la liste des sites web bloqués en Russie."
+    },
+    "raid-alerts": {
+      "title": "Alertes de raids en Ukraine",
+      "description": "Explorez les alertes liées aux raids de missiles en Ukraine."
+    },
+    "components-weapons": {
+      "title": "Composants dans les armes Russes",
+      "description": "Explorez les composants fabriqués en dehors de Russie mais utilisés dans leurs armes.",
+      "kpi1": "Nombre de composants fabriqués à l'extérieur de la Russie",
+      "kpi2": "Pays avec le plus de composants présents dans les armes de l'agresseur",
+      "kpi3": "Entreprise avec le plus de composants présents dans les armes de l'agresseur",
+      "kpi4": "Arme utilisant le plus composants fabriqués à l'extérieur de la Russie"
+    },
+    "interactive-maps": {
+      "title": "Cartes interactives",
+      "description": "Explorez les cartes interactives liées au conflit."
+    },
+    "military-losses": {
+      "title": "Pertes militaires",
+      "description": "Explorez les pertes militaires en Ukraine."
+    }
+  }
+}

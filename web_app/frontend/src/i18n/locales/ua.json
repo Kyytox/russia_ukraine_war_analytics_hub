@@ -1,0 +1,107 @@
+{
+  "site": {
+    "title": "Центр даних про російсько-українську війну",
+    "brand": "UA Data Hub"
+  },
+  "nav": {
+    "home": "Головна",
+    "openMenu": "Відкрити меню",
+    "closeMenu": "Закрити меню",
+    "help": "Допомога",
+    "github": "GitHub",
+    "language": "Мова"
+  },
+  "home": {
+    "title": "Центр даних про російсько-українську війну",
+    "intro": "Сайт, що збирає й аналізує <strong>відкриті дані</strong> про вторгнення Росії в Україну: дані, візуалізації та аналітика в одному місці."
+  },
+  "error": {
+    "api": "API недоступний. Запустіть бекенд FastAPI на порту 8000."
+  },
+  "notFound": { "title": "Сторінку не знайдено", "back": "На головну" },
+  "tags": {
+    "analytics": "Аналітика",
+    "graphs": "Графіки",
+    "sources": "Джерела даних",
+    "external": "Зовнішні дані",
+    "maps": "Карти"
+  },
+  "page": {
+    "filters": "Фільтри (період, категорія…)",
+    "kpi": "Показник {{n}}",
+    "chart": "Графік {{n}}",
+    "map": "Інтерактивна карта",
+    "table": "Таблиця даних",
+    "sources": "Джерела",
+    "sourcesList": "Список джерел даних"
+  },
+  "sections": {
+    "railways": {
+      "title": "Інциденти на російських залізницях",
+      "description": "Інциденти на залізницях Росії з 2022 року."
+    },
+    "blocked-sites": {
+      "title": "Заблоковані сайти в Росії",
+      "description": "Перегляньте список сайтів, заблокованих у Росії."
+    },
+    "raid-alerts": {
+      "title": "Тривоги в Україні",
+      "description": "Перегляньте тривоги, пов'язані з ракетними атаками в Україні."
+    },
+    "weapons": {
+      "title": "Компоненти в озброєнні агресора",
+      "description": "Перегляньте компоненти, що використовуються в озброєнні агресора."
+    },
+    "maps": {
+      "title": "Інтерактивні карти",
+      "description": "Перегляньте інтерактивні карти, пов'язані з конфліктом."
+    },
+    "losses": {
+      "title": "Військові втрати",
+      "description": "Перегляньте військові втрати в Україні."
+    }
+  },
+  "pages": {
+    "incidents-railways": {
+      "title": "Incidents on Russian Railways",
+      "description": "Railway-related incidents in Russia since 2022."
+    },
+    "blocked-sites": {
+      "title": "Websites Blocked in Russia",
+      "description": "Explore the list of websites blocked in Russia."
+    },
+    "raid-alerts": {
+      "title": "Raid Alerts in Ukraine",
+      "description": "Explore alerts related to missile raids in Ukraine."
+    },
+    "components-weapons": {
+      "title": "Компоненти в російській зброї",
+      "description": "Дослідіть компоненти, виготовлені поза Росією, але використовані в їхній зброї.",
+      "kpi1": "Кількість компонентів, виготовлених поза Росією",
+      "kpi2": "Країна з найбільшою кількістю компонентів у зброї агресора",
+      "kpi3": "Компанія з найбільшою кількістю компонентів у зброї агресора",
+      "kpi4": "Зброя, що використовує найбільше компонентів, виготовлених поза Росією",
+      "section1": {
+        "chart1": {
+          "title": "Компоненти за типом обладнання",
+          "subtitle": "Розподіл компонентів за типом обладнання, що використовується в зброї агресора.",
+          "text": "Компоненти"
+        }
+      },
+      "chart-names": {
+        "Equipment": "Обладнання",
+        "UAV": "БПЛА",
+        "Vehicule": "транспортний засіб",
+        "Missile": "Ракети"
+      }
+    },
+    "interactive-maps": {
+      "title": "Interactive Maps",
+      "description": "Explore interactive maps related to the conflict."
+    },
+    "military-losses": {
+      "title": "Military Losses",
+      "description": "Explore military losses in Ukraine."
+    }
+  }
+}

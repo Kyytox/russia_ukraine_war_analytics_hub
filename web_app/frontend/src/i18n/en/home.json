@@ -1,0 +1,11 @@
+{
+  "title": "Ukraine War Data Hub",
+  "intro": "A site that collects and analyzes open data about Russia's invasion of Ukraine: data, visualizations and insights, all in one place.",
+  "tags": {
+    "analytics": "Analytics",
+    "graphs": "Graphs",
+    "sources": "Data Sources",
+    "external": "External Data",
+    "maps": "Maps"
+  }
+}
