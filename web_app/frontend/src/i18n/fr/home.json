@@ -1,3 +1,29 @@
 {
-  "intro": "Un site qui rassemble et analyse des données ouvertes sur l'invasion de l'Ukraine par la Russie. Données, visualisations et analyses, réunies au même endroit."
+  "title": "Plateforme de données sur la guerre en Ukraine",
+  "intro": "Un site qui collecte et analyse des données ouvertes sur l’invasion de l’Ukraine par la Russie : données, visualisations et analyses, le tout au même endroit.",
+  "day_war": "Jour {{day}} de la guerre",
+  "incidents-railways": {
+    "title": "Incidents sur les chemins de fer russes",
+    "description": "Incidents liés au réseau ferroviaire en Russie depuis 2022."
+  },
+  "blocked-sites": {
+    "title": "Sites web bloqués en Russie",
+    "description": "Explorez la liste des sites web bloqués en Russie."
+  },
+  "raid-alerts": {
+    "title": "Alertes aériennes",
+    "description": "Consultez les alertes et les avertissements liés aux raids aériens en Ukraine et en Russie."
+  },
+  "components-weapons": {
+    "title": "Composants des armes russes",
+    "description": "Découvrez les composants électroniques fabriqués hors de Russie mais utilisés dans les armes russes."
+  },
+  "interactive-maps": {
+    "title": "Cartes interactives",
+    "description": "Cartes interactives du conflit."
+  },
+  "military-losses": {
+    "title": "Pertes militaires",
+    "description": "Données sur les pertes militaires et les pertes humaines."
+  }
 }

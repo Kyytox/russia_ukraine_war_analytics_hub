@@ -1,0 +1,60 @@
+{
+  "title": "Interactive Maps",
+  "intro": "Interactive maps of the conflict",
+  "map0": {
+    "title": "Russo-Ukrainian War Tracker",
+    "description": "An independent research project visualizing the Russo-Ukrainian War through territory control, military losses, humanitarian impact, and international aid from February 2022 to the present."
+  },
+  "map1": {
+    "title": "DeepState Map of Ukraine",
+    "description": "News of russia's war against Ukraine on the map."
+  },
+  "map2": {
+    "title": "UA Control Map",
+    "description": "UA Control And Units Map."
+  },
+  "map3": {
+    "title": "War Mapper",
+    "description": "Understand the impact of the frontline changes in Ukraine through a series of control charts."
+  },
+  "map4": {
+    "title": "Eyes on Russia",
+    "description": "Map draws on the database of videos, photos, satellite imagery or other media related to Russia’s invasion of Ukraine."
+  },
+  "map5": {
+    "title": "ISW: Russian Military Objects Are in Range of ATACMS",
+    "description": "Map allows users to inspect 225 known Russian military objects in Russia that are in range of Ukrainian ATACMS."
+  },
+  "map6": {
+    "title": "ISW: Interactive Map: Russia's Invasion of Ukraine",
+    "description": "Interactive maps complements the static control-of-terrain maps that ISW daily produces with high-fidelity and, where possible, street level assessments of the war in Ukraine."
+  },
+  "map7": {
+    "title": "Ukraine Conflict Monitor",
+    "description": "ACLED’s Ukraine Conflict Monitor provides near real-time information on the ongoing war, including an interactive map, data file, weekly situation updates. Designed to help researchers, policymakers, media, and the wider public track key conflict developments in Ukraine."
+  },
+  "map8": {
+    "title": "Air Raid Alert Map of Ukraine",
+    "description": "Showcases air raid alerts across Ukraine on an interactive map, providing real-time updates on siren activations and safety information."
+  },
+  "map9": {
+    "title": "Ukraine Daily Updates",
+    "description": "Map maintained by Andrew Perpetua, providing the daily events of this war and the current situation on the battlefield. Notable events affecting military targets and civilian victims, fortifications and much more is shown through the map’s adjustable layers."
+  },
+  "map10": {
+    "title": "Timeline of Invasion",
+    "description": "Map by David Batashvili, visualize the movements of armies during Russia's invasion of Ukraine from February 24, 2022."
+  },
+  "map11": {
+    "title": "Civilian Harm Map",
+    "description": "Incidents in Ukraine that have resulted in potential civilian harm. These include: incidents where rockets or missiles struck civilian areas, where attacks have resulted in the destruction of civilian infrastructure, where the presence of civilian injuries are visible and/or the presence of immobile civilian bodies."
+  },
+  "map12": {
+    "title": "Fortifications in Ukraine",
+    "description": "Map showing fortifications in Ukraine including trenches, bunkers, and other defensive structures built during the conflict."
+  },
+  "map13": {
+    "title": "The Undeniable Street View",
+    "description": "Through Street View, walk the streets of 6 Ukrainian cities and regions that have found themselves on the front line and witness the Russian aggression against civilian infrastructure up close."
+  }
+}

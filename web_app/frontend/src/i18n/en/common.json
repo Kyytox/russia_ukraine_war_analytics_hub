@@ -18,6 +18,10 @@
     "title": "Page not found",
     "back": "Back to home"
   },
+  "common": {
+    "expand": "Expand",
+    "collapse": "Collapse"
+  },
   "sections": {
     "incidents-railways": {
       "title": "Incidents on Russian Railways",

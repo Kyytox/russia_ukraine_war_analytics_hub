@@ -80,13 +80,14 @@ export const loadPageTranslations = async (pageName, lang = i18n.language) => {
     // Get current translations
     const currentTranslations = i18n.getResourceBundle(lang, "translation");
 
-    // Merge page translations with common translations but replace page section with new page translations
+    // Merge page translations with common translations
+    // Keep all common translations and add/update page translations
     const merged = {
       ...currentTranslations,
-      page: {
-        ...pageTranslations,
-      },
+      page: pageTranslations,
     };
+
+    console.log(`Loaded translations for ${pageName} in ${lang}:`, merged);
 
     // Update resource bundle
     i18n.addResourceBundle(lang, "translation", merged, true, true);

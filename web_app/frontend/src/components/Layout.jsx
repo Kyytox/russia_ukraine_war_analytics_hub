@@ -12,6 +12,7 @@ import {
   Map,
   Cross,
   CircleHelp,
+  TrainTrack,
   Github,
 } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher.jsx";
@@ -22,7 +23,7 @@ import {
 
 // id = clé de traduction (sections.<id>.title) ET segment d'URL
 export const NAV = [
-  { id: "incidents-railways", icon: TrainFrontTunnel },
+  { id: "incidents-railways", icon: TrainTrack },
   { id: "blocked-sites", icon: Ban },
   { id: "raid-alerts", icon: Bell },
   { id: "components-weapons", icon: Cog },

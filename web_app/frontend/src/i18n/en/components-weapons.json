@@ -1,64 +1,59 @@
 {
-  "title": "Components in Russian Weapons",
-  "description": "Explore components manufactured outside Russia but used in their weapons.",
-  "infos1": "The data has been collected from ",
+  "title": "Foreign Electronic Components in Russian Weapons",
+  "description": "These charts cover the foreign electronic components identified in Russian weapons. A “component” refers to a distinct part reference of an electronic product.",
+  "infos1": "The data was collected from ",
   "infos2": "This page is a graphical representation of the data.",
   "kpi1": "Number of components manufactured outside Russia",
-  "kpi2": "Country with the most components in aggressor's weapons",
-  "kpi3": "Company with the most components in aggressor's weapons",
+  "kpi2": "Country with the most components found in Russian weapons",
+  "kpi3": "Company with the most components found in Russian weapons",
   "kpi4": "Weapon using the most components manufactured outside Russia",
+  "section1_title": "Overview",
+  "section2_title": "Components by Weapon and Country of Origin",
+  "tooltip_text": "Components",
+  "axes_text": "Number of components",
   "chart1": {
-    "title": "Components by Equipment Type",
-    "subtitle": "Distribution of components by equipment type used in aggressor's weapons.",
+    "title": "Foreign electronic components by equipment type",
+    "subtitle": "Number of components identified in Russian weapons, by equipment type.",
     "text": "Components",
-    "help": "Each slice represents a type of component found in the analyzed weapons. Hover over a slice to see the exact number."
+    "help": ""
   },
   "chart2": {
-    "title": "Components by Weapon Type",
-    "subtitle": "Number of components in aggressor's weapons by weapon type.",
+    "title": "Components by weapon type",
+    "subtitle": "Number of foreign electronic components identified in Russian weapons, by weapon type.",
     "yaxis": "Number of components",
-    "help": "Each bar represents a type of weapon found in the analyzed weapons. Hover over a bar to see the exact number."
+    "help": ""
   },
   "chart3": {
-    "title": "Components by Manufacturer Country",
-    "subtitle": "Number of components in aggressor's weapons by country of origin.",
+    "title": "Components by country of origin (top 30)",
+    "subtitle": "Number of foreign electronic components identified in Russian weapons, by country of origin.",
     "xaxis": "Number of components",
-    "help": "Each bar represents a country of origin of the components found in the analyzed weapons. Hover over a bar to see the exact number."
+    "help": "The “country of origin” is the country where the company that makes the component is based. “Not identified” groups the components whose origin could not be established. Only the top 30 countries are shown."
   },
   "chart4": {
-    "title": "Components by Company",
-    "subtitle": "Number of components in aggressor's weapons by company of origin.",
+    "title": "Components by company of origin (top 30)",
+    "subtitle": "Number of foreign electronic components identified in Russian weapons, by company of origin.",
     "xaxis": "Number of components",
-    "help": "Each bar represents a company of origin of the components found in the analyzed weapons. Hover over a bar to see the exact number."
+    "help": "Each bar represents the company of origin of the components found in Russian weapons."
   },
   "chart5": {
-    "title": "Components by Weapon",
-    "subtitle": "Number of components in aggressor's weapons by weapon.",
+    "title": "Components by weapon (top 30)",
+    "subtitle": "Number of foreign electronic components identified in Russian weapons, by weapon.",
     "xaxis": "Number of components",
-    "help": "Each bar represents a weapon found in the analyzed weapons. Hover over a bar to see the exact number."
+    "help": "A weapon is a specific model (for example Shahed-136 or Kh-101), whereas a weapon type groups several models (for example UAV or cruise missile). Only the 30 weapons with the most components are shown."
   },
   "chart6": {
-    "title": "",
-    "subtitle": "",
-    "text": "",
-    "help": ""
+    "title": "Components by weapon and country of origin (top 50)",
+    "subtitle": "Number of foreign electronic components identified in Russian weapons, by weapon and then by country of origin.",
+    "help": "Each bar represents a weapon, and its colored segments show the country of origin of its components. The total length is the number of components in that weapon. The detail of each segment is displayed on hover."
   },
   "chart7": {
-    "title": "",
-    "subtitle": "",
-    "text": "",
-    "help": ""
+    "title": "Foreign components in Russian weapons, by country of origin",
+    "subtitle": "Number of components identified by country of origin, then by weapon (Shahed-136, Kh-101, Iskander-K…).",
+    "help": "The blocks are nested: country of origin, then weapon. The area of each cell is proportional to the number of components identified. Zoom is enabled for the smallest cells."
   },
   "chart8": {
-    "title": "",
-    "subtitle": "",
-    "text": "",
-    "help": ""
-  },
-  "chart_names": {
-    "Equipment": "Equipments",
-    "UAV": "UAV",
-    "Vehicule": "Vehicules",
-    "Missile": "Missiles"
+    "title": "Components by weapon type and equipment type",
+    "subtitle": "Breakdown of the components identified in Russian weapons, by weapon type and equipment type.",
+    "help": "The inner ring shows the equipment type, and the outer ring shows the weapon type within each category."
   }
 }

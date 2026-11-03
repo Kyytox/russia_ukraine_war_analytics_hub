@@ -1,0 +1,60 @@
+{
+  "title": "Cartes interactives",
+  "intro": "Cartes interactives du conflit",
+  "map0": {
+    "title": "Suivi de la guerre russo-ukrainienne",
+    "description": "Un projet de recherche indépendant qui visualise la guerre russo-ukrainienne à travers le contrôle des territoires, les pertes militaires, l’impact humanitaire et l’aide internationale, de février 2022 à aujourd’hui."
+  },
+  "map1": {
+    "title": "Carte DeepState de l’Ukraine",
+    "description": "Actualités de la guerre menée par la Russie contre l’Ukraine sur une carte."
+  },
+  "map2": {
+    "title": "Carte UA Control",
+    "description": "Carte du contrôle territorial et des unités de l’Ukraine."
+  },
+  "map3": {
+    "title": "War Mapper",
+    "description": "Comprendre l’impact des changements de la ligne de front en Ukraine à travers une série de cartes de contrôle territorial."
+  },
+  "map4": {
+    "title": "Eyes on Russia",
+    "description": "La carte s’appuie sur une base de données de vidéos, de photos, d’images satellite et d’autres médias liés à l’invasion de l’Ukraine par la Russie."
+  },
+  "map5": {
+    "title": "ISW : Les installations militaires russes sont à portée des ATACMS",
+    "description": "La carte permet aux utilisateurs d’examiner 225 installations militaires russes connues situées en Russie et à portée des missiles ATACMS ukrainiens."
+  },
+  "map6": {
+    "title": "ISW : Carte interactive de l’invasion de l’Ukraine par la Russie",
+    "description": "Les cartes interactives complètent les cartes statiques du contrôle territorial produites quotidiennement par l’ISW, avec des évaluations détaillées et, lorsque cela est possible, à l’échelle de la rue, de la guerre en Ukraine."
+  },
+  "map7": {
+    "title": "Observatoire du conflit en Ukraine",
+    "description": "L’Observatoire du conflit en Ukraine d’ACLED fournit des informations presque en temps réel sur la guerre en cours, notamment une carte interactive, un fichier de données et des mises à jour hebdomadaires de la situation. Il est conçu pour aider les chercheurs, les décideurs politiques, les médias et le grand public à suivre les principaux développements du conflit en Ukraine."
+  },
+  "map8": {
+    "title": "Carte des alertes aux raids aériens en Ukraine",
+    "description": "Présente les alertes aux raids aériens en Ukraine sur une carte interactive, avec des mises à jour en temps réel sur le déclenchement des sirènes et des informations de sécurité."
+  },
+  "map9": {
+    "title": "Mises à jour quotidiennes sur l’Ukraine",
+    "description": "Carte tenue à jour par Andrew Perpetua, présentant les événements quotidiens de cette guerre et la situation actuelle sur le champ de bataille. Les événements notables touchant les cibles militaires et les victimes civiles, les fortifications et bien d’autres éléments sont affichés à l’aide des différentes couches activables de la carte."
+  },
+  "map10": {
+    "title": "Chronologie de l’invasion",
+    "description": "Carte de David Batashvili visualisant les mouvements des armées pendant l’invasion de l’Ukraine par la Russie depuis le 24 février 2022."
+  },
+  "map11": {
+    "title": "Carte des dommages causés aux civils",
+    "description": "Incidents survenus en Ukraine ayant entraîné des dommages potentiels aux civils. Ils comprennent les incidents au cours desquels des roquettes ou des missiles ont frappé des zones civiles, les attaques ayant entraîné la destruction d’infrastructures civiles, ainsi que les cas où des blessures de civils sont visibles et/ou où des corps de civils immobiles sont présents."
+  },
+  "map12": {
+    "title": "Fortifications en Ukraine",
+    "description": "Carte présentant les fortifications en Ukraine, notamment les tranchées, les bunkers et les autres structures défensives construites pendant le conflit."
+  },
+  "map13": {
+    "title": "Street View : des preuves irréfutables",
+    "description": "Grâce à Street View, parcourez les rues de six villes et régions ukrainiennes qui se sont retrouvées en première ligne et observez de près les conséquences de l’agression russe sur les infrastructures civiles."
+  }
+}

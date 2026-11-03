@@ -202,7 +202,7 @@ def section5():
                 SELECT
                     libelle,
                     metric,
-                    value
+                    value as count
                 FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_by_country_by_category_top_6
             ) t
             """

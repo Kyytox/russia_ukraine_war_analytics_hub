@@ -1,0 +1,45 @@
+{
+  "title": "Incidents sur les chemins de fer russes",
+  "description": "Incidents liés aux chemins de fer russes depuis 2022.",
+  "tabs": {
+    "overview": "Aperçu",
+    "incident_types": "Types d'incidents",
+    "damaged_equipments": "Équipements endommagés",
+    "collisions": "Collisions",
+    "sabotage": "Sabotage",
+    "partisans_arrest": "Arrestations de partisans",
+    "informations": "Informations"
+  },
+  "overview": {
+    "title": "Aperçu",
+    "last_update": "Dernière mise à jour",
+    "total_incidents": "Nombre total d'incidents",
+    "total_sabotage": "Nombre total de sabotages",
+    "partisans_arrested": "Partisans arrêtés",
+    "hide_moscow": "Masquer Moscou",
+    "chart1": {
+      "title": "Incidents ferroviaires annuels en Russie",
+      "subtitle": "Nombre d'incidents par an depuis 2022"
+    },
+    "chart2": {
+      "title": "Tendances mensuelles des incidents",
+      "subtitle": "Nombre d'incidents par mois depuis 2022"
+    },
+    "chart3": {
+      "title": "Tendances mensuelles des incidents",
+      "subtitle": "Nombre d'incidents par mois depuis 2022"
+    },
+    "chart4": {
+      "title": "Incidents ferroviaires par type",
+      "subtitle": "Nombre d'incidents par type depuis 2022"
+    },
+    "chart5": {
+      "title": "Équipements endommagés",
+      "subtitle": "Nombre d'équipements endommagés par type depuis 2022"
+    },
+    "chart7": {
+      "title": "Incidents ferroviaires par région",
+      "subtitle": "Carte thermique des incidents par région et année"
+    }
+  }
+}

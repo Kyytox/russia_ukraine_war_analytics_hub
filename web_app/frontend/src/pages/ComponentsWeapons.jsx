@@ -13,8 +13,11 @@ import { ComponentsSunburst } from "../components/charts/ComponentsSunburst.jsx"
 
 import ChartState from "../components/charts/ChartState.jsx";
 import ChartHeader from "../components/charts/ChartHeader.jsx";
+import ChartModal from "../components/charts/ChartModal.jsx";
 
-const PAGE_KEY = "pages.components-weapons";
+import { TriangleAlert } from "lucide-react";
+
+const PAGE_KEY = "page";
 const PAGE_NAME = "components-weapons";
 
 export default function ComponentsWeapons() {
@@ -49,6 +52,7 @@ export default function ComponentsWeapons() {
       {/* div alrts */}
       <section className="infos">
         <p>
+          <TriangleAlert />
           {t(`${PAGE_KEY}.infos1`)}
           <a
             href="https://war-sanctions.gur.gov.ua/en/components"
@@ -84,10 +88,12 @@ export default function ComponentsWeapons() {
       </div> */}
 
       <section className="charts-grid">
+        <h2 className="section-title span-12">{t(`page.section1_title`)}</h2>
         <section className="chart span-4">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart1" t={t} />
-          <ChartState query={section1} height={440}>
-            {(data) => (
+          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart1`} t={t}>
+            <ChartState query={section1}>
+            {(data, height) => (
               <ComponentsPie
                 id="chart1"
                 data={data.filter((d) => d.libelle === "type_equipment")}
@@ -95,15 +101,17 @@ export default function ComponentsWeapons() {
                 i18n={i18n}
                 nf={nf}
                 custom={custom}
-              />
+              height={height} />
             )}
-          </ChartState>
+            </ChartState>
+          </ChartModal>
         </section>
 
         <section className="chart span-8">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart8" t={t} />
-          <ChartState query={section4} height={600}>
-            {(data) => (
+          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart8`} t={t}>
+            <ChartState query={section4}>
+            {(data, height) => (
               <ComponentsSunburst
                 id="chart8"
                 data={data}
@@ -111,15 +119,17 @@ export default function ComponentsWeapons() {
                 i18n={i18n}
                 nf={nf}
                 custom={custom}
-              />
+              height={height} />
             )}
-          </ChartState>
+            </ChartState>
+          </ChartModal>
         </section>
 
         <section className="chart span-6">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart3" t={t} />
-          <ChartState query={section1} height={440}>
-            {(data) => (
+          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart3`} t={t}>
+            <ChartState query={section1}>
+            {(data, height) => (
               <ComponentsBarHorizontal
                 id="chart3"
                 data={data.filter((d) => d.libelle === "manufacturer_country")}
@@ -127,14 +137,16 @@ export default function ComponentsWeapons() {
                 i18n={i18n}
                 nf={nf}
                 custom={custom}
-              />
+              height={height} />
             )}
-          </ChartState>
+            </ChartState>
+          </ChartModal>
         </section>
         <section className="chart span-6">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart4" t={t} />
-          <ChartState query={section1} height={440}>
-            {(data) => (
+          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart4`} t={t}>
+            <ChartState query={section1}>
+            {(data, height) => (
               <ComponentsBarHorizontal
                 id="chart4"
                 data={data.filter((d) => d.libelle === "manufacturer")}
@@ -142,15 +154,17 @@ export default function ComponentsWeapons() {
                 i18n={i18n}
                 nf={nf}
                 custom={custom}
-              />
+              height={height} />
             )}
-          </ChartState>
+            </ChartState>
+          </ChartModal>
         </section>
 
         <section className="chart span-5">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart2" t={t} />
-          <ChartState query={section1} height={440}>
-            {(data) => (
+          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart2`} t={t}>
+            <ChartState query={section1}>
+            {(data, height) => (
               <ComponentsBarVertical
                 id="chart2"
                 data={data.filter((d) => d.libelle === "weapon_type")}
@@ -158,15 +172,17 @@ export default function ComponentsWeapons() {
                 i18n={i18n}
                 nf={nf}
                 custom={custom}
-              />
+              height={height} />
             )}
-          </ChartState>
+            </ChartState>
+          </ChartModal>
         </section>
 
         <section className="chart span-7">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart5" t={t} />
-          <ChartState query={section1} height={440}>
-            {(data) => (
+          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart5`} t={t}>
+            <ChartState query={section1}>
+            {(data, height) => (
               <ComponentsBarHorizontal
                 id="chart5"
                 data={data.filter((d) => d.libelle === "weapon")}
@@ -174,15 +190,18 @@ export default function ComponentsWeapons() {
                 i18n={i18n}
                 nf={nf}
                 custom={custom}
-              />
+              height={height} />
             )}
-          </ChartState>
+            </ChartState>
+          </ChartModal>
         </section>
 
+        <h2 className="section-title span-12">{t(`page.section2_title`)}</h2>
         <section className="chart span-12">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart6" t={t} />
-          <ChartState query={section2} height={440}>
-            {(data) => (
+          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart6`} t={t}>
+            <ChartState query={section2}>
+            {(data, height) => (
               <ComponentsBarStackedHorizontal
                 id="chart6"
                 data={data}
@@ -190,15 +209,17 @@ export default function ComponentsWeapons() {
                 i18n={i18n}
                 nf={nf}
                 custom={custom}
-              />
+              height={height} />
             )}
-          </ChartState>
+            </ChartState>
+          </ChartModal>
         </section>
 
         <section className="chart span-12">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart7" t={t} />
-          <ChartState query={section3} height={440}>
-            {(data) => (
+          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart7`} t={t}>
+            <ChartState query={section3}>
+            {(data, height) => (
               <ComponentsTreemap
                 id="chart7"
                 data={data}
@@ -206,9 +227,10 @@ export default function ComponentsWeapons() {
                 i18n={i18n}
                 nf={nf}
                 custom={custom}
-              />
+              height={height} />
             )}
-          </ChartState>
+            </ChartState>
+          </ChartModal>
         </section>
       </section>
     </article>

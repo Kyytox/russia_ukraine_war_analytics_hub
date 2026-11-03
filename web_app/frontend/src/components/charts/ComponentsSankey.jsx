@@ -1,117 +1,110 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const TOP_LEVEL2 = 20; // nombre de nœuds gardés au niveau 2, le reste va dans "Autres"
-const MIN_LABEL_LEVEL1 = 40; // un nœud de niveau 1 plus petit n'affiche pas son label (tooltip conservé)
-const ROW_HEIGHT = 26; // hauteur allouée par nœud dans la colonne la plus chargée
-const OTHER = "__other__";
+// Returns true if the links contain a cycle (ECharts Sankey must be a DAG)
+const hasCycle = (links) => {
+  const adj = new Map();
+  links.forEach((l) => {
+    if (!adj.has(l.source)) adj.set(l.source, []);
+    adj.get(l.source).push(l.target);
+  });
+  const state = new Map(); // 1 = visiting, 2 = done
+  const visit = (n) => {
+    if (state.get(n) === 1) return true;
+    if (state.get(n) === 2) return false;
+    state.set(n, 1);
+    for (const next of adj.get(n) ?? []) if (visit(next)) return true;
+    state.set(n, 2);
+    return false;
+  };
+  return [...adj.keys()].some(visit);
+};
 
-export function ComponentsSankey({ data, t, i18n, nf }) {
-  const { option, height } = useMemo(() => {
-    // 1. niveau 2 : top N + regroupement du reste en un seul nœud "Autres"
-    const lvl2 = data
-      .filter((d) => d.level === 2)
-      .sort((a, b) => b.value - a.value);
+export function ComponentsSankey({ id, data, t, nf, custom, height }) {
+  const option = useMemo(() => {
+    if (!data?.length) return null;
+    const cfg = custom?.[id] ?? {};
 
-    const others = new Map(); // parent -> somme des valeurs regroupées (garde les flux cohérents)
-    lvl2
-      .slice(TOP_LEVEL2)
-      .forEach((d) =>
-        others.set(d.parent, (others.get(d.parent) ?? 0) + d.value),
-      );
-
-    const rows = [
-      ...data.filter((d) => d.level < 2),
-      ...lvl2.slice(0, TOP_LEVEL2),
-      ...[...others].map(([parent, value]) => ({
-        parent,
-        label: OTHER,
-        value,
-        level: 2,
-      })),
-    ];
-
-    // 2. liens : le niveau 0 n'a pas de parent, il ne crée donc aucun lien
-    const links = rows
-      .filter((d) => d.level > 0 && d.parent)
-      .map((d) => ({
-        source: `${d.level - 1}:${d.parent}`, // "0:UAV", "1:UAV Combat"
-        target: `${d.level}:${d.label}`, // "1:UAV Combat", "2:Geran-4 UAV"
-        value: d.value,
-      }));
-
-    // 3. total entrant par nœud (pour masquer les labels des petits nœuds)
-    const incoming = new Map();
-    links.forEach((l) =>
-      incoming.set(l.target, (incoming.get(l.target) ?? 0) + l.value),
-    );
-
-    // 4. nœuds, avec leur colonne forcée
-    const ids = [...new Set(links.flatMap((l) => [l.source, l.target]))];
-    const nodes = ids.map((id) => {
-      const depth = Number(id.split(":")[0]);
-      const show = depth !== 1 || (incoming.get(id) ?? 0) >= MIN_LABEL_LEVEL1;
-      return { name: id, depth, label: { show } };
+    // 1. Each row = one link: parent (source) -> label (target), weighted by value
+    //    Rows without parent (root nodes) have no link, so they are skipped
+    const linkMap = new Map();
+    data.forEach((d) => {
+      const source = d.parent ?? d.parents;
+      const target = d.label;
+      const value = Number(d.value);
+      if (!source || !target || !(value > 0)) return;
+      const k = `${source}|${target}`;
+      linkMap.set(k, (linkMap.get(k) ?? 0) + value); // sum if duplicates
     });
 
-    // 5. hauteur adaptée à la colonne la plus chargée
-    const perLevel = {};
-    ids.forEach((id) => {
-      const l = id.split(":")[0];
-      perLevel[l] = (perLevel[l] ?? 0) + 1;
+    const links = [...linkMap].map(([k, value]) => {
+      const [source, target] = k.split("|");
+      return { source, target, value };
     });
-    const height = Math.max(
-      600,
-      Math.max(...Object.values(perLevel)) * ROW_HEIGHT * 2,
-    );
+    if (!links.length) return null;
 
-    // 6. libellé traduit à partir de l'id "niveau:nom"
-    const label = (id) => {
-      const [level, ...rest] = id.split(":");
-      const text = rest.join(":");
-      if (text === OTHER) return t("sankey.other");
-      return t(`sankey.level${level}.${text}`, text);
-    };
+    if (hasCycle(links)) {
+      console.warn(`[Sankey ${id}] cycle detected in data, chart not rendered`);
+      return null;
+    }
 
-    const option = {
+    // 2. Nodes = every unique name found in links
+    const names = [...new Set(links.flatMap((l) => [l.source, l.target]))];
+    const nodes = names.map((name) => {
+      const color = custom?.colors_metrics?.[name]; // optional fixed color
+      return { name, ...(color && { itemStyle: { color } }) };
+    });
+
+    const translate = (name) =>
+      t(`${cfg.label_prefix ?? "page.content"}.${name}`, String(name));
+
+    return {
+      aria: { enabled: true },
       toolbox: {
         right: 10,
         iconStyle: { borderColor: "#fff" },
-        feature: { saveAsImage: {} },
+        feature: {},
       },
       tooltip: {
         trigger: "item",
+        confine: true,
         formatter: (p) =>
           p.dataType === "edge"
-            ? `${label(p.data.source)} → ${label(p.data.target)}<br/><b>${nf.format(p.value)}</b>`
-            : `${label(p.data.name)}<br/><b>${nf.format(p.value)}</b>`,
+            ? `${translate(p.data.source)} → ${translate(p.data.target)} : <b>${nf.format(p.data.value)} ${cfg.tooltip_text ?? ""}</b>`
+            : `${translate(p.name)} : <b>${nf.format(p.value)} ${cfg.tooltip_text ?? ""}</b>`,
       },
       series: [
         {
           type: "sankey",
           data: nodes,
           links,
-          left: 20,
-          right: 220,
-          top: 20,
-          bottom: 20,
-          nodeWidth: 14,
-          nodeGap: 6,
-          lineStyle: { color: "source", opacity: 0.4, curveness: 0.5 },
+          top: "6%",
+          bottom: "6%",
+          left: "2%",
+          right: "12%", // room for the last column labels
+          nodeWidth: cfg.nodeWidth ?? 18,
+          nodeGap: cfg.nodeGap ?? 10,
+          draggable: false,
           emphasis: { focus: "adjacency" },
+          lineStyle: { color: "gradient", curveness: 0.4, opacity: 0.8 },
+          itemStyle: { borderWidth: 0 },
           label: {
             color: "#fff",
-            fontSize: 12,
-            width: 200,
-            overflow: "truncate",
-            formatter: (p) => label(p.name),
+            fontSize: 13,
+            formatter: (p) => translate(p.name),
           },
         },
       ],
     };
+  }, [data, t, nf, id, custom]);
 
-    return { option, height };
-  }, [data, t, i18n.language]);
+  if (!option) return null;
 
-  return <ReactECharts option={option} style={{ width: "100%", height }} />;
+  return (
+    <ReactECharts
+      option={option}
+      notMerge
+      style={{ width: "100%", height: height || custom?.[id]?.height || 400 }}
+    />
+  );
 }

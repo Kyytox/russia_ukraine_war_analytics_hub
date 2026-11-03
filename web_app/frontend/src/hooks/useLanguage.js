@@ -33,10 +33,11 @@ export function useChangeLanguage() {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
 
-  return (newLang) => {
+  return async (newLang) => {
     if (!LANGUAGES.includes(newLang)) return;
 
-    i18n.changeLanguage(newLang);
+    // Await the language change to ensure i18n is updated before navigation
+    await i18n.changeLanguage(newLang);
 
     // Get current path without language prefix
     const path = window.location.pathname;

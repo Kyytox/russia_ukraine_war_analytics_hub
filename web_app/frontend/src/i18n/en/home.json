@@ -1,11 +1,29 @@
 {
   "title": "Ukraine War Data Hub",
   "intro": "A site that collects and analyzes open data about Russia's invasion of Ukraine: data, visualizations and insights, all in one place.",
-  "tags": {
-    "analytics": "Analytics",
-    "graphs": "Graphs",
-    "sources": "Data Sources",
-    "external": "External Data",
-    "maps": "Maps"
+  "day_war": "Day {{day}} of the war",
+  "incidents-railways": {
+    "title": "Incidents on Russian Railways",
+    "description": "Railway-related incidents in Russia since 2022."
+  },
+  "blocked-sites": {
+    "title": "Websites Blocked in Russia",
+    "description": "Explore the list of websites blocked in Russia."
+  },
+  "raid-alerts": {
+    "title": "Raid Alerts",
+    "description": "Explore air raid alerts and warnings in Ukraine and Russia."
+  },
+  "components-weapons": {
+    "title": "Components in Russian Weapons",
+    "description": "Explore electronic components manufactured outside Russia but used in their weapons."
+  },
+  "interactive-maps": {
+    "title": "Interactive Maps",
+    "description": "Interactive maps of the conflict"
+  },
+  "military-losses": {
+    "title": "Military Losses",
+    "description": "Military losses and casualties data"
   }
 }

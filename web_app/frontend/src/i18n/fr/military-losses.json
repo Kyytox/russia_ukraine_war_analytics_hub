@@ -1,0 +1,24 @@
+{
+  "title": "Pertes militaires",
+  "intro": "Cette page fournit des informations sur les pertes militaires de la Russie et de l’Ukraine dans la guerre en cours.",
+  "military_losses_1": {
+    "title": "Kaggle : pertes d’équipements, bilan des morts, militaires blessés et prisonniers de guerre russes",
+    "description": "Ce jeu de données présente les pertes d’équipements, le bilan des morts, les militaires blessés et les prisonniers de guerre russes lors de la guerre russo-ukrainienne de 2022 (hébergé sur Kaggle)."
+  },
+  "military_losses_2": {
+    "title": "Pertes ukrainiennes",
+    "description": "Ce site tient à jour une liste des soldats ukrainiens tués dans la guerre actuelle, sur la base de rapports publics faisant état de décès."
+  },
+  "military_losses_3": {
+    "title": "Pertes russes en Ukraine",
+    "description": "Suivi mis à jour quotidiennement des pertes humaines et matérielles russes, à partir des rapports officiels du ministère de la Défense ukrainien."
+  },
+  "military_losses_4": {
+    "title": "Pertes humaines russes en Ukraine",
+    "description": "Données sur les pertes depuis le 24 février 2022, regroupées par jour, semaine et mois."
+  },
+  "military_losses_5": {
+    "title": "Russo-Ukrainian Warspotting",
+    "description": "WarSpotting est une base de données recensant les pertes matérielles documentées pendant l’invasion russe de l’Ukraine. Les preuves utilisées sont des photographies trouvées dans des sources ouvertes sur Internet, notamment sur les réseaux sociaux."
+  }
+}

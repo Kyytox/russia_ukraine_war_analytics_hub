@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-export function ComponentsTree({ id, data = [], t, i18n, nf, custom }) {
+export function ComponentsTree({ id, data = [], t, i18n, nf, custom, height }) {
   const option = useMemo(() => {
     const name = (label) => t(`page.content.${label}`, label);
 
@@ -81,7 +81,7 @@ export function ComponentsTree({ id, data = [], t, i18n, nf, custom }) {
       notMerge
       style={{
         width: "100%",
-        height: custom?.[id]?.height ?? 500,
+        height: height || custom?.[id]?.height || 500,
       }}
     />
   );

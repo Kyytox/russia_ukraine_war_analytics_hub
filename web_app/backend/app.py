@@ -1,18 +1,26 @@
+from datetime import date
 from pathlib import Path
 
 import duckdb
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import DB_PATH
 
 from routers import (
     blocked_sites,
-    losses,
-    maps,
+    military_losses,
+    interactive_maps,
     raid_alerts,
-    railways,
     components_weapons,
+)
+
+from routers.incidents_railway import (
+    collisions,
+    damaged_equipments,
+    overview,
+    incident_types,
+    sabotage,
 )
 
 app = FastAPI(title="Russia-Ukraine War Data Hub")
@@ -23,76 +31,45 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-for r in (railways, blocked_sites, raid_alerts, components_weapons, maps, losses):
+for r in (
+    overview,
+    incident_types,
+    damaged_equipments,
+    collisions,
+    sabotage,
+    blocked_sites,
+    raid_alerts,
+    components_weapons,
+    interactive_maps,
+    military_losses,
+):
     app.include_router(r.router)
 
 # Sections de la page d'accueil. Pas de texte ici : titres et descriptions
 # sont traduits côté front (frontend/src/i18n/locales/*.json).
 DICT_CONTENT = [
-    {
-        "id": "incidents-railways",
-        "image": "/img/inc_rail.jpeg",
-        "url": "/incidents-railway",
-        "tags": ["Analytics", "Graphs", "Data Sources"],
-        "color_tags": ["#961010", "#4abb15", "#14aca4"],
-        "icon": "fa-train",
-    },
-    {
-        "id": "blocked-sites",
-        "title": "Blocked Web Sites in Russia",
-        "descr": "Explore the list of websites blocked in Russia.",
-        "image": "/img/logo_blocked_sites.png",
-        "url": "/blocked-sites",
-        "tags": ["Analytics", "Graphs", "Data Sources", "External Data"],
-        "color_tags": ["#961010", "#4abb15", "#14aca4", "#821f9b"],
-        "icon": "fa-ban",
-    },
-    {
-        "id": "raid-alerts",
-        "title": "Raid Alerts in Ukraine",
-        "descr": "Explore the alerts related to missile raids in Ukraine.",
-        "image": "/img/raid_alerts_ukraine.png",
-        "url": "/raids-alerts",
-        "tags": ["Analytics", "Graphs", "Data Sources", "External Data"],
-        "color_tags": ["#961010", "#4abb15", "#14aca4", "#821f9b"],
-        "icon": "fa-bell",
-    },
-    {
-        "id": "components-weapons",
-        "title": "Components in Aggressor's Weapons",
-        "descr": "Explore the components used in the aggressor`s weapon.",
-        "image": "/img/components_weapons.jpg",
-        "url": "/components-waepons",
-        "tags": ["Analytics", "Graphs", "External Data"],
-        "color_tags": ["#961010", "#4abb15", "#821f9b"],
-        "icon": "fa-cog",
-    },
-    {
-        "id": "interactive-maps",
-        "title": "Interactive Maps",
-        "descr": "Explore the interactive maps related to the conflict.",
-        "image": "/img/interactive_maps.png",
-        "url": "/interactive-maps",
-        "tags": ["Maps", "External Data"],
-        "color_tags": ["#121096", "#821f9b"],
-        "icon": "fa-map",
-    },
-    {
-        "id": "military-losses",
-        "title": "Military Losses",
-        "descr": "Explore the military losses in Ukraine.",
-        "image": "/img/military_losses.png",
-        "url": "/military-losses",
-        "tags": ["Maps", "Graphs", "Data Sources"],
-        "color_tags": ["#121096", "#4abb15", "#14aca4"],
-        "icon": "fa-cross",
-    },
+    {"id": "incidents-railways", "image": "/img/inc_rail.jpeg"},
+    {"id": "blocked-sites", "image": "/img/logo_blocked_sites.png"},
+    {"id": "raid-alerts", "image": "/img/raid_alerts_ukraine.png"},
+    {"id": "components-weapons", "image": "/img/components_weapons.jpg"},
+    {"id": "interactive-maps", "image": "/img/interactive_maps.png"},
+    {"id": "military-losses", "image": "/img/military_losses.png"},
 ]
 
 
 @app.get("/api/sections")
 def sections():
     return DICT_CONTENT
+
+
+@app.get("/api/day-war")
+def day_war():
+    """Get the number of days since the war started (24 February 2022)."""
+
+    start_date = date(2022, 2, 24)
+    today = date.today()
+    delta = today - start_date
+    return delta.days
 
 
 @app.get("/api/losses/monthly")

@@ -1,0 +1,183 @@
+{
+  "title": "Incidents on Russian Railways",
+  "description": "Railway-related incidents in Russia since 2022.",
+  "tabs": {
+    "overview": "Overview",
+    "incident_types": "Incident Types",
+    "damaged_equipments": "Damaged Equipments",
+    "collisions": "Collisions",
+    "sabotage": "Sabotage",
+    "partisans_arrest": "Partisans Arrest",
+    "informations": "Informations"
+  },
+  "tooltip_text": "Incidents",
+  "axes_text": "Number of incidents",
+  "overview": {
+    "title": "Overview",
+    "kpi1": "Last Update",
+    "kpi2": "Incidents on Russian Railways since 2022",
+    "kpi3": "Sabotage since 2022",
+    "kpi4": "Partisans Arrested after Sabotage",
+    "hide_moscow": "Hide Moscow",
+    "chart1": {
+      "title": "Annual Railway Incidents in Russia",
+      "subtitle": "Number of incidents per year since 2022"
+    },
+    "chart2": {
+      "title": "Monthly Incident Trends on Russian Railways",
+      "subtitle": "Number of incidents per month since 2022"
+    },
+    "chart3": {
+      "title": "Monthly Incident Trends on Russian Railways",
+      "subtitle": "Number of incidents per month since 2022"
+    },
+    "chart4": {
+      "title": "Railway Incidents by Type in Russia",
+      "subtitle": "Number of incidents per type since 2022"
+    },
+    "chart5": {
+      "title": "Railway Damaged Equipments in Russia",
+      "subtitle": "Number of damaged equipments per type since 2022"
+    }
+  },
+  "incident-types": {
+    "title": "Incident Types",
+    "hide_moscow": "Hide Moscow",
+    "chart1": {
+      "title": "Railway Incidents by Type in Russia",
+      "subtitle": "Number of incidents per type since 2022",
+      "text": "Incidents"
+    },
+    "chart2": {
+      "title": "Railway Incidents by Type in Russia",
+      "subtitle": "Number of incidents per type since 2022"
+    }
+  },
+
+  "damaged-equipments": {
+    "title": "Damaged Equipments",
+    "hide_moscow": "Hide Moscow",
+    "chart1": {
+      "title": "",
+      "subtitle": "",
+      "text": "Incidents"
+    },
+    "chart2": {
+      "title": "Railway Incidents by Type in Russia",
+      "subtitle": "Number of incidents per type since 2022"
+    }
+  },
+  "collisions": {
+    "title": "Collisions",
+    "hide_moscow": "Hide Moscow",
+    "chart1": {
+      "title": "",
+      "subtitle": "",
+      "text": "Incidents"
+    },
+    "chart2": {
+      "title": "Railway Incidents by Type in Russia",
+      "subtitle": "Number of incidents per type since 2022"
+    }
+  },
+  "content": {
+    "Adygey": "Adygey",
+    "Altay": "Altay",
+    "Amur": "Amur",
+    "Arkhangelsk": "Arkhangelsk",
+    "Astrakhan": "Astrakhan",
+    "Bashkortostan": "Bashkortostan",
+    "Belgorod": "Belgorod",
+    "Bryansk": "Bryansk",
+    "Buryat": "Buryat",
+    "Chechnya": "Chechnya",
+    "Chelyabinsk": "Chelyabinsk",
+    "Chita": "Chita",
+    "Chukchi Autonomous Okrug": "Chukchi Autonomous Okrug",
+    "Chuvash": "Chuvash",
+    "Crimea": "Crimea",
+    "Dagestan": "Dagestan",
+    "Gorno-Altay": "Gorno-Altay",
+    "Ingush": "Ingush",
+    "Irkutsk": "Irkutsk",
+    "Ivanovo": "Ivanovo",
+    "Kabardin-Balkar": "Kabardin-Balkar",
+    "Kaliningrad": "Kaliningrad",
+    "Kalmyk": "Kalmyk",
+    "Kaluga": "Kaluga",
+    "Kamchatka": "Kamchatka",
+    "Karachay-Cherkess": "Karachay-Cherkess",
+    "Karelia": "Karelia",
+    "Kemerovo": "Kemerovo",
+    "Khabarovsk": "Khabarovsk",
+    "Khakass": "Khakass",
+    "Khanty-Mansiy": "Khanty-Mansiy",
+    "Kirov": "Kirov",
+    "Komi": "Komi",
+    "Kostroma": "Kostroma",
+    "Krasnodar": "Krasnodar",
+    "Krasnoyarsk": "Krasnoyarsk",
+    "Kurgan": "Kurgan",
+    "Kursk": "Kursk",
+    "Leningrad": "Leningrad",
+    "Lipetsk": "Lipetsk",
+    "Maga Buryatdan": "Maga Buryatdan",
+    "Mariy-El": "Mariy-El",
+    "Mordovia": "Mordovia",
+    "Moscow": "Moscow",
+    "Murmansk": "Murmansk",
+    "Nenets": "Nenets",
+    "Nizhegorod": "Nizhegorod",
+    "North Ossetia": "North Ossetia",
+    "Novgorod": "Novgorod",
+    "Novosibirsk": "Novosibirsk",
+    "Omsk": "Omsk",
+    "Orel": "Orel",
+    "Orenburg": "Orenburg",
+    "Penza": "Penza",
+    "Perm": "Perm",
+    "Primorye": "Primorye",
+    "Pskov": "Pskov",
+    "Rostov": "Rostov",
+    "Ryazan": "Ryazan",
+    "Sakha (Yakutia)": "Sakha (Yakutia)",
+    "Sakhalin": "Sakhalin",
+    "Samara": "Samara",
+    "Saratov": "Saratov",
+    "Smolensk": "Smolensk",
+    "St.Petersburg City": "St.Petersburg City",
+    "Stavropol": "Stavropol",
+    "Sverdlovsk": "Sverdlovsk",
+    "Tambov": "Tambov",
+    "Tatarstan": "Tatarstan",
+    "Tomsk": "Tomsk",
+    "Transbaikalia": "Transbaikalia",
+    "Tula": "Tula",
+    "Tuva": "Tuva",
+    "Tver": "Tver",
+    "Tyumen": "Tyumen",
+    "Udmurt": "Udmurt",
+    "Ulyanovsk": "Ulyanovsk",
+    "Vladimir": "Vladimir",
+    "Volgograd": "Volgograd",
+    "Vologda": "Vologda",
+    "Voronezh": "Voronezh",
+    "Yamal-Nenets": "Yamal-Nenets",
+    "Yaroslavl": "Yaroslavl",
+    "Yevrey": "Yevrey",
+    "Derailment": "Derailment",
+    "Collision": "Collision",
+    "Sabotage": "Sabotage",
+    "Fire": "Fire",
+    "Attack": "Attack",
+    "Other": "Other",
+    "Electric Box": "Electric Box",
+    "Freight Train": "Freight Train",
+    "Infrastructure": "Infrastructure",
+    "Locomotive": "Locomotive",
+    "Passengers Train": "Passengers Train",
+    "Railroad Tracks": "Railroad Tracks",
+    "Relay Cabin": "Relay Cabin",
+    "Unknown": "Unknown"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Raid Alerts",
+  "intro": "Explore air raid alerts and warnings in Ukraine and Russia",
+  "raid-alerts-1": {
+    "title": "Air Raid Alert Map of Ukraine",
+    "description": "alerts.in.ua is an online service that visualizes information about air alerts and other threats on the map of Ukraine."
+  },
+  "raid-alerts-2": {
+    "title": "Air-alarms.in.ua",
+    "description": "Statistics of air alerts in Ukraine"
+  },
+  "raid-alerts-3": {
+    "title": "Ukrainian Air Raid Sirens Dataset",
+    "description": "GitHub repository with the Ukrainian Air Raid Sirens Dataset"
+  },
+  "raid-alerts-4": {
+    "title": "Ukraine Air Raid Alert Map — Live Shahed & Missile Tracker",
+    "description": "Live air raid alert map of Ukraine. Track shaheds, cruise missiles, ballistic rockets & drones in real time. Push notifications, 5-second updates, 24/7."
+  },
+  "raid-alerts-5": {
+    "title": "Ukraine air raid alert map: drones & missiles - NA Agency",
+    "description": "Live air raid alert map of Ukraine: where the alert is now, missile and drone threats, history for every community. Updated every 15 s, Telegram alerts."
+  },
+  "raid-alerts-6": {
+    "title": "Russia Air Raid Alert Map - NAHR.UK",
+    "description": "Real-time map of air raid alerts and missile threats in Russia. Track missile attacks, UAV strikes, artillery shelling and flight trajectories."
+  },
+  "raid-alerts-7": {
+    "title": "Argus Map — live air-raid alert and threat map",
+    "description": "Argus Map is an independent live map of air-raid alerts, UAV threats, missiles, and other events reported by public sources."
+  },
+  "raid-alerts-8": {
+    "title": "Air-raid alerts in Russia: live map by region | Chaos Pulse",
+    "description": "Live map of officially declared UAV and missile alerts in Russian regions, with the all-clear, official channels per region and what to do."
+  },
+  "raid-alerts-9": {
+    "title": "UAV Radar — live drone & missile alert map, Ukraine & Russia",
+    "description": "Live drone (UAV) attack reports and air-raid alerts across 110 regions of Ukraine and Russia, from open sources checked every minute. 30-day stats."
+  }
+}

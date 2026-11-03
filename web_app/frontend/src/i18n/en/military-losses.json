@@ -1,0 +1,24 @@
+{
+  "title": "Military Losses",
+  "intro": "This page provides information about the military losses of Russia and Ukraine in the ongoing war.",
+  "military_losses_1": {
+    "title": "Kaggle : Equipment losses & Death Toll & Military Wounded & Prisoner of War of russians",
+    "description": "This dataset describes Equipment Losses & Death Toll & Military Wounded & Prisoner of War of russians in 2022 Ukraine russia War (hosted on kaggle)."
+  },
+  "military_losses_2": {
+    "title": "UA losses",
+    "description": "This website maintains a list of Ukrainian soldiers killed in the current war, on the basis of public reports of deaths."
+  },
+  "military_losses_3": {
+    "title": "Russian Losses in Ukraine",
+    "description": "Daily-updated tracker of Russian personnel and equipment losses, from official reports of the Ministry of Defense of Ukraine."
+  },
+  "military_losses_4": {
+    "title": "Russian Casualties in Ukraine",
+    "description": "Loss data from 02/24/2022, aggregated per day / week / month."
+  },
+  "military_losses_5": {
+    "title": "Russo-Ukrainian Warspotting",
+    "description": "WarSpotting is a database of documented material losses during Russian invasion in Ukraine. We use photo evidences found accross open sources on the web such as social media as proofs."
+  }
+}

@@ -1,64 +1,59 @@
 {
-  "title": "Composants dans les armes Russes",
-  "description": "Explorez les composants fabriqués en dehors de Russie mais utilisés dans leurs armes.",
+  "title": "Composants éléctroniques étrangers dans les armes Russes",
+  "description": "Ces graphiques portent sur les composants électroniques étrangers identifiés dans des armes russes. Un « composant » désigne une référence distincte d'un produit éléctroniques.",
   "infos1": "Les données ont été collectées à partir de ",
   "infos2": "Cette page est une représentation graphique des données.",
   "kpi1": "Nombre de composants fabriqués à l'extérieur de la Russie",
   "kpi2": "Pays avec le plus de composants présents dans les armes de l'agresseur",
   "kpi3": "Entreprise avec le plus de composants présents dans les armes de l'agresseur",
   "kpi4": "Arme utilisant le plus composants fabriqués à l'extérieur de la Russie",
+  "section1_title": "Vue d’ensemble",
+  "section2_title": "Composants par Arme et par Pays d’origine",
+  "tooltip_text": "Composants",
+  "axes_text": "Nombre de composants",
   "chart1": {
-    "title": "Composants par type d'équipement",
-    "subtitle": "Distribution des composants par type d'équipement utilisés dans les armes de l'agresseur.",
+    "title": "Composants électroniques étrangers par type d’équipement",
+    "subtitle": "Nombre de composants identifiés dans les armes russes, selon le type d’équipement.",
     "text": "Composants",
-    "help": "Chaque part représente un type de composant retrouvé dans les armes analysées. Passez la souris sur une part pour voir le nombre exact."
+    "help": ""
   },
   "chart2": {
-    "title": "Composants par type d'arme",
-    "subtitle": "Nombre de composants dans les armes de l'agresseur par type d'arme.",
+    "title": "Composants par type d’arme",
+    "subtitle": "Nombre de composants électroniques étrangers identifiés dans les armes russes, par type d’arme.",
     "yaxis": "Nombre de composants",
-    "help": "Chaque barre représente un type d'arme trouvé dans les armes analysées. Passez la souris sur une barre pour voir le nombre exact."
+    "help": ""
   },
   "chart3": {
-    "title": "Composants par pays de fabricant",
-    "subtitle": "Nombre de composants dans les armes de l'agresseur par pays d'origine.",
+    "title": "Composants par pays d’origine (top 30)",
+    "subtitle": "Nombre de composants électroniques étrangers identifiés dans les armes russes, par pays d’origine.",
     "xaxis": "Nombre de composants",
-    "help": "Chaque barre représente un pays d'origine des composants retrouvés dans les armes analysées. Passez la souris sur une barre pour voir le nombre exact."
+    "help": "Le « pays d’origine » désigne (le pays où est basée l’entreprise qui fabrique le composant). La mention « Not identified » regroupe les composants dont l’origine n’a pas pu être établie. Seuls les 30 premiers pays sont affichés.."
   },
   "chart4": {
-    "title": "Composants par entreprise",
-    "subtitle": "Nombre de composants dans les armes de l'agresseur par entreprise d'origine.",
+    "title": "Composants par entreprise d’origine (top 30)",
+    "subtitle": "Nombre de composants électroniques étrangers identifiés dans les armes russes, par entreprise d’origine.",
     "xaxis": "Nombre de composants",
-    "help": "Chaque barre représente une entreprise d'origine des composants retrouvés dans les armes analysées. Passez la souris sur une barre pour voir le nombre exact."
+    "help": "Chaque barre représente une entreprise d'origine des composants retrouvés dans les armes russes."
   },
   "chart5": {
-    "title": "Composants par arme",
-    "subtitle": "Nombre de composants dans les armes de l'agresseur par arme.",
+    "title": "Composants par arme (top 30)",
+    "subtitle": "Nombre de composants électroniques étrangers identifiés dans les armes russes, par arme.",
     "xaxis": "Nombre de composants",
-    "help": "Chaque barre représente une arme trouvée dans les armes analysées. Passez la souris sur une barre pour voir le nombre exact."
+    "help": "Une arme désigne un modèle précis (par exemple Shahed-136 ou Kh-101), alors qu’un type d’arme regroupe plusieurs modèles (par exemple UAV ou missile de croisière). Seules les 30 armes comptant le plus de composants sont affichées."
   },
   "chart6": {
-    "title": "",
-    "subtitle": "",
-    "text": "",
-    "help": ""
+    "title": "Composants par arme et par pays d’origine (top 50)",
+    "subtitle": "Nombre de composants électroniques étrangers identifiés dans les armes russes, par arme puis par pays d’origine.",
+    "help": "Chaque barre représente une arme, et ses segments colorés indiquent le pays d’origine des composants. La longueur totale correspond au nombre de composants de l’arme. Le détail de chaque segment s’affiche au survol."
   },
   "chart7": {
-    "title": "",
-    "subtitle": "",
-    "text": "",
-    "help": ""
+    "title": "Composants étrangers dans les armes russes, par pays d’origine",
+    "subtitle": "Nombre de composants identifiés par pays d'origine, puis par arme (Shahed-136, Kh-101, Iskander-K…).",
+    "help": "Les blocs sont imbriqués : pays d’origine, puis arme. La surface de chaque case est proportionnelle au nombre de composants identifiés. Le Zoom est activer pour les cases les plus petites."
   },
   "chart8": {
-    "title": "",
-    "subtitle": "",
-    "text": "",
-    "help": ""
-  },
-  "chart_names": {
-    "Equipment": "Équipements",
-    "UAV": "UAV",
-    "Vehicule": "Véhicules",
-    "Missile": "Missiles"
+    "title": "Composants par type d’arme et type d’équipement",
+    "subtitle": "Répartition des composants identifiés dans les armes russes, par type d’arme et type d’équipement.",
+    "help": "Le cercle intérieur indique le type d’équipement, le cercle extérieur le type d’arme à l’intérieur de chaque catégorie."
   }
 }

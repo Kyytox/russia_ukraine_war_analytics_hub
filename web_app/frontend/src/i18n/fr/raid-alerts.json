@@ -1,0 +1,40 @@
+{
+  "title": "Alertes aériennes",
+  "intro": "Explorez les alertes et les avertissements liés aux raids aériens en Ukraine et en Russie",
+  "raid-alerts-1": {
+    "title": "Carte des alertes aériennes en Ukraine",
+    "description": "alerts.in.ua est un service en ligne qui visualise sur une carte de l’Ukraine les informations relatives aux alertes aériennes et aux autres menaces."
+  },
+  "raid-alerts-2": {
+    "title": "Air-alarms.in.ua",
+    "description": "Statistiques des alertes aériennes en Ukraine."
+  },
+  "raid-alerts-3": {
+    "title": "Jeu de données sur les sirènes d’alerte aérienne ukrainiennes",
+    "description": "Dépôt GitHub contenant le jeu de données sur les sirènes d’alerte aérienne ukrainiennes."
+  },
+  "raid-alerts-4": {
+    "title": "Carte des alertes aériennes en Ukraine — suivi en direct des Shahed et des missiles",
+    "description": "Carte des alertes aériennes en Ukraine en temps réel. Suivez en direct les Shahed, les missiles de croisière, les missiles balistiques et les drones. Notifications push, mises à jour toutes les 5 secondes, 24 h/24 et 7 j/7."
+  },
+  "raid-alerts-5": {
+    "title": "Carte des alertes aériennes en Ukraine : drones et missiles — NA Agency",
+    "description": "Carte des alertes aériennes en Ukraine en temps réel : localisation actuelle des alertes, menaces liées aux missiles et aux drones, et historique pour chaque communauté. Mise à jour toutes les 15 secondes, alertes sur Telegram."
+  },
+  "raid-alerts-6": {
+    "title": "Carte des alertes aériennes en Russie — NAHR.UK",
+    "description": "Carte en temps réel des alertes aériennes et des menaces de missiles en Russie. Suivez les attaques de missiles, les frappes de drones (UAV), les bombardements d’artillerie et les trajectoires de vol."
+  },
+  "raid-alerts-7": {
+    "title": "Argus Map — carte en direct des alertes aériennes et des menaces",
+    "description": "Argus Map est une carte indépendante en temps réel des alertes aériennes, des menaces liées aux drones (UAV), des missiles et d’autres événements signalés par des sources publiques."
+  },
+  "raid-alerts-8": {
+    "title": "Alertes aériennes en Russie : carte en direct par région | Chaos Pulse",
+    "description": "Carte en direct des alertes officielles concernant les drones (UAV) et les missiles dans les régions russes, avec les annonces de fin d’alerte, les canaux officiels de chaque région et les consignes à suivre."
+  },
+  "raid-alerts-9": {
+    "title": "UAV Radar — carte en direct des alertes liées aux drones et aux missiles, en Ukraine et en Russie",
+    "description": "Signalements en direct d’attaques de drones (UAV) et alertes aériennes dans 110 régions d’Ukraine et de Russie, à partir de sources ouvertes vérifiées chaque minute. Statistiques sur 30 jours."
+  }
+}

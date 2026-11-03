@@ -2,16 +2,22 @@ import HelpTip from "../../components/HelpTip.jsx";
 
 export default function ChartHeader({ pageKey, chartKey, t, year }) {
   const yearSuffix = year ? ` ${year}` : "";
+  const fullKey = chartKey.includes(".") ? chartKey : `${pageKey}.${chartKey}`;
+  const helpKey = `${fullKey}.help`;
+  const helpText = t(helpKey);
+  const showHelp = helpText !== "";
 
   return (
     <>
       <h2>
-        {t(`${pageKey}.${chartKey}.title`) + yearSuffix}
-        <HelpTip>
-          <p>{t(`${pageKey}.${chartKey}.help`) + yearSuffix}</p>
-        </HelpTip>
+        {t(`${fullKey}.title`) + yearSuffix}
+        {showHelp && (
+          <HelpTip>
+            <p>{helpText + yearSuffix}</p>
+          </HelpTip>
+        )}
       </h2>
-      <h3>{t(`${pageKey}.${chartKey}.subtitle`) + yearSuffix}</h3>
+      <h3>{t(`${fullKey}.subtitle`) + yearSuffix}</h3>
     </>
   );
 }

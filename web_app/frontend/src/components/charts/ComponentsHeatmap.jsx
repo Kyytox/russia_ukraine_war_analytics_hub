@@ -1,14 +1,12 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const CELL_SIZE = 16; // hauteur d'une case (un jour)
-const YEAR_BLOCK = CELL_SIZE * 7 + 50; // hauteur d'un calendrier + espacement
+const YEAR_BLOCK = 12 * 7 + 50; // hauteur d'un calendrier + espacement
 const TOP_OFFSET = 50;
-const BOTTOM_OFFSET = 60; // place pour la légende (visualMap)
 
-export function ComponentsHeatmap({ id, data, t, i18n, nf, custom }) {
-  const { option, height } = useMemo(() => {
-    const items = data.map((d) => ({ date: d.metric, value: d.count }));
+export function ComponentsHeatmap({ id, data, t, i18n, nf, custom, height }) {
+  const { option, height: computedHeight } = useMemo(() => {
+    const items = data.map((d) => ({ date: d.metric, value: d.value }));
 
     const color = custom?.[id]?.colors || "#7F557D";
     const max = Math.max(...items.map((d) => d.value), 1);
@@ -34,8 +32,8 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom }) {
       top: TOP_OFFSET + i * YEAR_BLOCK,
       left: 60,
       right: 30,
+      bottom: 40,
       orient: custom?.[id]?.orient || "horizontal",
-      cellSize: ["auto", CELL_SIZE],
       range: year,
       itemStyle: {
         borderWidth: 2,
@@ -73,10 +71,11 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom }) {
     }));
 
     return {
-      height: TOP_OFFSET + years.length * YEAR_BLOCK + BOTTOM_OFFSET,
+      computedHeight: TOP_OFFSET + years.length * YEAR_BLOCK + 30,
       option: {
         toolbox: {
           right: 10,
+          top: -15,
           iconStyle: { borderColor: "#fff" },
           feature: {
             saveAsImage: {},
@@ -92,7 +91,7 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom }) {
           calculable: false,
           orient: custom?.[id]?.orient || "horizontal",
           left: "center",
-          bottom: 10,
+          bottom: -5,
           itemWidth: 14,
           itemHeight: 160,
           text: [nf.format(max), "0"],
@@ -104,14 +103,17 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom }) {
         series,
       },
     };
-  }, [data, t, i18n.language, nf, id, custom]);
+  }, [data, t, i18n.language, nf, id, custom, height]);
+
+  // Dans la modale (height="100%"), utiliser 100%, sinon la hauteur calculée
+  const finalHeight = height === "100%" ? "100%" : (height || custom?.[id]?.height || computedHeight || 400);
 
   return (
     <ReactECharts
       option={option}
       style={{
         width: "100%",
-        height: custom?.[id]?.height || height,
+        height: finalHeight,
         alignSelf: "center",
       }}
     />

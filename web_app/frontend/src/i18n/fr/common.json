@@ -18,6 +18,10 @@
     "title": "Page introuvable",
     "back": "Retour à l'accueil"
   },
+  "common": {
+    "expand": "Agrandir",
+    "collapse": "Réduire"
+  },
   "sections": {
     "incidents-railways": {
       "title": "Incidents sur les chemins de fer russes",

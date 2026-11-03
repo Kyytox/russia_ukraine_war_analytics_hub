@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-export function ComponentsLineArea({ id, data, t, i18n, nf, custom }) {
+export function ComponentsLineArea({ id, data, t, i18n, nf, custom, height }) {
   const option = useMemo(() => {
     const items = data.map((d) => ({
       name: d.metric,
-      value: d.count,
+      value: d.value,
     }));
 
     const color = custom?.[id]?.colors || "#7F557D";
@@ -83,7 +83,7 @@ export function ComponentsLineArea({ id, data, t, i18n, nf, custom }) {
       option={option}
       style={{
         width: "100%",
-        height: custom?.[id]?.height,
+        height: height || custom?.[id]?.height || 400,
         alignSelf: "center",
       }}
     />
