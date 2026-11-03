@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS messages_theme (
 --DROP TABLE IF EXISTS messages_qualif_inc_railway;
 CREATE TABLE IF NOT EXISTS messages_qualif_inc_railway (
     id_message VARCHAR PRIMARY KEY REFERENCES messages(id_message),
-    idx VARCHAR,
     qualif_date_inc TIMESTAMP,
     qualif_region VARCHAR,
     qualif_location VARCHAR,

@@ -2,6 +2,7 @@ import duckdb
 from prefect import task
 
 # Variables
+from core.config import paths
 from core.config.paths import PATH_DB_QUALIF_DATALAKE
 
 
@@ -131,6 +132,39 @@ def update_table_duckdb(df, query):
 
     except Exception as e:
         print(f"Error updating {table_name}: {e}")
+        con.rollback()
+        return 0
+
+    finally:
+        con.close()
+
+
+@task(name="Rewrite DuckDB Table", task_run_name="rewrite-duckdb-table")
+def rewrite_duckdb_table(df, schema, table_name, db_path):
+    """
+    Rewrite DuckDB table with new data.
+
+    Args:
+        df: dataframe
+        schema: schema name to rewrite
+        table_name: table name to rewrite
+        db_path: path to DuckDB database
+    """
+
+    # deconnec all instances of DuckDB
+    # duckdb.d
+
+    con = duckdb.connect(database=db_path, read_only=False)
+
+    try:
+        con.execute(f"DROP TABLE IF EXISTS {schema}.{table_name}")
+        con.execute(f"CREATE TABLE {schema}.{table_name} AS SELECT * FROM df")
+        con.commit()
+        print(f"{df.shape[0]} rows replaced in {schema}.{table_name}.")
+        return
+
+    except Exception as e:
+        print(f"Error replacing {schema}.{table_name}: {e}")
         con.rollback()
         return 0
 

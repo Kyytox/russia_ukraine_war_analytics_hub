@@ -147,6 +147,7 @@ def read_data(base_path: str, file_name: str) -> pd.DataFrame:
     """
     # get data
     try:
+        # df = pd.read_parquet(f"{base_path}/{file_name}.parquet", engine="pyarrow")
         df = pd.read_parquet(f"{base_path}/{file_name}.parquet", engine="fastparquet")
     except Exception as e:
         print(e)
@@ -175,7 +176,7 @@ def save_data(
     """
 
     if df.empty:
-        print(f"No data to save")
+        print("No data to save")
         return
 
     # create folder if not exist
@@ -185,15 +186,14 @@ def save_data(
     path = os.path.join(base_path, f"{file_name}.parquet")
     print(f"Saving {df.shape} data to {path}")
 
-    # remove dir
-    # os.remove(path)
-
     # save data to parquet
     df.to_parquet(
         path,
+        # engine="pyarrow",
         engine="fastparquet",
         partition_cols=partition_cols,
-        compression="snappy",
+        # compression="snappy",
+        index=False,
     )
 
     return
