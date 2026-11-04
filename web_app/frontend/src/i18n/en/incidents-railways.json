@@ -80,6 +80,20 @@
       "subtitle": "Number of incidents per type since 2022"
     }
   },
+  "partisans-arrest": {
+    "title": "Partisans Arrest",
+    "hide_moscow": "Hide Moscow",
+    "chart1": {
+      "title": "",
+      "subtitle": "",
+      "text": "Incidents"
+    },
+    "chart2": {
+      "title": "",
+      "subtitle": "",
+      "text": "Sabotages"
+    }
+  },
   "content": {
     "Adygey": "Adygey",
     "Altay": "Altay",
@@ -178,6 +192,12 @@
     "Passengers Train": "Passengers Train",
     "Railroad Tracks": "Railroad Tracks",
     "Relay Cabin": "Relay Cabin",
-    "Unknown": "Unknown"
+    "Unknown": "Unknown",
+    "167 - Intentional Destruction or Damage of Property": "167 - Intentional Destruction or Damage of Property",
+    "205 - Terrorism": "205 - Terrorism",
+    "213 - Hooliganism": "213 - Hooliganism",
+    "267 - Damage Transport Vehicles or Communications": "267 - Damage Transport Vehicles or Communications",
+    "281 - Sabotage": "281 - Sabotage",
+    "Go To WAR": "Go To WAR"
   }
 }

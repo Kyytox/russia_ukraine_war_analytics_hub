@@ -9,7 +9,7 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
     if (!data?.length) return null;
 
     const cfg = custom?.[id] ?? {};
-    const translate = (key) => t(`page.content.${key}`, key);
+    const translate = (key) => t(`page.content.${key}`, { defaultValue: key });
     const pctFmt = new Intl.NumberFormat(i18n.language, {
       style: "percent",
       maximumFractionDigits: 1,
@@ -19,14 +19,14 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
     // Helper function to get color from custom config with fallback
     const getColor = (key) => custom?.colors_metrics?.[key] ?? FALLBACK_COLOR;
 
-    // parent -> children
+    // libelle -> children
     const groups = new Map();
     data.forEach((d) => {
-      if (!groups.has(d.parent)) groups.set(d.parent, []);
-      groups.get(d.parent).push({
-        name: translate(d.label),
+      if (!groups.has(d.libelle)) groups.set(d.libelle, []);
+      groups.get(d.libelle).push({
+        name: translate(d.metric),
         value: d.value,
-        label: d.label, // Garder la clé originale pour le matching de couleur
+        metric: d.metric, // Garder la clé originale pour le matching de couleur
       });
     });
 
@@ -35,13 +35,13 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
       name: translate(key),
       value: children.reduce((sum, c) => sum + c.value, 0), // Parent value = sum of children
       itemStyle: {
-        color: getColor(key), // Couleur du parent
+        color: getColor(key), // Couleur du libelle
       },
       children: children.map((child) => ({
         name: child.name,
         value: child.value,
         itemStyle: {
-          color: getColor(child.label), // Couleur de l'enfant
+          color: getColor(child.metric), // Couleur de l'enfant
         },
       })),
     }));
@@ -66,6 +66,7 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
           left: 0,
           right: 0,
           top: 20,
+          bottom: 40,
           roam: false,
           nodeClick: "zoomToNode",
           breadcrumb: {
@@ -77,11 +78,12 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
               textStyle: { color: "#fff" },
             },
           },
-          label: {
+          metric: {
             show: true,
             fontSize: cfg.fontSize ?? 12,
             overflow: "truncate",
-            formatter: (p) => `${p.name}\n${nf.format(p.value)}`,
+            formatter: (p) =>
+              `${p.name} · ${nf.format(p.value)} (${pctFmt.format(p.value / total)})`,
           },
           upperLabel: {
             show: true,
@@ -116,7 +118,7 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
 
   if (!option) return null;
 
-  const chartHeight = height || custom?.[id]?.height || 400;
+  const chartHeight = height || custom?.[id]?.height;
 
   return (
     <ReactECharts

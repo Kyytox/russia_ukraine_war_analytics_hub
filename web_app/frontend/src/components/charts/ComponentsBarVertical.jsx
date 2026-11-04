@@ -46,7 +46,7 @@ export function ComponentsBarVertical({
       },
       tooltip: {
         trigger: "axis",
-        confine: true,
+        // confine: true,
         axisPointer: { type: "shadow" },
         formatter: (params) => {
           const p = params[0];
