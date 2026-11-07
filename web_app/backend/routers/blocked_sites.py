@@ -19,14 +19,14 @@ def summary():
     with duckdb.connect(str(DB_PATH), read_only=True) as con:
         rows = con.execute(
             f"""
-            SELECT 'kpi1' AS libelle, SUM(count) AS value
+            SELECT 'kpi1' AS libelle, SUM(value) AS value
             FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_global
             WHERE libelle = 'total'
 
             UNION ALL
 
             SELECT 'kpi2' AS libelle, metric as value FROM (
-                SELECT metric as metric, MAX(count) AS max_count
+                SELECT metric as metric, MAX(value) AS max_count
                 FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_global
                 WHERE libelle = 'by_country_domain'
                 GROUP BY metric
@@ -37,7 +37,7 @@ def summary():
             UNION ALL
 
             SELECT 'kpi3' AS libelle, metric as value FROM (
-                SELECT metric as metric, MAX(count) AS max_count
+                SELECT metric as metric, MAX(value) AS max_count
                 FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_global
                 WHERE libelle = 'by_category'
                 GROUP BY metric
@@ -48,7 +48,7 @@ def summary():
             UNION ALL
 
             SELECT 'kpi4' AS libelle, metric as value FROM (
-                SELECT metric as metric, MAX(count) AS max_count
+                SELECT metric as metric, MAX(value) AS max_count
                 FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_global
                 WHERE libelle = 'by_banning_authority'
                 GROUP BY metric
@@ -89,7 +89,7 @@ def section1():
                 SELECT
                     libelle,
                     metric,
-                    count
+                    value
                 FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_global
             ) t
             """
@@ -117,7 +117,7 @@ def section2():
                 SELECT
                     libelle as libelle,
                     date as metric,
-                    count
+                    value
                 FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_by_date
             ) t
             """
@@ -146,7 +146,7 @@ def section3():
                     id,
                     month as libelle,
                     metric,
-                    count
+                    value
                 FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_metrics_over_time
             ) t
             """
@@ -172,8 +172,8 @@ def section4():
             SELECT to_json(list(t))
             FROM (
                SELECT 
-                    parent, 
-                    label,
+                    libelle, 
+                    metric,
                     value, 
                 FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_by_authority_category
             ) t
@@ -202,7 +202,7 @@ def section5():
                 SELECT
                     libelle,
                     metric,
-                    value as count
+                    value
                 FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_by_country_by_category_top_6
             ) t
             """

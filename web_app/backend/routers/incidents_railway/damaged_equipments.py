@@ -110,7 +110,7 @@ def section4():
             """
         ).fetchone()[0]
 
-        # WHERE label <> 'Moscow'
+        # WHERE metric <> 'Moscow'
         return Response(content=rows or "[]", media_type="application/json")
 
     return []
@@ -128,8 +128,8 @@ def section5():
             SELECT to_json(list(t))
             FROM (
                 SELECT
-                    parent,
-                    label,
+                    libelle,
+                    metric,
                     value
                 FROM {schema}.dmt_damaged_equipment_by_incident_type
             ) t

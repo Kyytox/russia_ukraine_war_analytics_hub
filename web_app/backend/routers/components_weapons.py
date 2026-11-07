@@ -7,6 +7,9 @@ from fastapi import Response
 router = APIRouter(prefix="/api/components-weapons", tags=["components-weapons"])
 
 
+schema = SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS
+
+
 @router.get("/summary")
 def summary():
     """
@@ -19,15 +22,15 @@ def summary():
     with duckdb.connect(str(DB_PATH), read_only=True) as con:
         rows = con.execute(
             f"""
-            SELECT 'kpi1' AS libelle, SUM(count) AS value
-            FROM {SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS}.dmt_global_count
+            SELECT 'kpi1' AS libelle, SUM(value) AS value
+            FROM {schema}.dmt_global_count
             WHERE libelle = 'type_equipment'
 
             UNION ALL
 
             SELECT 'kpi2' AS libelle, metric as value FROM (
-                SELECT metric as metric, MAX(count) AS max_count
-                FROM {SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS}.dmt_global_count
+                SELECT metric as metric, MAX(value) AS max_count
+                FROM {schema}.dmt_global_count
                 WHERE libelle = 'manufacturer_country'
                 GROUP BY metric
                 ORDER BY max_count DESC
@@ -37,8 +40,8 @@ def summary():
             UNION ALL
 
             SELECT 'kpi3' AS libelle, metric as value FROM (
-                SELECT metric as metric, MAX(count) AS max_count
-                FROM {SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS}.dmt_global_count
+                SELECT metric as metric, MAX(value) AS max_count
+                FROM {schema}.dmt_global_count
                 WHERE libelle = 'manufacturer'
                 GROUP BY metric
                 ORDER BY max_count DESC
@@ -48,8 +51,8 @@ def summary():
             UNION ALL
 
             SELECT 'kpi4' AS libelle, metric as value FROM (
-                SELECT metric as metric, MAX(count) AS max_count
-                FROM {SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS}.dmt_global_count
+                SELECT metric as metric, MAX(value) AS max_count
+                FROM {schema}.dmt_global_count
                 WHERE libelle = 'weapon'
                 GROUP BY metric
                 ORDER BY max_count DESC
@@ -80,8 +83,8 @@ def section1():
                 SELECT
                     libelle,
                     metric,
-                    count
-                FROM {SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS}.dmt_global_count
+                    value
+                FROM {schema}.dmt_global_count
             ) t
             """
         ).fetchone()[0]
@@ -108,8 +111,8 @@ def section2():
                SELECT 
                     libelle,
                     metric, 
-                    count
-                FROM {SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS}.dmt_country_by_weapon
+                    value
+                FROM {schema}.dmt_country_by_weapon
             ) t
             """
         ).fetchone()[0]
@@ -134,10 +137,10 @@ def section3():
             SELECT to_json(list(t))
             FROM (
                SELECT 
-                    parent, 
-                    label,
+                    libelle, 
+                    metric,
                     value, 
-                FROM {SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS}.dmt_treemap_country_weapon
+                FROM {schema}.dmt_treemap_country_weapon
             ) t
             """
         ).fetchone()[0]
@@ -162,10 +165,10 @@ def section4():
             SELECT to_json(list(t))
             FROM (
                SELECT 
-                    parent, 
-                    label,
+                    libelle, 
+                    metric,
                     value, 
-                FROM {SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS}.dmt_sunburst_equipments_weapon_type
+                FROM {schema}.dmt_sunburst_equipments_weapon_type
             ) t
             """
         ).fetchone()[0]
