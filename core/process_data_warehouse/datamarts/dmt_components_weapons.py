@@ -48,20 +48,20 @@ def dmt_global_count(df: pd.DataFrame) -> pd.DataFrame:
     counts = [
         df[col]
         .value_counts()
-        .reset_index(name="count")
+        .reset_index(name="value")
         .rename(columns={col: "metric"})
         .assign(libelle=col)
         for col in count_columns
     ]
 
     # Concatenate all counts at once
-    df_final = pd.concat(counts, ignore_index=True)[["libelle", "metric", "count"]]
+    df_final = pd.concat(counts, ignore_index=True)[["libelle", "metric", "value"]]
 
     # Update types
     dict_types = {
         "libelle": "string",
         "metric": "string",
-        "count": "int64",
+        "value": "int64",
     }
 
     # reorder and retype columns
@@ -91,9 +91,9 @@ def dmt_treemap_country_weapon(df: pd.DataFrame) -> pd.DataFrame:
     list_country = (
         df["manufacturer_country"]
         .value_counts()
-        .reset_index(name="count")
+        .reset_index(name="value")
         # .head(10)
-        .sort_values(by="count", ascending=False)
+        .sort_values(by="value", ascending=False)
         .reset_index(drop=True)
     )
 
@@ -103,8 +103,8 @@ def dmt_treemap_country_weapon(df: pd.DataFrame) -> pd.DataFrame:
     # Filter df by top 10 countries
     df = df[df["manufacturer_country"].isin(top_countries)]
 
-    parents = []
-    labels = []
+    libelles = []
+    metrics = []
     values = []
 
     for country in df["manufacturer_country"].unique():
@@ -113,23 +113,23 @@ def dmt_treemap_country_weapon(df: pd.DataFrame) -> pd.DataFrame:
 
         # add the weapon for the manufacturer country
         for weapon in df_countries["weapon"].unique():
-            labels.append(weapon)
-            parents.append(country)
+            metrics.append(weapon)
+            libelles.append(country)
             values.append(df_countries[df_countries["weapon"] == weapon].shape[0])
 
     # create the dataframe
     df_final = pd.DataFrame(
         {
-            "parent": parents,
-            "label": labels,
+            "libelle": libelles,
+            "metric": metrics,
             "value": values,
         }
     )
 
     # Update types
     dict_types = {
-        "parent": "string",
-        "label": "string",
+        "libelle": "string",
+        "metric": "string",
         "value": "int64",
     }
 
@@ -160,9 +160,9 @@ def dmt_sunbusrt_equipments_weapon_type(df: pd.DataFrame) -> pd.DataFrame:
     list_country = (
         df["type_equipment"]
         .value_counts()
-        .reset_index(name="count")
+        .reset_index(name="value")
         # .head(10)
-        .sort_values(by="count", ascending=False)
+        .sort_values(by="value", ascending=False)
         .reset_index(drop=True)
     )
 
@@ -172,8 +172,8 @@ def dmt_sunbusrt_equipments_weapon_type(df: pd.DataFrame) -> pd.DataFrame:
     # Filter df by top 10 countries
     df = df[df["type_equipment"].isin(top_countries)]
 
-    parents = []
-    labels = []
+    libelles = []
+    metrics = []
     values = []
 
     for country in df["type_equipment"].unique():
@@ -182,8 +182,8 @@ def dmt_sunbusrt_equipments_weapon_type(df: pd.DataFrame) -> pd.DataFrame:
 
         # add the damaged equipment
         for weap_type in df_weap_type["weapon_type"].unique():
-            labels.append(weap_type)
-            parents.append(country)
+            metrics.append(weap_type)
+            libelles.append(country)
             values.append(
                 df_weap_type[df_weap_type["weapon_type"] == weap_type].shape[0]
             )
@@ -191,16 +191,16 @@ def dmt_sunbusrt_equipments_weapon_type(df: pd.DataFrame) -> pd.DataFrame:
     # create the dataframe
     df_final = pd.DataFrame(
         {
-            "parent": parents,
-            "label": labels,
+            "libelle": libelles,
+            "metric": metrics,
             "value": values,
         }
     )
 
     # Update types
     dict_types = {
-        "parent": "string",
-        "label": "string",
+        "libelle": "string",
+        "metric": "string",
         "value": "int64",
     }
 
@@ -232,9 +232,9 @@ def dmt_country_by_weapon(df: pd.DataFrame) -> pd.DataFrame:
     top_weapons = (
         df["weapon"]
         .value_counts()
-        .reset_index(name="count")
+        .reset_index(name="value")
         .head(60)
-        .sort_values(by="count", ascending=False)
+        .sort_values(by="value", ascending=False)
         .reset_index(drop=True)
     )
 
@@ -249,21 +249,21 @@ def dmt_country_by_weapon(df: pd.DataFrame) -> pd.DataFrame:
     df = df.sort_values(by="weapon")
 
     # count number of manufacturer countries by weapon
-    df = df.groupby(["weapon", "manufacturer_country"]).size().reset_index(name="count")
+    df = df.groupby(["weapon", "manufacturer_country"]).size().reset_index(name="value")
 
     # Remove line count = 0
-    df = df[df["count"] != 0]
+    df = df[df["value"] != 0]
 
     # rename columns
     df = df.rename(
         columns={"weapon": "libelle", "manufacturer_country": "metric"}
-    ).sort_values(by=["count"], ascending=False)
+    ).sort_values(by=["value"], ascending=False)
 
     # Update types
     dict_types = {
         "libelle": "string",
         "metric": "string",
-        "count": "int64",
+        "value": "int64",
     }
 
     # reorder and retype columns
@@ -285,43 +285,26 @@ def subflow_dmt_components_weapons():
 
     # read source compo weapons
     # df_compo_weapons = read_data(PATH_DWH_SILVER_COMPO_WEAPONS, "components_weapons")
-    print(f"Reading data from {PATH_DWH_SILVER_COMPO_WEAPONS}")
     df_compo_weapons = read_parquet(PATH_DWH_SILVER_COMPO_WEAPONS, "components_weapons")
+
+    schema = SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS
 
     # Global Count
     df_tmp = dmt_global_count(df_compo_weapons)
-    rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS,
-        "dmt_global_count",
-        PATH_DWH_GOLD,
-    )
+    rewrite_duckdb_table(df_tmp, schema, "dmt_global_count", PATH_DWH_GOLD)
 
     # TreeMap Country Weapon Type
     df_tmp = dmt_treemap_country_weapon(df_compo_weapons)
-    rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS,
-        "dmt_treemap_country_weapon",
-        PATH_DWH_GOLD,
-    )
+    rewrite_duckdb_table(df_tmp, schema, "dmt_treemap_country_weapon", PATH_DWH_GOLD)
 
     # Sunburst Equipments Weapon Type
     df_tmp = dmt_sunbusrt_equipments_weapon_type(df_compo_weapons)
     rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS,
-        "dmt_sunburst_equipments_weapon_type",
-        PATH_DWH_GOLD,
+        df_tmp, schema, "dmt_sunburst_equipments_weapon_type", PATH_DWH_GOLD
     )
 
     # Country by Weapon
     df_tmp = dmt_country_by_weapon(df_compo_weapons)
-    rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS,
-        "dmt_country_by_weapon",
-        PATH_DWH_GOLD,
-    )
+    rewrite_duckdb_table(df_tmp, schema, "dmt_country_by_weapon", PATH_DWH_GOLD)
 
     return Completed(message="All DataMarts Components in Weapons Completed")

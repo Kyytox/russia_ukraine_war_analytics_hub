@@ -1,6 +1,7 @@
 import pandas as pd
 
 from prefect import flow, task
+from prefect.blocks.core import schema_extra
 from prefect.states import Completed, Failed
 
 
@@ -33,11 +34,11 @@ def dmt_global(df: pd.DataFrame) -> pd.DataFrame:
     df_final = pd.DataFrame()
 
     for metric in list_metrics:
-        metric_counts = df.groupby(metric).size().reset_index(name="count")
+        metric_counts = df.groupby(metric).size().reset_index(name="value")
         metric_counts.rename(columns={metric: "metric"}, inplace=True)
         metric_counts["libelle"] = f"by_{metric}"
         metric_counts["poucentage"] = (
-            metric_counts["count"] / metric_counts["count"].sum() * 100
+            metric_counts["value"] / metric_counts["value"].sum() * 100
         ).round(2)
 
         df_final = pd.concat([df_final, metric_counts], ignore_index=True)
@@ -46,7 +47,7 @@ def dmt_global(df: pd.DataFrame) -> pd.DataFrame:
     total_row = pd.DataFrame(
         {
             "metric": ["total_blocked_sites"],
-            "count": [df.shape[0]],
+            "value": [df.shape[0]],
             "libelle": ["total"],
             "poucentage": [100.0],
         }
@@ -57,7 +58,7 @@ def dmt_global(df: pd.DataFrame) -> pd.DataFrame:
     last_date_row = pd.DataFrame(
         {
             "metric": pd.to_datetime(df["date_blocked"]).max().strftime("%Y-%m-%d"),
-            "count": None,
+            "value": None,
             "libelle": ["last_date_updated"],
             "poucentage": [None],
         }
@@ -68,7 +69,7 @@ def dmt_global(df: pd.DataFrame) -> pd.DataFrame:
     dict_types = {
         "libelle": "string",
         "metric": "string",
-        "count": "int64",
+        "value": "int64",
         "poucentage": "float64",
     }
 
@@ -111,7 +112,7 @@ def dmt_by_date(df: pd.DataFrame) -> pd.DataFrame:
             {
                 "libelle": libelle,
                 "date": counts.index.strftime(fmt),
-                "count": counts.to_numpy().astype("int64"),
+                "value": counts.to_numpy().astype("int64"),
             }
         )
 
@@ -141,7 +142,7 @@ def dmt_by_date(df: pd.DataFrame) -> pd.DataFrame:
 
     # by_day_cumul
     df_day_cumul = df_day.copy()
-    df_day_cumul["count"] = df_day_cumul["count"].cumsum()
+    df_day_cumul["value"] = df_day_cumul["value"].cumsum()
     df_day_cumul["libelle"] = "by_day_cumul"
 
     # Combine all dataframes into one
@@ -154,7 +155,7 @@ def dmt_by_date(df: pd.DataFrame) -> pd.DataFrame:
     dict_types = {
         "libelle": "string",
         "date": "string",
-        "count": "int64",
+        "value": "int64",
     }
 
     df_concat = reorder_cols(df_concat, dict_types)
@@ -197,7 +198,7 @@ def dmt_metrics_over_time(df: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
 
     for metric in metrics:
         # Group by month and metric
-        df_tmp = df.groupby(["month", metric]).size().reset_index(name="count")
+        df_tmp = df.groupby(["month", metric]).size().reset_index(name="value")
 
         # Handle missing values by metric type
         if metric == "banning_authority":
@@ -208,7 +209,7 @@ def dmt_metrics_over_time(df: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
         # Filter top metrics if needed
         if metric == "country_domain":
             top_countries = (
-                df_tmp.groupby("country_domain")["count"]
+                df_tmp.groupby("country_domain")["value"]
                 .sum()
                 .nlargest(25)
                 .index.tolist()
@@ -216,7 +217,7 @@ def dmt_metrics_over_time(df: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
             df_tmp = df_tmp[df_tmp["country_domain"].isin(top_countries)]
 
         # Keep only relevant data (count > 0)
-        df_tmp = df_tmp[df_tmp["count"] > 0]
+        df_tmp = df_tmp[df_tmp["value"] > 0]
 
         if df_tmp.empty:
             continue
@@ -243,7 +244,7 @@ def dmt_metrics_over_time(df: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
         df_metric_final = df_expanded.merge(df_tmp, on=["month", metric], how="left")
 
         # Fill missing counts with 0
-        df_metric_final["count"] = df_metric_final["count"].fillna(0).astype(int)
+        df_metric_final["value"] = df_metric_final["value"].fillna(0).astype(int)
 
         # Rename metric column and add theme identifier
         df_metric_final = df_metric_final.rename(columns={metric: "metric"})
@@ -267,7 +268,7 @@ def dmt_metrics_over_time(df: pd.DataFrame, metrics: list[str]) -> pd.DataFrame:
         "id": "string",
         "month": "string",
         "metric": "string",
-        "count": "int64",
+        "value": "int64",
     }
 
     df_final = reorder_cols(df_final, dict_types)
@@ -282,15 +283,15 @@ def dmt_by_authority_category(df: pd.DataFrame) -> pd.DataFrame:
     Create datamart for number of blocked sites by authority and category
 
     Returns long-format table with 3 columns:
-    - parent: Banning authority
-    - label: Category
+    - libelle: Banning authority
+    - metric: Category
     - count: Number of blocked sites
 
     Args:
         df (pd.DataFrame): Source dataframe with 'banning_authority' and 'category' columns
 
     Returns:
-        pd.DataFrame: Long-format dataframe with columns: parent, label, count
+        pd.DataFrame: Long-format dataframe with columns: libelle, metric, count
     """
     # Group by authority and category to get counts
     df_tmp = (
@@ -304,15 +305,15 @@ def dmt_by_authority_category(df: pd.DataFrame) -> pd.DataFrame:
     # Rename columns for clarity
     df_final = df_tmp.rename(
         columns={
-            "banning_authority": "parent",
-            "category": "label",
+            "banning_authority": "libelle",
+            "category": "metric",
         }
     )
 
     # Ensure proper order and types
     dict_types = {
-        "parent": "string",
-        "label": "string",
+        "libelle": "string",
+        "metric": "string",
         "value": "int64",
     }
 
@@ -408,13 +409,13 @@ def dmt_country_by_category_after6(df: pd.DataFrame) -> pd.DataFrame:
     df = df[~df["country_domain"].isin(top_countries)]
 
     # get list of countries sorted by count
-    df_sorted = df.groupby("country_domain").size().reset_index(name="count")
-    list_sorted_countries = df_sorted.sort_values("count", ascending=False)[
+    df_sorted = df.groupby("country_domain").size().reset_index(name="value")
+    list_sorted_countries = df_sorted.sort_values("value", ascending=False)[
         "country_domain"
     ].tolist()
 
     # Count by country and category
-    df = df.groupby(["country_domain", "category"]).size().reset_index(name="count")
+    df = df.groupby(["country_domain", "category"]).size().reset_index(name="value")
 
     # Sort df according to list TOP_COUNTRY
     df["country_domain"] = pd.Categorical(
@@ -426,7 +427,7 @@ def dmt_country_by_category_after6(df: pd.DataFrame) -> pd.DataFrame:
     df = df.pivot_table(
         index="country_domain",
         columns="category",
-        values="count",
+        values="value",
         aggfunc="sum",
         fill_value=0,
     ).reset_index()
@@ -447,69 +448,40 @@ def subflow_dmt_blocked_sites():
     # read data from transform
     df = read_parquet(PATH_DWH_SILVER_BLOCKED_SITES, "blocked_sites")
 
+    schema = SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES
+
     # Cont Global
     df_tmp = dmt_global(df)
-    rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES,
-        "dmt_global",
-        PATH_DWH_GOLD,
-    )
+    rewrite_duckdb_table(df_tmp, schema, "dmt_global", PATH_DWH_GOLD)
 
     # By Date
     df_tmp = dmt_by_date(df)
-    rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES,
-        "dmt_by_date",
-        PATH_DWH_GOLD,
-    )
+    rewrite_duckdb_table(df_tmp, schema, "dmt_by_date", PATH_DWH_GOLD)
 
     # All metrics over time (single datamart)
     df_tmp = dmt_metrics_over_time(
         df, ["country_domain", "category", "banning_authority"]
     )
-    rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES,
-        "dmt_metrics_over_time",
-        PATH_DWH_GOLD,
-    )
+    rewrite_duckdb_table(df_tmp, schema, "dmt_metrics_over_time", PATH_DWH_GOLD)
 
     # By Authorithy and Category
     df_tmp = dmt_by_authority_category(df)
-    rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES,
-        "dmt_by_authority_category",
-        PATH_DWH_GOLD,
-    )
+    rewrite_duckdb_table(df_tmp, schema, "dmt_by_authority_category", PATH_DWH_GOLD)
 
     # Blocked by Country Domain and Category Top 6
     df_tmp = dmt_country_by_category_top6(df)
     rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES,
-        "dmt_by_country_by_category_top_6",
-        PATH_DWH_GOLD,
+        df_tmp, schema, "dmt_by_country_by_category_top_6", PATH_DWH_GOLD
     )
 
     # Blocked by Country Domain and Category Top 6 +
     df_tmp = dmt_country_by_category_after6(df)
     rewrite_duckdb_table(
-        df_tmp,
-        SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES,
-        "dmt_by_country_by_category_after_6",
-        PATH_DWH_GOLD,
+        df_tmp, schema, "dmt_by_country_by_category_after_6", PATH_DWH_GOLD
     )
 
     # dmt_all_data
-    rewrite_duckdb_table(
-        df,
-        SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES,
-        "dmt_all_data",
-        PATH_DWH_GOLD,
-    )
+    rewrite_duckdb_table(df, schema, "dmt_all_data", PATH_DWH_GOLD)
 
     if df.empty:
         return Failed(message="Data is empty")
