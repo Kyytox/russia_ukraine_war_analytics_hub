@@ -1,23 +1,33 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const FALLBACK_COLOR = "#6b7280"; // gris neutre
-const BORDER_COLOR = "#1c2430"; // couleur des bordures
+const BORDER_COLOR = "#1c2430";
+const FALLBACK_COLOR = "##0e0e0e"; // used when a key has no color in colors_metrics
 
-export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsTreemap({
+  id,
+  data,
+  t,
+  i18n,
+  nf,
+  custom,
+  height,
+  gradient,
+}) {
   const option = useMemo(() => {
     if (!data?.length) return null;
 
     const cfg = custom?.[id] ?? {};
+    const colors = custom?.colors_metrics ?? {};
+
     const translate = (key) => t(`page.content.${key}`, { defaultValue: key });
     const pctFmt = new Intl.NumberFormat(i18n.language, {
       style: "percent",
       maximumFractionDigits: 1,
     });
-    const total = data.reduce((sum, d) => sum + d.value, 0);
 
-    // Helper function to get color from custom config with fallback
-    const getColor = (key) => custom?.colors_metrics?.[key] ?? FALLBACK_COLOR;
+    const values = data.map((d) => Number(d.value));
+    const total = values.reduce((sum, v) => sum + v, 0);
 
     // libelle -> children
     const groups = new Map();
@@ -25,40 +35,44 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
       if (!groups.has(d.libelle)) groups.set(d.libelle, []);
       groups.get(d.libelle).push({
         name: translate(d.metric),
-        value: d.value,
-        metric: d.metric, // Garder la clé originale pour le matching de couleur
+        value: Number(d.value),
+        metric: d.metric,
       });
     });
 
-    // Build tree with color information for all levels
-    const tree = [...groups].map(([key, children]) => ({
-      name: translate(key),
-      value: children.reduce((sum, c) => sum + c.value, 0), // Parent value = sum of children
-      itemStyle: {
-        color: getColor(key), // Couleur du libelle
-      },
-      children: children.map((child) => ({
-        name: child.name,
-        value: child.value,
+    const tree = [...groups].map(([key, children]) => {
+      const parentColor = colors[key] ?? FALLBACK_COLOR;
+
+      return {
+        name: translate(key),
         itemStyle: {
-          color: getColor(child.metric), // Couleur de l'enfant
+          borderColor: parentColor,
+          ...(!gradient && { color: parentColor }),
         },
-      })),
-    }));
+        children: [...children]
+          .sort((a, b) => b.value - a.value)
+          .map((c) => ({
+            name: c.name,
+            value: c.value,
+            ...(!gradient && {
+              itemStyle: { color: colors[c.metric] ?? parentColor },
+            }),
+          })),
+      };
+    });
 
     return {
-      backgroundColor: "transparent",
       aria: { enabled: true },
-      tooltip: {
-        confine: true,
-        formatter: (p) => {
-          const path = p.treePathInfo
-            .slice(1) // drop the invisible root
-            .map((n) => n.name)
-            .join(" › ");
-          return `${path}<br/><b>${nf.format(p.value)}</b> ${t("page.tooltip_text")} (${pctFmt.format(p.value / total)})`;
+      ...(gradient && {
+        visualMap: {
+          show: false,
+          type: "continuous",
+          min: Math.min(...values),
+          max: Math.max(...values),
+          dimension: "value",
+          inRange: { color: cfg.gradient },
         },
-      },
+      }),
       series: [
         {
           type: "treemap",
@@ -69,21 +83,22 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
           bottom: 40,
           roam: false,
           nodeClick: "zoomToNode",
+          ...(gradient && { visualDimension: 0 }),
           breadcrumb: {
             show: true,
             bottom: 0,
             height: 22,
             itemStyle: {
-              color: "#1c2430",
+              color: BORDER_COLOR,
               textStyle: { color: "#fff" },
             },
           },
-          metric: {
+          label: {
             show: true,
             fontSize: cfg.fontSize ?? 12,
             overflow: "truncate",
             formatter: (p) =>
-              `${p.name} · ${nf.format(p.value)} (${pctFmt.format(p.value / total)})`,
+              `${p.name} \n ${nf.format(p.value)} (${pctFmt.format(p.value / total)})`,
           },
           upperLabel: {
             show: true,
@@ -94,19 +109,20 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
           },
           levels: [
             {
-              // Parent level (level 0)
+              itemStyle: { borderWidth: 0, gapWidth: 0 },
+              upperLabel: { show: false },
+            },
+            {
               itemStyle: {
                 borderColor: BORDER_COLOR,
-                borderWidth: 3,
-                gapWidth: 3,
+                borderWidth: 2,
+                gapWidth: 1,
               },
             },
             {
-              // Children level (level 1)
               itemStyle: {
                 borderColor: BORDER_COLOR,
-                borderColorSaturation: 0.5,
-                borderWidth: 2,
+                borderWidth: 1,
                 gapWidth: 2,
               },
             },
@@ -114,10 +130,11 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
         },
       ],
     };
-  }, [data, t, i18n.language, nf, id, custom]);
+  }, [data, t, i18n.language, nf, id, custom, gradient]);
 
   if (!option) return null;
 
+  // Determine chart height:
   const chartHeight = height || custom?.[id]?.height;
 
   return (
@@ -125,7 +142,6 @@ export function ComponentsTreemap({ id, data, t, i18n, nf, custom, height }) {
       option={option}
       notMerge
       style={{ width: "100%", height: chartHeight }}
-      theme="dark"
     />
   );
 }

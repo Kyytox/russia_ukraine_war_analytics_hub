@@ -2,9 +2,15 @@ import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 import { getMetricColor } from "../../utils/common.js";
 
-const LABEL_MAX_WIDTH = 250; // y-axis labels are truncated beyond this (full name stays in the tooltip)
-
-export function ComponentsBarHorizontal({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsBarHorizontal({
+  id,
+  data,
+  t,
+  i18n,
+  nf,
+  custom,
+  height,
+}) {
   const result = useMemo(() => {
     if (!data?.length) return null;
 
@@ -16,18 +22,18 @@ export function ComponentsBarHorizontal({ id, data, t, i18n, nf, custom, height 
     });
 
     // Computed before the top N cut, so percentages refer to the whole dataset
-    const total = data.reduce((sum, d) => sum + d.count, 0);
+    const total = data.reduce((sum, d) => sum + d.value, 0);
 
     // Sort a copy so the incoming props are never mutated, then apply the top N
     const sorted =
       cfg.sort === false
         ? [...data]
-        : [...data].sort((a, b) => b.count - a.count);
+        : [...data].sort((a, b) => b.value - a.value);
     const rows = cfg.limit ? sorted.slice(0, cfg.limit) : sorted;
 
     const items = rows.map((d) => ({
       name: t(`${labelPrefix}.${d.metric}`, d.metric),
-      value: d.count,
+      value: d.value,
       // Color is looked up with the raw key so it stays stable across languages
       itemStyle: {
         color: getMetricColor(
@@ -40,17 +46,13 @@ export function ComponentsBarHorizontal({ id, data, t, i18n, nf, custom, height 
 
     const option = {
       aria: { enabled: true },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: {
-          // x-axis zoom only; opt-in to keep the toolbox light
-          ...(cfg.zoomable && { dataZoom: { xAxisIndex: "none" } }),
-          saveAsImage: {},
-        },
+      grid: {
+        top: 32,
+        left: 8,
+        right: 32,
+        bottom: 48,
+        containLabel: true,
       },
-      // containLabel lets the grid adapt to long y-axis labels; top leaves room for the toolbox
-      grid: { top: 32, left: 8, right: 32, bottom: 48, containLabel: true },
       tooltip: {
         trigger: "axis",
         confine: true,
@@ -72,7 +74,7 @@ export function ComponentsBarHorizontal({ id, data, t, i18n, nf, custom, height 
         axisTick: { show: false },
         axisLabel: {
           interval: 0, // never silently drop a category label
-          width: LABEL_MAX_WIDTH,
+          width: custom?.common?.labelMaxLength,
           overflow: "truncate",
           fontSize: 13,
           color: "#fff",
@@ -89,7 +91,7 @@ export function ComponentsBarHorizontal({ id, data, t, i18n, nf, custom, height 
           fontSize: 14,
           color: "#fff",
         },
-        splitLine: { lineStyle: { color: "rgba(255,255,255,0.12)" } },
+        splitLine: custom?.common?.splitLine,
         boundaryGap: [0, "8%"], // leaves room for the value label at the end of the longest bar
       },
       series: [
@@ -110,7 +112,7 @@ export function ComponentsBarHorizontal({ id, data, t, i18n, nf, custom, height 
 
     return {
       option,
-      height: height || cfg.height || 400,
+      height: height || cfg.height,
     };
   }, [data, t, i18n.language, nf, id, custom, height]);
 

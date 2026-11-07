@@ -1,9 +1,15 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const LABEL_MAX_WIDTH = 150;
-
-export function ComponentsScatterGroups({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsScatterGroups({
+  id,
+  data,
+  t,
+  i18n,
+  nf,
+  custom,
+  height,
+}) {
   const option = useMemo(() => {
     if (!data?.length) return null;
 
@@ -38,26 +44,13 @@ export function ComponentsScatterGroups({ id, data, t, i18n, nf, custom, height 
     }
 
     return {
-      backgroundColor: "transparent",
       aria: { enabled: true },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: {
-          ...(cfg.zoomable && { dataZoom: {} }),
-        },
-      },
       grid: {
         top: "3%",
         left: "1%",
         right: "3%",
         bottom: "2%",
         containLabel: true,
-      },
-      legend: {
-        show: cfg.showLegend ?? false,
-        top: 0,
-        textStyle: { color: "#fff", fontSize: 13 },
       },
       tooltip: {
         trigger: "item",
@@ -70,11 +63,11 @@ export function ComponentsScatterGroups({ id, data, t, i18n, nf, custom, height 
         type: "category",
         data: categories,
         boundaryGap: true,
-        axisLine: { lineStyle: { color: "rgba(255,255,255,0.3)" } },
+        axisLine: custom?.common?.splitLine,
         axisLabel: {
           hideOverlap: true,
           rotate: cfg.xAxisRotate ?? 45,
-          width: LABEL_MAX_WIDTH,
+          width: custom?.common?.labelMaxLength,
           overflow: "truncate",
           fontSize: 12,
           color: "#fff",
@@ -85,11 +78,8 @@ export function ComponentsScatterGroups({ id, data, t, i18n, nf, custom, height 
         data: groups.map((g) => t(`${labelPrefix}.${g}`, g)),
         inverse: true,
         axisLabel: { fontSize: 13, color: "#fff" },
-        axisLine: { lineStyle: { color: "rgba(255,255,255,0.3)" } },
-        splitLine: {
-          show: true,
-          lineStyle: { color: "rgba(255,255,255,0.2)", type: "dashed" },
-        },
+        axisLine: custom?.common?.splitLine,
+        splitLine: custom?.common?.splitLine,
       },
       series: groups.map((name) => ({
         name: t(`${labelPrefix}.${name}`, name),
@@ -111,10 +101,9 @@ export function ComponentsScatterGroups({ id, data, t, i18n, nf, custom, height 
       option={option}
       style={{
         width: "100%",
-        height: height || custom?.[id]?.height || 400,
+        height: height || custom?.[id]?.height,
         alignSelf: "center",
       }}
-      theme="dark"
     />
   );
 }

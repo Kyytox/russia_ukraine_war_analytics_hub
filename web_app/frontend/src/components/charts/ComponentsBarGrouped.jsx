@@ -4,16 +4,7 @@ import ReactECharts from "echarts-for-react";
 const sortNatural = (a, b) =>
   String(a).localeCompare(String(b), undefined, { numeric: true });
 
-export function ComponentsBarGrouped({
-  id,
-  data,
-  t,
-  nf,
-  custom,
-  height,
-  horizontal = false, // true: horizontal bars
-  sortBy = "natural", // "natural" | "total" (categories sorted by total, descending)
-}) {
+export function ComponentsBarGrouped({ id, data, t, nf, custom, height }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
     const cfg = custom?.[id] ?? {};
@@ -25,10 +16,7 @@ export function ComponentsBarGrouped({
     });
 
     let categories = [...totals.keys()];
-    categories =
-      sortBy === "total"
-        ? categories.sort((a, b) => totals.get(b) - totals.get(a))
-        : categories.sort(sortNatural);
+    categories = categories.sort(sortNatural);
 
     const groups = [...new Set(data.map((d) => d.libelle))].sort(sortNatural);
 
@@ -39,6 +27,9 @@ export function ComponentsBarGrouped({
       lookup.set(k, (lookup.get(k) ?? 0) + Number(d.value)); // sum if duplicates
     });
 
+    console.log("ComponentsBarGrouped", custom);
+    console.log("ComponentsBarGrouped", cfg);
+
     // 3. One series per group
     const series = groups.map((g) => {
       const color = custom?.colors_metrics?.[g];
@@ -46,7 +37,6 @@ export function ComponentsBarGrouped({
         name: String(g),
         type: "bar",
         data: categories.map((c) => lookup.get(`${g}|${c}`) ?? null),
-        barMaxWidth: cfg.barMaxWidth ?? 40,
         itemStyle: {
           borderRadius: [4, 4, 0, 0],
           ...(color && { color }),
@@ -82,27 +72,30 @@ export function ComponentsBarGrouped({
       type: "value",
       name: t(cfg.axis_text ?? "page.axes_text"),
       nameLocation: "end",
-      nameTextStyle: { fontSize: 14, color: "#fff", align: "left" },
+      nameTextStyle: {
+        fontSize: 14,
+        color: "#fff",
+        align: "left",
+      },
       axisLabel: {
         formatter: (v) => nf.format(v),
         fontSize: 14,
         color: "#fff",
       },
-      splitLine: { lineStyle: { color: "rgba(255,255,255,0.32)" } },
+      // splitLine: {
+      //   lineStyle: {
+      //     color: "rgba(255,255,255,0.32)",
+      //   },
+      // },
     };
 
     return {
-      aria: { enabled: true },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: { saveAsImage: {} },
-      },
+      // aria: { enabled: true },
       grid: {
-        top: "14%",
+        top: "15%",
         left: "4%",
         right: "4%",
-        bottom: "4%",
+        bottom: "2%",
         containLabel: true,
       },
       legend: {
@@ -129,11 +122,11 @@ export function ComponentsBarGrouped({
           ].join("<br/>");
         },
       },
-      xAxis: horizontal ? valueAxis : categoryAxis,
-      yAxis: horizontal ? categoryAxis : valueAxis,
+      xAxis: categoryAxis,
+      yAxis: valueAxis,
       series,
     };
-  }, [data, t, nf, id, custom, horizontal, sortBy]);
+  }, [data, t, nf, id, custom]);
 
   if (!option) return null;
 

@@ -7,7 +7,6 @@ const OTHERS = "__others__"; // bucket for the smallest metrics
 const OTHERS_COLOR = "#6b7280"; // neutral grey, distinct from the background and from any metric color
 const DEFAULT_MAX_METRICS = 10;
 const MIN_LABEL_RATIO = 0.02; // segment < 5 % of the tallest bar: no label inside
-const LABEL_MAX_WIDTH = 140; // x-axis labels are truncated beyond this (full name stays in the tooltip)
 
 export function ComponentsBarStackedVertical({
   id,
@@ -23,7 +22,7 @@ export function ComponentsBarStackedVertical({
 
     const cfg = custom?.[id] ?? {};
     const labelPrefix = cfg.label_prefix ?? "page.chart-names";
-    const metricPrefix = cfg.metric_prefix ?? "metrics";
+    const metricPrefix = cfg.metric_prefix ?? "metric";
     const maxMetrics = cfg.max_metrics ?? DEFAULT_MAX_METRICS;
     const pct = new Intl.NumberFormat(i18n.language, {
       style: "percent",
@@ -80,11 +79,6 @@ export function ComponentsBarStackedVertical({
 
     return {
       aria: { enabled: true },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: { dataZoom: { yAxisIndex: "none" }, saveAsImage: {} },
-      },
       tooltip: {
         trigger: "axis",
         confine: true,
@@ -127,7 +121,13 @@ export function ComponentsBarStackedVertical({
         textStyle: { fontSize: 13, color: "#fff" },
         data: metrics.map(metricName),
       },
-      grid: { top: 56, left: 8, right: 16, bottom: 8, containLabel: true },
+      grid: {
+        top: 56,
+        left: 8,
+        right: 16,
+        bottom: 8,
+        containLabel: true,
+      },
       xAxis: {
         type: "category",
         data: libelles.map((l) => t(`${labelPrefix}.${l}`, l)),
@@ -135,7 +135,7 @@ export function ComponentsBarStackedVertical({
         axisLabel: {
           interval: 0, // never silently drop a label
           rotate: cfg.axis_rotate,
-          width: LABEL_MAX_WIDTH,
+          width: custom?.common?.labelMaxLength,
           overflow: "truncate",
           fontSize: 12,
           color: "#fff",
@@ -197,7 +197,7 @@ export function ComponentsBarStackedVertical({
   return (
     <ReactECharts
       option={option}
-      style={{ width: "100%", height: height || custom?.[id]?.height || 400 }}
+      style={{ width: "100%", height: height || custom?.[id]?.height }}
     />
   );
 }

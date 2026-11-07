@@ -1,8 +1,6 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const LABEL_MAX_WIDTH = 150; // x-axis labels are truncated beyond this (full name stays in the tooltip)
-
 export function ComponentsBarVertical({
   id,
   data,
@@ -15,16 +13,21 @@ export function ComponentsBarVertical({
   const option = useMemo(() => {
     if (!data?.length) return null;
 
+    // Get chart configuration for the given id
     const cfg = custom?.[id] ?? {};
-    const labelPrefix = cfg.label_prefix ?? "page.content";
+
+    // Formatter for percentage
     const pct = new Intl.NumberFormat(i18n.language, {
       style: "percent",
       maximumFractionDigits: 1,
     });
+
+    // Calc Total for tooltip percentage
     const total = data.reduce((sum, d) => sum + d.value, 0);
 
+    // Map data to chart items
     const items = data.map((d) => ({
-      name: t(`${labelPrefix}.${d.metric}`, d.metric),
+      name: t(`${d.metric}`, d.metric),
       value: d.value,
       itemStyle: {
         color: custom?.colors_metrics?.[d.metric] ?? cfg.default_colors,
@@ -33,29 +36,21 @@ export function ComponentsBarVertical({
 
     return {
       aria: { enabled: true },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-      },
       grid: {
-        top: 48,
-        left: "6%",
-        right: "6%",
+        top: "10%",
+        left: "4%",
+        right: "4%",
         bottom: "5%",
         containLabel: true,
       },
       tooltip: {
         trigger: "axis",
-        // confine: true,
+        confine: true,
         axisPointer: { type: "shadow" },
         formatter: (params) => {
           const p = params[0];
-          const share = cfg.show_percent
-            ? ` (${pct.format(p.value / total)})`
-            : "";
-          return `${p.marker} ${p.name}<br/><b>${nf.format(p.value)}</b> ${t(
-            cfg.tooltip ?? "page.tooltip_text",
-          )}${share}`;
+          const share = ` (${pct.format(p.value / total)})`;
+          return `${p.marker} ${p.name}<br/><b>${nf.format(p.value)}</b> ${t("page.tooltip_text")}${share}`;
         },
       },
       xAxis: {
@@ -65,7 +60,7 @@ export function ComponentsBarVertical({
         axisLabel: {
           interval: 0, // never silently drop a category label
           rotate: cfg.xAxisRotate,
-          width: LABEL_MAX_WIDTH,
+          width: custom?.common?.labelMaxLength,
           overflow: "truncate",
           fontSize: 13,
           color: "#fff",
@@ -75,13 +70,13 @@ export function ComponentsBarVertical({
         type: "value",
         name: t(cfg.axis_text ?? "page.axes_text"),
         nameLocation: "end",
-        nameTextStyle: { fontSize: 14, color: "#fff" },
+        nameTextStyle: custom?.common?.nameTextStyle,
         axisLabel: {
           formatter: (v) => nf.format(v),
           fontSize: 14,
           color: "#fff",
         },
-        splitLine: { lineStyle: { color: "rgba(255,255,255,0.12)" } },
+        splitLine: custom?.common?.splitLine,
       },
       series: [
         {
@@ -89,7 +84,7 @@ export function ComponentsBarVertical({
           itemStyle: { borderRadius: [4, 4, 0, 0] },
           label: {
             show: true,
-            position: "top", // always above the bar: readable whatever the bar height
+            position: "top",
             fontSize: 11,
             color: "#fff",
             formatter: (p) => nf.format(p.value),
@@ -102,7 +97,7 @@ export function ComponentsBarVertical({
 
   if (!option) return null;
 
-  // Prioriser : prop height > custom[id].height > 400 (défaut)
+  // Determine chart height:
   const chartHeight = height || custom?.[id]?.height || 400;
 
   return (

@@ -1,21 +1,21 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const YEAR_BLOCK = 12 * 7 + 50; // hauteur d'un calendrier + espacement
+const YEAR_BLOCK = 12 * 7 + 50;
 const TOP_OFFSET = 50;
 
 export function ComponentsHeatmap({ id, data, t, i18n, nf, custom, height }) {
-  const { option, height: computedHeight } = useMemo(() => {
+  const { option } = useMemo(() => {
+    const lang = i18n.language;
     const items = data.map((d) => ({ date: d.metric, value: d.value }));
 
-    const color = custom?.[id]?.colors || "#7F557D";
+    const color = custom?.[id]?.colors || "#A84657";
     const max = Math.max(...items.map((d) => d.value), 1);
 
     // années présentes dans les données, triées
     const years = [...new Set(items.map((d) => d.date.slice(0, 4)))].sort();
 
     // libellés des mois / jours traduits selon la langue courante
-    const lang = i18n.language;
     const monthNames = Array.from({ length: 12 }, (_, m) =>
       new Intl.DateTimeFormat(lang, { month: "short" }).format(
         new Date(2022, m, 1),
@@ -24,7 +24,7 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom, height }) {
     // dayLabel : 0 = dimanche ... 6 = samedi (la semaine commence le lundi)
     const dayNames = Array.from({ length: 7 }, (_, d) =>
       new Intl.DateTimeFormat(lang, { weekday: "short" }).format(
-        new Date(2022, 0, 2 + d), // 2022-01-02 est un dimanche
+        new Date(2022, 0, 2 + d),
       ),
     );
 
@@ -38,7 +38,7 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom, height }) {
       itemStyle: {
         borderWidth: 2,
         borderColor: "#0f1a20",
-        color: "rgba(255,255,255,0.06)", // jours sans donnée
+        color: "rgba(255,255,255,0.05)", // 0 data
       },
       splitLine: { show: false },
       yearLabel: {
@@ -71,16 +71,7 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom, height }) {
     }));
 
     return {
-      computedHeight: TOP_OFFSET + years.length * YEAR_BLOCK + 30,
       option: {
-        toolbox: {
-          right: 10,
-          top: -15,
-          iconStyle: { borderColor: "#fff" },
-          feature: {
-            saveAsImage: {},
-          },
-        },
         tooltip: {
           formatter: (p) => `${p.value[0]}<br/><b>${nf.format(p.value[1])}</b>`,
         },
@@ -91,12 +82,10 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom, height }) {
           calculable: false,
           orient: custom?.[id]?.orient || "horizontal",
           left: "center",
-          bottom: -5,
-          itemWidth: 14,
-          itemHeight: 160,
+          bottom: -15,
           text: [nf.format(max), "0"],
           textStyle: { color: "#fff", fontSize: 12 },
-          inRange: { color: ["rgba(255,255,255,0.06)", color] },
+          inRange: { color: ["rgba(255,255,255,0.2)", color] },
           formatter: (value) => nf.format(Math.round(value)),
         },
         calendar: calendars,
@@ -105,15 +94,14 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom, height }) {
     };
   }, [data, t, i18n.language, nf, id, custom, height]);
 
-  // Dans la modale (height="100%"), utiliser 100%, sinon la hauteur calculée
-  const finalHeight = height === "100%" ? "100%" : (height || custom?.[id]?.height || computedHeight || 400);
+  const chartHeight = height || custom?.[id]?.height;
 
   return (
     <ReactECharts
       option={option}
       style={{
         width: "100%",
-        height: finalHeight,
+        height: chartHeight,
         alignSelf: "center",
       }}
     />

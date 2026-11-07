@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { usePageTranslation } from "../hooks/usePageTranslation.js";
 import { getPageFromPath } from "../utils/common.js";
-import { useCustomChart } from "../hooks/useCustomChart.js";
+import { useConfigCharts } from "../hooks/useConfigCharts.js";
 
 // Importer tous les composants d'onglets
 import Overview from "./railways/Overview.jsx";
@@ -38,7 +38,6 @@ const PAGE_NAME = "incidents-railways";
 export default function IncidentsRailways() {
   const PAGE = getPageFromPath(window.location.pathname);
   const { t, i18n } = usePageTranslation(PAGE_NAME);
-  const customCharts = useCustomChart(PAGE_NAME);
   const nf = new Intl.NumberFormat(i18n.language);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -70,13 +69,7 @@ export default function IncidentsRailways() {
         {/* Contenu - UNIQUEMENT le composant actif se monte */}
         <div className="tabs-content">
           <div className="tab-panel active">
-            <ActiveComponent
-              PAGE={PAGE}
-              t={t}
-              i18n={i18n}
-              nf={nf}
-              customCharts={customCharts}
-            />
+            <ActiveComponent PAGE={PAGE} t={t} i18n={i18n} nf={nf} />
           </div>
         </div>
       </div>

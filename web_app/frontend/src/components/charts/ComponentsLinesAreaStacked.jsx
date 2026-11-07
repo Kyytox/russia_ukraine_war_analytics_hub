@@ -1,7 +1,15 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-export function ComponentsLinesAreaStacked({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsLinesAreaStacked({
+  id,
+  data,
+  t,
+  i18n,
+  nf,
+  custom,
+  height,
+}) {
   const option = useMemo(() => {
     // Flat data: [{ libelle, metric, value }]
     const categories = [];
@@ -31,14 +39,6 @@ export function ComponentsLinesAreaStacked({ id, data, t, i18n, nf, custom, heig
     const colors = custom?.colors_metrics;
 
     return {
-      backgroundColor: "transparent",
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: {
-          dataZoom: { yAxisIndex: "none" },
-        },
-      },
       grid: {
         left: "3%",
         right: "3%",
@@ -106,7 +106,6 @@ export function ComponentsLinesAreaStacked({ id, data, t, i18n, nf, custom, heig
         height: height || custom?.[id]?.height || 400,
         alignSelf: "center",
       }}
-      theme={custom?.theme || "dark"}
     />
   );
 }

@@ -1,4 +1,5 @@
 import { useApi } from "../../hooks/useApi.js";
+import { useConfigCharts } from "../../hooks/useConfigCharts.js";
 
 import ChartState from "../../components/charts/ChartState.jsx";
 import ChartHeader from "../../components/charts/ChartHeader.jsx";
@@ -9,27 +10,18 @@ import { ComponentsPie } from "../../components/charts/ComponentsPie.jsx";
 import { ComponentsTreemap } from "../../components/charts/ComponentsTreemap.jsx";
 import { ComponentsPictorialBar } from "../../components/charts/ComponentsPictorialBar.jsx";
 import { ComponentsWaterfall } from "../../components/charts/ComponentsWaterfall.jsx";
-import { ComponentsHeatmap } from "../../components/charts/ComponentsHeatmap.jsx";
-import { ComponentsRadar } from "../../components/charts/ComponentsRadar.jsx";
 import { ComponentsPunchCard } from "../../components/charts/ComponentsPunchCard.jsx";
 
 const TAB = "partisans-arrest";
 
 export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
   const prefix = `${PAGE}/${TAB}`;
-  const custom = customCharts?.[`${TAB}`] ?? {};
-
-  console.log("PartisansArrest TAB", TAB);
-  console.log("PartisansArrest custom", custom);
-  console.log("PartisansArrest custom", customCharts?.[`${TAB}`]);
+  const cfg = useConfigCharts(PAGE, TAB);
 
   const section1 = useApi(`/api/${prefix}/section1`);
   const section2 = useApi(`/api/${prefix}/section2`);
   const section3 = useApi(`/api/${prefix}/section3`);
   const section4 = useApi(`/api/${prefix}/section4`);
-  const section5 = useApi(`/api/${prefix}/section5`);
-  const section6 = useApi(`/api/${prefix}/section6`);
-  const section7 = useApi(`/api/${prefix}/section7`);
 
   return (
     <>
@@ -52,7 +44,7 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -75,7 +67,7 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -90,11 +82,11 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
               {(data, height) => (
                 <ComponentsTreemap
                   id="chart3"
-                  data={data.filter((d) => d.libelle === "applicable_laws")}
+                  data={data.filter((d) => d.libelle === "Laws")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -113,7 +105,7 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -132,7 +124,7 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                   mode="global"
                 />
@@ -152,7 +144,7 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                   mode="byMetric"
                   palette={["#1f7a9e", "#5a9e5f", "#d4f01f", "#ff8c1a"]}
@@ -173,7 +165,7 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}

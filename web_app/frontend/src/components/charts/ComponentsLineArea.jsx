@@ -11,14 +11,6 @@ export function ComponentsLineArea({ id, data, t, i18n, nf, custom, height }) {
     const color = custom?.[id]?.colors || "#7F557D";
 
     return {
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: {
-          dataZoom: { yAxisIndex: "none" },
-          saveAsImage: {},
-        },
-      },
       grid: {
         left: "6%",
         right: "6%",

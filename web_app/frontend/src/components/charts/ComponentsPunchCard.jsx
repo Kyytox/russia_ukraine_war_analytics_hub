@@ -1,14 +1,9 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const LABEL_MAX_WIDTH = 150;
-
 const isNumeric = (arr) =>
   arr.every((v) => v !== "" && !Number.isNaN(Number(v)));
-const uniqueSorted = (values) => {
-  const uniq = [...new Set(values.map(String))];
-  return isNumeric(uniq) ? uniq.sort((a, b) => Number(a) - Number(b)) : uniq;
-};
+const unique = (values) => [...new Set(values.map(String))];
 
 export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
   const option = useMemo(() => {
@@ -16,25 +11,20 @@ export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
 
     const cfg = custom?.[id] ?? {};
     const labelPrefix = cfg.label_prefix ?? "page.content";
-    const minS = cfg.min_size ?? 3;
-    const maxS = cfg.max_size ?? 40;
-    const alpha = cfg.opacity ?? 0.85;
+    const minS = 1;
+    const maxS = 40;
 
     const label = (key) => String(t(`${labelPrefix}.${key}`, key));
 
-    // --- Catégories : ordre custom > tri numérique > ordre d'apparition
-    const xs = (cfg.x_order ?? uniqueSorted(data.map((d) => d.libelle))).map(
-      String,
-    );
-    const ys = (cfg.y_order ?? uniqueSorted(data.map((d) => d.metric))).map(
-      String,
-    );
+    // --- Catégories : ordre custom > ordre d'apparition (aucun tri)
+    const xs = (cfg.x_order ?? unique(data.map((d) => d.libelle))).map(String);
+    const ys = (cfg.y_order ?? unique(data.map((d) => d.metric))).map(String);
     const yNumeric = isNumeric(ys);
     const xIndex = new Map(xs.map((k, i) => [k, i]));
     const yIndex = new Map(ys.map((k, i) => [k, i]));
 
     // --- Couleur par libelle
-    const colorOf = (lib) => custom?.colors_libs?.[lib];
+    const colorOf = (lib) => custom?.colors_metrics?.[lib];
 
     // --- Taille : racine carrée pour que la surface soit proportionnelle
     const maxValue = Math.max(...data.map((d) => Math.abs(d.value)), 1);
@@ -59,20 +49,12 @@ export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
           ],
         })),
       symbolSize: (val) => sizeOf(val[2]),
-      itemStyle: { color: colorOf(lib), opacity: alpha },
-      emphasis: { scale: 1.1, itemStyle: { opacity: 1 } },
+      itemStyle: { color: colorOf(lib) },
+      emphasis: { scale: 1, itemStyle: { opacity: 1 } },
     }));
 
     return {
-      backgroundColor: "transparent",
       aria: { enabled: true },
-      toolbox: { right: 10, iconStyle: { borderColor: "#fff" } },
-      legend: {
-        show: cfg.show_legend ?? true,
-        type: "scroll",
-        top: 0,
-        textStyle: { color: "#fff" },
-      },
       grid: {
         top: 48,
         left: "4%",
@@ -85,7 +67,7 @@ export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
         confine: true,
         formatter: (p) => {
           const [, , v, x, y] = p.value;
-          return `${p.marker} ${label(x)} - ${label(y)}<br/><b>${nf.format(v)}</b> ${t(
+          return `${p.marker} ${label(x)}<br/><b>Age: ${label(y)}<br/><b>${nf.format(v)}</b> ${t(
             cfg.tooltip ?? "page.tooltip_text",
           )}`;
         },
@@ -94,15 +76,12 @@ export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
         type: "category",
         data: xs.map(label),
         axisTick: { show: false, alignWithLabel: true },
-        axisLine: { show: false },
-        splitLine: {
-          show: true,
-          lineStyle: { color: "rgba(255,255,255,0.12)" },
-        },
+        axisLine: { show: true },
+        splitLine: custom?.common?.splitLine,
         axisLabel: {
           interval: 0,
           rotate: cfg.xAxisRotate,
-          width: LABEL_MAX_WIDTH,
+          width: custom?.common?.labelMaxLength,
           overflow: "truncate",
           fontSize: 13,
           color: "#fff",
@@ -114,10 +93,7 @@ export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
         data: ys.map(label),
         inverse: !yNumeric,
         axisTick: { show: false },
-        axisLine: {
-          show: true,
-          lineStyle: { color: "rgba(255,255,255,0.12)" },
-        },
+        axisLine: custom?.common?.splitLine,
         axisLabel: { interval: 0, fontSize: 13, color: "#fff" },
       },
       series,
@@ -125,7 +101,7 @@ export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
   }, [data, t, i18n.language, nf, id, custom]);
 
   if (!option) return null;
-  const chartHeight = height || custom?.[id]?.height || 400;
+  const chartHeight = height || custom?.[id]?.height;
 
   return (
     <ReactECharts
@@ -135,7 +111,6 @@ export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
         height: chartHeight,
         alignSelf: "center",
       }}
-      theme="dark"
     />
   );
 }

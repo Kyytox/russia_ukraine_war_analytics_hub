@@ -25,12 +25,12 @@ export function ComponentsSankey({ id, data, t, nf, custom, height }) {
     if (!data?.length) return null;
     const cfg = custom?.[id] ?? {};
 
-    // 1. Each row = one link: parent (source) -> label (target), weighted by value
-    //    Rows without parent (root nodes) have no link, so they are skipped
+    // 1. Each row = one link: libelle (source) -> metric (target), weighted by value
+    //    Rows without libelle (root nodes) have no link, so they are skipped
     const linkMap = new Map();
     data.forEach((d) => {
-      const source = d.parent ?? d.parents;
-      const target = d.label;
+      const source = d.libelle;
+      const target = d.metric;
       const value = Number(d.value);
       if (!source || !target || !(value > 0)) return;
       const k = `${source}|${target}`;
@@ -55,16 +55,10 @@ export function ComponentsSankey({ id, data, t, nf, custom, height }) {
       return { name, ...(color && { itemStyle: { color } }) };
     });
 
-    const translate = (name) =>
-      t(`${cfg.label_prefix ?? "page.content"}.${name}`, String(name));
+    const translate = (name) => t(`${"page.content"}.${name}`, String(name));
 
     return {
       aria: { enabled: true },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: {},
-      },
       tooltip: {
         trigger: "item",
         confine: true,
@@ -81,17 +75,25 @@ export function ComponentsSankey({ id, data, t, nf, custom, height }) {
           top: "6%",
           bottom: "6%",
           left: "2%",
-          right: "12%", // room for the last column labels
+          right: "12%", // room for the last column metrics
           nodeWidth: cfg.nodeWidth ?? 18,
           nodeGap: cfg.nodeGap ?? 10,
           draggable: false,
+
           emphasis: { focus: "adjacency" },
           lineStyle: { color: "gradient", curveness: 0.4, opacity: 0.8 },
           itemStyle: { borderWidth: 0 },
-          label: {
+          metric: {
             color: "#fff",
             fontSize: 13,
             formatter: (p) => translate(p.name),
+          },
+          label: {
+            show: true,
+            fontSize: 13,
+            fontWeight: "normal",
+            borderCololor: "transparent",
+            color: "#FFF",
           },
         },
       ],
@@ -104,7 +106,7 @@ export function ComponentsSankey({ id, data, t, nf, custom, height }) {
     <ReactECharts
       option={option}
       notMerge
-      style={{ width: "100%", height: height || custom?.[id]?.height || 400 }}
+      style={{ width: "100%", height: height || custom?.[id]?.height }}
     />
   );
 }

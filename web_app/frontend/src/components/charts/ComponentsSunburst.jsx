@@ -1,8 +1,19 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const FALLBACK_COLOR = "#6b7280"; // gris neutre, distinct du fond et des bordures
+const FALLBACK_COLOR = "#6b7280";
 const BORDER_COLOR = "#0d1117"; // à aligner sur le fond de la carte
+
+// Texte sombre sur fond clair, blanc sinon (couleurs hex #rrggbb)
+const textColorFor = (bg) => {
+  const m = /^#?([0-9a-f]{6})$/i.exec(bg ?? "");
+  if (!m) return "#fff";
+  const n = parseInt(m[1], 16);
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6 ? "#111827" : "#fff";
+};
 
 export function ComponentsSunburst({ id, data, t, i18n, nf, custom, height }) {
   const option = useMemo(() => {
@@ -13,56 +24,52 @@ export function ComponentsSunburst({ id, data, t, i18n, nf, custom, height }) {
       style: "percent",
       maximumFractionDigits: 1,
     });
-
-    // Helper function to get color from custom config
     const getColor = (key) => custom?.colors_metrics?.[key] ?? FALLBACK_COLOR;
 
-    // parent -> enfants
+    // libelle -> enfants
     const groups = new Map();
     data.forEach((d) => {
-      if (!groups.has(d.parent)) groups.set(d.parent, []);
-      groups.get(d.parent).push({
-        name: translate(d.label),
-        value: d.value,
-        label: d.label, // Keep original label for color lookup
+      if (!groups.has(d.libelle)) groups.set(d.libelle, []);
+      groups.get(d.libelle).push({
+        name: translate(d.metric),
+        value: Number(d.value),
+        metric: d.metric,
       });
     });
 
-    // Build tree with color information for all levels
-    const tree = [...groups].map(([key, children]) => ({
-      name: translate(key),
-      value: children.reduce((sum, c) => sum + c.value, 0), // Parent value = sum of children
-      itemStyle: {
-        color: getColor(key), // Color for parent level
-      },
-      children: children.map((child) => ({
-        name: child.name,
-        value: child.value,
-        itemStyle: {
-          color: getColor(child.label), // Color for children level
-        },
-      })),
-    }));
+    const tree = [...groups].map(([key, children]) => {
+      const color = getColor(key);
+      return {
+        name: translate(key),
+        itemStyle: { color },
+        label: { color: textColorFor(color) },
+        children: children.map((c) => {
+          const childColor = getColor(c.metric);
+          return {
+            name: c.name,
+            value: c.value,
+            itemStyle: { color: childColor },
+            label: { color: textColorFor(childColor) },
+          };
+        }),
+      };
+    });
 
-    console.log("ComponentsSunburst tree", tree);
-
-    const total = data.reduce((sum, d) => sum + d.value, 0);
+    const total = data.reduce((sum, d) => sum + Number(d.value), 0);
 
     return {
       aria: { enabled: true },
       tooltip: {
+        confine: true,
         formatter: (p) => {
           const path = p.treePathInfo
             .slice(1)
             .map((n) => n.name)
             .join(" › ");
-          return `${path}<br/><b>${nf.format(p.value)}</b> ${t("page.tooltip_text")} (${pctFmt.format(p.value / total)})`;
+          return `${p.marker} ${path}<br/><b>${nf.format(p.value)}</b> ${t(
+            "page.tooltip_text",
+          )} (${pctFmt.format(p.value / total)})`;
         },
-      },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: { saveAsImage: {} },
       },
       graphic: [
         {
@@ -71,7 +78,7 @@ export function ComponentsSunburst({ id, data, t, i18n, nf, custom, height }) {
           top: "center",
           silent: true,
           style: {
-            text: `${nf.format(total)}\n${t("page.total_label")}`,
+            text: `${nf.format(total)}\n${t("page.total_metric")}`,
             textAlign: "center",
             textVerticalAlign: "middle",
             fill: "#fff",
@@ -85,40 +92,55 @@ export function ComponentsSunburst({ id, data, t, i18n, nf, custom, height }) {
           type: "sunburst",
           data: tree,
           radius: ["22%", "98%"],
+          sort: "desc", // mets null pour garder l'ordre des données
           emphasis: { focus: "ancestor" },
           itemStyle: {
-            borderRadius: 4,
-            borderWidth: 2,
+            borderWidth: 1,
             borderColor: BORDER_COLOR,
           },
           label: {
             show: true,
             fontSize: 11,
-            overflow: "truncate",
             rotate: "radial",
-            minAngle: 6,
-            formatter: (p) => `${p.name}\n${nf.format(p.value)}`,
+            minAngle: 3, // masque l'étiquette sous 3° (évite le chevauchement)
+            align: "center",
+            fontWeight: 500,
+            formatter: (p) => {
+              return `${p.name}\n${nf.format(p.value)}`;
+            },
           },
           levels: [
+            {}, // racine virtuelle
             {
-              // center - no specific styling needed
-            },
-            {
-              // First ring (parents)
-              label: { rotate: "tangential", minAngle: 12 },
+              // anneau 1 : libelle
+              r0: "22%",
+              r: "58%",
               itemStyle: {
                 borderRadius: 4,
                 borderWidth: 2,
                 borderColor: BORDER_COLOR,
               },
+              label: {
+                rotate: "tangential",
+                minAngle: 12,
+                fontSize: 12,
+                fontWeight: 600,
+              },
             },
             {
-              // Second ring (children)
-              label: { rotate: "radial", align: "center", minAngle: 3 },
+              // anneau 2 : metric
+              r0: "58%",
+              r: "98%",
               itemStyle: {
+                borderRadius: 2,
                 borderWidth: 1,
-                borderRadius: 3,
                 borderColor: BORDER_COLOR,
+              },
+              label: {
+                rotate: "radial",
+                align: "center",
+                minAngle: 3,
+                fontSize: 11,
               },
             },
           ],
@@ -132,7 +154,7 @@ export function ComponentsSunburst({ id, data, t, i18n, nf, custom, height }) {
   return (
     <ReactECharts
       option={option}
-      style={{ width: "100%", height: height || custom?.[id]?.height || 480 }}
+      style={{ width: "100%", height: height || custom?.[id]?.height }}
     />
   );
 }

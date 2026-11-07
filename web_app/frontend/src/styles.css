@@ -331,7 +331,7 @@ main {
 }
 .section-title {
   font: 700 2.1rem var(--font-head);
-  margin-top: 4rem;
+  margin-top: 3rem;
   margin-bottom: 1rem;
   color: var(--accent);
 }
@@ -488,8 +488,8 @@ main {
 
 .chart-expand-btn {
   position: absolute;
-  top: -3rem;
-  right: 0.5rem;
+  top: -3.5rem;
+  right: 0rem;
   background: var(--surface-2);
   border: 1px solid var(--line);
   color: var(--muted);

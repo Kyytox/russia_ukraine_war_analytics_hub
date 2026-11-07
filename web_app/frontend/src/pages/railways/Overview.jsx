@@ -1,72 +1,30 @@
 import { useState } from "react";
 import { useApi } from "../../hooks/useApi.js";
-import { usePageTranslation } from "../../hooks/usePageTranslation.js";
-import { getPageFromPath } from "../../utils/common.js";
+import { formatKpiValue } from "../../utils/common.js";
+import { useConfigCharts } from "../../hooks/useConfigCharts.js";
 
 import ChartState from "../../components/charts/ChartState.jsx";
 import ChartHeader from "../../components/charts/ChartHeader.jsx";
 import ChartModal from "../../components/charts/ChartModal.jsx";
 
+import { ComponentsHeatmap } from "../../components/charts/ComponentsHeatmap.jsx";
 import { ComponentsMap } from "../../components/charts/ComponentsMap.jsx";
 import { ComponentsStackedLines } from "../../components/charts/ComponentsStackedLines.jsx";
-import { ComponentsBarStackedVertical } from "../../components/charts/ComponentsBarStackedVertical.jsx";
-import { ComponentsLineArea } from "../../components/charts/ComponentsLineArea.jsx";
-import { ComponentsHeatmap } from "../../components/charts/ComponentsHeatmap.jsx";
-import { ComponentsTree } from "../../components/charts/ComponentsTree.jsx";
-import { ComponentsPie } from "../../components/charts/ComponentsPie.jsx";
 import { ComponentsBarVertical } from "../../components/charts/ComponentsBarVertical.jsx";
-import { ComponentsBarHorizontal } from "../../components/charts/ComponentsBarHorizontal.jsx";
-import { ComponentsBarStackedHorizontal } from "../../components/charts/ComponentsBarStackedHorizontal.jsx";
 import { ComponentsTreemap } from "../../components/charts/ComponentsTreemap.jsx";
-import { ComponentsSunburst } from "../../components/charts/ComponentsSunburst.jsx";
 
-/**
- * Format KPI value based on type
- * - Numeric: formatted with locale
- * - Date (YYYY-MM-DD or YYYY-MM): formatted as date
- * - Other: returned as-is
- */
-function formatKpiValue(value, locale) {
-  if (!value) return value;
-
-  // Check if numeric (starts with digit)
-  if (/^\d/.test(value)) {
-    // Check if it's a date (YYYY-MM-DD or YYYY-MM format)
-    if (/^\d{4}-\d{2}(-\d{2})?$/.test(value)) {
-      const date = new Date(value + "T00:00:00Z"); // Add time to parse as UTC
-      if (!isNaN(date.getTime())) {
-        // Format as date
-        return new Intl.DateTimeFormat(locale, {
-          year: "numeric",
-          month: "long",
-          day: value.length === 10 ? "numeric" : undefined,
-        }).format(date);
-      }
-    }
-
-    // Otherwise try to format as number
-    const num = Number(value);
-    if (!isNaN(num)) {
-      return new Intl.NumberFormat(locale).format(num);
-    }
-  }
-
-  return value;
-}
-
-const TAB = "overview";
-
-export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
+export default function Overview({ PAGE, t, i18n, nf }) {
+  const TAB = "overview";
   const prefix = `${PAGE}/${TAB}`;
-  const custom = customCharts?.[`${TAB}`] ?? {}; // Get custom chart config for this tab
+  const cfg = useConfigCharts(PAGE, TAB); // Get custom chart config for this tab
 
-  const [hideMoscowChart7, setHideMoscowChart7] = useState(false);
-  const [hideMoscowChart8, setHideMoscowChart8] = useState(false);
+  const [hideMoscowChart7, setHideMoscowChart7] = useState(true);
+  const [hideMoscowChart8, setHideMoscowChart8] = useState(true);
 
   const kpi = useApi(`/api/${prefix}/kpi`);
   const section1 = useApi(`/api/${prefix}/section1`);
   const section2 = useApi(`/api/${prefix}/section2`);
-  // const section3 = useApi(`/api/${prefix}/section3`);
+  const section3 = useApi(`/api/${prefix}/section3`);
   const section4 = useApi(`/api/${prefix}/section4`);
 
   return (
@@ -102,7 +60,7 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -125,7 +83,7 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -149,7 +107,7 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   xTypeProp="month"
                   height={height}
                 />
@@ -174,7 +132,7 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -197,7 +155,7 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -205,42 +163,6 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
           </ChartModal>
         </section>
 
-        {/* LOOP over years in "by_day" section2 and display heatmap for each year 
-        {section2.data && (
-          <>
-            {Array.from(
-              new Set(
-                section3.data.map((d) => d.metric.substring(0, 4)), // Extract year from YYYY-MM-DD
-              ),
-            )
-              .sort()
-              .map((year) => (
-                <section key={year} className="chart span-6">
-                  <ChartHeader
-                    pageKey={PAGE}
-                    chartKey={`chart6`}
-                    t={t}
-                    year={year}
-                  />
-                  <ChartState query={section3}>
-                    {(data) => (
-                      <ComponentsHeatmap
-                        id={"chart7"}
-                        data={data.filter((d) => d.metric.startsWith(year))}
-                        t={t}
-                        i18n={i18n}
-                        nf={nf}
-                        custom={customCharts}
-                      />
-                    )}
-                  </ChartState>
-                </section>
-              ))}
-          </>
-        )} 
-        */}
-
-        {/* Chart 7: Treemap with independent Moscow filter */}
         <section className="chart span-12">
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart7`} t={t} />
           <div className="filter-controls">
@@ -266,7 +188,7 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
               {(data, height) => {
                 const filteredData = hideMoscowChart7
                   ? data.filter(
-                      (d) => d.label !== "Moscow" && d.label !== "Москва",
+                      (d) => d.metric !== "Moscow" && d.metric !== "Москва",
                     )
                   : data;
                 return (
@@ -276,8 +198,9 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
                     t={t}
                     i18n={i18n}
                     nf={nf}
-                    custom={custom}
+                    custom={cfg}
                     height={height}
+                    gradient={true}
                   />
                 );
               }}
@@ -285,7 +208,6 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
           </ChartModal>
         </section>
 
-        {/* Chart 8: Map with independent Moscow filter */}
         <section className="chart span-12">
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart8`} t={t} />
           <div className="filter-controls">
@@ -311,7 +233,7 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
               {(data, height) => {
                 const filteredData = hideMoscowChart8
                   ? data.filter(
-                      (d) => d.label !== "Moscow" && d.label !== "Москва",
+                      (d) => d.metric !== "Moscow" && d.metric !== "Москва",
                     )
                   : data;
                 return (
@@ -321,7 +243,7 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
                     t={t}
                     i18n={i18n}
                     nf={nf}
-                    custom={custom}
+                    custom={cfg}
                     height={height}
                   />
                 );
@@ -329,6 +251,46 @@ export default function Overview({ PAGE, t, i18n, nf, customCharts }) {
             </ChartState>
           </ChartModal>
         </section>
+
+        {section3.data && (
+          <>
+            {Array.from(
+              new Set(
+                section3.data.map((d) => d.metric.substring(0, 4)), // Extract year from YYYY-MM-DD
+              ),
+            )
+              .sort()
+              .map((year) => (
+                <section key={year} className="chart span-6">
+                  <ChartHeader
+                    pageKey={TAB}
+                    chartKey={`page.${TAB}.chart6`}
+                    t={t}
+                    year={year}
+                  />
+                  <ChartModal
+                    pageKey={TAB}
+                    chartKey={`page.${TAB}.chart6`}
+                    t={t}
+                    initialHeight={440}
+                  >
+                    <ChartState query={section3}>
+                      {(data) => (
+                        <ComponentsHeatmap
+                          id="chart6"
+                          data={data.filter((d) => d.metric.startsWith(year))}
+                          t={t}
+                          i18n={i18n}
+                          nf={nf}
+                          custom={cfg}
+                        />
+                      )}
+                    </ChartState>
+                  </ChartModal>
+                </section>
+              ))}
+          </>
+        )}
       </section>
     </>
   );

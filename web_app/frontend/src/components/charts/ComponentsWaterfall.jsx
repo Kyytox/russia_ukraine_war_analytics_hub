@@ -1,8 +1,6 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const LABEL_MAX_WIDTH = 150;
-
 export function ComponentsWaterfall({
   id,
   data,
@@ -44,7 +42,7 @@ export function ComponentsWaterfall({
         value: d.value,
         start,
         end: cumulative,
-        color: colorOf(d.metric, d.value),
+        color: colorOf(d.libelle),
       };
     });
 
@@ -56,7 +54,6 @@ export function ComponentsWaterfall({
         value: total,
         start: 0,
         end: total,
-        // color:
       });
     }
 
@@ -98,9 +95,7 @@ export function ComponentsWaterfall({
     }));
 
     return {
-      backgroundColor: "transparent",
       aria: { enabled: true },
-      toolbox: { right: 10, iconStyle: { borderColor: "#fff" } },
       legend: withLegend
         ? { top: 0, textStyle: { color: "#fff" } }
         : { show: false },
@@ -118,7 +113,7 @@ export function ComponentsWaterfall({
           const p = params[0];
           const r = rows[p.dataIndex];
           if (!r) return "";
-          return `Age:  ${r.name}<br/><b>${nf.format(r.value)}</b> ${t(
+          return `${p.marker}Age:  ${r.name}<br/><b>${nf.format(r.value)}</b> ${t(
             cfg.tooltip ?? "page.tooltip_text",
           )}`;
         },
@@ -130,7 +125,7 @@ export function ComponentsWaterfall({
         axisLabel: {
           interval: 0,
           rotate: cfg.xAxisRotate,
-          width: LABEL_MAX_WIDTH,
+          width: custom?.common?.labelMaxLength,
           overflow: "truncate",
           fontSize: 13,
           color: "#fff",
@@ -146,7 +141,7 @@ export function ComponentsWaterfall({
           fontSize: 14,
           color: "#fff",
         },
-        splitLine: { lineStyle: { color: "rgba(255,255,255,0.12)" } },
+        splitLine: custom?.common?.splitLine,
       },
       series: [baseSeries, ...valueSeries],
     };
@@ -159,7 +154,6 @@ export function ComponentsWaterfall({
     <ReactECharts
       option={option}
       style={{ width: "100%", height: chartHeight, alignSelf: "center" }}
-      theme="dark"
     />
   );
 }

@@ -25,74 +25,209 @@
     },
     "chart2": {
       "title": "Monthly Incident Trends on Russian Railways",
-      "subtitle": "Number of incidents per month since 2022"
+      "subtitle": "Timeline showing monthly volume trends of railway incidents"
     },
     "chart3": {
       "title": "Monthly Incident Trends on Russian Railways",
-      "subtitle": "Number of incidents per month since 2022"
+      "subtitle": "Comparative view of total incidents per month"
     },
     "chart4": {
       "title": "Railway Incidents by Type in Russia",
-      "subtitle": "Number of incidents per type since 2022"
+      "subtitle": "Breakdown of incidents categorized by incident classification"
     },
     "chart5": {
       "title": "Railway Damaged Equipments in Russia",
-      "subtitle": "Number of damaged equipments per type since 2022"
+      "subtitle": "Overview of damaged equipment involved across railway incidents"
+    },
+    "chart6": {
+      "title": "Distribution of Railway Incidents by Day of the Week in ",
+      "subtitle": "Number of incidents per day of the week in"
+    },
+    "chart7": {
+      "title": "Distribution of Railway Incidents by Region in Russia",
+      "subtitle": "Hierarchical breakdown of railway incidents across Russian regions"
+    },
+    "chart8": {
+      "title": "Geographic Distribution of Sabotages on Russian Railways",
+      "subtitle": "Spatial distribution and mapping of recorded sabotage events"
     }
   },
   "incident-types": {
     "title": "Incident Types",
     "hide_moscow": "Hide Moscow",
     "chart1": {
-      "title": "Railway Incidents by Type in Russia",
-      "subtitle": "Number of incidents per type since 2022",
-      "text": "Incidents"
+      "title": "Distribution of Incidents by Type",
+      "subtitle": "Overall breakdown of reported incidents categorized by type"
     },
     "chart2": {
-      "title": "Railway Incidents by Type in Russia",
-      "subtitle": "Number of incidents per type since 2022"
+      "title": "Trends in Cumulative Incidents by Type Over Time",
+      "subtitle": "Running cumulative count of incidents over time segmented by type"
+    },
+    "chart3": {
+      "title": "Incidents by Type: Yearly Comparison",
+      "subtitle": "Year-over-year comparison showing incident volume by category"
+    },
+    "chart4": {
+      "title": "Monthly Incidents by Type",
+      "subtitle": "Temporal monthly trends of incidents broken down by category"
+    },
+    "chart5": {
+      "title": "Distribution of Damaged Equipment by Incident Type",
+      "subtitle": "Breakdown showing equipment damage totals for each incident type"
+    },
+    "chart6": {
+      "title": "Flow of Damaged Equipment by Incident Type",
+      "subtitle": "Relationship flow illustrating how specific incident types lead to equipment damage"
+    },
+    "chart7": {
+      "title": "Distribution of Incidents by Type and Region",
+      "subtitle": "Regional breakdown of incidents categorized by incident classification"
     }
   },
-
   "damaged-equipments": {
     "title": "Damaged Equipments",
     "hide_moscow": "Hide Moscow",
     "chart1": {
-      "title": "",
-      "subtitle": "",
-      "text": "Incidents"
+      "title": "Distribution of Damaged Equipments",
+      "subtitle": "Overall count and breakdown of damaged equipment across all incidents"
     },
     "chart2": {
-      "title": "Railway Incidents by Type in Russia",
-      "subtitle": "Number of incidents per type since 2022"
+      "title": "Trends in Cumulative Damaged Equipments Over Time",
+      "subtitle": "Cumulative growth trajectory of damaged equipment over time"
+    },
+    "chart3": {
+      "title": "Damaged Equipment: Yearly Comparison",
+      "subtitle": "Annual comparison of equipment damage instances"
+    },
+    "chart4": {
+      "title": "Monthly Damaged Equipments",
+      "subtitle": "Detailed monthly view of damaged equipment counts"
+    },
+    "chart5": {
+      "title": "Distribution of Incident Types by Damaged Equipment",
+      "subtitle": "Multi-tiered hierarchical breakdown showing incident types within equipment categories"
+    },
+    "chart6": {
+      "title": "Flow of Incident Types by Damaged Equipment",
+      "subtitle": "Mapping connection flows between damaged equipment types and corresponding incident categories"
+    },
+    "chart7": {
+      "title": "Distribution of Damaged Equipments by Region",
+      "subtitle": "Regional comparative view of equipment damage occurrences"
     }
   },
   "collisions": {
     "title": "Collisions",
     "hide_moscow": "Hide Moscow",
     "chart1": {
-      "title": "",
-      "subtitle": "",
+      "title": "Distribution of Collisions",
+      "subtitle": "Proportion of collisions relative to overall incident types",
       "text": "Incidents"
     },
     "chart2": {
-      "title": "Railway Incidents by Type in Russia",
-      "subtitle": "Number of incidents per type since 2022"
+      "title": "Monthly Collisions",
+      "subtitle": "NuTemporal monthly frequency of collision events"
+    },
+    "chart3": {
+      "title": "Distribution of Collisions by Implicated Equipment",
+      "subtitle": "Breakdown of collisions categorized by the primary equipment involved"
+    },
+    "chart4": {
+      "title": "Monthly Implicated Equipments in Collisions",
+      "subtitle": "Monthly trends of specific equipment involved in collision events"
+    }
+  },
+  "sabotage": {
+    "title": "Sabotage",
+    "hide_moscow": "Hide Moscow",
+    "chart1": {
+      "title": "Annual Number of Sabotage",
+      "subtitle": "Total recorded sabotage events grouped by year"
+    },
+    "chart2": {
+      "title": "Monthly Number of Sabotage by Year",
+      "subtitle": "Monthly sabotage activity trends compared across years"
+    },
+    "chart3": {
+      "title": "Incidents vs Sabotage over Time",
+      "subtitle": "Comparative timeline measuring total incidents against targeted sabotage events"
+    },
+    "chart4": {
+      "title": "Distribution of Sabotage by Partisans Group",
+      "subtitle": "Proportion of sabotage events attributed to specific partisan groups"
+    },
+    "chart5": {
+      "title": "Sabotage Incidents by Partisans Group",
+      "subtitle": "Timeline mapping individual sabotage incidents by partisan group and date"
+    },
+    "chart6": {
+      "title": "Treemap of Partisan Groups and Associated Equipment Damage",
+      "subtitle": "Hierarchical structure mapping partisan groups to specific equipment damages"
+    },
+    "chart7": {
+      "title": "Distribution of damaged equipment of partisan groups",
+      "subtitle": "Volume of equipment damage attributed across partisan organizations"
+    },
+    "chart8": {
+      "title": "Distribution of Damaged Equipment for Sabotage Incidents",
+      "subtitle": "Share of specific equipment types damaged strictly in sabotage cases"
+    },
+    "chart9": {
+      "title": "Monthly Number of Damaged Equipments",
+      "subtitle": "Temporal monthly trajectory of equipment damaged via sabotage"
+    },
+    "chart10": {
+      "title": "Treemap of Damaged Equipment with Partisan Group Attribution",
+      "subtitle": "Hierarchical layout of damaged equipment organized by responsible partisan groups"
+    },
+    "chart11": {
+      "title": "Implication of Partisans Group in Damaged Equipment",
+      "subtitle": "Extent of involvement for each partisan group regarding equipment damage"
+    },
+    "chart12": {
+      "title": "Geographic Distribution of Sabotages on Russian Railways",
+      "subtitle": "Geographic plot of railway sabotage locations across regions"
+    },
+    "chart13": {
+      "title": "Number of Damaged Equipments by Region",
+      "subtitle": "Geographical distribution of equipment damage caused by sabotage"
     }
   },
   "partisans-arrest": {
     "title": "Partisans Arrest",
     "hide_moscow": "Hide Moscow",
     "chart1": {
-      "title": "",
-      "subtitle": "",
-      "text": "Incidents"
+      "title": "Funnel of Partisans Arrested",
+      "subtitle": "Conversion stage mapping showing progression of partisan arrests"
     },
     "chart2": {
-      "title": "",
-      "subtitle": "",
-      "text": "Sabotages"
+      "title": "Distribution of Sabotage where partisans were arrested",
+      "subtitle": "Proportion of sabotage events resulting in partisan detentions"
+    },
+    "chart3": {
+      "title": "Distribution of Applicable Laws",
+      "subtitle": "Hierarchical view of legal statutes applied to detained partisans"
+    },
+    "chart4": {
+      "title": "Number of Partisans Age",
+      "subtitle": "Grid layout displaying age composition of arrested partisans"
+    },
+    "chart5": {
+      "title": "Number of Partisans Arrested by Age",
+      "subtitle": "Cumulative step analysis of arrested partisans grouped by exact age"
+    },
+    "chart6": {
+      "title": "Number of Partisans Arrested by Age Group",
+      "subtitle": "Sequential age bracket analysis of partisan arrest metrics"
+    },
+    "chart7": {
+      "title": "Applicable Laws by Partisans Age",
+      "subtitle": "Correlation mapping applied legal charges against partisan age"
     }
+  },
+  "informations": {
+    "title": "Informations",
+    "subtitle": ""
   },
   "content": {
     "Adygey": "Adygey",

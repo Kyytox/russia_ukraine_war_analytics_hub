@@ -1,17 +1,12 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const LABEL_MAX_WIDTH = 150;
-
 export function ComponentsFunnel({ id, data, t, i18n, nf, custom, height }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
 
-    console.log("ComponentsFunnel custom", custom);
-
     const cfg = custom?.[id] ?? {};
-    // const labelPrefix = "test";
-    const labelPrefix = cfg.label_prefix ?? "page.content";
+    const labelPrefix = "page.content";
     const pct = new Intl.NumberFormat(i18n.language, {
       style: "percent",
       maximumFractionDigits: 1,
@@ -30,9 +25,7 @@ export function ComponentsFunnel({ id, data, t, i18n, nf, custom, height }) {
       }));
 
     return {
-      backgroundColor: "transparent",
       aria: { enabled: true },
-      toolbox: { right: 10, iconStyle: { borderColor: "#fff" } },
       grid: {
         top: "5%",
         left: "6%",
@@ -86,7 +79,6 @@ export function ComponentsFunnel({ id, data, t, i18n, nf, custom, height }) {
     <ReactECharts
       option={option}
       style={{ width: "100%", height: chartHeight, alignSelf: "center" }}
-      theme="dark"
     />
   );
 }

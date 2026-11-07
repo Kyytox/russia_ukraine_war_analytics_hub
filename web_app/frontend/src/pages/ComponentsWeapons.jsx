@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useApi } from "../hooks/useApi.js";
 import { usePageTranslation } from "../hooks/usePageTranslation.js";
-import { useCustomChart } from "../hooks/useCustomChart.js";
+import { useConfigCharts } from "../hooks/useConfigCharts.js";
 
 import { ComponentsPie } from "../components/charts/ComponentsPie.jsx";
 import { ComponentsBarVertical } from "../components/charts/ComponentsBarVertical.jsx";
@@ -24,7 +24,7 @@ export default function ComponentsWeapons() {
   const [error, setError] = useState(false);
 
   const { t, i18n } = usePageTranslation("components-weapons");
-  const custom = useCustomChart(PAGE_NAME);
+  const custom = useConfigCharts(PAGE_NAME);
   const nf = new Intl.NumberFormat(i18n.language);
 
   const kpi = useApi("/api/components-weapons/summary");
@@ -82,116 +82,143 @@ export default function ComponentsWeapons() {
         </ChartState>
       </section>
 
-      {/* Exemple de bouton interne
-      <div style={{ marginTop: "2rem" }}>
-        <button onClick={() => navigate("/")}>{t("nav.home")}</button>
-      </div> */}
-
       <section className="charts-grid">
         <h2 className="section-title span-12">{t(`page.section1_title`)}</h2>
         <section className="chart span-4">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart1" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart1`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart1`}
+            t={t}
+          >
             <ChartState query={section1}>
-            {(data, height) => (
-              <ComponentsPie
-                id="chart1"
-                data={data.filter((d) => d.libelle === "type_equipment")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={custom}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsPie
+                  id="chart1"
+                  data={data.filter((d) => d.libelle === "type_equipment")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={custom}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-8">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart8" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart8`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart8`}
+            t={t}
+          >
             <ChartState query={section4}>
-            {(data, height) => (
-              <ComponentsSunburst
-                id="chart8"
-                data={data}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={custom}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsSunburst
+                  id="chart8"
+                  data={data}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={custom}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-6">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart3" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart3`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart3`}
+            t={t}
+          >
             <ChartState query={section1}>
-            {(data, height) => (
-              <ComponentsBarHorizontal
-                id="chart3"
-                data={data.filter((d) => d.libelle === "manufacturer_country")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={custom}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarHorizontal
+                  id="chart3"
+                  data={data.filter(
+                    (d) => d.libelle === "manufacturer_country",
+                  )}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={custom}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
         <section className="chart span-6">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart4" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart4`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart4`}
+            t={t}
+          >
             <ChartState query={section1}>
-            {(data, height) => (
-              <ComponentsBarHorizontal
-                id="chart4"
-                data={data.filter((d) => d.libelle === "manufacturer")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={custom}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarHorizontal
+                  id="chart4"
+                  data={data.filter((d) => d.libelle === "manufacturer")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={custom}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-5">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart2" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart2`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart2`}
+            t={t}
+          >
             <ChartState query={section1}>
-            {(data, height) => (
-              <ComponentsBarVertical
-                id="chart2"
-                data={data.filter((d) => d.libelle === "weapon_type")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={custom}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarVertical
+                  id="chart2"
+                  data={data.filter((d) => d.libelle === "weapon_type")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={custom}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-7">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart5" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart5`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart5`}
+            t={t}
+          >
             <ChartState query={section1}>
-            {(data, height) => (
-              <ComponentsBarHorizontal
-                id="chart5"
-                data={data.filter((d) => d.libelle === "weapon")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={custom}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarHorizontal
+                  id="chart5"
+                  data={data.filter((d) => d.libelle === "weapon")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={custom}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
@@ -199,36 +226,46 @@ export default function ComponentsWeapons() {
         <h2 className="section-title span-12">{t(`page.section2_title`)}</h2>
         <section className="chart span-12">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart6" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart6`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart6`}
+            t={t}
+          >
             <ChartState query={section2}>
-            {(data, height) => (
-              <ComponentsBarStackedHorizontal
-                id="chart6"
-                data={data}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={custom}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarStackedHorizontal
+                  id="chart6"
+                  data={data}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={custom}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-12">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart7" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart7`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart7`}
+            t={t}
+          >
             <ChartState query={section3}>
-            {(data, height) => (
-              <ComponentsTreemap
-                id="chart7"
-                data={data}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={custom}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsTreemap
+                  id="chart7"
+                  data={data}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={custom}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>

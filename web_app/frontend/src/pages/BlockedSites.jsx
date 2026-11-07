@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useApi } from "../hooks/useApi.js";
 import { usePageTranslation } from "../hooks/usePageTranslation.js";
-import { useCustomChart } from "../hooks/useCustomChart.js";
+import { useConfigCharts } from "../hooks/useConfigCharts.js";
 
 import { ComponentsBarVertical } from "../components/charts/ComponentsBarVertical.jsx";
 import { ComponentsBarHorizontal } from "../components/charts/ComponentsBarHorizontal.jsx";
@@ -25,7 +25,7 @@ export default function BlockedSites() {
   const [error, setError] = useState(false);
 
   const { t, i18n } = usePageTranslation(PAGE_NAME);
-  const customCharts = useCustomChart(PAGE_NAME);
+  const customCharts = useConfigCharts(PAGE_NAME);
   const nf = new Intl.NumberFormat(i18n.language);
 
   const kpi = useApi("/api/blocked-sites/kpi");
@@ -122,72 +122,94 @@ export default function BlockedSites() {
         <h2 className="section-title span-12">{t(`page.section1_title`)}</h2>
         <section className="chart span-6">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart3" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart3`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart3`}
+            t={t}
+          >
             <ChartState query={section1}>
-            {(data, height) => (
-              <ComponentsBarHorizontal
-                id="chart3"
-                data={data.filter((d) => d.libelle === "by_category")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarHorizontal
+                  id="chart3"
+                  data={data.filter((d) => d.libelle === "by_category")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-6">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart4" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart4`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart4`}
+            t={t}
+          >
             <ChartState query={section1}>
-            {(data, height) => (
-              <ComponentsBarHorizontal
-                id="chart4"
-                data={data.filter((d) => d.libelle === "by_banning_authority")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarHorizontal
+                  id="chart4"
+                  data={data.filter(
+                    (d) => d.libelle === "by_banning_authority",
+                  )}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-6">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart1" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart1`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart1`}
+            t={t}
+          >
             <ChartState query={section1}>
-            {(data, height) => (
-              <ComponentsBarHorizontal
-                id="chart1"
-                data={data.filter((d) => d.libelle === "by_country_domain")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarHorizontal
+                  id="chart1"
+                  data={data.filter((d) => d.libelle === "by_country_domain")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-6">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart2" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart2`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart2`}
+            t={t}
+          >
             <ChartState query={section1}>
-            {(data, height) => (
-              <ComponentsBarHorizontal
-                id="chart2"
-                data={data.filter((d) => d.libelle === "by_subcategory")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarHorizontal
+                  id="chart2"
+                  data={data.filter((d) => d.libelle === "by_subcategory")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
@@ -195,36 +217,46 @@ export default function BlockedSites() {
         <h2 className="section-title span-12">{t(`page.section2_title`)}</h2>
         <section className="chart span-4">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart5" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart5`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart5`}
+            t={t}
+          >
             <ChartState query={section2}>
-            {(data, height) => (
-              <ComponentsBarVertical
-                id="chart5"
-                data={data.filter((d) => d.libelle === "by_year")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarVertical
+                  id="chart5"
+                  data={data.filter((d) => d.libelle === "by_year")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-8">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart6" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart6`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart6`}
+            t={t}
+          >
             <ChartState query={section2}>
-            {(data, height) => (
-              <ComponentsBarVertical
-                id="chart6"
-                data={data.filter((d) => d.libelle === "by_month")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarVertical
+                  id="chart6"
+                  data={data.filter((d) => d.libelle === "by_month")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
@@ -248,14 +280,20 @@ export default function BlockedSites() {
                     t={t}
                     year={year}
                   />
-                  <ChartModal pageKey={PAGE_KEY} chartKey={`chart7`} t={t} year={year}>
+                  <ChartModal
+                    pageKey={PAGE_KEY}
+                    chartKey={`chart7`}
+                    t={t}
+                    year={year}
+                  >
                     <ChartState query={section2}>
                       {(data, height) => (
                         <ComponentsHeatmap
                           id={"chart7"}
                           data={data.filter(
                             (d) =>
-                              d.libelle === "by_day" && d.metric.startsWith(year),
+                              d.libelle === "by_day" &&
+                              d.metric.startsWith(year),
                           )}
                           t={t}
                           i18n={i18n}
@@ -273,18 +311,23 @@ export default function BlockedSites() {
 
         <section className="chart span-6">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart8" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart8`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart8`}
+            t={t}
+          >
             <ChartState query={section2}>
-            {(data, height) => (
-              <ComponentsLineArea
-                id="chart8"
-                data={data.filter((d) => d.libelle === "by_day_cumul")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsLineArea
+                  id="chart8"
+                  data={data.filter((d) => d.libelle === "by_day_cumul")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
@@ -292,72 +335,92 @@ export default function BlockedSites() {
         <h2 className="section-title span-12">{t(`page.section3_title`)}</h2>
         <section className="chart span-12">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart9" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart9`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart9`}
+            t={t}
+          >
             <ChartState query={section3}>
-            {(data, height) => (
-              <ComponentsBarStackedVertical
-                id="chart10"
-                data={data.filter((d) => d.id === "category")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarStackedVertical
+                  id="chart10"
+                  data={data.filter((d) => d.id === "category")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-12">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart10" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart10`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart10`}
+            t={t}
+          >
             <ChartState query={section3}>
-            {(data, height) => (
-              <ComponentsBarStackedVertical
-                id="chart9"
-                data={data.filter((d) => d.id === "banning_authority")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarStackedVertical
+                  id="chart9"
+                  data={data.filter((d) => d.id === "banning_authority")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-12">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart11" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart11`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart11`}
+            t={t}
+          >
             <ChartState query={section3}>
-            {(data, height) => (
-              <ComponentsBarStackedVertical
-                id="chart11"
-                data={data.filter((d) => d.id === "country_domain")}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarStackedVertical
+                  id="chart11"
+                  data={data.filter((d) => d.id === "country_domain")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
 
         <section className="chart span-12">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart12" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart12`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart12`}
+            t={t}
+          >
             <ChartState query={section4}>
-            {(data, height) => (
-              <ComponentsTree
-                id="chart12"
-                data={data}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsTree
+                  id="chart12"
+                  data={data}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>
@@ -365,18 +428,23 @@ export default function BlockedSites() {
         <h2 className="section-title span-12">{t(`page.section4_title`)}</h2>
         <section className="chart span-12">
           <ChartHeader pageKey={PAGE_KEY} chartKey="chart13" t={t} />
-          <ChartModal pageKey={PAGE_KEY} chartKey={`page.${PAGE_KEY}.chart13`} t={t}>
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart13`}
+            t={t}
+          >
             <ChartState query={section5}>
-            {(data, height) => (
-              <ComponentsBarStackedHorizontal
-                id="chart13"
-                data={data}
-                t={t}
-                i18n={i18n}
-                nf={nf}
-                custom={customCharts}
-              height={height} />
-            )}
+              {(data, height) => (
+                <ComponentsBarStackedHorizontal
+                  id="chart13"
+                  data={data}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                  height={height}
+                />
+              )}
             </ChartState>
           </ChartModal>
         </section>

@@ -1,8 +1,6 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const LABEL_MAX_WIDTH = 150;
-
 export function ComponentsRadar({ id, data, t, i18n, nf, custom, height }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
@@ -12,16 +10,11 @@ export function ComponentsRadar({ id, data, t, i18n, nf, custom, height }) {
     const maxValue = Math.max(...data.map((d) => d.value)) * 1.2;
 
     return {
-      backgroundColor: "transparent",
       grid: {
         top: "5%",
         left: "5%",
         right: "5%",
         bottom: "5%",
-      },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
       },
       tooltip: {
         trigger: "item",
@@ -39,8 +32,8 @@ export function ComponentsRadar({ id, data, t, i18n, nf, custom, height }) {
           color: "#fff",
           axisLabel: { fontSize: 12 },
         })),
-        axisLine: { lineStyle: { color: "rgba(255,255,255,0.3)" } },
-        splitLine: { lineStyle: { color: "rgba(255,255,255,0.1)" } },
+        axisLine: custom?.common?.splitLine,
+        splitLine: custom?.common?.splitLine,
         splitArea: { areaStyle: { color: ["rgba(255,255,255,0.05)"] } },
       },
       series: [
@@ -74,7 +67,6 @@ export function ComponentsRadar({ id, data, t, i18n, nf, custom, height }) {
     <ReactECharts
       option={option}
       style={{ width: "100%", height: chartHeight, alignSelf: "center" }}
-      theme="dark"
     />
   );
 }

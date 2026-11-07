@@ -4,12 +4,12 @@ import ReactECharts from "echarts-for-react";
 import { useApi } from "../../hooks/useApi";
 
 const DEFAULT_GRADIENT = [
-  "#f8dc8a",
-  "#fcb685",
-  "#f58f85",
-  "#e0707f",
-  "#a95a9b",
-  "#5c55a5",
+  "#c4aa5e",
+  "#c2885f",
+  "#bf635a",
+  "#b85462",
+  "#a85199",
+  "#50499c",
 ];
 
 import geo from "./ru_region.json";
@@ -18,16 +18,12 @@ import geo from "./ru_region.json";
 // echarts.registerMap("ru-regions", geo);
 
 export function ComponentsMap({ id, data, t, i18n, nf, custom, height }) {
-  console.log("ComponentsMap geo:", geo);
   // la carte est enregistrée une seule fois, quand le fichier est chargé
   const mapReady = useMemo(() => {
     if (!geo) return false;
     echarts.registerMap("ru-regions", geo);
     return true;
   }, [geo]);
-
-  console.log("ComponentsMap data:", data);
-  console.log("ComponentsMap mapReady:", mapReady);
 
   const option = useMemo(() => {
     if (!mapReady || !data?.length) return null;
@@ -36,11 +32,6 @@ export function ComponentsMap({ id, data, t, i18n, nf, custom, height }) {
 
     return {
       aria: { enabled: true },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: { saveAsImage: {} },
-      },
       tooltip: {
         confine: true,
         formatter: (p) =>
@@ -55,7 +46,7 @@ export function ComponentsMap({ id, data, t, i18n, nf, custom, height }) {
         orient: "horizontal",
         left: "center",
         bottom: 10,
-        textStyle: { color: "#fff" },
+        // textStyle: { color: "#fff" },
         inRange: { color: cfg.gradient ?? DEFAULT_GRADIENT },
       },
       series: [

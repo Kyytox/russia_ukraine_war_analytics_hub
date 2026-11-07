@@ -3,9 +3,10 @@ import HelpTip from "../../components/HelpTip.jsx";
 export default function ChartHeader({ pageKey, chartKey, t, year }) {
   const yearSuffix = year ? ` ${year}` : "";
   const fullKey = chartKey.includes(".") ? chartKey : `${pageKey}.${chartKey}`;
-  const helpKey = `${fullKey}.help`;
-  const helpText = t(helpKey);
-  const showHelp = helpText !== "";
+
+  // check if halp exists
+  const helpText = t(`${fullKey}.help`);
+  const showHelp = helpText !== `${fullKey}.help`;
 
   return (
     <>

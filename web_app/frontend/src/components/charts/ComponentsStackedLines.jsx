@@ -52,10 +52,12 @@ export function ComponentsStackedLines({
   nf,
   custom,
   height,
-  xType: xTypeProp, // optional override: "month" | "month_year" | "category"
+  xType: xTypeProp, // "month" | "month_year" | "category"
 }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
+
+    // Get chart configuration for the given id
     const cfg = custom?.[id] ?? {};
     const xType = xTypeProp ?? detectXType(data);
 
@@ -66,7 +68,6 @@ export function ComponentsStackedLines({
     // 2. X axis
     let xKeys, xLabels;
     if (xType === "month") {
-      // Fixed axis: Jan -> Dec
       xKeys = Array.from({ length: 12 }, (_, i) => i + 1);
       xLabels = xKeys.map((m) =>
         new Intl.DateTimeFormat(i18n.language, { month: "short" }).format(
@@ -74,7 +75,6 @@ export function ComponentsStackedLines({
         ),
       );
     } else if (xType === "month_year") {
-      // Chronological axis, filled with missing months
       const sorted = [
         ...new Set(data.map((d) => toYM(d.metric)).filter(Boolean)),
       ].sort();
@@ -90,9 +90,7 @@ export function ComponentsStackedLines({
     } else {
       // Default: generic categories, translated if a label exists
       xKeys = [...new Set(data.map((d) => d.metric))].sort(sortNatural);
-      xLabels = xKeys.map((k) =>
-        t(`${cfg.label_prefix ?? "page.content"}.${k}`, String(k)),
-      );
+      xLabels = xKeys.map((k) => t(`${"page.content"}.${k}`, String(k)));
     }
 
     // 3. One series per `libelle`, lookup "libelle|x" -> value
@@ -111,11 +109,9 @@ export function ComponentsStackedLines({
         name: String(key),
         type: "line",
         data: xKeys.map((x) => lookup.get(`${key}|${x}`) ?? null), // null = no point
-        smooth: cfg.smooth ?? false,
-        connectNulls: cfg.connectNulls ?? false,
-        showSymbol: cfg.showSymbol ?? false,
+        showSymbol: false,
         symbolSize: 6,
-        lineStyle: { width: 2, ...(color && { color }) },
+        lineStyle: { width: 3, ...(color && { color }) },
         ...(color && { itemStyle: { color } }),
         emphasis: { focus: "series" },
       };
@@ -124,20 +120,11 @@ export function ComponentsStackedLines({
     const isMY = xType === "month_year";
 
     return {
-      backgroundColor: "transparent",
       aria: { enabled: true },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: {
-          ...(cfg.zoomable && { dataZoom: { yAxisIndex: "none" } }),
-          saveAsImage: {},
-        },
-      },
       grid: {
         top: "14%",
-        left: "4%",
-        right: "4%",
+        left: "3%",
+        right: "3%",
         bottom: "4%",
         containLabel: true,
       },
@@ -151,7 +138,6 @@ export function ComponentsStackedLines({
         trigger: "axis",
         confine: true,
         formatter: (params) => {
-          // Hide empty points, sort by value (descending)
           const rows = params
             .filter((p) => p.value != null)
             .sort((a, b) => b.value - a.value);
@@ -179,16 +165,16 @@ export function ComponentsStackedLines({
       },
       yAxis: {
         type: "value",
-        name: t(cfg.axis_text ?? "page.axes_text"),
+        name: t("page.axes_text"),
         nameLocation: "end",
-        nameTextStyle: { fontSize: 14, color: "#fff", align: "left" }, // align left: avoids the title being cut off
         boundaryGap: [0, "10%"],
+        nameTextStyle: custom?.common?.nameTextStyle,
         axisLabel: {
           formatter: (v) => nf.format(v),
           fontSize: 14,
           color: "#fff",
         },
-        splitLine: { lineStyle: { color: "rgba(255,255,255,0.12)" } },
+        splitLine: custom?.common?.splitLine,
       },
       series,
     };
@@ -196,14 +182,14 @@ export function ComponentsStackedLines({
 
   if (!option) return null;
 
-  const chartHeight = height || custom?.[id]?.height || 400;
+  // Determine chart height:
+  const chartHeight = height || custom?.[id]?.height;
 
   return (
     <ReactECharts
       option={option}
       notMerge
       style={{ width: "100%", height: chartHeight }}
-      theme="dark"
     />
   );
 }

@@ -1,32 +1,24 @@
 import { useState } from "react";
 import { useApi } from "../../hooks/useApi.js";
-import { usePageTranslation } from "../../hooks/usePageTranslation.js";
-import { getPageFromPath } from "../../utils/common.js";
+import { useConfigCharts } from "../../hooks/useConfigCharts.js";
 
 import ChartState from "../../components/charts/ChartState.jsx";
 import ChartHeader from "../../components/charts/ChartHeader.jsx";
 import ChartModal from "../../components/charts/ChartModal.jsx";
 
-import { ComponentsMap } from "../../components/charts/ComponentsMap.jsx";
 import { ComponentsStackedLines } from "../../components/charts/ComponentsStackedLines.jsx";
 import { ComponentsBarStackedVertical } from "../../components/charts/ComponentsBarStackedVertical.jsx";
-import { ComponentsLineArea } from "../../components/charts/ComponentsLineArea.jsx";
-import { ComponentsHeatmap } from "../../components/charts/ComponentsHeatmap.jsx";
-import { ComponentsTree } from "../../components/charts/ComponentsTree.jsx";
 import { ComponentsPie } from "../../components/charts/ComponentsPie.jsx";
-import { ComponentsBarVertical } from "../../components/charts/ComponentsBarVertical.jsx";
-import { ComponentsBarHorizontal } from "../../components/charts/ComponentsBarHorizontal.jsx";
 import { ComponentsBarStackedHorizontal } from "../../components/charts/ComponentsBarStackedHorizontal.jsx";
-import { ComponentsTreemap } from "../../components/charts/ComponentsTreemap.jsx";
 import { ComponentsSunburst } from "../../components/charts/ComponentsSunburst.jsx";
 import { ComponentsBarGrouped } from "../../components/charts/ComponentsBarGrouped.jsx";
 import { ComponentsSankey } from "../../components/charts/ComponentsSankey.jsx";
 
 const TAB = "incident-types";
 
-export default function IncidentTypes({ PAGE, t, i18n, nf, customCharts }) {
+export default function IncidentTypes({ PAGE, t, i18n, nf }) {
   const prefix = `${PAGE}/${TAB}`;
-  const custom = customCharts?.[`${TAB}`] ?? {}; // Get custom chart config for this tab
+  const cfg = useConfigCharts(PAGE, TAB);
 
   const [hideMoscowChart7, setHideMoscowChart7] = useState(false);
 
@@ -52,7 +44,7 @@ export default function IncidentTypes({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -70,7 +62,7 @@ export default function IncidentTypes({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   xTypeProp="month_year"
                   height={height}
                 />
@@ -90,7 +82,7 @@ export default function IncidentTypes({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -109,7 +101,7 @@ export default function IncidentTypes({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -128,7 +120,7 @@ export default function IncidentTypes({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -147,7 +139,7 @@ export default function IncidentTypes({ PAGE, t, i18n, nf, customCharts }) {
                   t={t}
                   i18n={i18n}
                   nf={nf}
-                  custom={custom}
+                  custom={cfg}
                   height={height}
                 />
               )}
@@ -185,7 +177,7 @@ export default function IncidentTypes({ PAGE, t, i18n, nf, customCharts }) {
                     t={t}
                     i18n={i18n}
                     nf={nf}
-                    custom={custom}
+                    custom={cfg}
                     height={height}
                   />
                 );

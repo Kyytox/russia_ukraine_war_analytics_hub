@@ -7,7 +7,6 @@ const OTHERS = "__others__"; // bucket for the smallest metrics (countries)
 const OTHERS_COLOR = "#6b7280"; // neutral grey, distinct from the background and from any country color
 const DEFAULT_MAX_METRICS = 12; // metrics kept as their own segment before grouping into "Others"
 const MIN_LABEL_RATIO = 0.03; // segment < 3 % of the longest bar: no label inside
-const LABEL_MAX_WIDTH = 240; // y-axis labels are truncated beyond this (full name stays in the tooltip)
 
 export function ComponentsBarStackedHorizontal({
   id,
@@ -77,11 +76,6 @@ export function ComponentsBarStackedHorizontal({
 
     const option = {
       aria: { enabled: true },
-      toolbox: {
-        right: 10,
-        iconStyle: { borderColor: "#fff" },
-        feature: { dataZoom: { xAxisIndex: "none" }, saveAsImage: {} },
-      },
       tooltip: {
         trigger: "axis",
         axisPointer: { type: "shadow" },
@@ -131,7 +125,7 @@ export function ComponentsBarStackedHorizontal({
           fontSize: 13,
           color: "#fff",
           interval: 0, // never silently drop a label
-          width: LABEL_MAX_WIDTH,
+          width: custom?.common?.labelMaxLength,
           overflow: "truncate",
         },
       },
@@ -188,7 +182,7 @@ export function ComponentsBarStackedHorizontal({
 
     return {
       option,
-      height: height || cfg.height || 400,
+      height: height || cfg.height,
     };
   }, [data, t, i18n.language, nf, id, custom, height]);
 

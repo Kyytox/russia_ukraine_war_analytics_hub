@@ -16,6 +16,8 @@ export function ComponentsPie({ id, data, t, i18n, nf, custom, height }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
 
+    console.log("data", data);
+
     const cfg = custom?.[id] ?? {};
     const labelPrefix = cfg.label_prefix ?? "page.content";
     const total = data.reduce((sum, d) => sum + d.value, 0);
@@ -40,8 +42,9 @@ export function ComponentsPie({ id, data, t, i18n, nf, custom, height }) {
       };
     });
 
+    console.log("items", items);
+
     return {
-      backgroundColor: "transparent",
       title: {
         text: `${nf.format(total)}\n${t(`page.${id}.text`)}`,
         left: "center",
@@ -86,15 +89,16 @@ export function ComponentsPie({ id, data, t, i18n, nf, custom, height }) {
     };
   }, [data, t, i18n.language, nf, id, custom]);
 
+  console.log("option", option);
+
   if (!option) return null;
 
   return (
     <ReactECharts
       option={option}
-      theme="dark"
       style={{
         width: "100%",
-        height: height || custom?.[id]?.height || 400,
+        height: height || custom?.[id]?.height,
         alignSelf: "center",
       }}
     />

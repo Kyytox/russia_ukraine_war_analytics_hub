@@ -10,29 +10,29 @@ let customData = {};
  */
 export async function loadCustomData() {
   try {
-    const response = await fetch("/custom.json");
+    const response = await fetch("/src/config_charts/configCharts.json");
     if (!response.ok) {
-      console.warn(`Failed to load custom.json: ${response.status}`);
+      console.warn(`Failed to load configCharts.json: ${response.status}`);
       return {};
     }
     customData = await response.json();
     console.log("✅ Custom data loaded:", customData);
     return customData;
   } catch (error) {
-    console.error("❌ Error loading custom.json:", error);
+    console.error("❌ Error loading configCharts.json:", error);
     return {};
   }
 }
 
 /**
- * Retourne les données custom actuelles
+ * Retourne les données configCharts actuelles
  */
 export function getCustomData() {
   return customData;
 }
 
 /**
- * Réinitialise les données custom (utile pour tests/dev)
+ * Réinitialise les données configCharts (utile pour tests/dev)
  */
 export function resetCustomData() {
   customData = {};

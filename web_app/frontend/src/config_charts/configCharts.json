@@ -1,4 +1,17 @@
 {
+  "common": {
+    "labelMaxLength": 200,
+    "splitLine": {
+      "lineStyle": {
+        "color": "rgba(255,255,255,0.32)"
+      }
+    },
+    "nameTextStyle": {
+      "fontSize": 14,
+      "color": "#fff",
+      "padding": [0, 0, 0, 60]
+    }
+  },
   "colors_metrics": {
     "2022": "#355070",
     "01-2022": "#355070",
@@ -177,10 +190,11 @@
     "Vehicle": "#A3B5D0",
     "Equipment": "#D0A3B5",
     "Missile": "#B5D0A3",
-    "UAV": "#D0B5A3"
+    "UAV": "#D0B5A3",
+    "Regions": "#0e0e0e",
+    "Laws": "#0e0e0e"
   },
   "incidents-railways": {
-    "tooltip_text": "Incidents",
     "overview": {
       "chart1": {
         "height": 600
@@ -200,20 +214,19 @@
         "xAxisRotate": 20
       },
       "chart6": {
-        "height": 700,
+        "height": 240,
         "xAxisRotate": 20
       },
       "chart7": {
         "height": 600,
         "fontSize": 13.5,
-        "labelColor": "#000000",
         "gradient": [
-          "#f8dc8a",
-          "#fcb685",
-          "#f58f85",
-          "#e0707f",
-          "#a95a9b",
-          "#5c55a5"
+          "#c7af67",
+          "#c2885f",
+          "#bf635a",
+          "#b85462",
+          "#a85199",
+          "#50499c"
         ]
       },
       "chart8": {
@@ -274,13 +287,16 @@
     "collisions": {
       "tooltip_text": "Collisions",
       "chart1": {
-        "height": 500
+        "height": 500,
+        "startAngle": 70
       },
       "chart2": {
-        "height": 500
+        "height": 500,
+        "axis_rotate": 40
       },
       "chart3": {
-        "height": 500
+        "height": 500,
+        "startAngle": 90
       },
       "chart4": {
         "height": 500,
@@ -300,7 +316,8 @@
       },
       "chart4": {
         "height": 500,
-        "axis_rotate": 40
+        "axis_rotate": 40,
+        "startAngle": 140
       },
       "chart5": {
         "height": 550
@@ -314,11 +331,10 @@
       },
       "chart8": {
         "height": 500,
-        "axis_rotate": 40,
-        "text": "Damageed Equipments"
+        "startAngle": 10
       },
       "chart9": {
-        "height": 650,
+        "height": 550,
         "axis_rotate": 40
       },
       "chart10": {
@@ -359,7 +375,7 @@
       },
       "chart7": {
         "yAxisName": "Partisans Ages",
-        "height": 600,
+        "height": 700,
         "axis_rotate": 40
       }
     }
