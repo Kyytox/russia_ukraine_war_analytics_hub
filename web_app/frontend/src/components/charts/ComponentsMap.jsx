@@ -17,13 +17,13 @@ import geo from "./ru_region.json";
 // enregistrée une seule fois, au chargement du module
 // echarts.registerMap("ru-regions", geo);
 
-export function ComponentsMap({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsMap({ tab, id, data, t, i18n, nf, custom }) {
   // la carte est enregistrée une seule fois, quand le fichier est chargé
   const mapReady = useMemo(() => {
     if (!geo) return false;
     echarts.registerMap("ru-regions", geo);
     return true;
-  }, [geo]);
+  }, [geo, tab]);
 
   const option = useMemo(() => {
     if (!mapReady || !data?.length) return null;
@@ -37,7 +37,7 @@ export function ComponentsMap({ id, data, t, i18n, nf, custom, height }) {
         formatter: (p) =>
           p.value == null || Number.isNaN(p.value)
             ? p.name
-            : `${p.name}<br/><b>${nf.format(p.value)}</b> ${t("page.tooltip_text")}`,
+            : `${p.name}<br/><b>${nf.format(p.value)}</b> ${t(`page.${tab}.tooltip_text`)}`,
       },
       visualMap: {
         min: Math.min(...values),
@@ -71,11 +71,11 @@ export function ComponentsMap({ id, data, t, i18n, nf, custom, height }) {
         },
       ],
     };
-  }, [data, mapReady, t, i18n.language, nf, id, custom]);
+  }, [data, mapReady, t, i18n.language, nf, id, custom, tab]);
 
   if (!option) return null;
 
-  const chartHeight = height || custom?.[id]?.height || 400;
+  const chartHeight = custom?.[id]?.height;
 
   return (
     <ReactECharts

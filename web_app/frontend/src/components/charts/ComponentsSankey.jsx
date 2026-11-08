@@ -20,7 +20,7 @@ const hasCycle = (links) => {
   return [...adj.keys()].some(visit);
 };
 
-export function ComponentsSankey({ id, data, t, nf, custom, height }) {
+export function ComponentsSankey({ tab, id, data, t, nf, custom }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
     const cfg = custom?.[id] ?? {};
@@ -90,15 +90,15 @@ export function ComponentsSankey({ id, data, t, nf, custom, height }) {
           },
           label: {
             show: true,
-            fontSize: 13,
-            fontWeight: "normal",
-            borderCololor: "transparent",
-            color: "#FFF",
+            fontsize: 13,
+            fontweight: "normal",
+            bordercololor: "transparent",
+            color: "#fff",
           },
         },
       ],
     };
-  }, [data, t, nf, id, custom]);
+  }, [data, t, nf, id, custom, tab]);
 
   if (!option) return null;
 
@@ -106,7 +106,7 @@ export function ComponentsSankey({ id, data, t, nf, custom, height }) {
     <ReactECharts
       option={option}
       notMerge
-      style={{ width: "100%", height: height || custom?.[id]?.height }}
+      style={{ width: "100%", height: custom?.[id]?.height }}
     />
   );
 }

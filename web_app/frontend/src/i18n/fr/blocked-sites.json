@@ -285,5 +285,68 @@
     "Yemen": "Yémen",
     "Zambia": "Zambie",
     "Zimbabwe": "Zimbabwe"
+  },
+  "tabs": {
+    "overview": "Vue d’ensemble",
+    "methodology": "Méthodologie"
+  },
+  "methodology": {
+    "title": "Méthodologie",
+    "intro": "Cette page présente les sites web bloqués en Russie, à partir de données de recherche ouvertes sur la censure d’Internet.",
+    "data_source_title": "Source de données",
+    "data_source_1": "Les données sont collectées à partir de l’étude « Websites Blocked in Russia » publiée par top10vpn.com, qui recense les domaines bloqués par les autorités russes (Roskomnadzor et autres).",
+    "data_source_2": "Les données sources sont ouvertes et libres d’utilisation. Si vous les utilisez, veuillez créditer la source. 🫡",
+    "source_button": "📜 Source : top10vpn — Sites web bloqués en Russie",
+    "processing_title": "Traitement des données",
+    "processing_1": "Chaque domaine bloqué est enregistré avec l’autorité de blocage, le pays, la catégorie, la sous-catégorie et la date de blocage, puis nettoyé, dédupliqué et agrégé par jour, mois, année, catégorie, autorité et pays.",
+    "processing_2": "Les résultats agrégés sont stockés dans un entrepôt de données structuré et servis par l’API qui alimente les graphiques de l’onglet Vue d’ensemble.",
+    "limitations_title": "Limitations et considérations",
+    "limitations_1": "Les données reflètent les domaines listés dans la recherche source ; la liste peut être incomplète ou mise à jour au fur et à mesure des nouveaux blocages signalés.",
+    "limitations_2": "Un domaine est compté une fois par événement de blocage, le même site peut donc apparaître sous plusieurs catégories ou autorités.",
+    "limitations_3": "La date de blocage correspond à l’enregistrement du blocage dans la source, qui peut différer de la date d’application réelle."
+  },
+  "overview": {
+    "tooltip_text": "Sites web bloqués",
+    "axes_text": "Nombre de sites web bloqués",
+    "total_metric": "Total",
+    "chart1": {
+      "text": "Sites Bloqués"
+    },
+    "chart2": {
+      "text": ""
+    },
+    "chart3": {
+      "text": ""
+    },
+    "chart4": {
+      "text": ""
+    },
+    "chart5": {
+      "text": ""
+    },
+    "chart6": {
+      "text": ""
+    },
+    "chart7": {
+      "text": ""
+    },
+    "chart8": {
+      "text": ""
+    },
+    "chart9": {
+      "text": ""
+    },
+    "chart10": {
+      "text": ""
+    },
+    "chart11": {
+      "text": ""
+    },
+    "chart12": {
+      "text": ""
+    },
+    "chart13": {
+      "text": ""
+    }
   }
 }

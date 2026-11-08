@@ -5,13 +5,13 @@ const BORDER_COLOR = "#1c2430";
 const FALLBACK_COLOR = "##0e0e0e"; // used when a key has no color in colors_metrics
 
 export function ComponentsTreemap({
+  tab,
   id,
   data,
   t,
   i18n,
   nf,
   custom,
-  height,
   gradient,
 }) {
   const option = useMemo(() => {
@@ -130,12 +130,12 @@ export function ComponentsTreemap({
         },
       ],
     };
-  }, [data, t, i18n.language, nf, id, custom, gradient]);
+  }, [data, t, i18n.language, nf, id, custom, gradient, tab]);
 
   if (!option) return null;
 
   // Determine chart height:
-  const chartHeight = height || custom?.[id]?.height;
+  const chartHeight = custom?.[id]?.height;
 
   return (
     <ReactECharts

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-export function ComponentsRadar({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsRadar({ tab, id, data, t, i18n, nf, custom }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
     const cfg = custom?.[id] ?? {};
@@ -22,7 +22,7 @@ export function ComponentsRadar({ id, data, t, i18n, nf, custom, height }) {
         formatter: (params) => {
           return `${params.marker} ${params.name}<br/><b>${nf.format(
             params.value,
-          )}</b> ${t(cfg.tooltip ?? "page.tooltip_text")}`;
+          )}</b> ${t(cfg.tooltip ?? `page.${tab}.tooltip_text`)}`;
         },
       },
       radar: {
@@ -58,10 +58,10 @@ export function ComponentsRadar({ id, data, t, i18n, nf, custom, height }) {
         },
       ],
     };
-  }, [data, t, id, custom]);
+  }, [data, t, id, custom, tab]);
 
   if (!option) return null;
-  const chartHeight = height || custom?.[id]?.height;
+  const chartHeight = custom?.[id]?.height;
 
   return (
     <ReactECharts

@@ -55,5 +55,32 @@
     "title": "Composants par type d’arme et type d’équipement",
     "subtitle": "Répartition des composants identifiés dans les armes russes, par type d’arme et type d’équipement.",
     "help": "Le cercle intérieur indique le type d’équipement, le cercle extérieur le type d’arme à l’intérieur de chaque catégorie."
+  },
+  "tabs": {
+    "overview": "Vue d’ensemble",
+    "methodology": "Méthodologie"
+  },
+  "methodology": {
+    "title": "Méthodologie",
+    "intro": "Cette page présente les composants électroniques étrangers identifiés dans les armes russes, à partir de données ouvertes sur les sanctions.",
+    "data_source_title": "Source de données",
+    "data_source_1": "Les données sont collectées à partir de la base War & Sanctions publiée par la Direction générale du renseignement (GUR) du ministère ukrainien de la Défense, qui recense les composants étrangers trouvés dans les armes russes.",
+    "data_source_2": "Les données sources sont ouvertes et libres d’utilisation. Si vous les utilisez, veuillez créditer la source. 🫡",
+    "source_button": "📜 Source : War & Sanctions — Composants dans l’arme de l’agresseur",
+    "processing_title": "Traitement des données",
+    "processing_1": "Les données brutes sont ingérées dans un data lake, puis nettoyées, normalisées et agrégées par type d’équipement, arme, type d’arme, fabricant et pays d’origine.",
+    "processing_2": "Les résultats agrégés sont stockés dans un entrepôt de données structuré et servis par l’API qui alimente les graphiques de l’onglet Vue d’ensemble.",
+    "limitations_title": "Limitations et considérations",
+    "limitations_1": "Les données reflètent les composants identifiés et publiés par le GUR ; elles peuvent être incomplètes ou mises à jour au fur et à mesure des nouvelles analyses.",
+    "limitations_2": "Un composant est compté par référence de pièce distincte, donc un même produit peut apparaître plusieurs fois.",
+    "limitations_3": "Les composants dont l’origine n’a pas pu être établie sont regroupés sous « Non identifié »."
+  },
+  "overview": {
+    "tooltip_text": "Composants",
+    "axes_text": "Nombre de composants",
+    "total_metric": "Total",
+    "chart1": {
+      "text": "Composants"
+    }
   }
 }

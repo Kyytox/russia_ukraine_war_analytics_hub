@@ -1,29 +1,29 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-export function ComponentsTree({ id, data = [], t, i18n, nf, custom, height }) {
+export function ComponentsTree({ tab, id, data = [], t, i18n, nf, custom }) {
   const option = useMemo(() => {
-    const name = (label) => t(`page.content.${label}`, label);
+    const name = (metric) => t(`page.content.${metric}`, metric);
 
     // Restructure the data into a tree format
-    const byParent = new Map();
+    const bylibelle = new Map();
 
-    data.forEach(({ parent, label, value }) => {
-      if (!byParent.has(parent)) {
-        byParent.set(parent, []);
+    data.forEach(({ libelle, metric, value }) => {
+      if (!bylibelle.has(libelle)) {
+        bylibelle.set(libelle, []);
       }
 
-      byParent.get(parent).push({
-        // name: name(label),
-        name: `${name(label)} (${nf.format(value)})`,
+      bylibelle.get(libelle).push({
+        // name: name(metric),
+        name: `${name(metric)} (${nf.format(value)})`,
         value,
       });
     });
 
     // Create the root nodes
-    const roots = Array.from(byParent.entries())
-      .map(([parent, children]) => ({
-        name: name(parent),
+    const roots = Array.from(bylibelle.entries())
+      .map(([libelle, children]) => ({
+        name: name(libelle),
         value: children.reduce((sum, child) => sum + child.value, 0),
         children: children.sort((a, b) => b.value - a.value),
       }))
@@ -47,21 +47,29 @@ export function ComponentsTree({ id, data = [], t, i18n, nf, custom, height }) {
         {
           type: "tree",
           data: [root],
-          top: "1%",
           left: "7%",
+          top: "1%",
           bottom: "1%",
           right: "20%",
           symbolSize: 7,
           initialTreeDepth: 2,
-          label: {
+          metric: {
             position: "bottom",
             verticalAlign: "middle",
             align: "right",
             fontSize: 11,
             color: "#fff",
           },
+          label: {
+            show: true,
+            fontsize: 13,
+            position: "right",
+            fontweight: "normal",
+            bordercololor: "transparent",
+            color: "#fff",
+          },
           leaves: {
-            label: {
+            metric: {
               position: "right",
               verticalAlign: "middle",
               align: "left",
@@ -74,14 +82,14 @@ export function ComponentsTree({ id, data = [], t, i18n, nf, custom, height }) {
         },
       ],
     };
-  }, [data, t, i18n.language, nf]);
+  }, [data, t, i18n.language, nf, tab]);
   return (
     <ReactECharts
       option={option}
       notMerge
       style={{
         width: "100%",
-        height: height || custom?.[id]?.height || 500,
+        height: custom?.[id]?.height,
       }}
     />
   );

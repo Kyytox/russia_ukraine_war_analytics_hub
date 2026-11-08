@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
 export function ComponentsBarVertical({
+  tab,
   id,
   data,
   t,
   i18n,
   nf,
   custom,
-  height,
 }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
@@ -50,7 +50,7 @@ export function ComponentsBarVertical({
         formatter: (params) => {
           const p = params[0];
           const share = ` (${pct.format(p.value / total)})`;
-          return `${p.marker} ${p.name}<br/><b>${nf.format(p.value)}</b> ${t("page.tooltip_text")}${share}`;
+          return `${p.marker} ${p.name}<br/><b>${nf.format(p.value)}</b> ${t(`page.${tab}.tooltip_text`)}${share}`;
         },
       },
       xAxis: {
@@ -68,7 +68,7 @@ export function ComponentsBarVertical({
       },
       yAxis: {
         type: "value",
-        name: t(cfg.axis_text ?? "page.axes_text"),
+        name: t(cfg.axis_text ?? `page.${tab}.axes_text`),
         nameLocation: "end",
         nameTextStyle: custom?.common?.nameTextStyle,
         axisLabel: {
@@ -93,12 +93,12 @@ export function ComponentsBarVertical({
         },
       ],
     };
-  }, [data, t, i18n.language, nf, id, custom]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
   if (!option) return null;
 
   // Determine chart height:
-  const chartHeight = height || custom?.[id]?.height || 400;
+  const chartHeight = custom?.[id]?.height;
 
   return (
     <ReactECharts

@@ -17,8 +17,8 @@ import { ComponentsSankey } from "../../components/charts/ComponentsSankey.jsx";
 const TAB = "incident-types";
 
 export default function IncidentTypes({ PAGE, t, i18n, nf }) {
-  const prefix = `${PAGE}/${TAB}`;
   const cfg = useConfigCharts(PAGE, TAB);
+  const prefix = `${PAGE}/${TAB}`;
 
   const [hideMoscowChart7, setHideMoscowChart7] = useState(false);
 
@@ -37,26 +37,28 @@ export default function IncidentTypes({ PAGE, t, i18n, nf }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart1`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart1`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsPie
+                  tab={TAB}
                   id="chart1"
                   data={data.filter((d) => d.libelle === "inc_type")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
           </ChartModal>
         </section>
+
         <section className="chart span-8">
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart2`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart2`} t={t}>
             <ChartState query={section2}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsStackedLines
+                  tab={TAB}
                   id="chart2"
                   data={data}
                   t={t}
@@ -64,7 +66,6 @@ export default function IncidentTypes({ PAGE, t, i18n, nf }) {
                   nf={nf}
                   custom={cfg}
                   xTypeProp="month_year"
-                  height={height}
                 />
               )}
             </ChartState>
@@ -75,15 +76,15 @@ export default function IncidentTypes({ PAGE, t, i18n, nf }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart3`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart3`} t={t}>
             <ChartState query={section4}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarGrouped
+                  tab={TAB}
                   id="chart3"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -94,15 +95,15 @@ export default function IncidentTypes({ PAGE, t, i18n, nf }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart4`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart4`} t={t}>
             <ChartState query={section3}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarStackedVertical
+                  tab={TAB}
                   id="chart4"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -113,15 +114,15 @@ export default function IncidentTypes({ PAGE, t, i18n, nf }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart5`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart5`} t={t}>
             <ChartState query={section5}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsSunburst
+                  tab={TAB}
                   id="chart5"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -132,15 +133,15 @@ export default function IncidentTypes({ PAGE, t, i18n, nf }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart6`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart6`} t={t}>
             <ChartState query={section5}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsSankey
+                  tab={TAB}
                   id="chart6"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -164,7 +165,7 @@ export default function IncidentTypes({ PAGE, t, i18n, nf }) {
           </div>
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart7`} t={t}>
             <ChartState query={section6}>
-              {(data, height) => {
+              {(data) => {
                 const filteredData = hideMoscowChart7
                   ? data.filter(
                       (d) => d.libelle !== "Moscow" && d.libelle !== "Москва",
@@ -172,13 +173,13 @@ export default function IncidentTypes({ PAGE, t, i18n, nf }) {
                   : data;
                 return (
                   <ComponentsBarStackedHorizontal
+                    tab={TAB}
                     id="chart7"
                     data={filteredData}
                     t={t}
                     i18n={i18n}
                     nf={nf}
                     custom={cfg}
-                    height={height}
                   />
                 );
               }}

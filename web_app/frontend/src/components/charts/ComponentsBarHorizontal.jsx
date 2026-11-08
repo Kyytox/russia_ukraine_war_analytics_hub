@@ -3,13 +3,13 @@ import ReactECharts from "echarts-for-react";
 import { getMetricColor } from "../../utils/common.js";
 
 export function ComponentsBarHorizontal({
+  tab,
   id,
   data,
   t,
   i18n,
   nf,
   custom,
-  height,
 }) {
   const result = useMemo(() => {
     if (!data?.length) return null;
@@ -63,7 +63,7 @@ export function ComponentsBarHorizontal({
             ? ` (${pct.format(p.value / total)})`
             : "";
           return `${p.marker} ${p.name}<br/><b>${nf.format(p.value)}</b> ${t(
-            cfg.tooltip ?? "page.tooltip_text",
+            cfg.tooltip ?? `page.${tab}.tooltip_text`,
           )}${share}`;
         },
       },
@@ -82,7 +82,7 @@ export function ComponentsBarHorizontal({
       },
       xAxis: {
         type: "value",
-        name: t(cfg.axis_text ?? "page.axes_text"),
+        name: t(cfg.axis_text ?? `page.${tab}.axes_text`),
         nameLocation: "middle",
         nameGap: 32,
         nameTextStyle: { fontSize: 14, color: "#fff" },
@@ -112,9 +112,9 @@ export function ComponentsBarHorizontal({
 
     return {
       option,
-      height: height || cfg.height,
+      height: cfg.height,
     };
-  }, [data, t, i18n.language, nf, id, custom, height]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
   if (!result) return null;
 

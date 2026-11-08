@@ -5,6 +5,8 @@
   },
   "nav": {
     "home": "Accueil",
+    "openmenu": "Ouvrir le menu",
+    "closemenu": "Fermer le menu",
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu",
     "help": "Aide",
@@ -18,25 +20,29 @@
     "title": "Page introuvable",
     "back": "Retour à l'accueil"
   },
+  "notfound": {
+    "title": "Page introuvable",
+    "back": "Retour à l'accueil"
+  },
   "common": {
     "expand": "Agrandir",
     "collapse": "Réduire"
   },
   "sections": {
     "incidents-railways": {
-      "title": "Incidents sur les chemins de fer russes",
+      "title": "Incidents sur les Chemins de Fer Russes",
       "description": "Explorez les incidents sur les chemins de fer russes depuis 2022 (type d'incident, date, localisation, équipements endommagés, sabotage, etc.)."
     },
     "blocked-sites": {
-      "title": "Sites web bloqués en Russie",
+      "title": "Sites Web Bloqués en Russie",
       "description": "Explorez la liste des sites web bloqués en Russie (nom des sites, date de blocage, catégorie, etc.)."
     },
     "raid-alerts": {
-      "title": "Alertes de raids",
+      "title": "Alertes de Raid",
       "description": "Explorez les alertes et avertissements de raids aériens en Ukraine."
     },
     "components-weapons": {
-      "title": "Composants dans les armes Russes",
+      "title": "Composants dans les Armes Russes",
       "description": "Explorez les composants électronique fabriqués en dehors de Russie mais utilisés dans leurs armes."
     },
     "interactive-maps": {

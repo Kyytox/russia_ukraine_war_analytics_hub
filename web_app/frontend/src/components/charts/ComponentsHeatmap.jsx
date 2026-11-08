@@ -4,7 +4,7 @@ import ReactECharts from "echarts-for-react";
 const YEAR_BLOCK = 12 * 7 + 50;
 const TOP_OFFSET = 50;
 
-export function ComponentsHeatmap({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsHeatmap({ tab, id, data, t, i18n, nf, custom }) {
   const { option } = useMemo(() => {
     const lang = i18n.language;
     const items = data.map((d) => ({ date: d.metric, value: d.value }));
@@ -92,9 +92,9 @@ export function ComponentsHeatmap({ id, data, t, i18n, nf, custom, height }) {
         series,
       },
     };
-  }, [data, t, i18n.language, nf, id, custom, height]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
-  const chartHeight = height || custom?.[id]?.height;
+  const chartHeight = custom?.[id]?.height;
 
   return (
     <ReactECharts

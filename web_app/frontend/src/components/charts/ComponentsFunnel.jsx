@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-export function ComponentsFunnel({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsFunnel({ tab, id, data, t, i18n, nf, custom }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
 
@@ -41,7 +41,7 @@ export function ComponentsFunnel({ id, data, t, i18n, nf, custom, height }) {
             cfg.show_percent && total !== 0
               ? ` (${pct.format(params.value / total)})`
               : "";
-          return `${params.marker} ${params.name}<br/><b>${nf.format(params.value)}</b> ${t(cfg.tooltip ?? "page.tooltip_text")}${share}`;
+          return `${params.marker} ${params.name}<br/><b>${nf.format(params.value)}</b> ${t(cfg.tooltip ?? `page.${tab}.tooltip_text`)}${share}`;
         },
       },
       series: [
@@ -68,12 +68,12 @@ export function ComponentsFunnel({ id, data, t, i18n, nf, custom, height }) {
         },
       ],
     };
-  }, [data, t, i18n.language, nf, id, custom]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
   console.log("ComponentsFunnel custom", custom);
 
   if (!option) return null;
-  const chartHeight = height || custom?.[id]?.height;
+  const chartHeight = custom?.[id]?.height;
 
   return (
     <ReactECharts

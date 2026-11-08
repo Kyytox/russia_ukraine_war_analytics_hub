@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
 export function ComponentsScatterGroups({
+  tab,
   id,
   data,
   t,
   i18n,
   nf,
   custom,
-  height,
 }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
@@ -92,7 +92,7 @@ export function ComponentsScatterGroups({
         data: pointsByGroup.get(name),
       })),
     };
-  }, [data, t, i18n.language, nf, id, custom]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
   if (!option) return null;
 
@@ -101,7 +101,7 @@ export function ComponentsScatterGroups({
       option={option}
       style={{
         width: "100%",
-        height: height || custom?.[id]?.height,
+        height: custom?.[id]?.height,
         alignSelf: "center",
       }}
     />

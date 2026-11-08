@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
 export function ComponentsWaterfall({
+  tab,
   id,
   data,
   t,
   i18n,
   nf,
   custom,
-  height,
   mode,
   showTotal,
   showLegend,
@@ -114,7 +114,7 @@ export function ComponentsWaterfall({
           const r = rows[p.dataIndex];
           if (!r) return "";
           return `${p.marker}Age:  ${r.name}<br/><b>${nf.format(r.value)}</b> ${t(
-            cfg.tooltip ?? "page.tooltip_text",
+            cfg.tooltip ?? `page.${tab}.tooltip_text`,
           )}`;
         },
       },
@@ -133,7 +133,7 @@ export function ComponentsWaterfall({
       },
       yAxis: {
         type: "value",
-        name: t(cfg.yAxisName ?? "page.axes_text"),
+        name: t(cfg.yAxisName ?? `page.${tab}.axes_text`),
         nameLocation: "end",
         nameTextStyle: { fontSize: 14, color: "#fff" },
         axisLabel: {
@@ -145,10 +145,10 @@ export function ComponentsWaterfall({
       },
       series: [baseSeries, ...valueSeries],
     };
-  }, [data, t, i18n.language, nf, id, custom, mode, showTotal, showLegend]);
+  }, [data, t, i18n.language, nf, id, custom, mode, showTotal, showLegend, tab]);
 
   if (!option) return null;
-  const chartHeight = height || custom?.[id]?.height;
+  const chartHeight = custom?.[id]?.height;
 
   return (
     <ReactECharts

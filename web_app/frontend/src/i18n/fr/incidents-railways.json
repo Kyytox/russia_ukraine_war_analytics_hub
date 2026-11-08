@@ -1,6 +1,8 @@
 {
   "title": "Incidents sur les chemins de fer russes",
   "description": "Incidents liés aux chemins de fer russes depuis 2022.",
+  "tooltip_text": "Incidents",
+  "axes_text": "Nombre d'incidents",
   "tabs": {
     "overview": "Aperçu",
     "incident_types": "Types d'incidents",
@@ -10,8 +12,256 @@
     "partisans_arrest": "Arrestations de partisans",
     "informations": "Informations"
   },
+  "page": {
+    "informations": {
+      "description_title": "Description",
+      "description_1": "Ce projet est un outil complet d'analyse et de visualisation des incidents sur le réseau ferroviaire russe de 2022 à 2025.",
+      "description_2": "Il utilise diverses sources de données ouvertes pour fournir des informations sur différents types d'incidents, y compris les sabotages, les collisions et les dommages aux équipements.",
+      "description_3": "L'application utilise des technologies web modernes pour créer une interface interactive où les utilisateurs peuvent explorer les données à travers divers onglets, chacun se concentrant sur un aspect spécifique des incidents. Le pipeline de données combine un filtrage par mots-clés, Jev AI pour la classification de pertinence des messages, et des modèles Ollama pour la traduction et l'extraction d'informations détaillées.",
+      "data_sources_title": "Sources de données",
+      "data_sources_warning": "Les sources de données sont ouvertes et libres d'utilisation. Si vous les utilisez, veuillez créditer. 🫡",
+      "source_button": "📜 Source : Incidents sur le réseau ferroviaire russe",
+      "twitter_title": "Comptes Twitter/X",
+      "telegram_title": "Chaînes Telegram",
+      "methodology_title": "Méthodologie",
+      "methodology_intro": "Recherche de messages, tweets et actualités évoquant des incidents sur le réseau ferroviaire russe. Le pipeline utilise une combinaison de filtrage par mots-clés, de Jev AI pour la détection de pertinence, et de modèles Ollama pour la traduction et la classification.",
+      "classification_title": "Méthodologie de classification",
+      "data_collection_title": "Processus de collecte des données",
+      "data_processing_title": "Pipeline de traitement des données",
+      "geographic_title": "Couverture géographique",
+      "temporal_title": "Couverture temporelle",
+      "limitations_title": "Limitations et considérations",
+      "quality_title": "Assurance de la qualité des données",
+      "ethical_title": "Considérations éthiques",
+      "classification_details_title": "Détails de la classification",
+      "incident_types_title": "Types d'incidents",
+      "equipment_types_title": "Types d'équipements",
+      "ai_title": "Utilisation de l'intelligence artificielle",
+      "ai_description": "Ce projet utilise des modèles d'IA pour traiter et classer de grands volumes de données de manière efficace.",
+      "ai_jev_title": "Jev AI (TypeSafe)",
+      "ai_jev_content_1": "Utilisé pour filtrer et classer les messages en fonction de leur pertinence par rapport aux incidents ferroviaires. Jev AI aide à déterminer si un message contient des informations sur les accidents, collisions, déraillements, sabotages ou autres incidents liés aux chemins de fer en Russie.",
+      "ai_jev_content_2": "Jev AI est également utilisé pour classer les types d'incidents, les équipements endommagés, les détails de collision et pour détecter les arrestations de partisans à partir du contenu des messages traduits.",
+      "ai_ollama_title": "Modèles Ollama",
+      "ai_ollama_content_1": "Les modèles Ollama locaux sont utilisés pour traduire le contenu non anglais (principalement russe) vers l'anglais, permettant une analyse et une classification cohérentes de tous les messages.",
+      "ai_ollama_content_2": "Les modèles Ollama sont également utilisés pour extraire des informations détaillées telles que les noms et âges des partisans à partir du texte traduit lorsqu'ils sont mentionnés en relation avec des activités de sabotage.",
+      "manual_validation_title": "Validation manuelle",
+      "manual_validation_content_1": "Chaque message traité par les systèmes d'IA fait l'objet d'une révision et d'une validation manuelle par des analystes humains.",
+      "manual_validation_content_2": "Cette supervision humaine garantit l'exactitude des classifications, corrige les éventuelles erreurs de l'IA et valide que chaque message est pertinent pour les incidents ferroviaires avant son inclusion définitive dans le jeu de données.",
+      "manual_validation_content_3": "Toutes les données présentées dans cette application ont été vérifiées et finalisées manuellement, garantissant ainsi le plus haut niveau de qualité et de fiabilité.",
+      "crimea_note_title": "Note importante sur la Crimée :",
+      "crimea_note": " Les incidents ferroviaires en Crimée ont été pris en compte. Il est important de se rappeler que la Crimée est un territoire ukrainien, mais étant occupée, le réseau ferroviaire est sous la responsabilité des autorités russes."
+    }
+  },
+  "methodology": {
+    "title": "Méthodologie",
+    "description": "Ce projet fournit une analyse complète des incidents sur le réseau ferroviaire russe de 2022 à 2025, en exploitant le renseignement d'origine source ouverte (OSINT) provenant de chaînes Telegram et de comptes Twitter/X.",
+    "data_collection": {
+      "title": "Collecte de données",
+      "content_1": "Surveillance systématique des chaînes Telegram et des comptes Twitter/X qui signalent des incidents ferroviaires en Russie.",
+      "content_2": "Extraction automatisée de messages, de tweets et d'articles de presse contenant des mots-clés liés aux incidents ferroviaires.",
+      "content_3": "Ingestion incrémentale des données pour capturer les nouveaux incidents dès qu'ils sont signalés, avec déduplication pour éviter de compter plusieurs fois le même incident.",
+      "content_4": "Les données sont collectées à partir de sources russes et ukrainiennes pour garantir une couverture complète."
+    },
+    "data_sources": {
+      "title": "Sources de données",
+      "twitter": {
+        "LX": "LX",
+        "Intelschizo": "Intelschizo",
+        "Prune60": "Prune60",
+        "NOELreports": "NOELreports",
+        "Igor_Sushko": "Igor Sushko"
+      },
+      "telegram": {
+        "Electrichki": "Electrichki",
+        "Astra_News": "Astra News",
+        "SHOT": "SHOT",
+        "Atesh": "Atesh",
+        "Legion_of_Freedom": "Legion of Freedom",
+        "VD_Legion_of_Freedom": "VD Legion of Freedom",
+        "Enews112": "Enews112",
+        "TeleRZD": "TeleRZD",
+        "Mzd_Rzd": "Mzd Rzd",
+        "Magistral_Kuvalda": "Magistral Kuvalda",
+        "NSKZD": "NSKZD",
+        "News_ZSZD": "News ZSZD",
+        "D4msk": "D4msk",
+        "Rospartizan": "Rospartizan",
+        "Boakom": "Boakom",
+        "RDPSRU": "RDPSRU",
+        "Ostanovi_Vagony_2023": "Ostanovi Vagony 2023",
+        "Activatica": "Activatica",
+        "Russvolcorps": "Russvolcorps"
+      }
+    },
+    "classification": {
+      "title": "Méthodologie de classification",
+      "content_1": "Tous les incidents sont classés en catégories en fonction du type, de l'équipement endommagé et de l'implication des partisans.",
+      "content_2": "La classification est effectuée à l'aide d'une combinaison d'analyse de texte automatisée et de vérification manuelle. Jev AI est utilisé pour classer le type d'incident, l'équipement endommagé, les détails de collision et les arrestations de partisans à partir du contenu des messages traduits.",
+      "content_3": "Les incidents sont classés comme Sabotage lorsque les sources mentionnent explicitement ou montrent des preuves d'actions destructrices délibérées.",
+      "content_4": "Certains incidents comme les déraillements ou les incendies peuvent être classés séparément si la source n'indique pas clairement un sabotage.",
+      "content_5": "Les équipements endommagés sont catégorisés en : Boîte électrique, Train de marchandises, Infrastructure, Locomotive, Train de passagers, Voies ferrées, Cabine de relais et Inconnu.",
+      "content_6": "Les groupes de partisans et les détails individuels (noms, âges) sont extraits à l'aide de modèles Ollama à partir du texte traduit lorsqu'ils sont mentionnés en relation avec des activités de sabotage."
+    },
+    "data_processing": {
+      "title": "Pipeline de traitement des données",
+      "content_1": "Les données brutes de Telegram et Twitter sont d'abord nettoyées et normalisées pour éliminer les doublons et le contenu non pertinent.",
+      "content_2": "La traduction des textes est effectuée pour le contenu non anglais à l'aide de modèles Ollama locaux afin de permettre une classification cohérente.",
+      "content_3": "Les incidents sont filtrés et qualifiés en fonction de leur pertinence pour les infrastructures ferroviaires en Russie. Un premier filtrage par mots-clés est appliqué, suivi d'une classification par Jev AI pour confirmer le contenu lié aux chemins de fer.",
+      "content_4": "Les données classées sont stockées dans un entrepôt de données structuré pour l'analyse et la visualisation.",
+      "content_5": "Le pipeline comprend plusieurs contrôles de qualité pour garantir l'exactitude et la cohérence des données."
+    },
+    "geographic_coverage": {
+      "title": "Couverture géographique",
+      "content_1": "Le projet couvre toutes les régions russes disposant d'infrastructures ferroviaires.",
+      "content_2": "Les incidents en Crimée sont inclus et notés séparément, car bien que la Crimée soit un territoire ukrainien, son réseau ferroviaire est sous contrôle russe depuis 2014.",
+      "content_3": "La distribution régionale permet d'analyser les schémas d'incidents dans différentes parties de la Russie.",
+      "content_4": "Moscou et les autres grands hubs ferroviaires font l'objet d'une attention particulière en raison de leur importance stratégique."
+    },
+    "temporal_coverage": {
+      "title": "Couverture temporelle",
+      "content_1": "La collecte des données a commencé en 2022, coïncidant avec le début de l'invasion à grande échelle de l'Ukraine par la Russie.",
+      "content_2": "Le jeu de données comprend des incidents de 2022 à 2025, avec des mises à jour continues au fur et à mesure que de nouveaux incidents sont signalés.",
+      "content_3": "L'analyse temporelle permet d'identifier les tendances, les schémas et les corrélations potentielles avec des événements externes.",
+      "content_4": "Les agrégations mensuelles et annuelles fournissent des informations sur l'évolution des incidents ferroviaires au fil du temps."
+    },
+    "limitations": {
+      "title": "Limitations et considérations",
+      "content_1": "Les données sont basées sur des rapports en source ouverte, qui peuvent être incomplets ou biaisés.",
+      "content_2": "Tous les incidents ne sont pas nécessairement signalés dans les sources surveillées, en particulier dans les régions éloignées ou moins couvertes.",
+      "content_3": "La classification est basée sur les informations disponibles et peut être mise à jour à mesure que de nouveaux détails émergent.",
+      "content_4": "Le projet se concentre sur les incidents sur les infrastructures ferroviaires russes ; les incidents sur les chemins de fer ukrainiens ne sont pas inclus.",
+      "content_5": "La couverture temporelle peut présenter des lacunes pour les périodes où la surveillance des sources a été interrompue.",
+      "content_6": "La précision géographique est limitée par les informations fournies dans les rapports sources."
+    },
+    "data_quality": {
+      "title": "Assurance de la qualité des données",
+      "content_1": "Toutes les données subissent plusieurs étapes de validation pour garantir leur exactitude.",
+      "content_2": "Les algorithmes de détection des doublons identifient et suppriment les rapports d'incidents redondants.",
+      "content_3": "Une vérification manuelle est effectuée sur un échantillon d'incidents pour valider la classification automatisée.",
+      "content_4": "Les contrôles de cohérence des données garantissent que les agrégations et les calculs sont corrects.",
+      "content_5": "Le projet maintient la transparence sur les sources de données et la méthodologie pour permettre une vérification indépendante."
+    },
+    "ethical_considerations": {
+      "title": "Considérations éthiques",
+      "content_1": "Ce projet s'engage à respecter des pratiques éthiques de collecte et d'analyse de données.",
+      "content_2": "Toutes les données proviennent d'informations publiques ; aucune donnée privée ou confidentielle n'est collectée.",
+      "content_3": "Le projet maintient la neutralité dans les rapports et ne prend pas position politiquement.",
+      "content_4": "Les informations sensibles concernant les individus sont traitées avec soin et conformément aux directives éthiques.",
+      "content_5": "Le projet vise à contribuer à la compréhension publique des questions de sécurité ferroviaire sans sensationaliser les incidents."
+    }
+  },
+  "content": {
+    "Adygey": "Adyguée",
+    "Altay": "Altaï",
+    "Amur": "Amour",
+    "Arkhangelsk": "Arkhangelsk",
+    "Astrakhan": "Astrakhan",
+    "Bashkortostan": "Bachkortostan",
+    "Belgorod": "Belgorod",
+    "Bryansk": "Briansk",
+    "Buryat": "Bouriatie",
+    "Chechnya": "Tchétchénie",
+    "Chelyabinsk": "Tcheliabinsk",
+    "Chita": "Chita",
+    "Chukchi Autonomous Okrug": "District autonome de Tchoukotka",
+    "Chuvash": "Tchouvachie",
+    "Crimea": "Crimée",
+    "Dagestan": "Dagestan",
+    "Gorno-Altay": "Altaï",
+    "Ingush": "Ingouchie",
+    "Irkutsk": "Irkoutsk",
+    "Ivanovo": "Ivanovo",
+    "Kabardin-Balkar": "Kabardino-Balkarie",
+    "Kaliningrad": "Kaliningrad",
+    "Kalmyk": "Kalmoukie",
+    "Kaluga": "Kalouga",
+    "Kamchatka": "Kamtchatka",
+    "Karachay-Cherkess": "Karachay-Tcherkessie",
+    "Karelia": "Carélie",
+    "Kemerovo": "Kemerovo",
+    "Khabarovsk": "Khabarovsk",
+    "Khakass": "Khakassie",
+    "Khanty-Mansiy": "Khanty-Mansï",
+    "Kirov": "Kirov",
+    "Komi": "Komi",
+    "Kostroma": "Kostroma",
+    "Krasnodar": "Krasnodar",
+    "Krasnoyarsk": "Krasnoïarsk",
+    "Kurgan": "Kourgan",
+    "Kursk": "Koursk",
+    "Leningrad": "Leningrad",
+    "Lipetsk": "Lipetsk",
+    "Maga Buryatdan": "Bouriatie",
+    "Mariy-El": "Mari El",
+    "Mordovia": "Mordovie",
+    "Moscow": "Moscou",
+    "Murmansk": "Mourmansk",
+    "Nenets": "Nénets",
+    "Nizhegorod": "Nijni Novgorod",
+    "North Ossetia": "Ossétie du Nord",
+    "Novgorod": "Novgorod",
+    "Novosibirsk": "Novossibirsk",
+    "Omsk": "Omsk",
+    "Orel": "Orel",
+    "Orenburg": "Orenbourg",
+    "Penza": "Penza",
+    "Perm": "Perm",
+    "Primorye": "Primorié",
+    "Pskov": "Pskov",
+    "Rostov": "Rostov",
+    "Ryazan": "Riazan",
+    "Sakha (Yakutia)": "Sakha (Iakoutie)",
+    "Sakhalin": "Sakhaline",
+    "Samara": "Samara",
+    "Saratov": "Saratov",
+    "Smolensk": "Smolensk",
+    "St.Petersburg City": "Ville de Saint-Pétersbourg",
+    "Stavropol": "Stavropol",
+    "Sverdlovsk": "Sverdlovsk",
+    "Tambov": "Tambov",
+    "Tatarstan": "Tatarstan",
+    "Tomsk": "Tomsk",
+    "Transbaikalia": "Transbaïkalie",
+    "Tula": "Tula",
+    "Tuva": "Touva",
+    "Tver": "Tver",
+    "Tyumen": "Tioumen",
+    "Udmurt": "Oudmourtie",
+    "Ulyanovsk": "Oulianovsk",
+    "Vladimir": "Vladimir",
+    "Volgograd": "Volgograd",
+    "Vologda": "Vologda",
+    "Voronezh": "Voronej",
+    "Yamal-Nenets": "Iamalo-Nénets",
+    "Yaroslavl": "Iaroslavl",
+    "Yevrey": "Juif",
+    "Derailment": "Déraillement",
+    "Collision": "Collision",
+    "Sabotage": "Sabotage",
+    "Fire": "Incendie",
+    "Attack": "Attaque",
+    "Other": "Autre",
+    "Electric Box": "Boîte électrique",
+    "Freight Train": "Train de marchandises",
+    "Infrastructure": "Infrastructure",
+    "Locomotive": "Locomotive",
+    "Passengers Train": "Train de passagers",
+    "Railroad Tracks": "Voies ferrées",
+    "Relay Cabin": "Cabine de relais",
+    "Unknown": "Inconnu",
+    "167 - Intentional Destruction or Damage of Property": "167 - Destruction ou dommage intentionnel de biens",
+    "205 - Terrorism": "205 - Terrorisme",
+    "213 - Hooliganism": "213 - Hooliganisme",
+    "267 - Damage Transport Vehicles or Communications": "267 - Dommages aux véhicules de transport ou aux communications",
+    "281 - Sabotage": "281 - Sabotage",
+    "Go To WAR": "Aller à la GUERRE"
+  },
   "overview": {
     "title": "Aperçu",
+    "kpi1": "Dernière mise à jour",
+    "kpi2": "Nombre total d'incidents sur les chemins de fer russes depuis 2022",
+    "kpi3": "Nombre total de sabotages depuis 2022",
+    "kpi4": "Partisans arrêtés après sabotage",
     "last_update": "Dernière mise à jour",
     "total_incidents": "Nombre total d'incidents",
     "total_sabotage": "Nombre total de sabotages",
@@ -37,9 +287,251 @@
       "title": "Équipements endommagés",
       "subtitle": "Nombre d'équipements endommagés par type depuis 2022"
     },
+    "chart6": {
+      "title": "Répartition des incidents ferroviaires par jour de la semaine en ",
+      "subtitle": "Nombre d'incidents par jour de la semaine en"
+    },
     "chart7": {
-      "title": "Incidents ferroviaires par région",
-      "subtitle": "Carte thermique des incidents par région et année"
-    }
+      "title": "Répartition des incidents ferroviaires par région en Russie",
+      "subtitle": "Répartition hiérarchique des incidents ferroviaires dans les différentes régions de Russie"
+    },
+    "chart8": {
+      "title": "Répartition géographique des sabotages sur les chemins de fer russes",
+      "subtitle": "Répartition spatiale et cartographie des événements de sabotage enregistrés"
+    },
+    "tooltip_text": "Incidents",
+    "axes_text": "Nombre d'incidents",
+    "total_metric": "Total"
+  },
+  "incident-types": {
+    "title": "Types d'incidents",
+    "hide_moscow": "Masquer Moscou",
+    "chart1": {
+      "title": "Répartition des incidents par type",
+      "subtitle": "Répartition globale des incidents signalés classés par type",
+      "text": "Incidents"
+    },
+    "chart2": {
+      "title": "Évolution des incidents cumulés par type au fil du temps",
+      "subtitle": "Compte cumulé des incidents au fil du temps segmenté par type"
+    },
+    "chart3": {
+      "title": "Incidents par type : comparaison annuelle",
+      "subtitle": "Comparaison année par année montrant le volume d'incidents par catégorie"
+    },
+    "chart4": {
+      "title": "Incidents mensuels par type",
+      "subtitle": "Tendances mensuelles des incidents ventilés par catégorie"
+    },
+    "chart5": {
+      "title": "Répartition des équipements endommagés par type d'incident",
+      "subtitle": "Ventilation montrant le total des dommages d'équipement pour chaque type d'incident"
+    },
+    "chart6": {
+      "title": "Flux des équipements endommagés par type d'incident",
+      "subtitle": "Flux de relations illustrant comment les types d'incidents spécifiques entraînent des dommages d'équipement"
+    },
+    "chart7": {
+      "title": "Répartition des incidents par type et région",
+      "subtitle": "Répartition régionale des incidents classés par classification d'incident"
+    },
+    "tooltip_text": "Incidents",
+    "axes_text": "Nombre d'incidents",
+    "total_metric": "Total"
+  },
+  "damaged-equipments": {
+    "title": "Équipements endommagés",
+    "hide_moscow": "Masquer Moscou",
+    "chart1": {
+      "title": "Répartition des équipements endommagés",
+      "subtitle": "Nombre total et répartition des équipements endommagés dans tous les incidents",
+      "text": "Incidents"
+    },
+    "chart2": {
+      "title": "Évolution des équipements endommagés cumulés au fil du temps",
+      "subtitle": "Trajectoire de croissance cumulative des équipements endommagés au fil du temps"
+    },
+    "chart3": {
+      "title": "Équipements endommagés : comparaison annuelle",
+      "subtitle": "Comparaison annuelle des cas de dommages d'équipement"
+    },
+    "chart4": {
+      "title": "Équipements endommagés mensuels",
+      "subtitle": "Vue mensuelle détaillée du nombre d'équipements endommagés"
+    },
+    "chart5": {
+      "title": "Répartition des types d'incidents par équipement endommagé",
+      "subtitle": "Répartition hiérarchique à plusieurs niveaux montrant les types d'incidents dans les catégories d'équipement"
+    },
+    "chart6": {
+      "title": "Flux des types d'incidents par équipement endommagé",
+      "subtitle": "Cartographie des flux de connexion entre les types d'équipements endommagés et les catégories d'incidents correspondantes"
+    },
+    "chart7": {
+      "title": "Répartition des équipements endommagés par région",
+      "subtitle": "Vue comparative régionale des occurrences de dommages d'équipement"
+    },
+    "tooltip_text": "Incidents",
+    "axes_text": "Nombre d'incidents",
+    "total_metric": "Total"
+  },
+  "collisions": {
+    "title": "Collisions",
+    "hide_moscow": "Masquer Moscou",
+    "chart1": {
+      "title": "Répartition des collisions",
+      "subtitle": "Proportion des collisions par rapport aux types d'incidents globaux",
+      "text": "Incidents"
+    },
+    "chart2": {
+      "title": "Collisions mensuelles",
+      "subtitle": "Fréquence mensuelle des événements de collision"
+    },
+    "chart3": {
+      "title": "Répartition des collisions par équipement impliqué",
+      "subtitle": "Répartition des collisions classées par l'équipement principal impliqué"
+    },
+    "chart4": {
+      "title": "Équipements impliqués mensuellement dans les collisions",
+      "subtitle": "Tendances mensuelles des équipements spécifiques impliqués dans les événements de collision"
+    },
+    "tooltip_text": "Incidents",
+    "axes_text": "Nombre d'incidents",
+    "total_metric": "Total"
+  },
+  "sabotage": {
+    "title": "Sabotage",
+    "hide_moscow": "Masquer Moscou",
+    "chart1": {
+      "title": "Nombre annuel de sabotages",
+      "subtitle": "Événements de sabotage enregistrés regroupés par année"
+    },
+    "chart2": {
+      "title": "Nombre mensuel de sabotages par année",
+      "subtitle": "Tendances mensuelles de l'activité de sabotage comparées sur plusieurs années"
+    },
+    "chart3": {
+      "title": "Incidents vs Sabotage au fil du temps",
+      "subtitle": "Chronologie comparative mesurant le nombre total d'incidents par rapport aux événements de sabotage ciblés"
+    },
+    "chart4": {
+      "title": "Répartition des sabotages par groupe de partisans",
+      "subtitle": "Proportion des événements de sabotage attribués à des groupes de partisans spécifiques"
+    },
+    "chart5": {
+      "title": "Incidents de sabotage par groupe de partisans",
+      "subtitle": "Chronologie cartographiant les incidents de sabotage individuels par groupe de partisans et par date"
+    },
+    "chart6": {
+      "title": "Cartographie des groupes de partisans et des dommages d'équipement associés",
+      "subtitle": "Structure hiérarchique cartographiant les groupes de partisans vers les dommages d'équipement spécifiques"
+    },
+    "chart7": {
+      "title": "Répartition des équipements endommagés des groupes de partisans",
+      "subtitle": "Volume de dommages d'équipement attribués aux organisations de partisans"
+    },
+    "chart8": {
+      "title": "Répartition des équipements endommagés pour les incidents de sabotage",
+      "subtitle": "Part des types d'équipements spécifiques endommagés strictement dans les cas de sabotage"
+    },
+    "chart9": {
+      "title": "Nombre mensuel d'équipements endommagés",
+      "subtitle": "Trajectoire mensuelle temporelle des équipements endommagés via le sabotage"
+    },
+    "chart10": {
+      "title": "Cartographie des équipements endommagés avec attribution aux groupes de partisans",
+      "subtitle": "Disposition hiérarchique des équipements endommagés organisés par groupes de partisans responsables"
+    },
+    "chart11": {
+      "title": "Implication des groupes de partisans dans les équipements endommagés",
+      "subtitle": "Étendue de l'implication de chaque groupe de partisans concernant les dommages d'équipement"
+    },
+    "chart12": {
+      "title": "Répartition géographique des sabotages sur les chemins de fer russes",
+      "subtitle": "Tracé géographique des emplacements des sabotages ferroviaires dans les régions"
+    },
+    "chart13": {
+      "title": "Nombre d'équipements endommagés par région",
+      "subtitle": "Répartition géographique des dommages d'équipement causés par le sabotage"
+    },
+    "tooltip_text": "Incidents",
+    "axes_text": "Nombre d'incidents",
+    "total_metric": "Total"
+  },
+  "partisans-arrest": {
+    "title": "Arrestations de partisans",
+    "hide_moscow": "Masquer Moscou",
+    "chart1": {
+      "title": "Entonnoir des partisans arrêtés",
+      "subtitle": "Cartographie des étapes de conversion montrant la progression des arrestations de partisans"
+    },
+    "chart2": {
+      "title": "Répartition des sabotages où des partisans ont été arrêtés",
+      "subtitle": "Proportion des événements de sabotage entraînant des détentions de partisans",
+      "text": "Sabotages"
+    },
+    "chart3": {
+      "title": "Répartition des lois applicables",
+      "subtitle": "Vue hiérarchique des statuts juridiques appliqués aux partisans détenus"
+    },
+    "chart4": {
+      "title": "Nombre de partisans par âge",
+      "subtitle": "Disposition en grille affichant la composition par âge des partisans arrêtés"
+    },
+    "chart5": {
+      "title": "Nombre de partisans arrêtés par âge",
+      "subtitle": "Analyse par étapes cumulatives des partisans arrêtés regroupés par âge exact"
+    },
+    "chart6": {
+      "title": "Nombre de partisans arrêtés par groupe d'âge",
+      "subtitle": "Analyse séquentielle par tranches d'âge des métriques d'arrestation des partisans"
+    },
+    "chart7": {
+      "title": "Lois applicables par âge des partisans",
+      "subtitle": "Cartographie de corrélation des accusations juridiques appliquées contre l'âge des partisans"
+    },
+    "tooltip_text": "Incidents",
+    "axes_text": "Nombre d'incidents",
+    "total_metric": "Total"
+  },
+  "informations": {
+    "title": "Informations",
+    "subtitle": "",
+    "description_title": "Description",
+    "description_1": "Ce projet est un outil complet d'analyse et de visualisation des incidents sur le réseau ferroviaire russe de 2022 à 2025.",
+    "description_2": "Il utilise diverses sources de données ouvertes pour fournir des informations sur différents types d'incidents, y compris les sabotages, les collisions et les dommages aux équipements.",
+    "description_3": "L'application utilise des technologies web modernes pour créer une interface interactive où les utilisateurs peuvent explorer les données à travers divers onglets, chacun se concentrant sur un aspect spécifique des incidents. Le pipeline de données combine un filtrage par mots-clés, Jev AI pour la classification de pertinence des messages, et des modèles Ollama pour la traduction et l'extraction d'informations détaillées.",
+    "data_sources_title": "Sources de données",
+    "data_sources_warning": "Les sources de données sont ouvertes et libres d'utilisation. Si vous les utilisez, veuillez créditer. 🫡",
+    "source_button": "📜 Source : Incidents sur le réseau ferroviaire russe",
+    "twitter_title": "Comptes Twitter/X",
+    "telegram_title": "Chaînes Telegram",
+    "methodology_title": "Méthodologie",
+    "methodology_intro": "Recherche de messages, tweets et actualités évoquant des incidents sur le réseau ferroviaire russe. Le pipeline utilise une combinaison de filtrage par mots-clés, de Jev AI pour la détection de pertinence, et de modèles Ollama pour la traduction et la classification.",
+    "classification_title": "Méthodologie de classification",
+    "data_collection_title": "Processus de collecte des données",
+    "data_processing_title": "Pipeline de traitement des données",
+    "geographic_title": "Couverture géographique",
+    "temporal_title": "Couverture temporelle",
+    "limitations_title": "Limitations et considérations",
+    "quality_title": "Assurance de la qualité des données",
+    "ethical_title": "Considérations éthiques",
+    "classification_details_title": "Détails de la classification",
+    "incident_types_title": "Types d'incidents",
+    "equipment_types_title": "Types d'équipements",
+    "ai_title": "Utilisation de l'intelligence artificielle",
+    "ai_description": "Ce projet utilise des modèles d'IA pour traiter et classer de grands volumes de données de manière efficace.",
+    "ai_jev_title": "Jev AI (TypeSafe)",
+    "ai_jev_content_1": "Utilisé pour filtrer et classer les messages en fonction de leur pertinence par rapport aux incidents ferroviaires. Jev AI aide à déterminer si un message contient des informations sur les accidents, collisions, déraillements, sabotages ou autres incidents liés aux chemins de fer en Russie.",
+    "ai_jev_content_2": "Jev AI est également utilisé pour classer les types d'incidents, les équipements endommagés, les détails de collision et pour détecter les arrestations de partisans à partir du contenu des messages traduits.",
+    "ai_ollama_title": "Modèles Ollama",
+    "ai_ollama_content_1": "Les modèles Ollama locaux sont utilisés pour traduire le contenu non anglais (principalement russe) vers l'anglais, permettant une analyse et une classification cohérentes de tous les messages.",
+    "ai_ollama_content_2": "Les modèles Ollama sont également utilisés pour extraire des informations détaillées telles que les noms et âges des partisans à partir du texte traduit lorsqu'ils sont mentionnés en relation avec des activités de sabotage.",
+    "manual_validation_title": "Validation manuelle",
+    "manual_validation_content_1": "Chaque message traité par les systèmes d'IA fait l'objet d'une révision et d'une validation manuelle par des analystes humains.",
+    "manual_validation_content_2": "Cette supervision humaine garantit l'exactitude des classifications, corrige les éventuelles erreurs de l'IA et valide que chaque message est pertinent pour les incidents ferroviaires avant son inclusion définitive dans le jeu de données.",
+    "manual_validation_content_3": "Toutes les données présentées dans cette application ont été vérifiées et finalisées manuellement, garantissant ainsi le plus haut niveau de qualité et de fiabilité.",
+    "crimea_note_title": "Note importante sur la Crimée :",
+    "crimea_note": " Les incidents ferroviaires en Crimée ont été pris en compte. Il est important de se rappeler que la Crimée est un territoire ukrainien, mais étant occupée, le réseau ferroviaire est sous la responsabilité des autorités russes."
   }
 }

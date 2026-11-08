@@ -53,15 +53,14 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             initialHeight={440}
           >
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarVertical
-                  id="chart1"
+                  tab={TAB} id="chart1"
                   data={data.filter((d) => d.libelle === "year")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -76,15 +75,14 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             initialHeight={440}
           >
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarVertical
-                  id="chart2"
+                  tab={TAB} id="chart2"
                   data={data.filter((d) => d.libelle === "month")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -100,16 +98,15 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             initialHeight={440}
           >
             <ChartState query={section2}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsStackedLines
-                  id="chart3"
+                  tab={TAB} id="chart3"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
                   xTypeProp="month"
-                  height={height}
                 />
               )}
             </ChartState>
@@ -125,15 +122,14 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             initialHeight={440}
           >
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarVertical
-                  id="chart4"
+                  tab={TAB} id="chart4"
                   data={data.filter((d) => d.libelle === "inc_type")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -148,15 +144,14 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             initialHeight={440}
           >
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarVertical
-                  id="chart5"
+                  tab={TAB} id="chart5"
                   data={data.filter((d) => d.libelle === "dmg_eqp")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -185,7 +180,7 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             initialHeight={440}
           >
             <ChartState query={section4}>
-              {(data, height) => {
+              {(data) => {
                 const filteredData = hideMoscowChart7
                   ? data.filter(
                       (d) => d.metric !== "Moscow" && d.metric !== "Москва",
@@ -193,13 +188,12 @@ export default function Overview({ PAGE, t, i18n, nf }) {
                   : data;
                 return (
                   <ComponentsTreemap
-                    id="chart7"
+                    tab={TAB} id="chart7"
                     data={filteredData}
                     t={t}
                     i18n={i18n}
                     nf={nf}
                     custom={cfg}
-                    height={height}
                     gradient={true}
                   />
                 );
@@ -230,7 +224,7 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             initialHeight={440}
           >
             <ChartState query={section4}>
-              {(data, height) => {
+              {(data) => {
                 const filteredData = hideMoscowChart8
                   ? data.filter(
                       (d) => d.metric !== "Moscow" && d.metric !== "Москва",
@@ -238,13 +232,12 @@ export default function Overview({ PAGE, t, i18n, nf }) {
                   : data;
                 return (
                   <ComponentsMap
-                    id="chart8"
+                    tab={TAB} id="chart8"
                     data={filteredData}
                     t={t}
                     i18n={i18n}
                     nf={nf}
                     custom={cfg}
-                    height={height}
                   />
                 );
               }}
@@ -277,7 +270,7 @@ export default function Overview({ PAGE, t, i18n, nf }) {
                     <ChartState query={section3}>
                       {(data) => (
                         <ComponentsHeatmap
-                          id="chart6"
+                          tab={TAB} id="chart6"
                           data={data.filter((d) => d.metric.startsWith(year))}
                           t={t}
                           i18n={i18n}

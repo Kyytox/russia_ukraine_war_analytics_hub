@@ -26,15 +26,14 @@ export default function Collisions({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart1`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart1`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsPie
-                  id="chart1"
+                  tab={TAB} id="chart1"
                   data={data.filter((d) => d.libelle === "coll_with")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -45,15 +44,14 @@ export default function Collisions({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart2`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart2`} t={t}>
             <ChartState query={section2}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarStackedVertical
-                  id="chart2"
+                  tab={TAB} id="chart2"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -64,15 +62,14 @@ export default function Collisions({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart3`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart3`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsPie
-                  id="chart3"
+                  tab={TAB} id="chart3"
                   data={data.filter((d) => d.libelle === "dmg_eqp_coll")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -83,15 +80,14 @@ export default function Collisions({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart4`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart4`} t={t}>
             <ChartState query={section3}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarStackedVertical
-                  id="chart4"
+                  tab={TAB} id="chart4"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>

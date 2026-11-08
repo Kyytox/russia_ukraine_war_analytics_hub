@@ -9,13 +9,13 @@ const DEFAULT_MAX_METRICS = 12; // metrics kept as their own segment before grou
 const MIN_LABEL_RATIO = 0.03; // segment < 3 % of the longest bar: no label inside
 
 export function ComponentsBarStackedHorizontal({
+  tab,
   id,
   data,
   t,
   i18n,
   nf,
   custom,
-  height,
 }) {
   const result = useMemo(() => {
     if (!data?.length) return null;
@@ -83,7 +83,7 @@ export function ComponentsBarStackedHorizontal({
           const key = libelles[params[0].dataIndex];
           const sum = totals[key];
           const header = `<b>${params[0].name}</b><br/>${nf.format(sum)} ${t(
-            "page.tooltip_text",
+            `page.${tab}.tooltip_text`,
           )}`;
 
           const lines = [];
@@ -131,7 +131,7 @@ export function ComponentsBarStackedHorizontal({
       },
       xAxis: {
         type: "value",
-        name: t("page.axes_text"),
+        name: t(`page.${tab}.axes_text`),
         nameLocation: "middle",
         nameGap: 32,
         nameTextStyle: { fontSize: 14, color: "#fff" },
@@ -182,9 +182,9 @@ export function ComponentsBarStackedHorizontal({
 
     return {
       option,
-      height: height || cfg.height,
+      height: cfg.height,
     };
-  }, [data, t, i18n.language, nf, id, custom, height]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
   if (!result) return null;
 

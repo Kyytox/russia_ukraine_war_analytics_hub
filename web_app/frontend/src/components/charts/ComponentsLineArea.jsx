@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-export function ComponentsLineArea({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsLineArea({ tab, id, data, t, i18n, nf, custom }) {
   const option = useMemo(() => {
     const items = data.map((d) => ({
       name: d.metric,
@@ -39,7 +39,7 @@ export function ComponentsLineArea({ id, data, t, i18n, nf, custom, height }) {
       },
       yAxis: {
         type: "value",
-        name: t(`page.axes_text`),
+        name: t(`page.${tab}.axes_text`),
         nameLocation: "end",
         nameTextStyle: {
           fontSize: 14,
@@ -68,14 +68,14 @@ export function ComponentsLineArea({ id, data, t, i18n, nf, custom, height }) {
         },
       ],
     };
-  }, [data, t, i18n.language, nf, id, custom]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
   return (
     <ReactECharts
       option={option}
       style={{
         width: "100%",
-        height: height || custom?.[id]?.height || 400,
+        height: custom?.[id]?.height,
         alignSelf: "center",
       }}
     />

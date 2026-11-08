@@ -15,7 +15,7 @@ const textColorFor = (bg) => {
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6 ? "#111827" : "#fff";
 };
 
-export function ComponentsSunburst({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsSunburst({ tab, id, data, t, i18n, nf, custom }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
 
@@ -67,7 +67,7 @@ export function ComponentsSunburst({ id, data, t, i18n, nf, custom, height }) {
             .map((n) => n.name)
             .join(" › ");
           return `${p.marker} ${path}<br/><b>${nf.format(p.value)}</b> ${t(
-            "page.tooltip_text",
+            `page.${tab}.tooltip_text`,
           )} (${pctFmt.format(p.value / total)})`;
         },
       },
@@ -78,7 +78,7 @@ export function ComponentsSunburst({ id, data, t, i18n, nf, custom, height }) {
           top: "center",
           silent: true,
           style: {
-            text: `${nf.format(total)}\n${t("page.total_metric")}`,
+            text: `${nf.format(total)}\n${t(`page.${tab}.total_metric`)}`,
             textAlign: "center",
             textVerticalAlign: "middle",
             fill: "#fff",
@@ -147,14 +147,14 @@ export function ComponentsSunburst({ id, data, t, i18n, nf, custom, height }) {
         },
       ],
     };
-  }, [data, t, i18n.language, nf, custom]);
+  }, [data, t, i18n.language, nf, custom, tab]);
 
   if (!option) return null;
 
   return (
     <ReactECharts
       option={option}
-      style={{ width: "100%", height: height || custom?.[id]?.height }}
+      style={{ width: "100%", height: custom?.[id]?.height }}
     />
   );
 }

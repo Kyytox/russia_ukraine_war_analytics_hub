@@ -10,7 +10,6 @@
     "partisans_arrest": "Partisans Arrest",
     "informations": "Informations"
   },
-  "tooltip_text": "Incidents",
   "axes_text": "Number of incidents",
   "overview": {
     "title": "Overview",
@@ -19,6 +18,7 @@
     "kpi3": "Sabotage since 2022",
     "kpi4": "Partisans Arrested after Sabotage",
     "hide_moscow": "Hide Moscow",
+    "tooltip_text": "Incidents",
     "chart1": {
       "title": "Annual Railway Incidents in Russia",
       "subtitle": "Number of incidents per year since 2022"
@@ -50,14 +50,18 @@
     "chart8": {
       "title": "Geographic Distribution of Sabotages on Russian Railways",
       "subtitle": "Spatial distribution and mapping of recorded sabotage events"
-    }
+    },
+    "axes_text": "Number of incidents",
+    "total_metric": "Total"
   },
   "incident-types": {
     "title": "Incident Types",
     "hide_moscow": "Hide Moscow",
+    "tooltip_text": "Incidents",
     "chart1": {
       "title": "Distribution of Incidents by Type",
-      "subtitle": "Overall breakdown of reported incidents categorized by type"
+      "subtitle": "Overall breakdown of reported incidents categorized by type",
+      "text": "Incidents"
     },
     "chart2": {
       "title": "Trends in Cumulative Incidents by Type Over Time",
@@ -82,14 +86,18 @@
     "chart7": {
       "title": "Distribution of Incidents by Type and Region",
       "subtitle": "Regional breakdown of incidents categorized by incident classification"
-    }
+    },
+    "axes_text": "Number of incidents",
+    "total_metric": "Total"
   },
   "damaged-equipments": {
     "title": "Damaged Equipments",
     "hide_moscow": "Hide Moscow",
+    "tooltip_text": "Damaged",
     "chart1": {
       "title": "Distribution of Damaged Equipments",
-      "subtitle": "Overall count and breakdown of damaged equipment across all incidents"
+      "subtitle": "Overall count and breakdown of damaged equipment across all incidents",
+      "text": "Damaged Equipments"
     },
     "chart2": {
       "title": "Trends in Cumulative Damaged Equipments Over Time",
@@ -114,7 +122,9 @@
     "chart7": {
       "title": "Distribution of Damaged Equipments by Region",
       "subtitle": "Regional comparative view of equipment damage occurrences"
-    }
+    },
+    "axes_text": "Number of incidents",
+    "total_metric": "Total"
   },
   "collisions": {
     "title": "Collisions",
@@ -135,7 +145,10 @@
     "chart4": {
       "title": "Monthly Implicated Equipments in Collisions",
       "subtitle": "Monthly trends of specific equipment involved in collision events"
-    }
+    },
+    "tooltip_text": "Incidents",
+    "axes_text": "Number of incidents",
+    "total_metric": "Total"
   },
   "sabotage": {
     "title": "Sabotage",
@@ -191,7 +204,10 @@
     "chart13": {
       "title": "Number of Damaged Equipments by Region",
       "subtitle": "Geographical distribution of equipment damage caused by sabotage"
-    }
+    },
+    "tooltip_text": "Incidents",
+    "axes_text": "Number of incidents",
+    "total_metric": "Total"
   },
   "partisans-arrest": {
     "title": "Partisans Arrest",
@@ -202,7 +218,8 @@
     },
     "chart2": {
       "title": "Distribution of Sabotage where partisans were arrested",
-      "subtitle": "Proportion of sabotage events resulting in partisan detentions"
+      "subtitle": "Proportion of sabotage events resulting in partisan detentions",
+      "text": "Sabotages"
     },
     "chart3": {
       "title": "Distribution of Applicable Laws",
@@ -223,11 +240,146 @@
     "chart7": {
       "title": "Applicable Laws by Partisans Age",
       "subtitle": "Correlation mapping applied legal charges against partisan age"
-    }
+    },
+    "tooltip_text": "Incidents",
+    "axes_text": "Number of incidents",
+    "total_metric": "Total"
   },
   "informations": {
     "title": "Informations",
-    "subtitle": ""
+    "subtitle": "",
+    "description_title": "Description",
+    "description_1": "This project is a comprehensive data analysis and visualization tool for incidents on the Russian Railways Network since 2022.",
+    "description_2": "It leverages various open-source data sources to provide insights into different types of incidents, including sabotage, collisions, and equipment damage.",
+    "description_3": "The application as an interactive interface where users can explore the data through various tabs, each focusing on a specific aspect of the incidents. The data pipeline combines keyword filtering, Jev AI for message relevance classification, and Ollama models for translation and detailed information extraction.",
+    "data_sources_title": "Data Sources",
+    "data_sources_warning": "Data sources are open and free to use. Just, if you use it, please credit. 🫡",
+    "source_button": "📜 Source: Incidents on Russian Railways Network",
+    "twitter_title": "Twitter/X Accounts",
+    "telegram_title": "Telegram Channels",
+    "methodology_title": "Methodology",
+    "methodology_intro": "Search of messages, tweets, and news evoking incidents on Russian Railways Network. The pipeline uses a combination of keyword-based filtering, Jev AI for relevance detection, and Ollama models for translation and classification.",
+    "classification_title": "Classification Methodology",
+    "data_collection_title": "Data Collection Process",
+    "data_processing_title": "Data Processing Pipeline",
+    "geographic_title": "Geographic Coverage",
+    "temporal_title": "Temporal Coverage",
+    "limitations_title": "Limitations and Considerations",
+    "quality_title": "Data Quality Assurance",
+    "ethical_title": "Ethical Considerations",
+    "classification_details_title": "Classification Details",
+    "incident_types_title": "Incident Types",
+    "equipment_types_title": "Equipment Types",
+    "ai_title": "Artificial Intelligence Usage",
+    "ai_description": "This project leverages AI models to process and classify large volumes of data efficiently.",
+    "ai_jev_title": "Jev AI (TypeSafe)",
+    "ai_jev_content_1": "Used for filtering and classifying messages based on their relevance to railway incidents. Jev AI helps determine if a message contains information about railway accidents, collisions, derailments, sabotage, or other railway-related incidents.",
+    "ai_jev_content_2": "Jev AI is also used to classify incident types, damaged equipment, collision details, and to detect partisan arrests from the translated message content.",
+    "ai_ollama_title": "Ollama Models",
+    "ai_ollama_content_1": "Local Ollama models are used for translating non-English content (primarily Russian) to English, enabling consistent analysis and classification across all messages.",
+    "ai_ollama_content_2": "Ollama models are also used to extract detailed information such as partisan names and ages from the translated text when mentioned in relation to sabotage activities.",
+    "manual_validation_title": "Manual Validation",
+    "manual_validation_content_1": "Every message processed by AI systems undergoes manual review and validation by human.",
+    "manual_validation_content_2": "This human oversight ensures the accuracy of classifications, corrects any AI errors, and validates that each message is relevant to railway incidents before final inclusion in the dataset.",
+    "manual_validation_content_3": "All data presented in this application has been manually verified and finalized, guaranteeing the highest level of quality and reliability.",
+    "crimea_note_title": "Important Note about Crimea:",
+    "crimea_note": " Rail incidents in Crimea have been accounted for. It is important to remember that Crimea is Ukrainian territory, but being occupied, the rail network is under the responsibility of the Russian authorities."
+  },
+  "methodology": {
+    "title": "Methodology",
+    "description": "This project provides comprehensive analysis of incidents on the Russian Railways Network sonce 2022, leveraging open-source intelligence (OSINT) from Telegram channels and Twitter/X accounts.",
+    "data_collection": {
+      "title": "Data Collection",
+      "content_1": "Systematic monitoring of Telegram channels and Twitter/X accounts that report on railway incidents in Russia.",
+      "content_2": "Automated extraction of messages, tweets, and news articles containing keywords related to railway incidents.",
+      "content_3": "Incremental data ingestion to capture new incidents as they are reported, with deduplication to avoid counting the same incident multiple times.",
+      "content_4": "Data is collected from both Russian and Ukrainian sources to ensure comprehensive coverage."
+    },
+    "data_sources": {
+      "title": "Data Sources",
+      "twitter": {
+        "LX": "LX",
+        "Intelschizo": "Intelschizo",
+        "Prune60": "Prune60",
+        "NOELreports": "NOELreports",
+        "Igor_Sushko": "Igor Sushko"
+      },
+      "telegram": {
+        "Electrichki": "Electrichki",
+        "Astra_News": "Astra News",
+        "SHOT": "SHOT",
+        "Atesh": "Atesh",
+        "Legion_of_Freedom": "Legion of Freedom",
+        "VD_Legion_of_Freedom": "VD Legion of Freedom",
+        "Enews112": "Enews112",
+        "TeleRZD": "TeleRZD",
+        "Mzd_Rzd": "Mzd Rzd",
+        "Magistral_Kuvalda": "Magistral Kuvalda",
+        "NSKZD": "NSKZD",
+        "News_ZSZD": "News ZSZD",
+        "D4msk": "D4msk",
+        "Rospartizan": "Rospartizan",
+        "Boakom": "Boakom",
+        "RDPSRU": "RDPSRU",
+        "Ostanovi_Vagony_2023": "Ostanovi Vagony 2023",
+        "Activatica": "Activatica",
+        "Russvolcorps": "Russvolcorps"
+      }
+    },
+    "classification": {
+      "title": "Classification Methodology",
+      "content_1": "All incidents are classified into categories based on type, damaged equipment, and partisan involvement.",
+      "content_2": "Classification is performed using a combination of automated text analysis and manual verification. Jev AI is used to classify incident type, damaged equipment, collision details, and partisan arrests based on translated message content.",
+      "content_3": "Incidents are categorized as Sabotage when sources explicitly mention or show evidence of deliberate destructive actions.",
+      "content_4": "Some incidents like derailments or fires may be classified separately if the source doesn't clearly indicate sabotage."
+    },
+    "data_processing": {
+      "title": "Data Processing Pipeline",
+      "content_1": "Raw data from Telegram and Twitter is first cleaned and normalized to remove duplicates and irrelevant content.",
+      "content_2": "Text translation is performed for non-English content using local Ollama models to enable consistent classification.",
+      "content_3": "Incidents are filtered and qualified based on relevance to railway infrastructure in Russia. A first keyword-based filter is applied, followed by a Jev AI classification to confirm railway-related content.",
+      "content_4": "Classified data is stored in a structured data warehouse for analysis and visualization.",
+      "content_5": "The pipeline includes multiple quality checks to ensure data accuracy and consistency."
+    },
+    "geographic_coverage": {
+      "title": "Geographic Coverage",
+      "content_1": "The project covers all Russian regions with railway infrastructure.",
+      "content_2": "Incidents in Crimea are included and noted separately, as while Crimea is Ukrainian territory, its railway network has been under Russian control since 2014.",
+      "content_3": "Regional distribution allows for analysis of incident patterns across different parts of Russia.",
+      "content_4": "Moscow and other major railway hubs receive special attention due to their strategic importance."
+    },
+    "temporal_coverage": {
+      "title": "Temporal Coverage",
+      "content_1": "Data collection began in 2022, coinciding with the start of the full-scale Russian invasion of Ukraine.",
+      "content_2": "The dataset includes incidents since 2022, with ongoing updates as new incidents are reported.",
+      "content_3": "Temporal analysis allows for identification of trends, patterns, and potential correlations with external events.",
+      "content_4": "Monthly and yearly aggregations provide insights into the evolution of railway incidents over time."
+    },
+    "limitations": {
+      "title": "Limitations and Considerations",
+      "content_1": "Data is based on open-source reporting, which may be incomplete or biased.",
+      "content_2": "Not all incidents may be reported in the monitored sources, especially in remote or less-covered regions.",
+      "content_3": "Classification is based on available information and may be updated as more details emerge.",
+      "content_4": "The project focuses on incidents on Russian railway infrastructure; incidents on Ukrainian railways are not included.",
+      "content_5": "Temporal coverage may have gaps for periods when source monitoring was interrupted.",
+      "content_6": "Geographic precision is limited by the information provided in the source reports."
+    },
+    "data_quality": {
+      "title": "Data Quality Assurance",
+      "content_1": "All data undergoes multiple validation steps to ensure accuracy.",
+      "content_2": "Duplicate detection algorithms identify and remove redundant incident reports.",
+      "content_3": "Manual verification is performed on a sample of incidents to validate automated classification.",
+      "content_4": "Data consistency checks ensure that aggregations and calculations are correct.",
+      "content_5": "The project maintains transparency about data sources and methodology to enable independent verification."
+    },
+    "ethical_considerations": {
+      "title": "Ethical Considerations",
+      "content_1": "This project is committed to ethical data collection and analysis practices.",
+      "content_2": "All data is sourced from publicly available information; no private or confidential data is collected.",
+      "content_3": "The project maintains neutrality in reporting and does not take political positions.",
+      "content_4": "Sensitive information about individuals is handled with care and in accordance with ethical guidelines.",
+      "content_5": "The project aims to contribute to public understanding of railway security issues without sensationalizing incidents."
+    }
   },
   "content": {
     "Adygey": "Adygey",

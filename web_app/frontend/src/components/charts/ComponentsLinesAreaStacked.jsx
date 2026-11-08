@@ -2,13 +2,13 @@ import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
 export function ComponentsLinesAreaStacked({
+  tab,
   id,
   data,
   t,
   i18n,
   nf,
   custom,
-  height,
 }) {
   const option = useMemo(() => {
     // Flat data: [{ libelle, metric, value }]
@@ -68,7 +68,7 @@ export function ComponentsLinesAreaStacked({
       },
       yAxis: {
         type: "value",
-        name: t(`page.axes_text`),
+        name: t(`page.${tab}.axes_text`),
         nameLocation: "end",
         nameTextStyle: { fontSize: 14, color: "#fff" },
         axisLabel: {
@@ -96,14 +96,14 @@ export function ComponentsLinesAreaStacked({
         data: seriesMap.get(name),
       })),
     };
-  }, [data, t, i18n.language, nf, id, custom]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
   return (
     <ReactECharts
       option={option}
       style={{
         width: "100%",
-        height: height || custom?.[id]?.height || 400,
+        height: custom?.[id]?.height,
         alignSelf: "center",
       }}
     />

@@ -10,6 +10,7 @@ export function useApi(url, options = {}) {
   return useQuery({
     queryKey: [url],
     queryFn: ({ signal }) => getJson(url, signal),
+    staleTime: Infinity,
     ...options,
   });
 }

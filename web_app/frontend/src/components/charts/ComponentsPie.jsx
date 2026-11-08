@@ -1,38 +1,24 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-const FALLBACK_COLORS = [
-  "#7F557D",
-  "#9D4EDD",
-  "#B298DC",
-  "#D0A9F5",
-  "#8B2E2E",
-  "#C0655B",
-  "#5B8C85",
-  "#E0A990",
-];
+export function ComponentsPie({ tab, id, data, t, i18n, nf, custom }) {
+  const fullId = `${tab}.${id}`;
 
-export function ComponentsPie({ id, data, t, i18n, nf, custom, height }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
 
-    console.log("data", data);
-
     const cfg = custom?.[id] ?? {};
-    const labelPrefix = cfg.label_prefix ?? "page.content";
     const total = data.reduce((sum, d) => sum + d.value, 0);
-    const minInsidePct = cfg.minInsidePercent ?? 5;
+    const minInsidePct = 5;
 
     const items = data.map((d, i) => {
       const pct = (d.value / total) * 100;
       const outside = pct < minInsidePct;
       return {
-        name: t(`${labelPrefix}.${d.metric}`, d.metric),
+        name: d.metric,
         value: d.value,
         itemStyle: {
-          color:
-            custom?.colors_metrics?.[d.metric] ??
-            FALLBACK_COLORS[i % FALLBACK_COLORS.length],
+          color: custom?.colors_metrics?.[d.metric],
           borderColor: "#0f1420",
           borderWidth: 2,
         },
@@ -42,20 +28,18 @@ export function ComponentsPie({ id, data, t, i18n, nf, custom, height }) {
       };
     });
 
-    console.log("items", items);
-
     return {
       title: {
-        text: `${nf.format(total)}\n${t(`page.${id}.text`)}`,
+        text: `${nf.format(total)}\n${t(`page.${fullId}.text`)}`,
         left: "center",
         top: "center",
-        textStyle: { fontSize: 17, fontWeight: "bold", color: "#fff" },
+        textStyle: { fontSize: 15, fontWeight: "bold", color: "#fff" },
       },
       tooltip: {
         trigger: "item",
         confine: true,
         formatter: (p) =>
-          `${p.marker} ${p.name}<br/><b>${nf.format(p.value)}</b> ${t("page.tooltip_text")} (${p.percent}%)`,
+          `${p.marker} ${p.name}<br/><b>${nf.format(p.value)}</b> ${t(`page.${tab}.tooltip_text`)} (${p.percent}%)`,
       },
       series: [
         {
@@ -87,9 +71,7 @@ export function ComponentsPie({ id, data, t, i18n, nf, custom, height }) {
         },
       ],
     };
-  }, [data, t, i18n.language, nf, id, custom]);
-
-  console.log("option", option);
+  }, [data, t, i18n.language, nf, tab, id, custom]);
 
   if (!option) return null;
 
@@ -98,7 +80,7 @@ export function ComponentsPie({ id, data, t, i18n, nf, custom, height }) {
       option={option}
       style={{
         width: "100%",
-        height: height || custom?.[id]?.height,
+        height: custom?.[id]?.height,
         alignSelf: "center",
       }}
     />

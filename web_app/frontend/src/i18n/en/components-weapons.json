@@ -14,14 +14,12 @@
   "chart1": {
     "title": "Foreign electronic components by equipment type",
     "subtitle": "Number of components identified in Russian weapons, by equipment type.",
-    "text": "Components",
-    "help": ""
+    "text": "Components"
   },
   "chart2": {
     "title": "Components by weapon type",
     "subtitle": "Number of foreign electronic components identified in Russian weapons, by weapon type.",
-    "yaxis": "Number of components",
-    "help": ""
+    "yaxis": "Number of components"
   },
   "chart3": {
     "title": "Components by country of origin (top 30)",
@@ -55,5 +53,32 @@
     "title": "Components by weapon type and equipment type",
     "subtitle": "Breakdown of the components identified in Russian weapons, by weapon type and equipment type.",
     "help": "The inner ring shows the equipment type, and the outer ring shows the weapon type within each category."
+  },
+  "tabs": {
+    "overview": "Overview",
+    "methodology": "Methodology"
+  },
+  "methodology": {
+    "title": "Methodology",
+    "intro": "This page shows foreign electronic components identified in Russian weapons, based on open-source sanctions data.",
+    "data_source_title": "Data Source",
+    "data_source_1": "Data is collected from the War & Sanctions database published by the Main Directorate of Intelligence (GUR) of the Ministry of Defence of Ukraine, which lists foreign components found in Russian weapons.",
+    "data_source_2": "The source data is open and free to use. If you use it, please credit the source. 🫡",
+    "source_button": "📜 Source: War & Sanctions — Components in the aggressor's weapons",
+    "processing_title": "Data Processing",
+    "processing_1": "Raw data is ingested into a data lake, then cleaned, normalized and aggregated by equipment type, weapon, weapon type, manufacturer and country of origin.",
+    "processing_2": "Aggregated results are stored in a structured data warehouse and served by the API that feeds the charts on the Overview tab.",
+    "limitations_title": "Limitations and Considerations",
+    "limitations_1": "The data reflects the components identified and published by the GUR; it may be incomplete or updated as new analyses are released.",
+    "limitations_2": "A component is counted per distinct part reference, so a single product can appear several times.",
+    "limitations_3": "Components whose origin could not be established are grouped under \"Not identified\"."
+  },
+  "overview": {
+    "tooltip_text": "Components",
+    "axes_text": "Number of components",
+    "total_metric": "Total",
+    "chart1": {
+      "text": "Components"
+    }
   }
 }

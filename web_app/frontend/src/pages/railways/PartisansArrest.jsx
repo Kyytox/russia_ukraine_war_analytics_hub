@@ -32,9 +32,9 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart1`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart1`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsFunnel
-                  id="chart1"
+                  tab={TAB} id="chart1"
                   data={data.filter(
                     (d) =>
                       d.libelle === "total_sabotage" ||
@@ -45,7 +45,6 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -56,9 +55,9 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart2`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart2`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsPie
-                  id="chart2"
+                  tab={TAB} id="chart2"
                   data={data.filter(
                     (d) =>
                       d.libelle === "total_sabotage_arrested" ||
@@ -68,7 +67,6 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -79,15 +77,14 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart3`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart3`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsTreemap
-                  id="chart3"
+                  tab={TAB} id="chart3"
                   data={data.filter((d) => d.libelle === "Laws")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -98,15 +95,14 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart4`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart4`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsPictorialBar
-                  id="chart4"
+                  tab={TAB} id="chart4"
                   data={data.filter((d) => d.libelle === "partisans_age")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -117,15 +113,14 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart5`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart5`} t={t}>
             <ChartState query={section2}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsWaterfall
-                  id="chart5"
+                  tab={TAB} id="chart5"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                   mode="global"
                 />
               )}
@@ -137,15 +132,14 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart6`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart6`} t={t}>
             <ChartState query={section3}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsWaterfall
-                  id="chart6"
+                  tab={TAB} id="chart6"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                   mode="byMetric"
                   palette={["#1f7a9e", "#5a9e5f", "#d4f01f", "#ff8c1a"]}
                 />
@@ -158,15 +152,14 @@ export default function PartisansArrest({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart7`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart7`} t={t}>
             <ChartState query={section4}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsPunchCard
-                  id="chart7"
+                  tab={TAB} id="chart7"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>

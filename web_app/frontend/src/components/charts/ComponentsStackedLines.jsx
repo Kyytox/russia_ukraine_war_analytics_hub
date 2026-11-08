@@ -45,13 +45,13 @@ const detectXType = (data) => {
 };
 
 export function ComponentsStackedLines({
+  tab,
   id,
   data,
   t,
   i18n,
   nf,
   custom,
-  height,
   xType: xTypeProp, // "month" | "month_year" | "category"
 }) {
   const option = useMemo(() => {
@@ -165,7 +165,7 @@ export function ComponentsStackedLines({
       },
       yAxis: {
         type: "value",
-        name: t("page.axes_text"),
+        name: t(`page.${tab}.axes_text`),
         nameLocation: "end",
         boundaryGap: [0, "10%"],
         nameTextStyle: custom?.common?.nameTextStyle,
@@ -178,12 +178,12 @@ export function ComponentsStackedLines({
       },
       series,
     };
-  }, [data, xTypeProp, t, i18n.language, nf, id, custom]);
+  }, [data, xTypeProp, t, i18n.language, nf, id, custom, tab]);
 
   if (!option) return null;
 
   // Determine chart height:
-  const chartHeight = height || custom?.[id]?.height;
+  const chartHeight = custom?.[id]?.height;
 
   return (
     <ReactECharts

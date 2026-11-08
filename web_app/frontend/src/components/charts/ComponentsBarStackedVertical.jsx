@@ -9,13 +9,13 @@ const DEFAULT_MAX_METRICS = 10;
 const MIN_LABEL_RATIO = 0.02; // segment < 5 % of the tallest bar: no label inside
 
 export function ComponentsBarStackedVertical({
+  tab,
   id,
   data,
   t,
   i18n,
   nf,
   custom,
-  height,
 }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
@@ -87,7 +87,7 @@ export function ComponentsBarStackedVertical({
           const key = libelles[params[0].dataIndex];
           const sum = totals[key];
           const header = `<b>${params[0].name}</b><br/>${nf.format(sum)} ${t(
-            "page.tooltip_text",
+            `page.${tab}.tooltip_text`,
           )}`;
 
           const lines = [];
@@ -143,7 +143,7 @@ export function ComponentsBarStackedVertical({
       },
       yAxis: {
         type: "value",
-        name: t("page.axes_text"),
+        name: t(`page.${tab}.axes_text`),
         nameLocation: "middle",
         nameGap: 56,
         nameTextStyle: { fontSize: 14, color: "#fff" },
@@ -190,14 +190,14 @@ export function ComponentsBarStackedVertical({
         },
       ],
     };
-  }, [data, t, i18n.language, nf, id, custom]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
   if (!option) return null;
 
   return (
     <ReactECharts
       option={option}
-      style={{ width: "100%", height: height || custom?.[id]?.height }}
+      style={{ width: "100%", height: custom?.[id]?.height }}
     />
   );
 }

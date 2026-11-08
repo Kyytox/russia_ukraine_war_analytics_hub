@@ -5,7 +5,7 @@ const isNumeric = (arr) =>
   arr.every((v) => v !== "" && !Number.isNaN(Number(v)));
 const unique = (values) => [...new Set(values.map(String))];
 
-export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
+export function ComponentsPunchCard({ tab, id, data, t, i18n, nf, custom }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
 
@@ -68,7 +68,7 @@ export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
         formatter: (p) => {
           const [, , v, x, y] = p.value;
           return `${p.marker} ${label(x)}<br/><b>Age: ${label(y)}<br/><b>${nf.format(v)}</b> ${t(
-            cfg.tooltip ?? "page.tooltip_text",
+            cfg.tooltip ?? `page.${tab}.tooltip_text`,
           )}`;
         },
       },
@@ -98,10 +98,10 @@ export function ComponentsPunchCard({ id, data, t, i18n, nf, custom, height }) {
       },
       series,
     };
-  }, [data, t, i18n.language, nf, id, custom]);
+  }, [data, t, i18n.language, nf, id, custom, tab]);
 
   if (!option) return null;
-  const chartHeight = height || custom?.[id]?.height;
+  const chartHeight = custom?.[id]?.height;
 
   return (
     <ReactECharts

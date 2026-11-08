@@ -4,7 +4,7 @@ import ReactECharts from "echarts-for-react";
 const sortNatural = (a, b) =>
   String(a).localeCompare(String(b), undefined, { numeric: true });
 
-export function ComponentsBarGrouped({ id, data, t, nf, custom, height }) {
+export function ComponentsBarGrouped({ tab, id, data, t, nf, custom }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
     const cfg = custom?.[id] ?? {};
@@ -70,7 +70,7 @@ export function ComponentsBarGrouped({ id, data, t, nf, custom, height }) {
 
     const valueAxis = {
       type: "value",
-      name: t(cfg.axis_text ?? "page.axes_text"),
+      name: t(cfg.axis_text ?? `page.${tab}.axes_text`),
       nameLocation: "end",
       nameTextStyle: {
         fontSize: 14,
@@ -126,7 +126,7 @@ export function ComponentsBarGrouped({ id, data, t, nf, custom, height }) {
       yAxis: valueAxis,
       series,
     };
-  }, [data, t, nf, id, custom]);
+  }, [data, t, nf, id, custom, tab]);
 
   if (!option) return null;
 
@@ -134,7 +134,7 @@ export function ComponentsBarGrouped({ id, data, t, nf, custom, height }) {
     <ReactECharts
       option={option}
       notMerge
-      style={{ width: "100%", height: height || custom?.[id]?.height || 400 }}
+      style={{ width: "100%", height: custom?.[id]?.height }}
     />
   );
 }

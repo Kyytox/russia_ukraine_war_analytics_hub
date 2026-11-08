@@ -44,15 +44,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart1`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart1`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarVertical
-                  id="chart1"
+                  tab={TAB} id="chart1"
                   data={data.filter((d) => d.libelle === "sabotage_year")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -63,15 +62,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart2`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart2`} t={t}>
             <ChartState query={section2}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsStackedLines
-                  id="chart2"
+                  tab={TAB} id="chart2"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -82,15 +80,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart3`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart3`} t={t}>
             <ChartState query={section3}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsLinesAreaStacked
-                  id="chart3"
+                  tab={TAB} id="chart3"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -101,15 +98,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart4`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart4`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsPie
-                  id="chart4"
+                  tab={TAB} id="chart4"
                   data={data.filter((d) => d.libelle === "prtsn_grp")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -120,15 +116,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart5`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart5`} t={t}>
             <ChartState query={section4}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsScatterGroups
-                  id="chart5"
+                  tab={TAB} id="chart5"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -139,15 +134,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart9`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart9`} t={t}>
             <ChartState query={section7}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarStackedVertical
-                  id="chart9"
+                  tab={TAB} id="chart9"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -157,15 +151,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart8`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart8`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsPie
-                  id="chart8"
+                  tab={TAB} id="chart8"
                   data={data.filter((d) => d.libelle === "dmg_eqp_sabotage")}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -176,15 +169,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart6`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart6`} t={t}>
             <ChartState query={section5}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsTreemap
-                  id="chart6"
+                  tab={TAB} id="chart6"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                   gradient={false}
                 />
               )}
@@ -196,15 +188,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart7`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart7`} t={t}>
             <ChartState query={section5}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarStackedVertical
-                  id="chart7"
+                  tab={TAB} id="chart7"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -215,15 +206,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart10`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart10`} t={t}>
             <ChartState query={section6}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsTreemap
-                  id="chart10"
+                  tab={TAB} id="chart10"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                   gradient={false}
                 />
               )}
@@ -235,15 +225,14 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           <ChartHeader pageKey={TAB} chartKey={`page.${TAB}.chart11`} t={t} />
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart11`} t={t}>
             <ChartState query={section6}>
-              {(data, height) => (
+              {(data) => (
                 <ComponentsBarStackedVertical
-                  id="chart11"
+                  tab={TAB} id="chart11"
                   data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
                   custom={cfg}
-                  height={height}
                 />
               )}
             </ChartState>
@@ -266,7 +255,7 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           </div>
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart12`} t={t}>
             <ChartState query={section1}>
-              {(data, height) => {
+              {(data) => {
                 const filteredData = hideMoscowChart12
                   ? data.filter(
                       (d) =>
@@ -277,13 +266,12 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
                   : data.filter((d) => d.libelle === "region_sabotage");
                 return (
                   <ComponentsMap
-                    id="chart12"
+                    tab={TAB} id="chart12"
                     data={filteredData}
                     t={t}
                     i18n={i18n}
                     nf={nf}
                     custom={cfg}
-                    height={height}
                   />
                 );
               }}
@@ -308,7 +296,7 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
           </div>
           <ChartModal pageKey={TAB} chartKey={`page.${TAB}.chart13`} t={t}>
             <ChartState query={section8}>
-              {(data, height) => {
+              {(data) => {
                 const filteredData = hideMoscowChart13
                   ? data.filter(
                       (d) => d.libelle !== "Moscow" && d.libelle !== "Москва",
@@ -316,13 +304,12 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
                   : data;
                 return (
                   <ComponentsBarStackedHorizontal
-                    id="chart13"
+                    tab={TAB} id="chart13"
                     data={filteredData}
                     t={t}
                     i18n={i18n}
                     nf={nf}
                     custom={cfg}
-                    height={height}
                   />
                 );
               }}
