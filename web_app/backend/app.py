@@ -22,6 +22,7 @@ from routers.incidents_railway import (
     incident_types,
     sabotage,
     partisans_arrest,
+    informations,
 )
 
 app = FastAPI(title="Russia-Ukraine War Data Hub")
@@ -39,6 +40,7 @@ for r in (
     collisions,
     sabotage,
     partisans_arrest,
+    informations,
     blocked_sites,
     raid_alerts,
     components_weapons,
