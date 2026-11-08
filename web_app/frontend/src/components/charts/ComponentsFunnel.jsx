@@ -33,17 +33,17 @@ export function ComponentsFunnel({ tab, id, data, t, i18n, nf, custom }) {
         bottom: "5%",
         containLabel: true,
       },
-      tooltip: {
-        trigger: "item",
-        confine: true,
-        formatter: (params) => {
-          const share =
-            cfg.show_percent && total !== 0
-              ? ` (${pct.format(params.value / total)})`
-              : "";
-          return `${params.marker} ${params.name}<br/><b>${nf.format(params.value)}</b> ${t(cfg.tooltip ?? `page.${tab}.tooltip_text`)}${share}`;
-        },
-      },
+      // tooltip: {
+      //   trigger: "item",
+      //   confine: true,
+      //   formatter: (params) => {
+      //     const share =
+      //       cfg.show_percent && total !== 0
+      //         ? ` (${pct.format(params.value / total)})`
+      //         : "";
+      //     return `${params.marker} ${params.name}<br/><b>${nf.format(params.value)}</b> ${t(cfg.tooltip ?? `page.${tab}.tooltip_text`)}${share}`;
+      //   },
+      // },
       series: [
         {
           type: "funnel",

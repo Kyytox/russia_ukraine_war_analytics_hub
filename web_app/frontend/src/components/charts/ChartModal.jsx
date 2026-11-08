@@ -22,15 +22,20 @@ export default function ChartModal({ children, pageKey, chartKey, t, year }) {
 
       {isModalOpen && (
         <ModalPortal onClose={() => setIsModalOpen(false)}>
-          <div className="chart-modal-overlay" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="chart-modal-overlay"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="chart-modal-content">
               <div className="chart-modal-header">
-                <ChartHeader
-                  pageKey={pageKey}
-                  chartKey={chartKey}
-                  t={t}
-                  year={year}
-                />
+                <div className="chart-modal-title">
+                  <ChartHeader
+                    pageKey={pageKey}
+                    chartKey={chartKey}
+                    t={t}
+                    year={year}
+                  />
+                </div>
                 <button
                   onClick={() => setIsModalOpen(false)}
                   className="chart-modal-close"

@@ -1,15 +1,7 @@
 import { useMemo } from "react";
 import ReactECharts from "echarts-for-react";
 
-export function ComponentsBarVertical({
-  tab,
-  id,
-  data,
-  t,
-  i18n,
-  nf,
-  custom,
-}) {
+export function ComponentsBarVertical({ tab, id, data, t, i18n, nf, custom }) {
   const option = useMemo(() => {
     if (!data?.length) return null;
 
@@ -58,7 +50,7 @@ export function ComponentsBarVertical({
         data: items.map((d) => d.name),
         axisTick: { show: false },
         axisLabel: {
-          interval: 0, // never silently drop a category label
+          interval: 0,
           rotate: cfg.xAxisRotate,
           width: custom?.common?.labelMaxLength,
           overflow: "truncate",

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import * as echarts from "echarts";
 import ReactECharts from "echarts-for-react";
-import { useApi } from "../../hooks/useApi";
 
 const DEFAULT_GRADIENT = [
   "#c4aa5e",
@@ -14,8 +13,7 @@ const DEFAULT_GRADIENT = [
 
 import geo from "./ru_region.json";
 
-// enregistrée une seule fois, au chargement du module
-// echarts.registerMap("ru-regions", geo);
+echarts.registerMap("ru-regions", geo);
 
 export function ComponentsMap({ tab, id, data, t, i18n, nf, custom }) {
   // la carte est enregistrée une seule fois, quand le fichier est chargé
@@ -46,7 +44,6 @@ export function ComponentsMap({ tab, id, data, t, i18n, nf, custom }) {
         orient: "horizontal",
         left: "center",
         bottom: 10,
-        // textStyle: { color: "#fff" },
         inRange: { color: cfg.gradient ?? DEFAULT_GRADIENT },
       },
       series: [

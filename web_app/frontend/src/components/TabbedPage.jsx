@@ -1,18 +1,19 @@
 import { useEffect } from "react";
-import { NavLink, Outlet, useLocation, useOutletContext } from "react-router-dom";
+import {
+  NavLink,
+  Outlet,
+  useLocation,
+  useOutletContext,
+} from "react-router-dom";
 import { usePageTranslation } from "../hooks/usePageTranslation.js";
 import { getPageFromPath } from "../utils/common.js";
 
-/**
- * Tabbed page layout where each tab is a real nested route (SEO-friendly URLs
- * like /en/incidents-railways/sabotage instead of /en/incidents-railways?tab=sabotage).
- *
- * Tab components keep their usual props signature ({ PAGE, t, i18n, nf }):
- * they are provided through the outlet context (see OutletContextWrapper).
- *
- * tabs: [{ path: "sabotage", label: "page.tabs.sabotage", Component: Sabotage }, ...]
- */
-export default function TabbedPage({ pageName, titleKey, descriptionKey, tabs }) {
+export default function TabbedPage({
+  pageName,
+  titleKey,
+  descriptionKey,
+  tabs,
+}) {
   const location = useLocation();
   const PAGE = getPageFromPath(location.pathname);
   const { t, i18n } = usePageTranslation(pageName);
@@ -43,7 +44,14 @@ export default function TabbedPage({ pageName, titleKey, descriptionKey, tabs })
       document.head.appendChild(description);
     }
     description.content = t(descriptionKey);
-  }, [location.pathname, i18n.language, activeTab, t, titleKey, descriptionKey]);
+  }, [
+    location.pathname,
+    i18n.language,
+    activeTab,
+    t,
+    titleKey,
+    descriptionKey,
+  ]);
 
   return (
     <section className="page">
@@ -82,11 +90,6 @@ export default function TabbedPage({ pageName, titleKey, descriptionKey, tabs })
   );
 }
 
-/**
- * Bridges the outlet context ({ PAGE, t, i18n, nf }) into props,
- * so existing tab components don't need to change their signature.
- * Used as the element of each nested tab route in App.jsx.
- */
 export function OutletContextWrapper({ Component }) {
   const context = useOutletContext();
   return <Component {...context} />;

@@ -192,7 +192,22 @@
     "Missile": "#B5D0A3",
     "UAV": "#D0B5A3",
     "Regions": "#0e0e0e",
-    "Laws": "#0e0e0e"
+    "Laws": "#0e0e0e",
+    "UAV Combat": "#b8747a",
+    "UAV Surveillance": "#A8DADC",
+    "Electronic Equipment": "#4976b6",
+    "Communication Equipment": "#446275",
+    "Cruise Missile": "#F4A261",
+    "Ballistic Missile": "#E76F51",
+    "UAV Combat and Surveillance": "#F9C74F",
+    "Armored Vehicle": "#4ab695",
+    "Navigation Equipment": "#4D908E",
+    "Helicopter": "#1c2e3d",
+    "Guided Missile": "#b81f22",
+    "Artillery": "#90BE6D",
+    "Glide Bomb": "#F8961E",
+    "FPV": "#9C6644",
+    "Air Defense": "#6A4C93"
   },
   "incidents-railways": {
     "overview": {

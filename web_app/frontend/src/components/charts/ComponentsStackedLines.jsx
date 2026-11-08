@@ -182,14 +182,11 @@ export function ComponentsStackedLines({
 
   if (!option) return null;
 
-  // Determine chart height:
-  const chartHeight = custom?.[id]?.height;
-
   return (
     <ReactECharts
       option={option}
       notMerge
-      style={{ width: "100%", height: chartHeight }}
+      style={{ width: "100%", height: custom?.[id]?.height }}
     />
   );
 }

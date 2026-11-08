@@ -372,12 +372,9 @@ main {
 /**/
 /* KPI  */
 .h-kpi {
-  /* height: 150px; */
-  /* margin-bottom: 1rem; */
 }
 
 .h-kpi h3 {
-  /* padding: 0 0.5rem; */
   text-align: center;
 }
 
@@ -546,9 +543,18 @@ main {
   border-bottom: 1px solid var(--line);
 }
 
-.chart-modal-title {
-  font: 700 1.2rem var(--font-head);
+.chart-modal-title h2 {
+  font: 700 1.1rem var(--font-head);
   color: var(--text);
+}
+
+.chart-modal-title h3 {
+  font: 400 0.9rem var(--font-head);
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+.chart-modal-title {
   margin: 0;
 }
 
@@ -679,6 +685,7 @@ main {
     background-color 0.2s;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
+  text-align: center;
 }
 
 .tab-button:hover {

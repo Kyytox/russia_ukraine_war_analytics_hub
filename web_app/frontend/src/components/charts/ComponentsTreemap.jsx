@@ -73,6 +73,11 @@ export function ComponentsTreemap({
           inRange: { color: cfg.gradient },
         },
       }),
+      tooltip: {
+        trigger: "item",
+        formatter: (p) =>
+          `${p.name} <br/> ${nf.format(p.value)} (${pctFmt.format(p.value / total)})`,
+      },
       series: [
         {
           type: "treemap",

@@ -76,7 +76,7 @@
   "overview": {
     "tooltip_text": "Components",
     "axes_text": "Number of components",
-    "total_metric": "Total",
+    "total_metric": "Components",
     "chart1": {
       "text": "Components"
     }
