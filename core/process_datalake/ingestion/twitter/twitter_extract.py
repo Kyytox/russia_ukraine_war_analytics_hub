@@ -105,6 +105,7 @@ def create_search_query(date_since: str, date_until: str) -> str:
     text_accounts = " OR ".join([f"from:{account}" for account in RAILWAY_ACCOUNTS])
 
     query = f"({text_words}) ({text_accounts}) until:{date_until} since:{date_since} -filter:replies"
+    print(f"Constructed search query: {query}")
 
     return query
 
@@ -191,7 +192,6 @@ async def search_messages(df_raw: pd.DataFrame) -> pd.DataFrame:
 
         # Process tweet batches
         while list_tweets and len(list_tweets) > 0:
-
             if list_tweets[0].id == last_id:
                 print("No new tweets found, stopping retry")
                 break
@@ -307,7 +307,10 @@ def flow_twitter_extract() -> None:
         print(f"Saved {df_combined.shape[0]} total records (added {new_count} new)")
 
     # Update tracking artifacts
-    upd_data_artifact("twitter-extract", new_count)
-    create_artifact("dlk-flow-twitter-extract-artifact")
+    # upd_data_artifact("twitter-extract", new_count)
+    # create_artifact("dlk-flow-twitter-extract-artifact")
 
     print("Twitter extraction completed successfully")
+
+
+flow_twitter_extract()

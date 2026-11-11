@@ -22,6 +22,8 @@ from core.libs.utils import (
     create_artifact,
 )
 
+from core.common.parquet import read_parquet, save_parquet
+
 
 @task(name="Update UTC date", task_run_name="update-utc-date")
 def update_utc_date(df):
@@ -90,10 +92,12 @@ def flow_telegram_cleaning():
     """
 
     # data extracted
-    df_raw = read_data(PATH_TELEGRAM_RAW, "raw_telegram")
+    # df_raw = read_data(PATH_TELEGRAM_RAW, "raw_telegram")
+    df_raw = read_parquet(PATH_TELEGRAM_RAW, "raw_telegram")
 
     # data already cleaned
-    df_clean = read_data(PATH_TELEGRAM_CLEAN, "clean_telegram")
+    # df_clean = read_data(PATH_TELEGRAM_CLEAN, "clean_telegram")
+    df_clean = read_parquet(PATH_TELEGRAM_CLEAN, "clean_telegram")
 
     # keep data not in clean data
     df = keep_data_to_process(df_raw, df_clean)
@@ -108,4 +112,5 @@ def flow_telegram_cleaning():
     df = concat_old_new_df(df_raw=df_clean, df_new=df, cols=["ID"])
 
     # save data
-    save_data(PATH_TELEGRAM_CLEAN, "clean_telegram", df, ["account"])
+    # save_data(PATH_TELEGRAM_CLEAN, "clean_telegram", df, ["year"])
+    save_parquet(PATH_TELEGRAM_CLEAN, "clean_telegram", df, ["year"])

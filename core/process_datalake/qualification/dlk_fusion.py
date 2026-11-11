@@ -44,7 +44,12 @@ def get_twitter_data():
     """
 
     # read data from clean
-    return read_data(PATH_TWITTER_CLEAN, "twitter")
+    df = read_data(PATH_TWITTER_CLEAN, "twitter")
+
+    # put text_original into text_translate
+    df["text_translate"] = df["text_original"]
+
+    return df
 
 
 @task(name="Regroup data", task_run_name="regroup-data")

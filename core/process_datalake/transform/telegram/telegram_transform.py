@@ -28,6 +28,8 @@ from core.libs.utils import (
 # IA
 from core.libs.ollama_ia import ia_treat_message
 
+from core.common.parquet import read_parquet, save_parquet
+
 
 @task(name="Translate data", task_run_name="translate-data")
 def translate_data(df_to_trt):
@@ -155,9 +157,6 @@ def process_transform(df: pd.DataFrame, account: str) -> pd.DataFrame:
 
     print(f"Data to Transform: {df.shape[0]}")
 
-    # update artifact
-    upd_data_artifact(f"Messages to Transform - {account}", df.shape[0])
-
     # add col url
     df.loc[:, "url"] = "https://t.me/" + account + "/" + df["id_message"].astype(str)
 
@@ -187,10 +186,12 @@ def flow_telegram_transform():
     Init data
     """
     # read data clean
-    df_clean = read_data(PATH_TELEGRAM_CLEAN, "clean_telegram")
+    # df_clean = read_data(PATH_TELEGRAM_CLEAN, "clean_telegram")
+    df_clean = read_parquet(PATH_TELEGRAM_CLEAN, "clean_telegram")
 
     # read data transform
-    df_old_transf = read_data(PATH_TELEGRAM_TRANSFORM, "transform_telegram")
+    # df_old_transf = read_data(PATH_TELEGRAM_TRANSFORM, "transform_telegram")
+    df_old_transf = read_parquet(PATH_TELEGRAM_TRANSFORM, "transform_telegram")
 
     # remove poorly translated data for translate again
     df_transform = remove_poorly_translated_data(df_old_transf)
@@ -234,7 +235,8 @@ def flow_telegram_transform():
     print(f"Final data shape: {df_final.shape}")
 
     # save data
-    save_data(PATH_TELEGRAM_TRANSFORM, "transform_telegram", df_final, ["account"])
+    # save_data(PATH_TELEGRAM_TRANSFORM, "transform_telegram", df_final, ["year"])
+    save_parquet(PATH_TELEGRAM_TRANSFORM, "transform_telegram", df_final, ["year"])
 
     # create artifact
-    create_artifact("dlk-flow-telegram-transform-art", "table", data_art)
+    # create_artifact("dlk-flow-telegram-transform-art", "table", data_art)

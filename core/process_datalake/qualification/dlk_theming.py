@@ -362,7 +362,7 @@ def subflow_datalake_theming():
 
     df = get_data_into_duckdb(query)
 
-    df = df[df["date_message"] > datetime.datetime(2024, 4, 1)]  # for tests
+    df = df[df["date_message"] > datetime.datetime(2025, 7, 27)]  # for tests
 
     # Apply theming for railway incidents
     data_art_inc_rail = theming_incidents_railway(df)

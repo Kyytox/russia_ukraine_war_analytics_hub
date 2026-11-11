@@ -1,6 +1,8 @@
 import os
 from dotenv import load_dotenv
 import re
+import datetime
+
 import pandas as pd
 from tqdm import tqdm
 from prefect import flow, task
@@ -259,7 +261,7 @@ def qualif_incident_railway():
     """
 
     # Get data
-    query = """
+    query = f"""
     SELECT 
         msg.id_message, 
         msg.date_message,
@@ -284,13 +286,14 @@ def qualif_incident_railway():
     LEFT JOIN main.messages_qualif_inc_railway as mqir USING (id_message)
     WHERE msg_th.theme_inc_railway IS TRUE
     AND mqir.is_classify IS NULL
-    AND mqir.idx IS NULL
     AND msg.text_translate IS NOT NULL
     ORDER BY msg.date_message ASC
-    LIMIT 400;
+    LIMIT {SIZE_TO_QUALIF};
     """
 
     df = get_data_into_duckdb(query)
+
+    df = df[df["date_message"] > datetime.datetime(2025, 7, 27)]  # for tests
 
     if df.empty:
         print("No data to classify")
@@ -298,6 +301,7 @@ def qualif_incident_railway():
 
     data_art = []
     data_art.append({"key": "Data to Qualify", "value": df.shape[0]})
+    print(f"Data to Qualify: {df.shape[0]}")
 
     # qualif Region
     df = qualif_region(df)
@@ -410,6 +414,8 @@ def qualif_incident_railway():
     data_art.append(
         {"key": "Data Inserted messages_qualif_inc_railway", "value": len_inserted}
     )
+
+    print(f"Data inserted into messages_qualif_inc_railway: {len_inserted}")
 
     create_artifact("dlk-subflow-qualif-incident-railway-art", "table", data_art)
 

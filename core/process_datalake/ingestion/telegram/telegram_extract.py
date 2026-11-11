@@ -17,6 +17,8 @@ from core.libs.utils import (
     create_artifact,
 )
 
+from core.common.parquet import read_parquet, save_parquet
+
 
 @task(
     name="Get Telegram Messages",
@@ -123,7 +125,6 @@ def process_extract(
 
     # update data artifact
     print(f"Messages extracted from {account}: {df.shape[0]}")
-    upd_data_artifact(f"Messages extracted from {account}", df.shape[0])
 
     return df
 
@@ -145,7 +146,8 @@ def flow_telegram_extract():
     list_accounts = LIST_ACCOUNTS_TELEGRAM
 
     # get raw Data already extracted
-    df_raw = read_data(PATH_TELEGRAM_RAW, "raw_telegram")
+    # df_raw = read_data(PATH_TELEGRAM_RAW, "raw_telegram")
+    df_raw = read_parquet(PATH_TELEGRAM_RAW, "raw_telegram")
 
     # Init dfs
     df_new_data = pd.DataFrame()  # new data to extract
@@ -165,9 +167,19 @@ def flow_telegram_extract():
             [df_new_data, process_extract(client, account, df_raw_acc)]
         )
 
+    # remove ' in account
+    df_new_data["account"] = df_new_data["account"].str.replace("'", "")
+
+    # add year column for partitioning
+    df_new_data["year"] = df_new_data["date"].dt.year
+
     # concat data
     df_final = concat_old_new_df(df_raw, df_new_data, cols=["ID"])
     print("Final shape:", df_final.shape)
+
+    # save data
+    # save_data(PATH_TELEGRAM_RAW, "raw_telegram", df_final, ["year"])
+    save_parquet(PATH_TELEGRAM_RAW, "raw_telegram", df_final, ["year"])
 
     # crate data for artifact ,for each account, count number of messages extracted
     df_artifact = (
@@ -176,6 +188,3 @@ def flow_telegram_extract():
 
     # create artifact
     create_artifact("dlk-flow-telegram-extract-art", "table", df_artifact)
-
-    # save data
-    save_data(PATH_TELEGRAM_RAW, "raw_telegram", df_final, ["account"])

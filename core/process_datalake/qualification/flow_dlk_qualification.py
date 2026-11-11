@@ -16,10 +16,10 @@ def flow_dlk_qualification():
     """
 
     # Fusion
-    # subflow_datalake_fusion()
+    subflow_datalake_fusion()
 
     # Theming
-    # subflow_datalake_theming()
+    subflow_datalake_theming()
 
     # Qualification
     subflow_datalake_qualif()
