@@ -61,6 +61,16 @@ DICT_CONTENT = [
 ]
 
 
+@app.get("/")
+async def read_root():
+    return {"message": "Hello from FastAPI on VPS!"}
+
+
+@app.get("/api/health")
+def health():
+    return Response(status_code=200)
+
+
 @app.get("/api/sections")
 def sections():
     return DICT_CONTENT
