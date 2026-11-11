@@ -1,47 +1,42 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Menu,
-  X,
-  Home,
-  TrainFrontTunnel,
-  Ban,
-  Bell,
-  Cog,
-  Map,
-  Cross,
-  CircleHelp,
-  TrainTrack,
-  Github,
-} from "lucide-react";
+import { Menu, X, Github, Home } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher.jsx";
-import {
-  useLanguageNavigate,
-  useCurrentLanguage,
-} from "../hooks/useLanguage.js";
+import SEO from "./SEO.jsx";
+import Footer from "./Footer.jsx";
+import { SIDEBAR_NAV } from "../config/navigation.js";
+import { getSEOConfig } from "../config/seo.js";
+import { getPageFromPath } from "../utils/common.js";
+import { useLanguageNavigate } from "../hooks/useLanguage.js";
 
-// id = clé de traduction (sections.<id>.title) ET segment d'URL
-export const NAV = [
-  { id: "incidents-railways", icon: TrainTrack },
-  { id: "blocked-sites", icon: Ban },
-  { id: "raid-alerts", icon: Bell },
-  { id: "components-weapons", icon: Cog },
-  { id: "interactive-maps", icon: Map },
-  { id: "military-losses", icon: Cross },
-];
+// Re-export for backward compatibility
+export const NAV = SIDEBAR_NAV;
 
 export default function Layout() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const navigate = useLanguageNavigate();
-  const currentLang = useCurrentLanguage();
+
+  // Get page name for SEO
+  const PAGE = getPageFromPath(pathname);
+  const seoConfig = getSEOConfig(PAGE, pathname, t);
+
+  // Get home icon from NAV
+  const homeItem = SIDEBAR_NAV.find((item) => item.id === "home");
+  const HomeIcon = homeItem?.icon || Home;
 
   useEffect(() => setOpen(false), [pathname]);
 
   return (
     <>
+      <SEO
+        title={seoConfig.title}
+        description={seoConfig.description}
+        type={seoConfig.type}
+        breadcrumb={seoConfig.breadcrumb}
+      />
       <header className="topbar">
         <button
           className="icon-btn"
@@ -84,34 +79,35 @@ export default function Layout() {
               textAlign: "left",
             }}
           >
-            <Home size={18} />
+            <HomeIcon size={18} />
             {t("nav.home")}
           </button>
-          {NAV.map(({ id, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => navigate(`/${id}`)}
-              className="nav-item"
-              style={{
-                border: "none",
-                background: "none",
-                cursor: "pointer",
-                width: "100%",
-                textAlign: "left",
-              }}
-            >
-              <Icon size={18} />
-              {t(`sections.${id}.title`)}
-            </button>
-          ))}
+          {SIDEBAR_NAV.filter((item) => item.id !== "home").map(
+            ({ id, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => navigate(`/${id}`)}
+                className="nav-item"
+                style={{
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  width: "100%",
+                  textAlign: "left",
+                }}
+              >
+                <Icon size={18} />
+                {t(`sections.${id}.title`)}
+              </button>
+            ),
+          )}
         </nav>
         <footer>
-          <a href="#" aria-label={t("nav.help")}>
-            <CircleHelp size={20} />
-          </a>
           <a
             href="https://github.com/Kyytox/russia_ukraine_war_analytics_hub"
             aria-label={t("nav.github")}
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Github size={20} />
           </a>
@@ -119,7 +115,9 @@ export default function Layout() {
       </aside>
 
       <main>
+        <SEO />
         <Outlet />
+        <Footer />
       </main>
     </>
   );

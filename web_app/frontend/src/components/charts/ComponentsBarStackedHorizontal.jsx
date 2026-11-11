@@ -5,7 +5,7 @@ import { getMetricColor } from "../../utils/common.js";
 const TOTAL = "__total__"; // invisible series that carries the total at the end of each bar
 const OTHERS = "__others__"; // bucket for the smallest metrics (countries)
 const OTHERS_COLOR = "#6b7280"; // neutral grey, distinct from the background and from any country color
-const DEFAULT_MAX_METRICS = 12; // metrics kept as their own segment before grouping into "Others"
+const DEFAULT_MAX_METRICS = 17; // metrics kept as their own segment before grouping into "Others"
 const MIN_LABEL_RATIO = 0.03; // segment < 3 % of the longest bar: no label inside
 
 export function ComponentsBarStackedHorizontal({

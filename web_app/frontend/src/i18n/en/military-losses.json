@@ -20,5 +20,9 @@
   "military_losses_5": {
     "title": "Russo-Ukrainian Warspotting",
     "description": "WarSpotting is a database of documented material losses during Russian invasion in Ukraine. We use photo evidences found accross open sources on the web such as social media as proofs."
+  },
+  "military_losses_6": {
+    "title": "200.zona.media",
+    "description": "is a collaborative, name-based database that lists confirmed Russian military personnel who have died during Russia's invasion of Ukraine."
   }
 }

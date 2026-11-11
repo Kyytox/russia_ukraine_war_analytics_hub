@@ -1,28 +1,32 @@
 {
   "site": {
     "title": "Ukraine War Data Hub",
-    "brand": "UA Data Hub"
+    "brand": "UA Data Hub",
+    "description": "Plateforme complète de données et d'analyses sur la guerre Russie-Ukraine : incidents ferroviaires, sites web bloqués, composants d'armes, alertes de raid, cartes interactives et pertes militaires."
+  },
+  "error": {
+    "api": "API injoignable. Lance le backend FastAPI sur le port 8000."
+  },
+  "notfound": {
+    "title": "Page introuvable",
+    "back": "Retour à l'accueil"
+  },
+  "footer": {
+    "madeBy": "Créé par Kytox"
   },
   "nav": {
     "home": "Accueil",
     "openmenu": "Ouvrir le menu",
     "closemenu": "Fermer le menu",
-    "openMenu": "Ouvrir le menu",
-    "closeMenu": "Fermer le menu",
     "help": "Aide",
     "github": "GitHub",
-    "language": "Langue"
-  },
-  "error": {
-    "api": "API injoignable. Lance le backend FastAPI sur le port 8000."
-  },
-  "notFound": {
-    "title": "Page introuvable",
-    "back": "Retour à l'accueil"
-  },
-  "notfound": {
-    "title": "Page introuvable",
-    "back": "Retour à l'accueil"
+    "language": "Langue",
+    "incidentsRailways": "Incidents ferroviaires russes",
+    "blockedSites": "Sites web bloqués en Russie",
+    "raidAlerts": "Alertes de raid",
+    "componentsWeapons": "Composants dans les armes russes",
+    "interactiveMaps": "Cartes interactives",
+    "militaryLosses": "Pertes militaires"
   },
   "common": {
     "expand": "Agrandir",

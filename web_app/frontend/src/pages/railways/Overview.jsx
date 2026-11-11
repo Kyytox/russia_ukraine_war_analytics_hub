@@ -55,7 +55,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsBarVertical
-                  tab={TAB} id="chart1"
+                  tab={TAB}
+                  id="chart1"
                   data={data.filter((d) => d.libelle === "year")}
                   t={t}
                   i18n={i18n}
@@ -77,7 +78,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsBarVertical
-                  tab={TAB} id="chart2"
+                  tab={TAB}
+                  id="chart2"
                   data={data.filter((d) => d.libelle === "month")}
                   t={t}
                   i18n={i18n}
@@ -100,7 +102,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section2}>
               {(data) => (
                 <ComponentsStackedLines
-                  tab={TAB} id="chart3"
+                  tab={TAB}
+                  id="chart3"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -124,7 +127,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsBarVertical
-                  tab={TAB} id="chart4"
+                  tab={TAB}
+                  id="chart4"
                   data={data.filter((d) => d.libelle === "inc_type")}
                   t={t}
                   i18n={i18n}
@@ -146,7 +150,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsBarVertical
-                  tab={TAB} id="chart5"
+                  tab={TAB}
+                  id="chart5"
                   data={data.filter((d) => d.libelle === "dmg_eqp")}
                   t={t}
                   i18n={i18n}
@@ -188,7 +193,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
                   : data;
                 return (
                   <ComponentsTreemap
-                    tab={TAB} id="chart7"
+                    tab={TAB}
+                    id="chart7"
                     data={filteredData}
                     t={t}
                     i18n={i18n}
@@ -232,7 +238,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
                   : data;
                 return (
                   <ComponentsMap
-                    tab={TAB} id="chart8"
+                    tab={TAB}
+                    id="chart8"
                     data={filteredData}
                     t={t}
                     i18n={i18n}
@@ -270,7 +277,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
                     <ChartState query={section3}>
                       {(data) => (
                         <ComponentsHeatmap
-                          tab={TAB} id="chart6"
+                          tab={TAB}
+                          id="chart6"
                           data={data.filter((d) => d.metric.startsWith(year))}
                           t={t}
                           i18n={i18n}

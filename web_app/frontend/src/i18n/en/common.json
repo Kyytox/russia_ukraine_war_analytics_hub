@@ -1,15 +1,8 @@
 {
   "site": {
     "title": "Ukraine War Data Hub",
-    "brand": "UA Data Hub"
-  },
-  "nav": {
-    "home": "home",
-    "openmenu": "open menu",
-    "closemenu": "close menu",
-    "help": "help",
-    "github": "github",
-    "language": "language"
+    "brand": "UA Data Hub",
+    "description": "Comprehensive data and analytics on the Russia-Ukraine war: railway incidents, blocked websites, weapon components, raid alerts, interactive maps, and military losses."
   },
   "error": {
     "api": "api unreachable. start the fastapi backend on port 8000."
@@ -17,6 +10,23 @@
   "notfound": {
     "title": "page not found",
     "back": "back to home"
+  },
+  "footer": {
+    "madeBy": "Made by Kytox"
+  },
+  "nav": {
+    "home": "home",
+    "openmenu": "open menu",
+    "closemenu": "close menu",
+    "help": "help",
+    "github": "GitHub",
+    "language": "language",
+    "incidentsRailways": "Incidents on Russian Railways",
+    "blockedSites": "Websites Blocked in Russia",
+    "raidAlerts": "Raid Alerts",
+    "componentsWeapons": "Components in Russian Weapons",
+    "interactiveMaps": "Interactive Maps",
+    "militaryLosses": "Military Losses"
   },
   "common": {
     "expand": "expand",

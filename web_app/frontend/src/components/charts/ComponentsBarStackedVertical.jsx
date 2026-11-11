@@ -130,7 +130,7 @@ export function ComponentsBarStackedVertical({
       },
       xAxis: {
         type: "category",
-        data: libelles.map((l) => t(`${labelPrefix}.${l}`, l)),
+        data: libelles.map((l) => t(`${l}` ?? l)),
         axisTick: { show: false },
         axisLabel: {
           interval: 0, // never silently drop a label

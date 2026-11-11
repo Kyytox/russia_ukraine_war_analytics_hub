@@ -2,10 +2,16 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import { OutletContextWrapper } from "./components/TabbedPage.jsx";
 import Home from "./pages/Home.jsx";
-import IncidentsRailways, { TABS as RAILWAYS_TABS } from "./pages/IncidentsRailways.jsx";
-import BlockedSites, { TABS as BLOCKED_SITES_TABS } from "./pages/BlockedSites.jsx";
+import IncidentsRailways, {
+  TABS as RAILWAYS_TABS,
+} from "./pages/IncidentsRailways.jsx";
+import BlockedSites, {
+  TABS as BLOCKED_SITES_TABS,
+} from "./pages/BlockedSites.jsx";
 import RaidAlerts from "./pages/RaidAlerts.jsx";
-import ComponentsWeapons, { TABS as COMPONENTS_WEAPONS_TABS } from "./pages/ComponentsWeapons.jsx";
+import ComponentsWeapons, {
+  TABS as COMPONENTS_WEAPONS_TABS,
+} from "./pages/ComponentsWeapons.jsx";
 import InteractiveMaps from "./pages/InteractiveMaps.jsx";
 import MilitaryLosses from "./pages/MilitaryLosses.jsx";
 import NotFound from "./pages/NotFound.jsx";
@@ -89,9 +95,11 @@ function LanguageWrapper({ lang }) {
           {tabRoutes(BLOCKED_SITES_TABS)}
         </Route>
         <Route path="raid-alerts" element={<RaidAlerts />} />
+        {/*
         <Route path="components-weapons" element={<ComponentsWeapons />}>
           {tabRoutes(COMPONENTS_WEAPONS_TABS)}
         </Route>
+        */}
         <Route path="interactive-maps" element={<InteractiveMaps />} />
         <Route path="military-losses" element={<MilitaryLosses />} />
         <Route path="*" element={<NotFound />} />

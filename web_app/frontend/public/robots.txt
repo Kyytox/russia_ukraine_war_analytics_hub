@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ukraine-war-datahub.eu/sitemap.xml
+
+# Crawl delay to be gentle on the server
+Crawl-delay: 2

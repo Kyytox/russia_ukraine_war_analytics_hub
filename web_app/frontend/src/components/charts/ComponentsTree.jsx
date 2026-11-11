@@ -54,8 +54,7 @@ export function ComponentsTree({ tab, id, data = [], t, i18n, nf, custom }) {
           symbolSize: 7,
           initialTreeDepth: 2,
           metric: {
-            position: "bottom",
-            verticalAlign: "middle",
+            // verticalAlign: "middle",
             align: "right",
             fontSize: 11,
             color: "#fff",
@@ -63,7 +62,7 @@ export function ComponentsTree({ tab, id, data = [], t, i18n, nf, custom }) {
           label: {
             show: true,
             fontsize: 13,
-            position: "right",
+            position: "bottom",
             fontweight: "normal",
             bordercololor: "transparent",
             color: "#fff",

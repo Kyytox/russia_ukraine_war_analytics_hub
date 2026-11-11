@@ -12,12 +12,28 @@ import Informations from "./railways/Informations.jsx";
 // URL path (kebab-case, used in the route) -> i18n label key + component
 export const TABS = [
   { path: "overview", label: "page.tabs.overview", Component: Overview },
-  { path: "incident-types", label: "page.tabs.incident_types", Component: IncidentTypes },
-  { path: "damaged-equipments", label: "page.tabs.damaged_equipments", Component: DamagedEquipments },
+  {
+    path: "incident-types",
+    label: "page.tabs.incident_types",
+    Component: IncidentTypes,
+  },
+  {
+    path: "damaged-equipments",
+    label: "page.tabs.damaged_equipments",
+    Component: DamagedEquipments,
+  },
   { path: "collisions", label: "page.tabs.collisions", Component: Collisions },
   { path: "sabotage", label: "page.tabs.sabotage", Component: Sabotage },
-  { path: "partisans-arrest", label: "page.tabs.partisans_arrest", Component: PartisansArrest },
-  { path: "informations", label: "page.tabs.informations", Component: Informations },
+  {
+    path: "partisans-arrest",
+    label: "page.tabs.partisans_arrest",
+    Component: PartisansArrest,
+  },
+  {
+    path: "informations",
+    label: "page.tabs.informations",
+    Component: Informations,
+  },
 ];
 
 const PAGE_NAME = "incidents-railways";

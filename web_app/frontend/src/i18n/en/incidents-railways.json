@@ -33,11 +33,11 @@
     },
     "chart4": {
       "title": "Railway Incidents by Type in Russia",
-      "subtitle": "Breakdown of incidents categorized by incident classification"
+      "subtitle": "Breakdown of incidents categorized by incident type"
     },
     "chart5": {
       "title": "Railway Damaged Equipments in Russia",
-      "subtitle": "Overview of damaged equipment involved across railway incidents"
+      "subtitle": "Overview of damaged equipment involved across railway incidents (without Collisions with Humans)"
     },
     "chart6": {
       "title": "Distribution of Railway Incidents by Day of the Week in ",
@@ -48,8 +48,8 @@
       "subtitle": "Hierarchical breakdown of railway incidents across Russian regions"
     },
     "chart8": {
-      "title": "Geographic Distribution of Sabotages on Russian Railways",
-      "subtitle": "Spatial distribution and mapping of recorded sabotage events"
+      "title": "Geographic Distribution of Incidents on Russian Railways",
+      "subtitle": "Spatial distribution and mapping of recorded incidents across regions"
     },
     "axes_text": "Number of incidents",
     "total_metric": "Total"

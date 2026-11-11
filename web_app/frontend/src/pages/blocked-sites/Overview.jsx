@@ -28,6 +28,7 @@ export default function Overview({ PAGE, t, i18n, nf }) {
   const section3 = useApi("/api/blocked-sites/section3");
   const section4 = useApi("/api/blocked-sites/section4");
   const section5 = useApi("/api/blocked-sites/section5");
+  const section6 = useApi("/api/blocked-sites/section6");
 
   return (
     <>
@@ -103,7 +104,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsBarHorizontal
-                  tab={TAB} id="chart3"
+                  tab={TAB}
+                  id="chart3"
                   data={data.filter((d) => d.libelle === "by_category")}
                   t={t}
                   i18n={i18n}
@@ -125,7 +127,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsBarHorizontal
-                  tab={TAB} id="chart4"
+                  tab={TAB}
+                  id="chart4"
                   data={data.filter(
                     (d) => d.libelle === "by_banning_authority",
                   )}
@@ -149,7 +152,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsBarHorizontal
-                  tab={TAB} id="chart1"
+                  tab={TAB}
+                  id="chart1"
                   data={data.filter((d) => d.libelle === "by_country_domain")}
                   t={t}
                   i18n={i18n}
@@ -171,8 +175,32 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsBarHorizontal
-                  tab={TAB} id="chart2"
+                  tab={TAB}
+                  id="chart2"
                   data={data.filter((d) => d.libelle === "by_subcategory")}
+                  t={t}
+                  i18n={i18n}
+                  nf={nf}
+                  custom={customCharts}
+                />
+              )}
+            </ChartState>
+          </ChartModal>
+        </section>
+
+        <section className="chart span-12">
+          <ChartHeader pageKey={PAGE_KEY} chartKey="chart14" t={t} />
+          <ChartModal
+            pageKey={PAGE_KEY}
+            chartKey={`page.${PAGE_KEY}.chart14`}
+            t={t}
+          >
+            <ChartState query={section6}>
+              {(data) => (
+                <ComponentsBarStackedHorizontal
+                  tab={TAB}
+                  id="chart14"
+                  data={data}
                   t={t}
                   i18n={i18n}
                   nf={nf}
@@ -194,7 +222,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section2}>
               {(data) => (
                 <ComponentsBarVertical
-                  tab={TAB} id="chart5"
+                  tab={TAB}
+                  id="chart5"
                   data={data.filter((d) => d.libelle === "by_year")}
                   t={t}
                   i18n={i18n}
@@ -216,7 +245,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section2}>
               {(data) => (
                 <ComponentsBarVertical
-                  tab={TAB} id="chart6"
+                  tab={TAB}
+                  id="chart6"
                   data={data.filter((d) => d.libelle === "by_month")}
                   t={t}
                   i18n={i18n}
@@ -256,7 +286,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
                     <ChartState query={section2}>
                       {(data) => (
                         <ComponentsHeatmap
-                          tab={TAB} id={"chart7"}
+                          tab={TAB}
+                          id={"chart7"}
                           data={data.filter(
                             (d) =>
                               d.libelle === "by_day" &&
@@ -285,7 +316,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section2}>
               {(data) => (
                 <ComponentsLineArea
-                  tab={TAB} id="chart8"
+                  tab={TAB}
+                  id="chart8"
                   data={data.filter((d) => d.libelle === "by_day_cumul")}
                   t={t}
                   i18n={i18n}
@@ -308,7 +340,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section3}>
               {(data) => (
                 <ComponentsBarStackedVertical
-                  tab={TAB} id="chart10"
+                  tab={TAB}
+                  id="chart10"
                   data={data.filter((d) => d.id === "category")}
                   t={t}
                   i18n={i18n}
@@ -330,7 +363,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section3}>
               {(data) => (
                 <ComponentsBarStackedVertical
-                  tab={TAB} id="chart9"
+                  tab={TAB}
+                  id="chart9"
                   data={data.filter((d) => d.id === "banning_authority")}
                   t={t}
                   i18n={i18n}
@@ -352,7 +386,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section3}>
               {(data) => (
                 <ComponentsBarStackedVertical
-                  tab={TAB} id="chart11"
+                  tab={TAB}
+                  id="chart11"
                   data={data.filter((d) => d.id === "country_domain")}
                   t={t}
                   i18n={i18n}
@@ -374,7 +409,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section4}>
               {(data) => (
                 <ComponentsTree
-                  tab={TAB} id="chart12"
+                  tab={TAB}
+                  id="chart12"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -397,7 +433,8 @@ export default function Overview({ PAGE, t, i18n, nf }) {
             <ChartState query={section5}>
               {(data) => (
                 <ComponentsBarStackedHorizontal
-                  tab={TAB} id="chart13"
+                  tab={TAB}
+                  id="chart13"
                   data={data}
                   t={t}
                   i18n={i18n}

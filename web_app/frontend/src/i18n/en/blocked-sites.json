@@ -90,6 +90,12 @@
     "text": "",
     "help": ""
   },
+  "chart14": {
+    "title": "Blocked websites by Category and Subcategory",
+    "subtitle": "Number of blocked websites by category and subcategory.",
+    "text": "",
+    "help": ""
+  },
   "content": {
     "Afghanistan": "Afghanistan",
     "Albania": "Albania",
@@ -295,15 +301,10 @@
     "intro": "This page shows websites blocked in Russia, based on open research data about internet censorship.",
     "data_source_title": "Data Source",
     "data_source_1": "Data is collected from the \"Websites Blocked in Russia\" research published by top10vpn.com, which tracks domains blocked by Russian authorities (Roskomnadzor and others).",
-    "data_source_2": "The source data is open and free to use. If you use it, please credit the source. 🫡",
     "source_button": "📜 Source: top10vpn — Websites Blocked in Russia",
     "processing_title": "Data Processing",
     "processing_1": "Each blocked domain is stored with its banning authority, country, category, subcategory and date blocked, then cleaned, deduplicated and aggregated by day, month, year, category, authority and country.",
-    "processing_2": "Aggregated results are stored in a structured data warehouse and served by the API that feeds the charts on the Overview tab.",
-    "limitations_title": "Limitations and Considerations",
-    "limitations_1": "The data reflects the domains listed in the source research; the list may be incomplete or updated as new blocks are reported.",
-    "limitations_2": "A domain is counted once per blocking event, so the same site can appear under several categories or authorities.",
-    "limitations_3": "The date blocked refers to when the block was recorded in the source, which may differ from the actual enforcement date."
+    "processing_2": "Aggregated results are stored in a structured data warehouse and served by the API that feeds the charts on the Overview tab."
   },
   "overview": {
     "tooltip_text": "Blocked websites",

@@ -16,17 +16,21 @@ export default function TabbedPage({
 }) {
   const location = useLocation();
   const PAGE = getPageFromPath(location.pathname);
-  const { t, i18n } = usePageTranslation(pageName);
+  // isLoading tracks the page-specific translation file (loaded async after common)
+  const { t, i18n, ready, isLoading } = usePageTranslation(pageName);
   const nf = new Intl.NumberFormat(i18n.language);
 
   const activeTab = tabs.find((tab) =>
     location.pathname.endsWith(`/${tab.path}`),
   );
 
-  // SEO: per-tab <title>, canonical URL and meta description
   useEffect(() => {
+    // Wait until common translations are ready AND the page translation file is loaded
+    if (!ready || isLoading) return;
+
     const pageTitle = t(titleKey);
     const tabLabel = activeTab ? t(activeTab.label) : "";
+    console.log("tabLabel", tabLabel);
     document.title = tabLabel ? `${tabLabel} | ${pageTitle}` : pageTitle;
 
     let canonical = document.querySelector('link[rel="canonical"]');
@@ -51,6 +55,8 @@ export default function TabbedPage({
     t,
     titleKey,
     descriptionKey,
+    ready,
+    isLoading,
   ]);
 
   return (

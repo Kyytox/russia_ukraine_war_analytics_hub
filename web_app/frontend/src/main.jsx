@@ -1,5 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { HelmetProvider } from "react-helmet-async";
 import { initializeI18n } from "./i18n/index.js";
 import App from "./App.jsx";
 import "./styles.css";
@@ -18,13 +19,12 @@ const queryClient = new QueryClient({
 });
 
 // Initialize i18n and load custom data, then render
-Promise.all([
-  initializeI18n(),
-  loadCustomData()
-]).then(() => {
+Promise.all([initializeI18n(), loadCustomData()]).then(() => {
   createRoot(document.getElementById("root")).render(
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>,
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </HelmetProvider>,
   );
 });

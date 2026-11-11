@@ -14,14 +14,12 @@
   "chart1": {
     "title": "Composants électroniques étrangers par type d’équipement",
     "subtitle": "Nombre de composants identifiés dans les armes russes, selon le type d’équipement.",
-    "text": "Composants",
-    "help": ""
+    "text": "Composants"
   },
   "chart2": {
     "title": "Composants par type d’arme",
     "subtitle": "Nombre de composants électroniques étrangers identifiés dans les armes russes, par type d’arme.",
-    "yaxis": "Nombre de composants",
-    "help": ""
+    "yaxis": "Nombre de composants"
   },
   "chart3": {
     "title": "Composants par pays d’origine (top 30)",
