@@ -72,7 +72,7 @@ async def read_root():
     return {"message": "Hello from FastAPI on VPS!"}
 
 
-@app.get("/api/health")
+@app.get("/health")
 def health():
     return Response(status_code=200)
 
