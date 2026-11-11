@@ -1,9 +1,4 @@
-# Process: Extract incident railway
-# - Get source incident railway from google sheet
-# - Check if the region is correct and exists in the list for graph Map
-# - Check missing values in specific columns
-# - if one of the previous steps fails, don't save the data
-# - Save data
+# Process: Extract Marine Vessels
 
 
 import os
@@ -38,18 +33,9 @@ def gestion_artifact(start_date, end_date, count_new_data):
         end_date: end date
         count_new_data: count new data
     """
-    upd_data_artifact(
-        f"Start date extraction:",
-        f"{start_date}",
-    )
-    upd_data_artifact(
-        f"End date extraction:",
-        f"{end_date}",
-    )
-    upd_data_artifact(
-        f"New data extract:",
-        f"{count_new_data}",
-    )
+    upd_data_artifact(f"Start date extraction:", f"{start_date}")
+    upd_data_artifact(f"End date extraction:", f"{end_date}")
+    upd_data_artifact(f"New data extract:", f"{count_new_data}")
     create_artifact("dwh-subflow-ingestion-compo-weapons-artifact")
 
 

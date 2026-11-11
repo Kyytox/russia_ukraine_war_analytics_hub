@@ -253,32 +253,32 @@ def dmt_country_by_weapon(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @flow(
-    name="DWH Subflow Datamarts Components in Weapons",
-    flow_run_name="dwh-subflow-dmt-compo-weapons",
+    name="DWH Subflow Datamarts Russian Officers KIU",
+    flow_run_name="dwh-subflow-dmt-ru-officers-kiu",
     log_prints=True,
 )
-def flow_dmt_compo_weapons():
+def flow_dmt_ru_officers_kiu():
     """
-    Datamarts Components in Weapons
+    Datamarts Russian Officers KIU
     """
 
-    # read source compo weapons
-    df_compo_weapons = read_data(PATH_DWH_SOURCES, "components_weapons")
-
-    # Global Count
-    df_tmp = dmt_global_count(df_compo_weapons)
-    save_data(PATH_DMT_COMPO_WEAPONS, "dmt_global_count", df_tmp)
-
-    # TreeMap Country Weapon Type
-    df_tmp = dmt_treemap_country_weapon_type(df_compo_weapons)
-    save_data(PATH_DMT_COMPO_WEAPONS, "dmt_treemap_country_weapon_type", df_tmp)
-
-    # Sunburst Equipments Weapon Type
-    df_tmp = dmt_sunbusrt_equipments_weapon_type(df_compo_weapons)
-    save_data(PATH_DMT_COMPO_WEAPONS, "dmt_sunburst_equipments_weapon_type", df_tmp)
-
-    # Country by Weapon
-    df_tmp = dmt_country_by_weapon(df_compo_weapons)
-    save_data(PATH_DMT_COMPO_WEAPONS, "dmt_country_by_weapon", df_tmp)
+    # # read source compo weapons
+    # df_compo_weapons = read_data(PATH_DWH_SOURCES, "components_weapons")
+    #
+    # # Global Count
+    # df_tmp = dmt_global_count(df_compo_weapons)
+    # save_data(PATH_DMT_COMPO_WEAPONS, "dmt_global_count", df_tmp)
+    #
+    # # TreeMap Country Weapon Type
+    # df_tmp = dmt_treemap_country_weapon_type(df_compo_weapons)
+    # save_data(PATH_DMT_COMPO_WEAPONS, "dmt_treemap_country_weapon_type", df_tmp)
+    #
+    # # Sunburst Equipments Weapon Type
+    # df_tmp = dmt_sunbusrt_equipments_weapon_type(df_compo_weapons)
+    # save_data(PATH_DMT_COMPO_WEAPONS, "dmt_sunburst_equipments_weapon_type", df_tmp)
+    #
+    # # Country by Weapon
+    # df_tmp = dmt_country_by_weapon(df_compo_weapons)
+    # save_data(PATH_DMT_COMPO_WEAPONS, "dmt_country_by_weapon", df_tmp)
 
     return Completed(message="All DataMarts Components in Weapons Completed")

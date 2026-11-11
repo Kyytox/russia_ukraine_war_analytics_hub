@@ -28,7 +28,7 @@ def flow_dwh_block_sites():
     # subflow_ingest_blocked_sites()
     #
     # # Transform
-    subflow_transform_blocked_sites()
+    # subflow_transform_blocked_sites()
 
     # Datamarts
     subflow_dmt_blocked_sites()

@@ -435,6 +435,37 @@ def dmt_country_by_category_after6(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+@task(name="dmt-subcategory-by-category", task_run_name="dmt-subcategory-by-category")
+def dmt_subcategory_by_category(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create datamart for number of blocked sites by subcategory and category
+
+    Args:
+        df (pd.DataFrame): Dataframe to control
+
+    Returns:
+        df (pd.DataFrame): Dataframe with datamart by subcategory and category
+
+    create a df with 3 cols (libelle, metric, value)
+    liibelle = category
+    metric = subcategory
+    value = count of sites blocked
+    """
+    df = df.groupby(["category", "subcategory"]).size().reset_index(name="value")
+    df = df.rename(columns={"category": "libelle", "subcategory": "metric"})
+
+    dict_types = {
+        "libelle": "string",
+        "metric": "string",
+        "value": "int64",
+    }
+
+    df = reorder_cols(df, dict_types)
+    df = retype_cols(df, dict_types)
+
+    return df
+
+
 @flow(
     name="DWH Subflow Datamarts Blocked Sites",
     flow_run_name="dwh-subflow-dmt-blocked-sites",
@@ -480,8 +511,11 @@ def subflow_dmt_blocked_sites():
         df_tmp, schema, "dmt_by_country_by_category_after_6", PATH_DWH_GOLD
     )
 
-    # dmt_all_data
-    rewrite_duckdb_table(df, schema, "dmt_all_data", PATH_DWH_GOLD)
+    # Blocked by Subcategory and Category
+    df_tmp = dmt_subcategory_by_category(df)
+    rewrite_duckdb_table(
+        df_tmp, schema, "dmt_by_subcategory_by_category", PATH_DWH_GOLD
+    )
 
     if df.empty:
         return Failed(message="Data is empty")

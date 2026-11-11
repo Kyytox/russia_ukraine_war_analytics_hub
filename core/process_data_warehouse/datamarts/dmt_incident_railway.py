@@ -524,6 +524,9 @@ def dmt_metric_by_region(df, metric):
         .sort_values(["region"])
     )
 
+    # remove region with empty label
+    df_tmp = df_tmp.query("region != ''")
+
     # select cols
     df_tmp = df_tmp[["region", metric, "total_inc"]]
     df_tmp.columns = ["libelle", "metric", "value"]

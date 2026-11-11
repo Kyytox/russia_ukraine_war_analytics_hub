@@ -26,10 +26,10 @@ def flow_dwh_compo_weapons():
     # subflow_ingest_components_weapons()
 
     # Transform
-    # subflow_transform_components_weapons()
+    subflow_transform_components_weapons()
 
     # Datamarts
-    subflow_dmt_components_weapons()
+    # subflow_dmt_components_weapons()
 
 
 flow_dwh_compo_weapons()
