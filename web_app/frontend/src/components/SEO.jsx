@@ -29,7 +29,7 @@ export default function SEO({
   const pageDescription = description || siteDescription;
 
   // Default OG image
-  const ogImage = image || `${baseUrl}/img/logo-ws.svg`;
+  const ogImage = image || `${baseUrl}/img/favicon.ico`;
 
   // Build breadcrumb JSON-LD
   const breadcrumbJsonLd =
@@ -62,7 +62,7 @@ export default function SEO({
     "@type": "Organization",
     name: siteTitle,
     url: baseUrl,
-    logo: `${baseUrl}/img/logo-ws.svg`,
+    logo: `${baseUrl}/img/favicon.ico`,
     description: siteDescription,
   };
 
@@ -127,7 +127,7 @@ export default function SEO({
         <link
           rel="icon"
           type="image/svg+xml"
-          href={`${baseUrl}/img/logo-ws.svg`}
+          href={`${baseUrl}/img/favicon.ico`}
         />
       </Helmet>
 
