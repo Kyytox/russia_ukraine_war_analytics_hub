@@ -34,16 +34,45 @@ PATH_DB_QUALIF_DATALAKE = f"{PATH_DATA}/datalake/qualification/dlk_qualification
 # Data Classify
 PATH_CLASSIFY_DATALAKE = f"{PATH_DATA}/datalake/classify"
 
-# Data Wharehouse
-PATH_DWH_SOURCES = f"{PATH_DATA}/data_warehouse/sources"
-PATH_DWH_SOURCES_RU_OFFICERS_KIU = f"{PATH_DATA}/data_warehouse/sources/ru_officers_kiu"
-PATH_DWH_MILITARY_LOSSES = f"{PATH_DATA}/data_warehouse/sources/military_losses"
+
+##################
+# Data Warehouse
+##################
+
+# Main
+PATH_DWH = f"{PATH_DATA}/data_warehouse"
+PATH_DWH_BRONZE = f"{PATH_DWH}/bronze"
+PATH_DWH_SILVER = f"{PATH_DWH}/silver"
+PATH_DWH_GOLD = f"{PATH_DWH}/gold/dwh_datamarts.db"
+
+
+#
+#
+PATH_DWH_SOURCES_RU_OFFICERS_KIU = f"{PATH_DWH_BRONZE}/ru_officers_kiu"
+PATH_DWH_MILITARY_LOSSES = f"{PATH_DWH_BRONZE}/military_losses"
+
+#
+# Components in Weapons
+PATH_DWH_BRONZE_COMPO_WEAPONS = f"{PATH_DWH_BRONZE}/components_weapons"
+PATH_DWH_SILVER_COMPO_WEAPONS = f"{PATH_DWH_SILVER}/components_weapons"
+
+#
+# Blocked Sites
+PATH_DWH_BRONZE_BLOCKED_SITES = f"{PATH_DWH_BRONZE}/blocked_sites"
+PATH_DWH_SILVER_BLOCKED_SITES = f"{PATH_DWH_SILVER}/blocked_sites"
+
+#
+# Incidents Railway
+PATH_DWH_BRONZE_INC_RAILWAY = f"{PATH_DWH_BRONZE}/incidents_railway"
+PATH_DWH_SILVER_INC_RAILWAY = f"{PATH_DWH_SILVER}/incidents_railway"
+
 
 # Data Marts
-PATH_DMT_INC_RAILWAY = f"{PATH_DATA}/data_warehouse/datamarts/incidents_railway"
-PATH_DMT_RU_BLOCK_SITES = f"{PATH_DATA}/data_warehouse/datamarts/russia_block_sites"
-PATH_DMT_COMPO_WEAPONS = f"{PATH_DATA}/data_warehouse/datamarts/compo_weapons"
-PATH_DMT_RU_OFFICERS_KIU = f"{PATH_DATA}/data_warehouse/datamarts/ru_officers_kiu"
+# PATH_DMT_INC_RAILWAY = f"{PATH_DATA}/data_warehouse/datamarts/incidents_railway"
+# PATH_DMT_RU_BLOCK_SITES = f"{PATH_DATA}/data_warehouse/datamarts/russia_block_sites"
+# PATH_DMT_COMPO_WEAPONS = f"{PATH_DATA}/data_warehouse/datamarts/compo_weapons"
+# PATH_DMT_RU_OFFICERS_KIU = f"{PATH_DATA}/data_warehouse/datamarts/ru_officers_kiu"
+
 
 # Path Utils
 PATH_JSON_RU_REGION = "core/utils/ru_region.json"

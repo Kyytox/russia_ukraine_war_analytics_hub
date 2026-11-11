@@ -6,9 +6,9 @@
 # Path Excel files
 ID_EXCEL_INCIDENT_RAILWAY = "1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk"
 ID_EXCEL_RUSSIA_BLOCK_SITE = "1KN3isOEE7A4vBL9-QbEd-gQUgYcg4Hn50pKHJ75SS-A"
-ID_EXCEL_INCIDENT_ARREST = "1yMzTidLDj-sdsACYMkhRFuGIGOtscvpvijAAmVlLCfM"
+# ID_EXCEL_INCIDENT_ARREST = "1yMzTidLDj-sdsACYMkhRFuGIGOtscvpvijAAmVlLCfM"
 ID_EXCEL_RU_OFFICERS_KIU = "1InyFVmu1LoSjqcWTHe4iD9cR8CNiL-5Ke5Jiz_Mlvwc"
-# ID_EXCEL_INCIDENT_SABOTAGE = "1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk"
+ID_EXCEL_INCIDENT_SABOTAGE = "1jyD1bB0uauqIo-Bsi_qoBqV9JAu7cUXvG0UzZmFrSPk"
 
 # IA OLLAMA
 # IA_TRANSLATE = "ia_translate:latest" # hermes 3
@@ -20,15 +20,15 @@ IA_CLASSIFY = "ia_qualif_3:latest"
 IA_CLASSIFY_ALL = "ia_qualif_all:latest"
 IA_ASSISTANT = "ia_assistant:latest"
 
-GROUP_SIZE_TO_TRANSLATE = 15
-SIZE_TO_TRANSLATE = 30
+GROUP_SIZE_TO_TRANSLATE = 20
+SIZE_TO_TRANSLATE = 40
 
 # Theming
-SIZE_THEME_JEV_AI = 400  # size of data to treat before updating the DB
+SIZE_THEME_JEV_AI = 200  # size of data to treat before updating the DB
 ACCEPT_VALID_NOUL = 0.6  # Pourcentage to accept a "valid" answer from the IA (60%)
 
 # Qualification
-SIZE_TO_QUALIF = 100
+SIZE_TO_QUALIF = 200
 
 # number of military unit to process by batch (dwh; ru_officers_kiu)
 GROUP_SIZE_MILITARY_UNIT = 400
@@ -39,6 +39,15 @@ GROUP_SIZE_MILITARY_UNIT = 400
 PROMPT_RAILWAY = "Does the message contain information about a railway incident ?"
 PROMPT_ARREST = "Does the message contain information about an arrest or sentence ?"
 PROMPT_SABOATGE = "Does the message contain information about sabotage, arson, vandalism or acts against Russian infrastructure or government ?"
+
+
+####################
+## SCHEMA DUCK DB ##
+####################
+SCHEMA_DUCKDB_DW_DMT_INCIDENT_RAILWAY = "incident_railway"
+SCHEMA_DUCKDB_DW_DMT_COMPONENTS_WEAPONS = "components_weapons"
+SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES = "blocked_sites"
+
 
 #
 LIST_ACCOUNTS_TELEGRAM = [

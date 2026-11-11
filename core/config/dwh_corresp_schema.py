@@ -32,3 +32,25 @@ CORRESP_SCHEMA_RUSSIA_BLOCK_SITES = {
     "Subcategory": "subcategory",
     "Date blocked": "date_blocked",
 }
+
+
+CORRESP_SCHEMA_MILITARY_LOSSES_RU_EQUIP = {
+    "date": "date",
+    "year": "year",
+    "month": "month",
+    "day": "day",
+    "aircraft": "aircraft",
+    "helicopter": "helicopter",
+    "tank": "tank",
+    "APC": "apc",
+    "field artillery": "field_artillery",
+    "MRL": "mrl",
+    "drone": "drone",
+    "naval ship": "naval_ship",
+    "anti-aircraft warfare": "anti_aircraft_warfare",
+    "special equipment": "special_equipment",
+    "vehicles and fuel tanks": "vehicles_and_fuel_tanks",
+    "cruise missiles": "cruise_missiles",
+    "submarines": "submarines",
+    "ground robotic systems": "ground_robotic_systems",
+}

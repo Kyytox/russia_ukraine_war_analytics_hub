@@ -20,3 +20,25 @@ DWH_SCHEMA_EXCEL_RAILWAY = {
     "comments": "object",
     "exact_date": "object",
 }
+
+
+DWH_SCHEMA_MILITARY_LOSSES_RU_EQUIP = {
+    "date": "datetime64[ns]",
+    "year": "int64",
+    "month": "int64",
+    "day": "int64",
+    "aircraft": "int64",
+    "helicopter": "int64",
+    "tank": "int64",
+    "apc": "int64",
+    "field_artillery": "int64",
+    "mrl": "int64",
+    "drone": "int64",
+    "naval_ship": "int64",
+    "anti_aircraft_warfare": "int64",
+    "special_equipment": "int64",
+    "vehicles_and_fuel_tanks": "int64",
+    "cruise_missiles": "int64",
+    "submarines": "int64",
+    "ground_robotic_systems": "int64",
+}
