@@ -28,10 +28,16 @@ from routers.incidents_railway import (
 app = FastAPI(title="Russia-Ukraine War Data Hub")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_methods=["GET"],
+    allow_origins=[
+        "http://localhost:5173",  # Développement
+        "https://ukraine-war-datahub.eu",  # Production
+        "http://ukraine-war-datahub.eu",  # HTTP (redirigé vers HTTPS)
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 for r in (
     overview,
