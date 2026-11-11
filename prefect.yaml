@@ -45,12 +45,27 @@ definitions:
     every_2_hours: &every_2_hours
       cron: "0 */2 * * *"
       timezone: "Europe/Paris"
+    every_3_hours: &every_3_hours
+      cron: "0 */3 * * *"
+      timezone: "Europe/Paris"
     every_4_hours: &every_4_hours
       cron: "0 */4 * * *"
       timezone: "Europe/Paris"
 
 # the deployments section allows you to provide configuration for deploying flows
 deployments:
+  - name: dlk-flow-telegram-all
+    version: null
+    tags: ["dlk-flow-telegram-all"]
+    concurrency_limit: 1
+    description: "All process (ingestion, tansformation, qualifacation) des données de telegram"
+    entrypoint: core.process_datalake.flow_dlk_all_telegram.flow_dlk_all_telegram
+    parameters: {}
+    work_pool: *datalake_work_pool
+    enforce_parameter_schema: true
+    schedule: *every_3_hours
+    paused: True
+
   - name: dlk-flow-telegram-ingestion
     version: null
     tags: ["dlk-flow-telegram-ingestion"]
