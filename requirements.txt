@@ -76,7 +76,6 @@ jsonpointer==3.1.1
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
 kiwisolver==1.5.1
-lxml==5.3.1
 m3u8==6.0.0
 Mako==1.4.3
 Markdown==3.7
