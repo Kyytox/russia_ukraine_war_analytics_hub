@@ -1,4 +1,4 @@
-# Russia-Ukraine War Analytics Hub 🇺🇦🇷🇺
+# Russia-Ukraine War Data Hub 🇺🇦🇷🇺
 
 Repo featuring a wealth of data, graphs and analyses relating (directly or indirectly) to the war between Russia and Ukraine.
 
