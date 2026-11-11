@@ -2,12 +2,13 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  base: "/",
   plugins: [react()],
+  base: "/", // ✅ Base URL relative (pour le déploiement en production)
   server: {
+    port: 5173,
     proxy: {
       "/api": {
-        target: "http://localhost:8000", // Proxy vers le backend
+        target: "http://localhost:8000",
         changeOrigin: true,
       },
     },
