@@ -14,10 +14,10 @@ services:
   #   restart: unless-stopped
 
   # ── Visualisation (Dash Plotly) ─────────────
-  viz_app:
+  web_app:
     build: .
-    container_name: viz_app
-    command: python viz_app/app.py
+    container_name: web_app
+    command: python web_app/app.py
     ports:
       - "8050:8050"
     volumes:
