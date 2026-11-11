@@ -29,6 +29,11 @@ page_content = [
         "image": "/img/military_losses_5.png",
         "url": "https://ukr.warspotting.net/",
     },
+    {
+        "id": "military_losses_6",
+        "image": "/img/military_losses_6.png",
+        "url": "https://200.zona.media/",
+    },
 ]
 
 

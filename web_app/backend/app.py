@@ -55,7 +55,7 @@ DICT_CONTENT = [
     {"id": "incidents-railways", "image": "/img/inc_rail.jpeg"},
     {"id": "blocked-sites", "image": "/img/logo_blocked_sites.png"},
     {"id": "raid-alerts", "image": "/img/raid_alerts_ukraine.png"},
-    {"id": "components-weapons", "image": "/img/components_weapons.jpg"},
+    # {"id": "components-weapons", "image": "/img/components_weapons.jpg"},
     {"id": "interactive-maps", "image": "/img/interactive_maps.png"},
     {"id": "military-losses", "image": "/img/military_losses.png"},
 ]

@@ -211,3 +211,31 @@ def section5():
         return Response(content=rows or "[]", media_type="application/json")
 
     return []
+
+
+@router.get("/section6")
+def section6():
+    """
+    Data for Charts of Section 6
+    """
+
+    if not DB_PATH.exists():
+        return []
+
+    with duckdb.connect(str(DB_PATH), read_only=True) as con:
+        rows = con.execute(
+            f"""
+            SELECT to_json(list(t))
+            FROM (
+                SELECT
+                    libelle,
+                    metric,
+                    value
+                FROM {SCHEMA_DUCKDB_DW_DMT_BLOCKED_SITES}.dmt_by_subcategory_by_category
+            ) t
+            """
+        ).fetchone()[0]
+
+        return Response(content=rows or "[]", media_type="application/json")
+
+    return []
