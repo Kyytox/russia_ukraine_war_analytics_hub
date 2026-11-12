@@ -58,12 +58,12 @@ for r in (
 # Sections de la page d'accueil. Pas de texte ici : titres et descriptions
 # sont traduits côté front (frontend/src/i18n/locales/*.json).
 DICT_CONTENT = [
-    {"id": "incidents-railways", "image": "/img/inc_rail.jpeg"},
-    {"id": "blocked-sites", "image": "/img/logo_blocked_sites.png"},
-    {"id": "raid-alerts", "image": "/img/raid_alerts_ukraine.png"},
-    # {"id": "components-weapons", "image": "/img/components_weapons.jpg"},
-    {"id": "interactive-maps", "image": "/img/interactive_maps.png"},
-    {"id": "military-losses", "image": "/img/military_losses.png"},
+    {"id": "incidents-railways", "image": "/img/inc_rail.webp"},
+    {"id": "blocked-sites", "image": "/img/logo_blocked_sites.webp"},
+    {"id": "raid-alerts", "image": "/img/raid_alerts_ukraine.webp"},
+    # {"id": "components-weapons", "image": "/img/components_weapons.webp"},
+    {"id": "interactive-maps", "image": "/img/interactive_maps.webp"},
+    {"id": "military-losses", "image": "/img/military_losses.webp"},
 ]
 
 
