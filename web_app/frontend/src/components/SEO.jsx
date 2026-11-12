@@ -129,14 +129,14 @@ export default function SEO({
           type="image/svg+xml"
           href={`${baseUrl}/img/favicon.ico`}
         />
-      </Helmet>
 
-      {/* Umami */}
-      <script
-        defer
-        src="https://umami.kytox-lab.com/script.js"
-        data-website-id="38170119-79a9-4280-9f7d-3a41b9f37692"
-      ></script>
+        {/* Umami */}
+        <script
+          defer
+          src="https://umami.kytox-lab.com/script.js"
+          data-website-id="38170119-79a9-4280-9f7d-3a41b9f37692"
+        ></script>
+      </Helmet>
 
       {/* Structured Data (JSON-LD) */}
       <script type="application/ld+json">{JSON.stringify(mainJsonLd)}</script>
