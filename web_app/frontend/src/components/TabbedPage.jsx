@@ -30,7 +30,6 @@ export default function TabbedPage({
 
     const pageTitle = t(titleKey);
     const tabLabel = activeTab ? t(activeTab.label) : "";
-    console.log("tabLabel", tabLabel);
     document.title = tabLabel ? `${tabLabel} | ${pageTitle}` : pageTitle;
 
     let canonical = document.querySelector('link[rel="canonical"]');

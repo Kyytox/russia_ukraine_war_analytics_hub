@@ -27,9 +27,6 @@ export function ComponentsBarGrouped({ tab, id, data, t, nf, custom }) {
       lookup.set(k, (lookup.get(k) ?? 0) + Number(d.value)); // sum if duplicates
     });
 
-    console.log("ComponentsBarGrouped", custom);
-    console.log("ComponentsBarGrouped", cfg);
-
     // 3. One series per group
     const series = groups.map((g) => {
       const color = custom?.colors_metrics?.[g];

@@ -70,8 +70,6 @@ export function ComponentsFunnel({ tab, id, data, t, i18n, nf, custom }) {
     };
   }, [data, t, i18n.language, nf, id, custom, tab]);
 
-  console.log("ComponentsFunnel custom", custom);
-
   if (!option) return null;
   const chartHeight = custom?.[id]?.height;
 

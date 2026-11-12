@@ -27,7 +27,6 @@ let customData = {};
 
 export function loadCustomData() {
   customData = configCharts;
-  console.log("✅ Custom data loaded:", customData);
   return customData;
 }
 

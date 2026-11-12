@@ -87,7 +87,7 @@ export const loadPageTranslations = async (pageName, lang = i18n.language) => {
       page: pageTranslations,
     };
 
-    console.log(`Loaded translations for ${pageName} in ${lang}:`, merged);
+    // console.log(`Loaded translations for ${pageName} in ${lang}:`, merged);
 
     // Update resource bundle
     i18n.addResourceBundle(lang, "translation", merged, true, true);

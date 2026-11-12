@@ -34,11 +34,11 @@ export function useConfigCharts(page, tab = null) {
       pageConfig = context.data?.[page] ?? {};
     }
 
-    console.log(`useConfigCharts("${page}", "${tab}")`, {
-      pageConfig,
-      commonConfig,
-      colorsMetrics,
-    });
+    // console.log(`useConfigCharts("${page}", "${tab}")`, {
+    //   pageConfig,
+    //   commonConfig,
+    //   colorsMetrics,
+    // });
 
     return {
       ...pageConfig,

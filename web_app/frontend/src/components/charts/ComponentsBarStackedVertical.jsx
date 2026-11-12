@@ -75,8 +75,6 @@ export function ComponentsBarStackedVertical({
         ? OTHERS_COLOR
         : getMetricColor(custom?.colors_metrics ?? {}, m, cfg.default_colors);
 
-    console.log("ComponentsBarStackedVertical", cfg);
-
     return {
       aria: { enabled: true },
       tooltip: {

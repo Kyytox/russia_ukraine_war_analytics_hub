@@ -31,8 +31,6 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
   const section7 = useApi(`/api/${prefix}/section7`);
   const section8 = useApi(`/api/${prefix}/section8`);
 
-  console.log("sections ", section5, section6);
-
   const [hideMoscowChart12, setHideMoscowChart12] = useState(false);
   const [hideMoscowChart13, setHideMoscowChart13] = useState(false);
 
@@ -46,7 +44,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsBarVertical
-                  tab={TAB} id="chart1"
+                  tab={TAB}
+                  id="chart1"
                   data={data.filter((d) => d.libelle === "sabotage_year")}
                   t={t}
                   i18n={i18n}
@@ -64,7 +63,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section2}>
               {(data) => (
                 <ComponentsStackedLines
-                  tab={TAB} id="chart2"
+                  tab={TAB}
+                  id="chart2"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -82,7 +82,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section3}>
               {(data) => (
                 <ComponentsLinesAreaStacked
-                  tab={TAB} id="chart3"
+                  tab={TAB}
+                  id="chart3"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -100,7 +101,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsPie
-                  tab={TAB} id="chart4"
+                  tab={TAB}
+                  id="chart4"
                   data={data.filter((d) => d.libelle === "prtsn_grp")}
                   t={t}
                   i18n={i18n}
@@ -118,7 +120,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section4}>
               {(data) => (
                 <ComponentsScatterGroups
-                  tab={TAB} id="chart5"
+                  tab={TAB}
+                  id="chart5"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -136,7 +139,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section7}>
               {(data) => (
                 <ComponentsBarStackedVertical
-                  tab={TAB} id="chart9"
+                  tab={TAB}
+                  id="chart9"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -153,7 +157,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section1}>
               {(data) => (
                 <ComponentsPie
-                  tab={TAB} id="chart8"
+                  tab={TAB}
+                  id="chart8"
                   data={data.filter((d) => d.libelle === "dmg_eqp_sabotage")}
                   t={t}
                   i18n={i18n}
@@ -171,7 +176,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section5}>
               {(data) => (
                 <ComponentsTreemap
-                  tab={TAB} id="chart6"
+                  tab={TAB}
+                  id="chart6"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -190,7 +196,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section5}>
               {(data) => (
                 <ComponentsBarStackedVertical
-                  tab={TAB} id="chart7"
+                  tab={TAB}
+                  id="chart7"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -208,7 +215,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section6}>
               {(data) => (
                 <ComponentsTreemap
-                  tab={TAB} id="chart10"
+                  tab={TAB}
+                  id="chart10"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -227,7 +235,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
             <ChartState query={section6}>
               {(data) => (
                 <ComponentsBarStackedVertical
-                  tab={TAB} id="chart11"
+                  tab={TAB}
+                  id="chart11"
                   data={data}
                   t={t}
                   i18n={i18n}
@@ -266,7 +275,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
                   : data.filter((d) => d.libelle === "region_sabotage");
                 return (
                   <ComponentsMap
-                    tab={TAB} id="chart12"
+                    tab={TAB}
+                    id="chart12"
                     data={filteredData}
                     t={t}
                     i18n={i18n}
@@ -304,7 +314,8 @@ export default function Sabotage({ PAGE, t, i18n, nf, customCharts }) {
                   : data;
                 return (
                   <ComponentsBarStackedHorizontal
-                    tab={TAB} id="chart13"
+                    tab={TAB}
+                    id="chart13"
                     data={filteredData}
                     t={t}
                     i18n={i18n}
