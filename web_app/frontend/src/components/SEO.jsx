@@ -66,7 +66,7 @@ export default function SEO({
     description: siteDescription,
   };
 
-  // Build alternate links for hreflang
+  // Build alternate links forhrefLang
   const langPaths = {
     en: location.pathname.replace(/^\/\w+/, ""),
     fr: location.pathname.replace(/^\/\w+/, ""),
@@ -113,13 +113,13 @@ export default function SEO({
           <link
             key={lang}
             rel="alternate"
-            hreflang={lang}
+            hrefLang={lang}
             href={`${baseUrl}/${lang}${path}`}
           />
         ))}
         <link
           rel="alternate"
-          hreflang="x-default"
+          hrefLang="x-default"
           href={`${baseUrl}/en${langPaths.en}`}
         />
 
@@ -129,13 +129,6 @@ export default function SEO({
           type="image/svg+xml"
           href={`${baseUrl}/img/favicon.ico`}
         />
-
-        {/* Umami */}
-        <script
-          defer
-          src="https://umami.kytox-lab.com/script.js"
-          data-website-id="38170119-79a9-4280-9f7d-3a41b9f37692"
-        ></script>
       </Helmet>
 
       {/* Structured Data (JSON-LD) */}
