@@ -1,22 +1,17 @@
 import duckdb
-from fastapi import APIRouter
-from config import (
-    DB_PATH,
-    SCHEMA_DUCKDB_DW_DMT_INCIDENT_RAILWAY,
-)
+from fastapi import APIRouter, Response
 
-from fastapi import Response
+from config import DB_PATH, SCHEMA_DUCKDB_DW_DMT_INCIDENT_RAILWAY as SCHEMA
+from utils import register_sections
 
 router = APIRouter(
     prefix="/api/incidents-railways/overview", tags=["incidents-railways-overview"]
 )
 
-schema = SCHEMA_DUCKDB_DW_DMT_INCIDENT_RAILWAY
-
 
 @router.get("/kpi")
 def summary():
-    """Return KPI summary from dmt_global table."""
+    """Return KPI summary from dmt_kpis table. Kept as-is (custom query)."""
     if not DB_PATH.exists():
         return Response(content="[]", media_type="application/json")
 
@@ -28,7 +23,7 @@ def summary():
                 SELECT
                     libelle AS id,
                     value
-                FROM {schema}.dmt_kpis
+                FROM {SCHEMA}.dmt_kpis
                 WHERE metric IN (
                     'last_date_updated',
                     'total_incidents',
@@ -44,102 +39,11 @@ def summary():
     return []
 
 
-@router.get("/section1")
-def section1():
-    """Return section 1 data from overview_global_incidents table."""
-    if not DB_PATH.exists():
-        return Response(content="[]", media_type="application/json")
+SECTIONS = {
+    "section1": "dmt_global",
+    "section2": "dmt_incidents_by_month",
+    "section3": "dmt_incidents_by_day",
+    "section4": "dmt_incidents_by_region",
+}
 
-    with duckdb.connect(str(DB_PATH), read_only=True) as con:
-        rows = con.execute(
-            f"""
-            SELECT to_json(list(t))
-            FROM (
-                SELECT
-                    libelle,
-                    metric,
-                    value,
-                FROM {schema}.dmt_global
-            ) t
-            """
-        ).fetchone()[0]
-
-        return Response(content=rows or "[]", media_type="application/json")
-
-    return []
-
-
-@router.get("/section2")
-def section2():
-    """Return section 2 data from dmt_incidents_by_month table."""
-    if not DB_PATH.exists():
-        return Response(content="[]", media_type="application/json")
-
-    with duckdb.connect(str(DB_PATH), read_only=True) as con:
-        rows = con.execute(
-            f"""
-            SELECT to_json(list(t))
-            FROM (
-                SELECT
-                    libelle,
-                    metric,
-                    value
-                FROM {schema}.dmt_incidents_by_month
-            ) t
-            """
-        ).fetchone()[0]
-
-        return Response(content=rows or "[]", media_type="application/json")
-
-    return []
-
-
-@router.get("/section3")
-def section3():
-    """Return section 3 data from dmt_incidents_by_day table."""
-    if not DB_PATH.exists():
-        return Response(content="[]", media_type="application/json")
-
-    with duckdb.connect(str(DB_PATH), read_only=True) as con:
-        rows = con.execute(
-            f"""
-            SELECT to_json(list(t))
-            FROM (
-                SELECT
-                    libelle,
-                    metric,
-                    value
-                FROM {schema}.dmt_incidents_by_day
-            ) t
-            """
-        ).fetchone()[0]
-
-        return Response(content=rows or "[]", media_type="application/json")
-
-    return []
-
-
-@router.get("/section4")
-def section4():
-    """Return section 4 data from dmt_incidents_by_region table."""
-    if not DB_PATH.exists():
-        return Response(content="[]", media_type="application/json")
-
-    with duckdb.connect(str(DB_PATH), read_only=True) as con:
-        rows = con.execute(
-            f"""
-            SELECT to_json(list(t))
-            FROM (
-                SELECT
-                    libelle,
-                    metric,
-                    value
-                FROM {schema}.dmt_incidents_by_region
-            ) t
-            """
-        ).fetchone()[0]
-
-        # WHERE metric <> 'Moscow'
-        return Response(content=rows or "[]", media_type="application/json")
-
-    return []
+register_sections(router, SECTIONS, SCHEMA, DB_PATH)
